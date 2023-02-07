@@ -1,9 +1,14 @@
 # social-network
 
-You have to install caddy before running this code.
+
+This project uses Caddy.
+To use it you have to install it first:
 
 
 https://caddyserver.com/docs/install#debian-ubuntu-raspbian
 
 
-After installing, remember to run `caddy start` before running the backend, and run `caddy stop` after you have finished.
+After installing, run `caddy start` while you are running the backend server, and run `caddy stop` after you have finished.
+
+
+You can still use localhost:8080 for HTTP connection.
