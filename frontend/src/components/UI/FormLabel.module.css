@@ -1,0 +1,7 @@
+@import "../var.css";
+
+.label {
+    color: var(--ultra-violet, purple);
+    font-size: 1.5rem;
+	font-weight: 700;
+}

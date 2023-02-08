@@ -1,0 +1,10 @@
+@import "./var.css";
+
+.login-form {
+    margin: 15% auto;
+    text-align: center;
+    display: block;
+    border: 1rem;
+    width: 60%;
+    height: auto;
+}

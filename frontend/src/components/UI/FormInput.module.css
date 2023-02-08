@@ -1,0 +1,9 @@
+@import "../var.css";
+
+.input {
+    background-color: var(--antiflash-white, white);
+    border: 0.5rem var(--ultra-violet, purple);
+    padding: 1.25rem;
+    border-radius: 0.6rem;
+    width: 45%;
+}

@@ -1,0 +1,6 @@
+@import "../var.css";
+
+.sub-btn {
+    background-color: var(--ultra-violet, purple);
+    color: var(--antiflash-white, white);
+}
