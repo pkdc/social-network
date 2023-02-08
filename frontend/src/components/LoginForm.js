@@ -7,11 +7,11 @@ import styles from "./LoginForm.module.css";
 const LoginForm = () => {
     return (
         <form className={styles["login-form"]}>
-        <FormLabel>Email</FormLabel>
-            <FormInput/>
-            <FormLabel>Password</FormLabel>
-            <FormInput/>
-            <SubmitButton>Login</SubmitButton>
+            <FormLabel htmlFor="email">Email</FormLabel>
+            <FormInput name="email" id="email" placeholder="abc@mail.com"/>
+            <FormLabel htmlFor="password">Password</FormLabel>
+            <FormInput type="password" name="password" id="password" placeholder="Password"/>
+            <SubmitButton type="submit">Login</SubmitButton>
         </form>
     )
 };

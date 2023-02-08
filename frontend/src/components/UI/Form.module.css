@@ -4,9 +4,9 @@
 	text-align: center;
 	background-color: var(--antiflash-white, white);
     padding: 0.6rem 0.75rem;
-    margin: 10rem 15rem;
+    margin: 0 30rem;
     border: 3px solid;
     border-radius: 0.75rem;
-    opacity: 0.9;
+    /* opacity: 0.9; */
     /* color: var(--ultra-violet); */
 }

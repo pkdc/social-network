@@ -1,9 +1,13 @@
 @import "../var.css";
 
+.input-container {
+    margin: 1.25rem 0;
+}
+
 .input {
     background-color: var(--antiflash-white, white);
-    border: 0.5rem var(--ultra-violet, purple);
+    border: 0.1rem solid var(--ultra-violet, purple);
     padding: 1.25rem;
     border-radius: 0.6rem;
-    width: 45%;
+    width: 85%;
 }

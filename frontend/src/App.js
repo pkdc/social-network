@@ -5,9 +5,12 @@ import LoginForm from './components/LoginForm';
 
 function App() {
   return (
-    <Form className="login">
-      <LoginForm />
-    </Form>
+    <div className='wrapper'>
+      <Form className="login">
+        <LoginForm />
+      </Form>
+    </div>
+    
   );
 }
 

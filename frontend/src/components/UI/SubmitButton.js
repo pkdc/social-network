@@ -2,10 +2,10 @@ import styles from "./SubmitButton.module.css";
 
 const SubmitButton = (props) => {
     return (
-        <>
-            {!props.className && <div className={`${styles["sub-btn"]}`}>{props.children}</div>}
-            {props.className && <div className={`${styles["sub-btn"]} ${styles[props.className]}`}>{props.children}</div>}
-        </>
+        <div className={styles["sub-btn-container"]}>
+            {!props.className && <button className={`${styles["sub-btn"]}`} type={props.type} onClick={props.onClick}>{props.children}</button>}
+            {props.className && <button className={`${styles["sub-btn"]} ${styles[props.className]}`} type={props.type} onClick={props.onClick}>{props.children}</button>}
+        </div>
     )
 };
 
