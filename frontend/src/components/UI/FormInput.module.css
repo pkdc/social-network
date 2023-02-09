@@ -6,8 +6,13 @@
 
 .input {
     background-color: var(--antiflash-white, white);
-    border: 0.1rem solid var(--ultra-violet, purple);
+    outline: solid var(--ultra-violet, purple);
+    border: 0.2rem solid transparent;
     padding: 1.25rem;
     border-radius: 0.6rem;
-    width: 85%;
+    width: 75%;
+}
+
+.input:focus {
+    border: 0.2rem solid var(--ultra-violet, purple);
 }

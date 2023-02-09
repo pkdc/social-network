@@ -6,6 +6,7 @@ const FormInput = (props) => {
                     id={props.id}
                     type={props.type}
                     name={props.name}
+                    value={props.value}
                     placeholder={props.placeholder}
                     />);
     if (props.className) {
@@ -14,6 +15,7 @@ const FormInput = (props) => {
         id={props.id}
         type={props.type}
         name={props.name}
+        value={props.value}
         placeholder={props.placeholder}
         />;
     }

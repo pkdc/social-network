@@ -3,7 +3,7 @@
 .form {
 	text-align: center;
 	background-color: var(--antiflash-white, white);
-    padding: 0.6rem 0.75rem;
+    padding: 1.2rem 0.75rem;
     margin: 8rem 30rem;
     border: 3px solid;
     border-radius: 0.75rem;

@@ -6,9 +6,7 @@ import LoginForm from './components/LoginForm';
 function App() {
   return (
     <div className='wrapper'>
-      <Form className="login">
         <LoginForm />
-      </Form>
     </div>
     
   );
