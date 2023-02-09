@@ -1,7 +1,7 @@
 import styles from "./FormInput.module.css";
 
 const FormInput = (props) => {
-    let myInput = (<input className={`${styles["input"]}`}
+    let renderInput = (<input className={`${styles["input"]}`}
                     onChange={props.onChange}
                     id={props.id}
                     type={props.type}
@@ -9,7 +9,7 @@ const FormInput = (props) => {
                     placeholder={props.placeholder}
                     />);
     if (props.className) {
-        myInput = <input className={`${styles["input"]}`}
+        renderInput = <input className={`${styles["input"]} ${styles[props.className]}}`}
         onChange={props.onChange}
         id={props.id}
         type={props.type}
@@ -19,7 +19,7 @@ const FormInput = (props) => {
     }
     return (
         <div className={styles["input-container"]}>
-            {myInput}
+            {renderInput}
         </div>
     )
 };
