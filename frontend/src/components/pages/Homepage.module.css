@@ -1,9 +1,14 @@
 @import "../var.css";
 
 .title {
-    font-size: 3rem;
+    font-size: 5rem;
     display: flex;
     justify-content: center;
     color: var(--ultra-violet, purple);
     margin: 5rem 0 0 0;
+}
+
+.nav-link {
+    text-decoration: none;
+    color: var(--antiflash-white);
 }
