@@ -1,15 +1,16 @@
-import './App.css';
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Card from './components/UI/Card';
 import Form from './components/UI/Form';
-import LoginForm from './components/LoginForm';
+import Homepage from './components/pages/Homepage';
+import LoginForm from './components/pages/LoginForm';
 
 function App() {
-  return (
-    <div className='wrapper'>
-        <LoginForm />
-    </div>
-    
-  );
+  const router = createBrowserRouter([
+    {path: "/", element: <Homepage />},
+    {path: "/login", element: <LoginForm />},
+  ]);
+
+  return <RouterProvider router={router}/>;
 }
 
 export default App;

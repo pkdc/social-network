@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import Form from './UI/Form';
-import FormInput from "./UI/FormInput";
-import FormLabel from "./UI/FormLabel";
-import SubmitButton from "./UI/SubmitButton";
+import Form from '../UI/Form';
+import FormInput from "../UI/FormInput";
+import FormLabel from "../UI/FormLabel";
+import SubmitButton from "../UI/SubmitButton";
 import styles from "./LoginForm.module.css";
 
 const LoginForm = () => {
