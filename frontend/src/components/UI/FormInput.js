@@ -8,6 +8,7 @@ const FormInput = (props) => {
                     name={props.name}
                     value={props.value}
                     placeholder={props.placeholder}
+                    rows={props.rows}
                     />);
     if (props.className) {
         renderInput = <input className={`${styles["input"]} ${styles[props.className]}}`}
@@ -17,6 +18,7 @@ const FormInput = (props) => {
         name={props.name}
         value={props.value}
         placeholder={props.placeholder}
+        rows={props.rows}
         />;
     }
     return (
