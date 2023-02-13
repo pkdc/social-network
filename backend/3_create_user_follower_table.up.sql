@@ -1,0 +1,9 @@
+CREATE TABLE user_message (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  sourceId INTEGER NOT NULL,
+  targetId INTEGER NOT NULL,
+  message TEXT NOT NULL,
+  createdAt DATETIME NOT NULL,
+  FOREIGN KEY (sourceId) REFERENCES user(id),
+  FOREIGN KEY (targetId) REFERENCES user(id)
+);
