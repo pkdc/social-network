@@ -1,0 +1,7 @@
+CREATE TABLE post_member (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  userId INTEGER NOT NULL,
+  postId INTEGER NOT NULL,
+  FOREIGN KEY (userId) REFERENCES user(id),
+  FOREIGN KEY (postId) REFERENCES post(id)
+);
