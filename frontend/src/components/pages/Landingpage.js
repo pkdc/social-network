@@ -8,7 +8,7 @@ import styles from "./Landingpage.module.css";
 const Homepage = () => {
     return (
         <div>
-            <h1 className={styles["title"]}>Welcome Home</h1>
+            <h1 className={styles["title"]}>Welcome</h1>
             <Card>
                 <div className={styles["link-container"]}>
                 <Link className={styles["nav-link"]} to="/login"><LgButton className={styles["nav-link-btn"]}>Login</LgButton></Link>
