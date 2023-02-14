@@ -5,9 +5,23 @@ import (
 	"fmt"
 	"net/http"
 	"os/exec"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
+	"github.com/golang-migrate/migrate/v4"
+	_ "github.com/golang-migrate/migrate/v4/database/sqlite3"
 )
 
 func main() {
+
+	
+	m, err := migrate.New(
+        "file://../../pkg/db/migration/sqlite",
+        "sqlite3://../../pkg/db/database.db")
+    m.Up()
+
+	if err != nil {
+		fmt.Print(err.Error())
+	}
+
 	exec.Command("xdg-open", "https://localhost/").Start()
 
 	http.HandleFunc("/", backend.Homehandler)
@@ -17,8 +31,8 @@ func main() {
 
 	fmt.Println("Starting server at port 8080")
 
-	err := http.ListenAndServe(":8080", nil)
-	if err != nil {
-		fmt.Println(err)
+	err1 := http.ListenAndServe(":8080", nil)
+	if err1 != nil {
+		fmt.Println(err1)
 	}
 }
