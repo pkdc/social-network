@@ -11,15 +11,51 @@ import { useState } from "react";
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
 
+  const loginURL = "http://localhost:8080/login/";
+  const regURL = "http://localhost:8080/reg/";
+
+  const loginHandler = (loginPayloadObj) => {
+    console.log("app.js", loginPayloadObj);
+    const reqOptions = {
+      method: "POST",
+      body: JSON.stringify(loginPayloadObj)
+    };
+    fetch(loginURL, reqOptions)
+    .then(resp => resp.json())
+    .then(data => {
+      console.log(data);
+    })
+    .catch(error => {
+      console.log(error);
+    })
+  };
+
+  const regHandler = (regPayloadObj) => {
+    console.log("app.js", regPayloadObj);
+    const reqOptions = {
+      method: "POST",
+      body: JSON.stringify(regPayloadObj)
+    };
+  
+    fetch(regURL, reqOptions)
+        .then(resp => resp.json())
+        .then(data => {
+            console.log(data);  
+        })
+      }
+  };
+
   let router = createBrowserRouter([
     {path: "/", element: <Landingpage />},
-    {path: "/login", element: <LoginForm />},
-    {path: "/reg", element: <RegForm />},
+    {path: "/login", element: <LoginForm onLogin={loginHandler}/>},
+    {path: "/reg", element: <RegForm onReg={regHandler}/>},
   ]);
 
   if (loggedIn) router = createBrowserRouter([
     {path: "/", element: <PostsPage />},
   ]);
+
+
 
   return <RouterProvider router={router}/>;
 }

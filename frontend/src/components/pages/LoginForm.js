@@ -6,9 +6,7 @@ import FormLabel from "../UI/FormLabel";
 import LgButton from "../UI/LgButton";
 import styles from "./LoginForm.module.css";
 
-const LoginForm = () => {
-    const loginURL = "http://localhost:8080/login/";
-    
+const LoginForm = (props) => {  
     const [enteredEmail, setEnteredEmail] = useState("");
     const [enteredPw, setEnteredPw] = useState("");
 
@@ -29,17 +27,8 @@ const LoginForm = () => {
         };
         console.log(loginPayloadObj);
 
-        const reqOptions = {
-            method: "POST",
-            body: JSON.stringify(loginPayloadObj)
-        };
-        fetch(loginURL, reqOptions)
-        .then(resp => {
-            const respObj = resp.json();
-            console.log(respObj);
-            
-        }
-        )
+        props.onLogin(loginPayloadObj);
+        
         setEnteredEmail("");
         setEnteredPw("");
     };

@@ -7,9 +7,7 @@ import FormTextarea from "../UI/FormTextarea";
 import LgButton from "../UI/LgButton";
 import styles from "./RegForm.module.css";
 
-const RegForm = () => {
-    const regURL = "http://localhost:8080/reg/";
-    
+const RegForm = (props) => {    
     const imageSrc = "/images/";
 
     const [enteredEmail, setEnteredEmail] = useState("");
@@ -62,17 +60,8 @@ const RegForm = () => {
         };
         console.log(regPayloadObj);
 
-        const reqOptions = {
-            method: "POST",
-            body: JSON.stringify(regPayloadObj)
-        };
-        fetch(regURL, reqOptions)
-        .then(resp => {
-            const respObj = resp.json();
-            console.log(respObj);
-            
-        }
-        )
+        props.onReg(regPayloadObj);
+        
         // setEnteredEmail("");
         // setEnteredPw("");
     };

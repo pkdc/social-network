@@ -1,0 +1,6 @@
+@import "../var.css";
+
+
+.logout-btn {
+    background-color: var(--cinnabar, red);
+}

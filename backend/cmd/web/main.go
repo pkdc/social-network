@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	exec.Command("xdg-open", "https://localhost/").Start()
+	exec.Command("xdg-open", "http://localhost:8080").Start()
 
 	http.HandleFunc("/", backend.Homehandler)
 	http.HandleFunc("/login/", backend.Loginhandler)
