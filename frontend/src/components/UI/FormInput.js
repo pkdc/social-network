@@ -12,7 +12,7 @@ const FormInput = (props) => {
                     name={props.name}
                     value={props.value}
                     placeholder={props.placeholder}
-
+                    accept={props.accept}
                     />;
         </div>
     )

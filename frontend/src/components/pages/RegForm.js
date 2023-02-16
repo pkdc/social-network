@@ -9,14 +9,14 @@ import styles from "./RegForm.module.css";
 
 const RegForm = (props) => {    
     const imageSrc = "../../images/";
-    // let imagePath = "default_avatar.jpg";
+    let defaultImagePath = "default_avatar.jpg";
 
     const [enteredEmail, setEnteredEmail] = useState("");
     const [enteredPw, setEnteredPw] = useState("");
     const [enteredFName, setEnteredFName] = useState("");
     const [enteredLName, setEnteredLName] = useState("");
-    const [enteredDoB, setEnteredDoB] = useState("");
-    const [uploadedImgPath, setUploadedImgPath] = useState("default_avatar.jpg");
+    const [enteredDob, setEnteredDob] = useState("");
+    const [uploadedImg, setUploadedImg] = useState("");
     const [enteredNickname, setEnteredNickname] = useState("");
     const [enteredAbout, setEnteredAbout] = useState("");
 
@@ -36,13 +36,21 @@ const RegForm = (props) => {
         setEnteredLName(e.target.value);
         console.log(enteredLName);
     };
-    const doBChangeHandler = (e) => {
-        setEnteredDoB(e.target.value);
-        console.log(enteredDoB);
+    const dobChangeHandler = (e) => {
+        setEnteredDob(e.target.value);
+        console.log(enteredDob);
     };
     const avatarHandler = (e) => {
-        setUploadedImgPath(e.target.value);
-        console.log(uploadedImgPath);
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.addEventListener("load", () => {
+            console.log(reader.result);
+            setUploadedImg(reader.result);
+        })
+
+        setUploadedImg(e.target.value);
+        console.log(uploadedImg);
     };
     const nicknameChangeHandler = (e) => {
         setEnteredNickname(e.target.value);
@@ -57,7 +65,13 @@ const RegForm = (props) => {
         e.preventDefault();
         const regPayloadObj = {
             email: enteredEmail,
-            pw: enteredPw
+            pw: enteredPw,
+            fname: enteredFName,
+            lname: enteredLName,
+            Dob: enteredDob,
+            avatar: uploadedImg,
+            nname: enteredNickname,
+            about: enteredAbout,
         };
         console.log(regPayloadObj);
 
@@ -79,14 +93,15 @@ const RegForm = (props) => {
                 <FormInput className={styles["reg-input"]} type="text" name="fname" id="fname" placeholder="John" value={enteredFName} onChange={fNameChangeHandler}/>
                 <FormLabel htmlFor="lname">Last Name</FormLabel>
                 <FormInput className={styles["reg-input"]} type="text" name="lname" id="lname" placeholder="Smith" value={enteredLName} onChange={lNameChangeHandler}/>
-                <FormLabel htmlFor="DoB">Date of Birth</FormLabel>
-                <FormInput className={styles["reg-input"]} type="date" name="DoB" id="DoB" value={enteredDoB} onChange={doBChangeHandler}/>
-                <FormLabel htmlFor="img">Avatar (Optional)</FormLabel>
+                <FormLabel htmlFor="Dob">Date of Birth</FormLabel>
+                <FormInput className={styles["reg-input"]} type="date" name="Dob" id="Dob" value={enteredDob} onChange={dobChangeHandler}/>
+                <FormLabel htmlFor="avatar">Avatar (Optional)</FormLabel>
                 <figure>
-                    <img src={require("../../images/"+`${uploadedImgPath}`)} alt="Preview Uploaded Image" width={"220px"}/>
+                    {!uploadedImg && <img src={require("../../images/"+`${defaultImagePath}`)} alt="Preview Uploaded Image" width={"250px"}/>}
+                    {uploadedImg && <img src={uploadedImg} width={"250px"}/>}
                     <figcaption><p>Preview Uploaded Image</p></figcaption>
                 </figure>
-                <FormInput className={styles["reg-input"]} type="file" name="avatar" id="avatar" onChange={avatarHandler}/>
+                <FormInput className={styles["reg-input"]} type="file" name="avatar" id="avatar" accept=".jpg, .jpeg, .png, .gif" onChange={avatarHandler}/>
                 <FormLabel htmlFor="nname">Nickname (Optional)</FormLabel>
                 <FormInput className={styles["reg-input"]} type="text" name="nname" id="nname" placeholder="Pikachu" value={enteredNickname} onChange={nicknameChangeHandler}/>
                 <FormLabel htmlFor="about">About Me (Optional)</FormLabel>
