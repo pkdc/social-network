@@ -24,9 +24,12 @@ function App() {
     .then(resp => resp.json())
     .then(data => {
       console.log(data);
+      if (data.success) {
+        setLoggedIn(true);
+      }
     })
-    .catch(error => {
-      console.log(error);
+    .catch(err => {
+      console.log(err);
     })
   };
 
@@ -38,13 +41,13 @@ function App() {
     };
   
     fetch(regURL, reqOptions)
-        .then(resp => resp.json())
-        .then(data => {
-            console.log(data);  
-        })
-      }
+      .then(resp => resp.json())
+      .then(data => {
+          console.log(data);  
+      })
+      .catch(err => console.log(err))
   };
-
+  
   let router = createBrowserRouter([
     {path: "/", element: <Landingpage />},
     {path: "/login", element: <LoginForm onLogin={loginHandler}/>},
@@ -53,9 +56,9 @@ function App() {
 
   if (loggedIn) router = createBrowserRouter([
     {path: "/", element: <PostsPage />},
+    {path: "/login", element: <PostsPage />},
+    {path: "/reg", element: <PostsPage />},
   ]);
-
-
 
   return <RouterProvider router={router}/>;
 }

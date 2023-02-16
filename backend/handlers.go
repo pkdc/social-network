@@ -8,7 +8,7 @@ import (
 )
 
 type AuthResponse struct {
-	Pass bool `json:"pass"`
+	Success bool `json:"success"`
 }
 
 type loginPayload struct {
@@ -44,17 +44,17 @@ func Loginhandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("password: %s\n", pw)
 
 		var Resp AuthResponse
-		Resp.Pass = true
+		Resp.Success = true
 		if email == "f" {
-			Resp.Pass = false
+			Resp.Success = false
 		}
-		jsResp, err := json.Marshal(Resp)
-		fmt.Println(string(jsResp))
+		jsonResp, err := json.Marshal(Resp)
+		fmt.Println(string(jsonResp))
 
 		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		w.Write(jsResp)
+		w.Write(jsonResp)
 	}
 }
 func Reghandler(w http.ResponseWriter, r *http.Request) {
