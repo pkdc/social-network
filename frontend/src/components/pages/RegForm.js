@@ -9,14 +9,14 @@ import styles from "./RegForm.module.css";
 
 const RegForm = (props) => {    
     const imageSrc = "../../images/";
-    let imagePath = "default_avatar.jpg";
+    // let imagePath = "default_avatar.jpg";
 
     const [enteredEmail, setEnteredEmail] = useState("");
     const [enteredPw, setEnteredPw] = useState("");
     const [enteredFName, setEnteredFName] = useState("");
     const [enteredLName, setEnteredLName] = useState("");
     const [enteredDoB, setEnteredDoB] = useState("");
-    const [enteredImg, setEnteredImg] = useState("default_avatar.jpg");
+    const [uploadedImgPath, setUploadedImgPath] = useState("default_avatar.jpg");
     const [enteredNickname, setEnteredNickname] = useState("");
     const [enteredAbout, setEnteredAbout] = useState("");
 
@@ -41,8 +41,8 @@ const RegForm = (props) => {
         console.log(enteredDoB);
     };
     const avatarHandler = (e) => {
-        setEnteredImg(e.target.value);
-        console.log(enteredImg);
+        setUploadedImgPath(e.target.value);
+        console.log(uploadedImgPath);
     };
     const nicknameChangeHandler = (e) => {
         setEnteredNickname(e.target.value);
@@ -83,7 +83,7 @@ const RegForm = (props) => {
                 <FormInput className={styles["reg-input"]} type="date" name="DoB" id="DoB" value={enteredDoB} onChange={doBChangeHandler}/>
                 <FormLabel htmlFor="img">Avatar (Optional)</FormLabel>
                 <figure>
-                    <img src={require("../../images/"+`${imagePath}`)} alt="Preview Uploaded Image" width={"220px"}/>
+                    <img src={require("../../images/"+`${uploadedImgPath}`)} alt="Preview Uploaded Image" width={"220px"}/>
                     <figcaption><p>Preview Uploaded Image</p></figcaption>
                 </figure>
                 <FormInput className={styles["reg-input"]} type="file" name="avatar" id="avatar" onChange={avatarHandler}/>
