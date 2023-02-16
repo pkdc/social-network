@@ -8,14 +8,15 @@ import LgButton from "../UI/LgButton";
 import styles from "./RegForm.module.css";
 
 const RegForm = (props) => {    
-    const imageSrc = "/images/";
+    const imageSrc = "../../images/";
+    let imagePath = "default_avatar.jpg";
 
     const [enteredEmail, setEnteredEmail] = useState("");
     const [enteredPw, setEnteredPw] = useState("");
     const [enteredFName, setEnteredFName] = useState("");
     const [enteredLName, setEnteredLName] = useState("");
     const [enteredDoB, setEnteredDoB] = useState("");
-    const [enteredImg, setEnteredImg] = useState("");
+    const [enteredImg, setEnteredImg] = useState("default_avatar.jpg");
     const [enteredNickname, setEnteredNickname] = useState("");
     const [enteredAbout, setEnteredAbout] = useState("");
 
@@ -39,7 +40,7 @@ const RegForm = (props) => {
         setEnteredDoB(e.target.value);
         console.log(enteredDoB);
     };
-    const imgChangeHandler = (e) => {
+    const avatarHandler = (e) => {
         setEnteredImg(e.target.value);
         console.log(enteredImg);
     };
@@ -81,8 +82,11 @@ const RegForm = (props) => {
                 <FormLabel htmlFor="DoB">Date of Birth</FormLabel>
                 <FormInput className={styles["reg-input"]} type="date" name="DoB" id="DoB" value={enteredDoB} onChange={doBChangeHandler}/>
                 <FormLabel htmlFor="img">Avatar (Optional)</FormLabel>
-                {/* <img src={require("../../images/0.png")} alt="test" width={"220px"}/> */}
-                {/* <FormInput type="select" name="img" id="img" value={enteredImg} onChange={imgChangeHandler}/> */}
+                <figure>
+                    <img src={require("../../images/"+`${imagePath}`)} alt="Preview Uploaded Image" width={"220px"}/>
+                    <figcaption><p>Preview Uploaded Image</p></figcaption>
+                </figure>
+                <FormInput className={styles["reg-input"]} type="file" name="avatar" id="avatar" onChange={avatarHandler}/>
                 <FormLabel htmlFor="nname">Nickname (Optional)</FormLabel>
                 <FormInput className={styles["reg-input"]} type="text" name="nname" id="nname" placeholder="Pikachu" value={enteredNickname} onChange={nicknameChangeHandler}/>
                 <FormLabel htmlFor="about">About Me (Optional)</FormLabel>
