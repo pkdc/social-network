@@ -1,0 +1,12 @@
+@import "../var.css";
+
+.card {
+    border-radius: 0.75rem;
+    border: 3px solid var(--ultra-violet, purple);
+    background: var(--antiflash-white, white);
+    color:var(--ultra-violet, purple);
+    padding: 0.6rem 0.75rem;
+    margin: 2rem 2rem;
+    opacity: 0.8;
+    text-align: center;
+}
