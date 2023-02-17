@@ -43,7 +43,10 @@ function App() {
     fetch(regURL, reqOptions)
       .then(resp => resp.json())
       .then(data => {
-          console.log(data);  
+          console.log(data);
+          if (data.success) {
+            setLoggedIn(true);
+          }
       })
       .catch(err => {
         console.log(err);

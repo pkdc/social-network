@@ -19,12 +19,12 @@ type loginPayload struct {
 type regPayload struct {
 	Email  string `json:"email"`
 	Pw     string `json:"pw"`
-	fname  string `json:"fname"`
-	lname  string `json:"lname"`
-	dob    string `json:"dob"`
-	avatar string `json:"avatar"`
-	nname  string `json:"nname"`
-	about  string `json:"about"`
+	Fname  string `json:"fname"`
+	Lname  string `json:"lname"`
+	Dob    string `json:"dob"`
+	Avatar string `json:"avatar"`
+	Nname  string `json:"nname"`
+	About  string `json:"about"`
 }
 
 func Homehandler(w http.ResponseWriter, r *http.Request) {
@@ -77,11 +77,21 @@ func Reghandler(w http.ResponseWriter, r *http.Request) {
 
 		email := payload.Email
 		pw := payload.Pw
-		fname := payload.fname
+		fname := payload.Fname
+		lname := payload.Lname
+		dob := payload.Dob
+		avatar := payload.Avatar
+		nname := payload.Nname
+		about := payload.About
 
 		fmt.Printf("Email: %s\n", email)
 		fmt.Printf("password: %s\n", pw)
 		fmt.Printf("fname: %s\n", fname)
+		fmt.Printf("lname: %s\n", lname)
+		fmt.Printf("dob: %s\n", dob)
+		fmt.Printf("avatar: %s\n", avatar)
+		fmt.Printf("nname: %s\n", nname)
+		fmt.Printf("about: %s\n", about)
 
 		var Resp AuthResponse
 		Resp.Success = true

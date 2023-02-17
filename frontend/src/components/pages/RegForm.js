@@ -77,8 +77,14 @@ const RegForm = (props) => {
 
         props.onReg(regPayloadObj);
         
-        // setEnteredEmail("");
-        // setEnteredPw("");
+        setEnteredEmail("");
+        setEnteredPw("");
+        setEnteredFName("");
+        setEnteredLName("");
+        setEnteredDob("");
+        setUploadedImg("");
+        setEnteredNickname("");
+        setEnteredAbout("");
     };
 
     return (
