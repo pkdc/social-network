@@ -2,12 +2,15 @@ package main
 
 import (
 	"backend"
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"os/exec"
-	_ "github.com/golang-migrate/migrate/v4/source/file"
+
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/database/sqlite3"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 )
 
 func main() {
@@ -20,6 +23,47 @@ func main() {
 
 	if err != nil {
 		fmt.Print(err.Error())
+	}
+
+	// connect to database
+
+	// var db *sql.DB
+	
+	// db, _ = sql.Open("sqlite3", "../../pkg/db/database.db")
+
+	// fetch api for mock data
+	
+	var res *http.Response
+
+	res, _ = http.Get("https://63f35a0e864fb1d60014de90.mockapi.io/users")
+	
+	resData, _ := ioutil.ReadAll(res.Body)
+
+
+	
+	type User struct {
+		FirstName string `json:"firstName"`
+		LastName string `json:"lastName"`
+		NickName string `json:"nickName"`
+		Email string `json:"email"`
+		Password string `json:"password"`
+		Dob string `json:"dob"`
+		Image string `json:"image"`
+		About string `json:"about"`
+		Public bool `json:"public"`
+	}
+
+
+/// receiving information
+
+	var responseObject []User
+
+	json.Unmarshal(resData, &responseObject)
+
+	fmt.Println(responseObject)
+
+	for _, user := range responseObject {
+		fmt.Println(user.FirstName)
 	}
 
 	exec.Command("xdg-open", "https://localhost/").Start()
