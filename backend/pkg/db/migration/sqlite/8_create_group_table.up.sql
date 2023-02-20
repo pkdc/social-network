@@ -1,8 +1,8 @@
-CREATE TABLE group (
+CREATE TABLE group_ (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   title TEXT NOT NULL,
   creator INTEGER NOT NULL,
-  description TEXT,
+  description_ TEXT,
   createdAt DATETIME NOT NULL,
   FOREIGN KEY (creator) REFERENCES user(id)
 );

@@ -2,8 +2,8 @@ CREATE TABLE group_message (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   sourceId INTEGER NOT NULL,
   groupId INTEGER NOT NULL,
-  message TEXT NOT NULL,
+  message_ TEXT NOT NULL,
   createdAt DATETIME NOT NULL,
   FOREIGN KEY (sourceId) REFERENCES user(id),
-  FOREIGN KEY (groupId) REFERENCES group(id)
+  FOREIGN KEY (groupId) REFERENCES group_(id)
 );

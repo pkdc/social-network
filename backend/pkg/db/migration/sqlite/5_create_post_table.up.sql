@@ -1,8 +1,8 @@
 CREATE TABLE post (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   author INTEGER NOT NULL,
-  message TEXT,
-  image TEXT,
+  message_ TEXT,
+  image_ TEXT,
   createdAt DATETIME NOT NULL,
   privacy INTEGER NOT NULL DEFAULT 0,
   FOREIGN KEY (author) REFERENCES user(id)

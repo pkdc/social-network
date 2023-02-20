@@ -4,9 +4,9 @@ CREATE TABLE user (
   lastName TEXT NOT NULL,
   nickName TEXT,
   email TEXT NOT NULL,
-  password TEXT NOT NULL,
+  password_ TEXT NOT NULL,
   dob DATE,
-  image TEXT,
+  image_ TEXT,
   about TEXT,
   public INTEGER NOT NULL DEFAULT 0
 );
