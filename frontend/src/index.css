@@ -1,3 +1,5 @@
+@import "./components/var.css";
+
 html {
   box-sizing: border-box;
 }
@@ -9,9 +11,22 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+
+
+  background-color: var(--antiflash-white);
+
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+
+textarea {
+  border: none;
+  resize: none;
+    
+}
+

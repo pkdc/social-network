@@ -1,0 +1,38 @@
+
+.container {
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.08);
+    border-radius: 1rem;  
+    padding: 25px;
+    margin: 20px 0px 20px 0px;
+    /* background-color: var(--seasalt); */
+    
+    /* align-items: center; */
+    /* width: 50%; */
+}
+
+.user {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+}
+
+.username {
+    font-weight: bold;
+
+}
+
+.content {
+    margin: 10px;
+}
+
+
+.comments {
+    display: flex;
+    justify-content: flex-end;
+}
