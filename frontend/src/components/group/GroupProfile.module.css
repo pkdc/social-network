@@ -1,0 +1,29 @@
+.container {
+    padding: 20px;
+    display: flex;
+    gap: 30px;
+    /* margin: 20px; */
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.img {
+    width: 0px;
+    padding: 50px;
+    border-radius: 50%;
+    background: rgb(188, 188, 188);
+}
+
+.groupname {
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.btn {
+    display: flex;
+    justify-content: flex-end;
+}
