@@ -29,10 +29,18 @@ const contentInput = useRef();
             <input type='text' required id="title" ref={titleInput}/>
         </div> */}
         <Card className={classes.card}>
-         {/* <label htmlFor="content">Post Label</label> */}
-            <textarea className={classes.content} placeholder="What's on your mind?" ref={contentInput} rows="4"/>
-            {/* <textarea id='content' placeholder="What's on your mind?"  cols='60' ref={contentInput}></textarea> */}
-      
+            <div className={classes["content-container"]}>
+                <textarea className={classes.content} placeholder="What's on your mind?" ref={contentInput} rows="4"/>
+                <div className={classes["privacy"]}>
+                    <label htmlFor="privacy"></label>
+                    <select name="privacy" id="privacy">
+                        <option value="public">Public</option>
+                        <option value="private">Private</option>
+                        <option value="almost-private">Almost Private</option>
+                    </select>
+                </div>
+            </div>
+        
         <div className={classes.btn}>
             <SmallButton>Post</SmallButton>
         </div>
