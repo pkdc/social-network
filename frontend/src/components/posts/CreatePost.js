@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import Card from "../UI/Card";
-import FormTextarea from "../UI/FormTextarea";
+import CreatePostTextarea from "../UI/CreatePostTextarea";
 import SmallButton from "../UI/SmallButton";
 import classes from './CreatePost.module.css';
 
@@ -30,7 +30,9 @@ const contentInput = useRef();
         </div> */}
         <Card className={classes.card}>
             <div className={classes["content-container"]}>
-                <textarea className={classes.content} placeholder="What's on your mind?" ref={contentInput} rows="4"/>
+                <div>
+                <CreatePostTextarea className={classes.content} placeholder="What's on your mind?" ref={contentInput} rows="4"/>
+                </div>
                 <div className={classes["privacy"]}>
                     <label htmlFor="privacy"></label>
                     <select name="privacy" id="privacy">
