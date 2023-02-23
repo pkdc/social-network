@@ -10,6 +10,11 @@
 
 .reg-input {
     width: 65%;
+    margin: 0.2rem 0;
+}
+
+.img-preview {
+    border-radius: 50%;
 }
 
 .sub-btn {

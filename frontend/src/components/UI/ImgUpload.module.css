@@ -1,0 +1,16 @@
+.input {
+    display: none;
+}
+
+.label {
+    background-color: var(--ultra-violet-0, purple);
+    color: var(--antiflash-white, white);
+    padding: .5rem 1rem;
+    cursor: pointer;
+    border: none;
+    border-radius: 1.5rem;
+    /* width: 75%; */
+    font-size: 1rem;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
