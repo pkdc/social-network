@@ -2,6 +2,7 @@ import { useRef } from "react";
 import Card from "../UI/Card";
 import CreatePostTextarea from "../UI/CreatePostTextarea";
 import SmallButton from "../UI/SmallButton";
+import CreatePostSelect from "../UI/CreatePostSelect";
 import classes from './CreatePost.module.css';
 
 function CreatePost(props) {
@@ -23,6 +24,12 @@ const contentInput = useRef();
         props.onCreatePost(postData)
     }
 
+    const privacyOptions = [
+        {value: "public", text: "Public"},
+        {value: "private", text: "Private"},
+        {value: "almost-private", text: "Almost Private"}
+    ];
+
     return <form onSubmit={SubmitHandler}>
         {/* <div>
             <label htmlFor="title">Title</label>
@@ -31,15 +38,10 @@ const contentInput = useRef();
         <Card className={classes.card}>
             <div className={classes["content-container"]}>
                 <div>
-                <CreatePostTextarea className={classes.content} placeholder="What's on your mind?" ref={contentInput} rows="4"/>
+                    <CreatePostTextarea className={classes.content} placeholder="What's on your mind?" ref={contentInput} rows="4"/>
                 </div>
-                <div className={classes["privacy"]}>
-                    <label htmlFor="privacy"></label>
-                    <select name="privacy" id="privacy">
-                        <option value="public">Public</option>
-                        <option value="private">Private</option>
-                        <option value="almost-private">Almost Private</option>
-                    </select>
+                <div>
+                    <CreatePostSelect options={privacyOptions} className={classes["privacy"]}/>
                 </div>
             </div>
         
