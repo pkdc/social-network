@@ -10,10 +10,15 @@ import (
 func main() {
 	exec.Command("xdg-open", "https://localhost/").Start()
 
-	http.HandleFunc("/", backend.Homehandler)
-	http.HandleFunc("/login/", backend.Loginhandler)
-	http.HandleFunc("/reg/", backend.Reghandler)
-	http.HandleFunc("/logout/", backend.Logouthandler)
+	mux := http.NewServeMux()
+
+	mux.Handle("/", backend.Homehandler())
+	mux.Handle("/login", backend.Loginhandler())
+	mux.Handle("/logout", backend.Logouthandler())
+	mux.Handle("/reg", backend.Reghandler())
+	mux.Handle("/user", backend.Userhandler())
+	mux.Handle("/post", backend.Posthandler())
+	mux.Handle("/group", backend.Grouphandler())
 
 	fmt.Println("Starting server at port 8080")
 
