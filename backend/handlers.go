@@ -8,6 +8,7 @@ import (
 )
 
 type AuthResponse struct {
+	UserId  int  `json:"uid"`
 	Success bool `json:"success"`
 }
 
@@ -32,6 +33,7 @@ type postsResponse struct {
 }
 
 type postPayload struct {
+	UserId  int    `json:"user_id"`
 	Content string `json:"content"`
 	Privacy string `json:"privacy"`
 }
@@ -49,18 +51,21 @@ func Homehandler(w http.ResponseWriter, r *http.Request) {
 		}
 		fmt.Println(payload)
 
+		userid := payload.UserId
 		content := payload.Content
 		privacy := payload.Privacy
 
+		fmt.Printf("userid %d\n", userid)
 		fmt.Printf("content %s\n", content)
 		fmt.Printf("post privacy %s\n", privacy)
 
-		jsonResp, err := json.Marshal(Resp)
+		// var Resp postsResponse
+		// jsonResp, err := json.Marshal(Resp)
 
-		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		w.Write(jsonResp)
+		// w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+		// w.Header().Set("Content-Type", "application/json")
+		// w.WriteHeader(http.StatusOK)
+		// w.Write(jsonResp)
 	}
 }
 func Loginhandler(w http.ResponseWriter, r *http.Request) {
@@ -83,6 +88,7 @@ func Loginhandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("password: %s\n", pw)
 
 		var Resp AuthResponse
+		Resp.UserId = 1
 		Resp.Success = true
 		if email == "f" {
 			Resp.Success = false

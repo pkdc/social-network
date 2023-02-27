@@ -19,6 +19,7 @@ const privacyInputRef = useRef();
         const chosenPrivacy = privacyInputRef.current.value;
 
         const postData = {
+            user_id: 1,
             content: enteredContent,
             privacy: chosenPrivacy
         };
