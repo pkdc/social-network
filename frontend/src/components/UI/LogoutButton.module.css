@@ -3,4 +3,5 @@
 
 .logout-btn {
     background-color: var(--cinnabar, red);
+    color: var(--antiflash-white, white);
 }

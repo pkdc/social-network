@@ -7,6 +7,8 @@ import CreatePost from "../posts/CreatePost";
 import AllPosts from "../posts/AllPosts";
 
 const PostsPage = () => {
+    const createPostUrl = "http://localhost:8080/";
+
     const DATA = [
         {
             id: 1,
@@ -22,12 +24,34 @@ const PostsPage = () => {
     }
     ]
 
+    const createPostHandler = (createPostPayloadObj) => {
+        console.log("postpage create post", createPostPayloadObj);
+        const reqOptions = {
+            method: "POST",
+            body: JSON.stringify(createPostPayloadObj)
+        };
+        fetch(createPostUrl, reqOptions)
+        .then(resp => resp.json())
+        .then(data => {
+            console.log(data);
+            if (data) {
+                // render all posts
+
+            // navigate("/", {replace: true});
+            }
+        })
+        .catch(err => {
+            console.log(err);
+        })
+
+    };
+
     return (
         <>
         <h1 className={styles["title"]}>Create New Post</h1>
         <div className={styles["container"]}>
             <div className={styles["create-post"]}>
-                <CreatePost />
+                <CreatePost onCreatePost={createPostHandler}/>
             </div>
             <div className={styles["all-posts"]}>
                 <AllPosts posts={DATA}/>

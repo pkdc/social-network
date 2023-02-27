@@ -27,8 +27,41 @@ type regPayload struct {
 	About  string `json:"about"`
 }
 
+type postsResponse struct {
+	AllPosts string `json:"posts"`
+}
+
+type postPayload struct {
+	Content string `json:"content"`
+	Privacy string `json:"privacy"`
+}
+
 func Homehandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Home")
+	// fmt.Fprintf(w, "Home")
+
+	if r.Method == http.MethodPost {
+		fmt.Printf("----home-POST---(create)--\n")
+		var payload postPayload
+
+		err := json.NewDecoder(r.Body).Decode(&payload)
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println(payload)
+
+		content := payload.Content
+		privacy := payload.Privacy
+
+		fmt.Printf("content %s\n", content)
+		fmt.Printf("post privacy %s\n", privacy)
+
+		jsonResp, err := json.Marshal(Resp)
+
+		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		w.Write(jsonResp)
+	}
 }
 func Loginhandler(w http.ResponseWriter, r *http.Request) {
 	// fmt.Fprintf(w, "login")

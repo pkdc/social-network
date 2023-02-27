@@ -110,7 +110,7 @@ const RegForm = (props) => {
                     {!uploadedImg && <img src={require("../../images/"+`${defaultImagePath}`)} alt="Default Image" className={styles["img-preview"]} width={"250px"}/>}
                     {uploadedImg && <img src={uploadedImg} className={styles["img-preview"]} width={"250px"}/>}
                 </figure>
-                <ImgUpload className={styles["reg-input"]} name="avatar" id="avatar" accept=".jpg, .jpeg, .png, .gif" onChange={avatarHandler}/>
+                <ImgUpload className={styles["reg-input"]} name="avatar" id="avatar" accept=".jpg, .jpeg, .png, .gif" text="Upload Image" onChange={avatarHandler}/>
                 <FormLabel className={styles["reg-label"]} htmlFor="nname">Nickname (Optional)</FormLabel>
                 <FormInput className={styles["reg-input"]} type="text" name="nname" id="nname" placeholder="Pikachu" value={enteredNickname} onChange={nicknameChangeHandler}/>
                 <FormLabel className={styles["reg-label"]} htmlFor="about">About Me (Optional)</FormLabel>

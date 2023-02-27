@@ -8,20 +8,27 @@ import classes from './CreatePost.module.css';
 function CreatePost(props) {
 // const titleInput = useRef();
 const contentInput = useRef();
+const privacyInputRef = useRef();
 
     function SubmitHandler(event) {
         event.preventDefault();
+        // console.log(contentInput.current.value);
+        // console.log(privacyInputRef.current.value);
 
-        // const enteredTitle = titleInput.current.value
         const enteredContent = contentInput.current.value
+        const chosenPrivacy = privacyInputRef.current.value;
 
         const postData = {
-            // title: enteredTitle,
-            content: enteredContent
+            content: enteredContent,
+            privacy: chosenPrivacy
         };
 
-        console.log(postData)
+        console.log("create post data", postData)
+
         props.onCreatePost(postData)
+
+        contentInput.current.value = "";
+        privacyInputRef.current.value = "public";
     }
 
     const privacyOptions = [
@@ -38,10 +45,10 @@ const contentInput = useRef();
         <Card className={classes.card}>
             <div className={classes["content-container"]}>
                 <div>
-                    <CreatePostTextarea className={classes.content} placeholder="What's on your mind?" ref={contentInput} rows="4"/>
+                    <CreatePostTextarea className={classes.content} placeholder="What's on your mind?" reference={contentInput} rows="3"/>
                 </div>
                 <div>
-                    <CreatePostSelect options={privacyOptions} className={classes["privacy"]}/>
+                    <CreatePostSelect options={privacyOptions} className={classes["privacy"]} reference={privacyInputRef}/>
                 </div>
             </div>
         

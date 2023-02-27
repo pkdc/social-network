@@ -5,7 +5,7 @@ const ImgUpload = (props) => {
     const classes = `${styles["input"]}` + " " + props.className;
     return (
         <>
-            <label htmlFor={props.id} className={styles["label"]}>Upload</label>
+            <label htmlFor={props.id} className={styles["label"]}>{props.text}</label>
             <input type="file" name={props.name} id={props.id} accept={props.accept} className={classes}/>
         </>
     )

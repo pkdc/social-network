@@ -1,7 +1,7 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 import MainNav from "../Navigation/MainNav";
-import TopMenu from "../Navigation/TopNav";
+import TopMenu from "../Navigation/TopMenu";
 
 const Root = () => {
     return <>

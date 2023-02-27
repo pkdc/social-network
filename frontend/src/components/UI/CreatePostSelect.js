@@ -5,7 +5,7 @@ const CreatePostSelect = (props) => {
     const classes = `${styles["select"]} ${props.className || ""}`
     return (
         <>
-            <select className={classes} >
+            <select className={classes} ref={props.reference}>
                 {props.options.map((obj, i) => {
                     return <option key={i} value={obj["value"]}>{obj["text"]}</option>
                 })}
