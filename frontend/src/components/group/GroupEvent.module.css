@@ -1,0 +1,38 @@
+.card {
+    margin: 20px 0px 20px 0px;
+    border: none;
+
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* align-items: center; */
+    /* padding: 20px; */
+    height: fit-content;
+    /* box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.08); */
+    border-radius: 20px;    
+    /* background-color: var(--seasalt); */
+}
+
+.date {
+    /* font-family: 'Poppins';
+    font-style: normal;
+    font-weight: 400; */
+    font-size: 0.8rem;
+    /* line-height: 24px; */
+}
+
+.title {
+    font-weight: 700;
+    font-size: 1rem;
+    line-height: 27px;
+}
+
+.btn {
+    display: flex;
+    gap: 10px;
+    padding-top: 0.5rem;
+    padding-right: 0.5rem;
+}
