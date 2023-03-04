@@ -6,9 +6,14 @@ import CreatePostSelect from "../UI/CreatePostSelect";
 import classes from './CreatePost.module.css';
 
 function CreatePost(props) {
-// const titleInput = useRef();
-const contentInput = useRef();
-const privacyInputRef = useRef();
+    const defaultImagePath = "default_avatar.jpg";
+    let first = "First";
+    let last = "Last";
+    let nickname = "Nickname";
+
+    // const titleInput = useRef();
+    const contentInput = useRef();
+    const privacyInputRef = useRef();
 
     function SubmitHandler(event) {
         event.preventDefault();
@@ -44,6 +49,10 @@ const privacyInputRef = useRef();
             <input type='text' required id="title" ref={titleInput}/>
         </div> */}
         <Card className={classes.card}>
+            <div className={classes["author"]}>
+                <img className={classes["avatar"]} src={require("../../images/"+`${defaultImagePath}`)} alt="" width={"50px"}/>
+                <div><p className={classes["details"]}>{`${first} ${last} (${nickname})`}</p></div>
+            </div>
             <div className={classes["content-container"]}>
                 <div>
                     <CreatePostTextarea className={classes.content} placeholder="What's on your mind?" reference={contentInput} rows="3"/>
