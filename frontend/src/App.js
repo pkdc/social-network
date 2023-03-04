@@ -29,7 +29,10 @@ function App() {
       console.log(data);
       if (data.success) {
         setLoggedIn(true);
-        // navigate("/", {replace: true});
+        localStorage.setItem("fname", data.fname)
+        localStorage.setItem("lname", data.lname)
+        data.nname && localStorage.setItem("nname", data.nname)
+        data.avatar && localStorage.setItem("avatar", data.avatar)
       }
     })
     .catch(err => {
@@ -50,7 +53,10 @@ function App() {
           console.log(data);
           if (data.success) {
             setLoggedIn(true);
-            // navigate("/", {replace: true});
+            localStorage.setItem("fname", data.fname)
+            localStorage.setItem("lname", data.lname)
+            data.nname && localStorage.setItem("nname", data.nname)
+            data.avatar && localStorage.setItem("avatar", data.avatar)
           }
       })
       .catch(err => {

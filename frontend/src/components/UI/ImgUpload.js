@@ -6,7 +6,7 @@ const ImgUpload = (props) => {
     return (
         <>
             <label htmlFor={props.id} className={styles["label"]}>{props.text}</label>
-            <input type="file" name={props.name} id={props.id} accept={props.accept} className={classes}/>
+            <input type="file" name={props.name} id={props.id} accept={props.accept} onChange={props.onChange} className={classes}/>
         </>
     )
 };
