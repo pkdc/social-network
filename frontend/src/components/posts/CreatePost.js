@@ -7,9 +7,10 @@ import classes from './CreatePost.module.css';
 
 function CreatePost(props) {
     const defaultImagePath = "default_avatar.jpg";
-    let first = "First";
-    let last = "Last";
-    let nickname = "Nickname";
+    let first = localStorage.getItem("fname");
+    let last = localStorage.getItem("lname");
+    let nickname = localStorage.getItem("nname");
+    let avatar = localStorage.getItem("avatar");
 
     // const titleInput = useRef();
     const contentInput = useRef();
@@ -50,7 +51,8 @@ function CreatePost(props) {
         </div> */}
         <Card className={classes.card}>
             <div className={classes["author"]}>
-                <img className={classes["avatar"]} src={require("../../images/"+`${defaultImagePath}`)} alt="" width={"50px"}/>
+                {!avatar && <img className={classes["avatar"]} src={require("../../images/"+`${defaultImagePath}`)} alt="" width={"50px"}/>}
+                {avatar && <img className={classes["avatar"]} src={avatar} alt="" width={"50px"}/>}
                 <div><p className={classes["details"]}>{`${first} ${last} (${nickname})`}</p></div>
             </div>
             <div className={classes["content-container"]}>
