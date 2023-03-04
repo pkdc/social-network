@@ -29,10 +29,11 @@ function App() {
       console.log(data);
       if (data.success) {
         setLoggedIn(true);
-        localStorage.setItem("fname", data.fname)
-        localStorage.setItem("lname", data.lname)
-        data.nname && localStorage.setItem("nname", data.nname)
-        data.avatar && localStorage.setItem("avatar", data.avatar)
+        localStorage.setItem("user_id", data.user_id);
+        localStorage.setItem("fname", data.fname);
+        localStorage.setItem("lname", data.lname);
+        data.nname && localStorage.setItem("nname", data.nname);
+        data.avatar && localStorage.setItem("avatar", data.avatar);
       }
     })
     .catch(err => {
@@ -53,10 +54,11 @@ function App() {
           console.log(data);
           if (data.success) {
             setLoggedIn(true);
-            localStorage.setItem("fname", data.fname)
-            localStorage.setItem("lname", data.lname)
-            data.nname && localStorage.setItem("nname", data.nname)
-            data.avatar && localStorage.setItem("avatar", data.avatar)
+            localStorage.setItem("user_id", data.user_id);
+            localStorage.setItem("fname", data.fname);
+            localStorage.setItem("lname", data.lname);
+            data.nname && localStorage.setItem("nname", data.nname);
+            data.avatar && localStorage.setItem("avatar", data.avatar);
           }
       })
       .catch(err => {

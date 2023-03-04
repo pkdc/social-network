@@ -8,7 +8,7 @@ import (
 )
 
 type AuthResponse struct {
-	UserId    int    `json:"uid"`
+	UserId    int    `json:"user_id"`
 	Firstname string `json:"fname"`
 	Lastname  string `json:"lname"`
 	Nname     string `json:"nname"`
@@ -143,7 +143,7 @@ func Reghandler(w http.ResponseWriter, r *http.Request) {
 
 		// dummy resp
 		var Resp AuthResponse
-		Resp.UserId = 7
+		Resp.UserId = 7 // dummy
 		Resp.Firstname = fname
 		Resp.Lastname = lname
 		Resp.Nname = nname

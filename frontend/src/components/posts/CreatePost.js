@@ -7,6 +7,7 @@ import classes from './CreatePost.module.css';
 
 function CreatePost(props) {
     const defaultImagePath = "default_avatar.jpg";
+    let userId = localStorage.getItem("user_id");
     let first = localStorage.getItem("fname");
     let last = localStorage.getItem("lname");
     let nickname = localStorage.getItem("nname");
@@ -25,7 +26,7 @@ function CreatePost(props) {
         const chosenPrivacy = privacyInputRef.current.value;
 
         const postData = {
-            user_id: 1,
+            user_id: userId,
             content: enteredContent,
             privacy: chosenPrivacy
         };
