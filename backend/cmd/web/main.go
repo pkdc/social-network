@@ -8,7 +8,14 @@ import (
 )
 
 func main() {
-	exec.Command("xdg-open", "http://localhost:8080").Start()
+
+	// db.RunMigration()
+	// db.DbConnect()
+	// db.RemoveMigration(m)
+	// db.InsertMockUserData()
+	// db.InsertMockPostData()
+
+	exec.Command("xdg-open", "https://localhost/").Start()
 
 	http.HandleFunc("/", backend.Homehandler)
 	http.HandleFunc("/login/", backend.Loginhandler)
@@ -17,8 +24,8 @@ func main() {
 
 	fmt.Println("Starting server at port 8080")
 
-	err := http.ListenAndServe(":8080", nil)
-	if err != nil {
-		fmt.Println(err)
+	err1 := http.ListenAndServe(":8080", nil)
+	if err1 != nil {
+		fmt.Println(err1)
 	}
 }
