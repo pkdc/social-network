@@ -1,18 +1,20 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import Card from "../UI/Card";
 import CreatePostTextarea from "../UI/CreatePostTextarea";
 import SmallButton from "../UI/SmallButton";
 import CreatePostSelect from "../UI/CreatePostSelect";
+import ImgUpload from "../UI/ImgUpload";
 import classes from './CreatePost.module.css';
 
 function CreatePost(props) {
     const defaultImagePath = "default_avatar.jpg";
-    let userId = localStorage.getItem("user_id");
-    let first = localStorage.getItem("fname");
-    let last = localStorage.getItem("lname");
-    let nickname = localStorage.getItem("nname");
-    let avatar = localStorage.getItem("avatar");
+    const userId = +localStorage.getItem("user_id");
+    const first = localStorage.getItem("fname");
+    const last = localStorage.getItem("lname");
+    const nickname = localStorage.getItem("nname");
+    const avatar = localStorage.getItem("avatar");
 
+    const [uploadedImg, setUploadedImg] = useState("");
     // const titleInput = useRef();
     const contentInput = useRef();
     const privacyInputRef = useRef();
@@ -28,6 +30,7 @@ function CreatePost(props) {
         const postData = {
             user_id: userId,
             content: enteredContent,
+            image: uploadedImg,
             privacy: chosenPrivacy
         };
 
@@ -37,8 +40,17 @@ function CreatePost(props) {
 
         contentInput.current.value = "";
         privacyInputRef.current.value = "public";
+        setUploadedImg("");
     }
-
+    const imgUploadHandler = (e) => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.addEventListener("load", () => {
+            console.log(reader.result);
+            setUploadedImg(reader.result);
+        })
+    };
     const privacyOptions = [
         {value: "public", text: "Public"},
         {value: "private", text: "Private"},
@@ -59,6 +71,12 @@ function CreatePost(props) {
             <div className={classes["content-container"]}>
                 <div>
                     <CreatePostTextarea className={classes.content} placeholder="What's on your mind?" reference={contentInput} rows="3"/>
+                </div>
+                <div>
+                <figure>
+                    {uploadedImg && <img src={uploadedImg} className={classes["img-preview"]} width={"80px"}/>}
+                </figure>
+                    <ImgUpload className={classes["attach"]} name="image" id="image" accept=".jpg, .jpeg, .png, .gif" text="Attach" onChange={imgUploadHandler}/>
                 </div>
                 <div>
                     <CreatePostSelect options={privacyOptions} className={classes["privacy"]} reference={privacyInputRef}/>

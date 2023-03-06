@@ -39,6 +39,7 @@ type postsResponse struct {
 type postPayload struct {
 	UserId  int    `json:"user_id"`
 	Content string `json:"content"`
+	Image   string `json:"image"`
 	Privacy string `json:"privacy"`
 }
 
@@ -57,10 +58,12 @@ func Homehandler(w http.ResponseWriter, r *http.Request) {
 
 		userid := payload.UserId
 		content := payload.Content
+		image := payload.Image
 		privacy := payload.Privacy
 
 		fmt.Printf("userid %d\n", userid)
 		fmt.Printf("content %s\n", content)
+		fmt.Printf("image %s\n", image)
 		fmt.Printf("post privacy %s\n", privacy)
 
 		// var Resp postsResponse
