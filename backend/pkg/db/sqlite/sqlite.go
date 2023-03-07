@@ -65,9 +65,10 @@ func RemoveMigration(m *migrate.Migrate) {
 
 // connect to database
 
-func DbConnect() {
+func DbConnect() *sql.DB {
 
 	db, _ = sql.Open("sqlite3", "../../pkg/db/database.db")
+	return db
 }
 
 // insert mock user data
@@ -92,7 +93,7 @@ func InsertMockUserData() {
 
 	for _, user := range responseObject {
 
-		stmt, err := db.Prepare("INSERT INTO user(firstName, lastName, nickName, email, password_, dob, image_, about, public) VALUES(?,?,?,?,?,?,?,?,?);")
+		stmt, err := db.Prepare("INSERT INTO user(first_name, last_name, nick_name, email, password_, dob, image_, about, public) VALUES(?,?,?,?,?,?,?,?,?);")
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -129,7 +130,7 @@ func InsertMockPostData() {
 
 		for _, post := range responseObject {
 
-			stmt, err := db.Prepare("INSERT INTO post(author, message_, image_, createdAt, privacy) VALUES(?,?,?,?,?);")
+			stmt, err := db.Prepare("INSERT INTO post(author, message_, image_, created_at, privacy) VALUES(?,?,?,?,?);")
 			if err != nil {
 				log.Fatal(err)
 			}

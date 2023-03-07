@@ -2,7 +2,9 @@ package main
 
 import (
 	"backend"
+	crud "backend/pkg/db/crud"
 	db "backend/pkg/db/sqlite"
+	"context"
 	"fmt"
 	"net/http"
 	"os/exec"
@@ -11,10 +13,16 @@ import (
 func main() {
 
 	// db.RunMigration()
-	db.DbConnect()
+	db := db.DbConnect()
 	// db.RemoveMigration(m)
 	// db.InsertMockUserData()
 	// db.InsertMockPostData()
+
+	var user crud.User
+
+	user, _ = crud.New(db).GetUser(context.Background(), 1)
+
+	fmt.Println(user)
 
 	exec.Command("xdg-open", "https://localhost/").Start()
 
