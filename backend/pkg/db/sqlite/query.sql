@@ -4,11 +4,11 @@ WHERE id = ? LIMIT 1;
 
 -- name: ListUsers :many
 SELECT * FROM user
-ORDER BY name;
+ORDER BY nick_name;
 
 -- name: CreateUser :one
 INSERT INTO user (
-  firstName, lastName, nickName, email, password_, dob, image_ , about, public
+  first_name, last_name, nick_name, email, password_, dob, image_ , about, public
 ) VALUES (
   ?, ?, ?, ?, ?, ?, ?, ?, ?
 )
@@ -20,9 +20,9 @@ WHERE id = ?;
 
 -- name: UpdateUser :one
 UPDATE user
-set firstName = ?, 
-lastName = ?, 
-nickName = ?, 
+set first_name = ?, 
+last_name = ?, 
+nick_name = ?, 
 email = ?, 
 password_ = ?, 
 dob = ?, 

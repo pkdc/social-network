@@ -1,8 +1,8 @@
 CREATE TABLE group_member (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  userId INTEGER NOT NULL,
-  groupId INTEGER NOT NULL,
+  user_id INTEGER NOT NULL,
+  group_id INTEGER NOT NULL,
   status_ INTEGER NOT NULL DEFAULT 0,
-  FOREIGN KEY (userId) REFERENCES user(id),
-  FOREIGN KEY (groupId) REFERENCES group_(id)
+  FOREIGN KEY (user_id) REFERENCES user(id),
+  FOREIGN KEY (group_id) REFERENCES group_(id)
 );

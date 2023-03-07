@@ -1,5 +1,5 @@
 CREATE TABLE session_table (
-  sessionToken TEXT PRIMARY KEY,
-  userId INTEGER NOT NULL,
-  FOREIGN KEY (userId) REFERENCES user(id)
+  session_token TEXT PRIMARY KEY,
+  user_id INTEGER NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES user(id)
 );

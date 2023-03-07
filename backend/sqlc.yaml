@@ -1,9 +1,9 @@
 version: 2
 sql:
   - engine: "sqlite"
-    schema: "./pkg/db/migration/sqlite"
+    schema: "./pkg/db/migration/sqlite/"
     queries: "./pkg/db/sqlite/query.sql"
     gen:
       go:
         package: "crud"
-        out: "./pkg/crud"
+        out: "./pkg/db/crud"

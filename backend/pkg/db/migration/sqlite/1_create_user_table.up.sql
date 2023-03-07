@@ -1,8 +1,8 @@
 CREATE TABLE user (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  firstName TEXT NOT NULL,
-  lastName TEXT NOT NULL,
-  nickName TEXT,
+  first_name TEXT NOT NULL,
+  last_name TEXT NOT NULL,
+  nick_name TEXT,
   email TEXT NOT NULL,
   password_ TEXT NOT NULL,
   dob DATE,
