@@ -10,6 +10,6 @@ INSERT INTO session_table (
 )
 RETURNING *;
 
--- name: DeleteMessage :exec
+-- name: DeleteSession :exec
 DELETE FROM session_table
 WHERE session_token = ?;

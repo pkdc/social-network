@@ -84,21 +84,21 @@ func (q *Queries) GetFollowers(ctx context.Context, targetID int64) ([]UserFollo
 	return items, nil
 }
 
-const updateUserFollower = `-- name: UpdateUserFollower :one
+const updateFollower = `-- name: UpdateFollower :one
 UPDATE user_follower
 set status_ = ?
 WHERE source_id = ? AND target_id = ?
 RETURNING id, source_id, target_id, status_
 `
 
-type UpdateUserFollowerParams struct {
+type UpdateFollowerParams struct {
 	Status   int64
 	SourceID int64
 	TargetID int64
 }
 
-func (q *Queries) UpdateUserFollower(ctx context.Context, arg UpdateUserFollowerParams) (UserFollower, error) {
-	row := q.db.QueryRowContext(ctx, updateUserFollower, arg.Status, arg.SourceID, arg.TargetID)
+func (q *Queries) UpdateFollower(ctx context.Context, arg UpdateFollowerParams) (UserFollower, error) {
+	row := q.db.QueryRowContext(ctx, updateFollower, arg.Status, arg.SourceID, arg.TargetID)
 	var i UserFollower
 	err := row.Scan(
 		&i.ID,
