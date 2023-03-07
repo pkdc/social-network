@@ -10,6 +10,33 @@ import (
 	"database/sql"
 )
 
+const createFollower = `-- name: CreateFollower :one
+INSERT INTO user_follower (
+  source_id, target_id, status_
+) VALUES (
+  ?, ?, ?
+)
+RETURNING id, source_id, target_id, status_
+`
+
+type CreateFollowerParams struct {
+	SourceID int64
+	TargetID int64
+	Status   int64
+}
+
+func (q *Queries) CreateFollower(ctx context.Context, arg CreateFollowerParams) (UserFollower, error) {
+	row := q.db.QueryRowContext(ctx, createFollower, arg.SourceID, arg.TargetID, arg.Status)
+	var i UserFollower
+	err := row.Scan(
+		&i.ID,
+		&i.SourceID,
+		&i.TargetID,
+		&i.Status,
+	)
+	return i, err
+}
+
 const createUser = `-- name: CreateUser :one
 INSERT INTO user (
   first_name, last_name, nick_name, email, password_, dob, image_ , about, public
@@ -59,6 +86,21 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 	return i, err
 }
 
+const deleteFollower = `-- name: DeleteFollower :exec
+DELETE FROM user_follower
+WHERE source_id = ? AND target_id = ?
+`
+
+type DeleteFollowerParams struct {
+	SourceID int64
+	TargetID int64
+}
+
+func (q *Queries) DeleteFollower(ctx context.Context, arg DeleteFollowerParams) error {
+	_, err := q.db.ExecContext(ctx, deleteFollower, arg.SourceID, arg.TargetID)
+	return err
+}
+
 const deleteUser = `-- name: DeleteUser :exec
 DELETE FROM user
 WHERE id = ?
@@ -67,6 +109,39 @@ WHERE id = ?
 func (q *Queries) DeleteUser(ctx context.Context, id int64) error {
 	_, err := q.db.ExecContext(ctx, deleteUser, id)
 	return err
+}
+
+const getFollowers = `-- name: GetFollowers :many
+SELECT id, source_id, target_id, status_ FROM user_follower
+WHERE target_id = ?
+`
+
+func (q *Queries) GetFollowers(ctx context.Context, targetID int64) ([]UserFollower, error) {
+	rows, err := q.db.QueryContext(ctx, getFollowers, targetID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []UserFollower
+	for rows.Next() {
+		var i UserFollower
+		if err := rows.Scan(
+			&i.ID,
+			&i.SourceID,
+			&i.TargetID,
+			&i.Status,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }
 
 const getUser = `-- name: GetUser :one
@@ -184,6 +259,31 @@ func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, e
 		&i.Image,
 		&i.About,
 		&i.Public,
+	)
+	return i, err
+}
+
+const updateUserFollower = `-- name: UpdateUserFollower :one
+UPDATE user_follower
+set status_ = ?
+WHERE source_id = ? AND target_id = ?
+RETURNING id, source_id, target_id, status_
+`
+
+type UpdateUserFollowerParams struct {
+	Status   int64
+	SourceID int64
+	TargetID int64
+}
+
+func (q *Queries) UpdateUserFollower(ctx context.Context, arg UpdateUserFollowerParams) (UserFollower, error) {
+	row := q.db.QueryRowContext(ctx, updateUserFollower, arg.Status, arg.SourceID, arg.TargetID)
+	var i UserFollower
+	err := row.Scan(
+		&i.ID,
+		&i.SourceID,
+		&i.TargetID,
+		&i.Status,
 	)
 	return i, err
 }

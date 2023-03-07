@@ -105,7 +105,7 @@ type User struct {
 	ID        int64
 	FirstName string
 	LastName  string
-	NickName  string
+	NickName  sql.NullString
 	Email     string
 	Password  string
 	Dob       sql.NullTime

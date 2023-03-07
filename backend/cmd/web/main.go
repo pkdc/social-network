@@ -18,9 +18,15 @@ func main() {
 	// db.InsertMockUserData()
 	// db.InsertMockPostData()
 
-	var user crud.User
+	var user crud.UserFollower
 
-	user, _ = crud.New(db).GetUser(context.Background(), 1)
+	var fol crud.CreateFollowerParams
+
+	fol.SourceID = 1
+	fol.TargetID = 20
+	fol.Status = 0
+
+	user, _ = crud.New(db).CreateFollower(context.Background(), fol)
 
 	fmt.Println(user)
 
