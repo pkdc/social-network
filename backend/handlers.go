@@ -32,9 +32,9 @@ type regPayload struct {
 	About  string `json:"about"`
 }
 
-type postsResponse struct {
-	AllPosts string `json:"posts"`
-}
+// type postsResponse struct {
+// 	AllPosts string `json:"posts"`
+// }
 
 type postPayload struct {
 	UserId  int    `json:"user_id"`
@@ -43,38 +43,18 @@ type postPayload struct {
 	Privacy string `json:"privacy"`
 }
 
+type dummyPosts struct {
+	PostId  int    `json:"post_id"`
+	User    string `json:"user"`
+	Content string `json:"content"`
+	Date    string `json:"date"`
+}
+
 func Homehandler(w http.ResponseWriter, r *http.Request) {
 	// fmt.Fprintf(w, "Home")
 
-	if r.Method == http.MethodPost {
-		fmt.Printf("----home-POST---(create)--\n")
-		var payload postPayload
-
-		err := json.NewDecoder(r.Body).Decode(&payload)
-		if err != nil {
-			log.Fatal(err)
-		}
-		fmt.Println(payload)
-
-		userid := payload.UserId
-		content := payload.Content
-		image := payload.Image
-		privacy := payload.Privacy
-
-		fmt.Printf("userid %d\n", userid)
-		fmt.Printf("content %s\n", content)
-		fmt.Printf("image %s\n", image)
-		fmt.Printf("post privacy %s\n", privacy)
-
-		// var Resp postsResponse
-		// jsonResp, err := json.Marshal(Resp)
-
-		// w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
-		// w.Header().Set("Content-Type", "application/json")
-		// w.WriteHeader(http.StatusOK)
-		// w.Write(jsonResp)
-	}
 }
+
 func Loginhandler(w http.ResponseWriter, r *http.Request) {
 	// fmt.Fprintf(w, "login")
 
@@ -164,6 +144,71 @@ func Reghandler(w http.ResponseWriter, r *http.Request) {
 		w.Write(jsonResp)
 	}
 }
+
+func Posthandler(w http.ResponseWriter, r *http.Request) {
+	// fmt.Fprintf(w, "Post")
+
+	if r.Method == http.MethodPost {
+		fmt.Printf("----hopostme-POST---(create)--\n")
+		var payload postPayload
+
+		err := json.NewDecoder(r.Body).Decode(&payload)
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println(payload)
+
+		userid := payload.UserId
+		content := payload.Content
+		image := payload.Image
+		privacy := payload.Privacy
+
+		fmt.Printf("userid %d\n", userid)
+		fmt.Printf("content %s\n", content)
+		fmt.Printf("image %s\n", image)
+		fmt.Printf("post privacy %s\n", privacy)
+
+		// var Resp postsResponse
+		// jsonResp, err := json.Marshal(Resp)
+
+		// w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+		// w.Header().Set("Content-Type", "application/json")
+		// w.WriteHeader(http.StatusOK)
+		// w.Write(jsonResp)
+	}
+
+	if r.Method == http.MethodGet {
+		fmt.Printf("----post-GET---(display)--\n")
+
+		var data []dummyPosts
+
+		var data1 dummyPosts
+		data1.PostId = 1
+		data1.User = "username"
+		data1.Content = "this is the post content"
+		data1.Date = "date"
+		fmt.Printf("data1 %v\n", data1)
+		data = append(data, data1)
+
+		var data2 dummyPosts
+		data2.PostId = 2
+		data2.User = "username2"
+		data2.Content = "this is the post content2"
+		data2.Date = "date2"
+		fmt.Printf("data2 %v\n", data2)
+		data = append(data, data2)
+
+		fmt.Printf("data %v\n", data)
+		jsonResp, _ := json.Marshal(data)
+		fmt.Printf("posts resp %s\n", string(jsonResp))
+
+		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		w.Write(jsonResp)
+	}
+}
+
 func Logouthandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "logout")
 }

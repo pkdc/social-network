@@ -12,6 +12,7 @@ func main() {
 	http.HandleFunc("/", backend.Homehandler)
 	http.HandleFunc("/login/", backend.Loginhandler)
 	http.HandleFunc("/reg/", backend.Reghandler)
+	http.HandleFunc("/post/", backend.Posthandler)
 	http.HandleFunc("/logout/", backend.Logouthandler)
 
 	fmt.Println("Starting server at port 8080")
