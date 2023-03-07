@@ -2,8 +2,25 @@ package backend
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 )
+
+func UrlPathMatcher(w http.ResponseWriter, r *http.Request, p string) error {
+	if r.URL.Path != p {
+		http.Error(w, "404 not found.", http.StatusNotFound)
+		return errors.New("404")
+	}
+
+	return nil
+}
+
+func WriteHttpHeader(jsonResp []byte, w http.ResponseWriter) {
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(jsonResp)
+}
 
 func Homehandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -14,8 +31,7 @@ func Homehandler() http.HandlerFunc {
 func Loginhandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// Prevents the endpoint being called from other url paths
-		if r.URL.Path != "/login" {
-			http.Error(w, "404 not found.", http.StatusNotFound)
+		if err := UrlPathMatcher(w, r, "/login"); err != nil {
 			return
 		}
 
@@ -51,18 +67,14 @@ func Loginhandler() http.HandlerFunc {
 		}
 
 		// Sets the http headers and writes the response to the browser
-		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		w.Write(jsonResp)
+		WriteHttpHeader(jsonResp, w)
 	}
 }
 
 func Reghandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// Prevents the endpoint being called from other url paths
-		if r.URL.Path != "/reg" {
-			http.Error(w, "404 not found.", http.StatusNotFound)
+		if err := UrlPathMatcher(w, r, "/reg"); err != nil {
 			return
 		}
 
@@ -94,18 +106,14 @@ func Reghandler() http.HandlerFunc {
 		}
 
 		// Sets the http headers and writes the response to the browser
-		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		w.Write(jsonResp)
+		WriteHttpHeader(jsonResp, w)
 	}
 }
 
 func Logouthandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// Prevents the endpoint being called from other url paths
-		if r.URL.Path != "/logout" {
-			http.Error(w, "404 not found.", http.StatusNotFound)
+		if err := UrlPathMatcher(w, r, "/logout"); err != nil {
 			return
 		}
 
@@ -130,18 +138,14 @@ func Logouthandler() http.HandlerFunc {
 		}
 
 		// Sets the http headers and writes the response to the browser
-		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		w.Write(jsonResp)
+		WriteHttpHeader(jsonResp, w)
 	}
 }
 
 func Userhandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// Prevents the endpoint being called from other url paths
-		if r.URL.Path != "/user" {
-			http.Error(w, "404 not found.", http.StatusNotFound)
+		if err := UrlPathMatcher(w, r, "/user"); err != nil {
 			return
 		}
 
@@ -159,45 +163,162 @@ func Userhandler() http.HandlerFunc {
 			foundId = true
 		}
 
+		// Declares the payload struct
+		var Resp UserPayload
+
 		// ### CONNECT TO DATABASE ###
 
-		// ### IF NOT FOUND, GET ALL USERS ###
+		// Gets the user by id if an id was passed in the url
+		// Otherwise, gets all users
+		if foundId {
+			// ### GET USER BY ID ###
+		} else {
+			// ### GET ALL USERS ###
+		}
 
-		// ### ELSE, USE PARAMETER TO FIND USER ###
+		// Marshals the response struct to a json object
+		jsonResp, err := json.Marshal(Resp)
+		if err != nil {
+			http.Error(w, "500 internal server error", http.StatusInternalServerError)
+			return
+		}
 
-		// ### MARSHAL RESULT TO JSON OBJECT ###
-
-		// ### WRITE JSON TO FRONTEND ###
+		// Sets the http headers and writes the response to the browser
+		WriteHttpHeader(jsonResp, w)
 	}
 }
 
 func Posthandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// Prevents the endpoint being called from other url paths
-		if r.URL.Path != "/post" {
-			http.Error(w, "404 not found.", http.StatusNotFound)
+		if err := UrlPathMatcher(w, r, "/post"); err != nil {
 			return
 		}
 
 		switch r.Method {
 		case http.MethodGet:
-			// ### CHECKS FOR SEARCH PARAMETER ###
+			// Checks to find a post id in the url
+			postId := r.URL.Query().Get("id")
+			foundId := false
 
-			// ### IF FOUND, GET ALL POSTS FROM ###
+			if postId != "" {
+				foundId = true
+			}
 
-			// ### ELSE, USE PARAMETER TO FIND POST ###
+			// Declares the payload struct
+			var Resp PostPayload
 
-			// ### MARSHAL RESULT TO JSON OBJECT ###
+			// ### CONNECT TO DATABASE ###
 
-			// ### WRITE JSON TO FRONTEND ###
+			// Gets the post by id if an id was passed in the url
+			// Otherwise, gets all posts
+			if foundId {
+				// ### GET POST BY ID CHECKING AGAINST POST MEMBER TABLE ###
+			} else {
+				// ### GET ALL POSTS USING POST MEMBER TABLE ###
+			}
+
+			// Marshals the response struct to a json object
+			jsonResp, err := json.Marshal(Resp)
+			if err != nil {
+				http.Error(w, "500 internal server error", http.StatusInternalServerError)
+				return
+			}
+
+			// Sets the http headers and writes the response to the browser
+			WriteHttpHeader(jsonResp, w)
 		case http.MethodPost:
-			// ### READ REQUEST BODY TO STRUCT ###
+			// Declares the variables to store the post details and handler response
+			var post PostStruct
+			Resp := AuthResponse{Success: true}
+
+			// Decodes the json object to the struct, changing the response to false if it fails
+			err := json.NewDecoder(r.Body).Decode(&post)
+			if err != nil {
+				Resp.Success = false
+			}
 
 			// ### CONNECT TO DATABASE ###
 
 			// ### ADD POST TO DATABASE ###
 
-			// ### WRITE RESPONSE TO FRONTEND ###
+			// ### CHECK PRIVACY OF THE POST AND ADD TO THE POST MEMBER TABLE ###
+
+			// Marshals the response struct to a json object
+			jsonResp, err := json.Marshal(Resp)
+			if err != nil {
+				http.Error(w, "500 internal server error", http.StatusInternalServerError)
+				return
+			}
+
+			// Sets the http headers and writes the response to the browser
+			WriteHttpHeader(jsonResp, w)
+		default:
+			// Prevents all request types other than POST and GET
+			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
+	}
+}
+
+func PostCommentHandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		// Prevents the endpoint being called from other url paths
+		if err := UrlPathMatcher(w, r, "/post-comment"); err != nil {
+			return
+		}
+
+		// Checks to find a post id in the url
+		postId := r.URL.Query().Get("id")
+		if postId == "" {
+			http.Error(w, "400 bad request", http.StatusBadRequest)
+			return
+		}
+
+		// ### CHECK IF USER ID AND POST ID MATCH IN POST MEMBER TABLE ###
+
+		switch r.Method {
+		case http.MethodGet:
+			// Declares the payload struct
+			var Resp PostCommentPayload
+
+			// ### CONNECT TO DATABASE ###
+
+			// ### GET ALL COMMENTS FOR THE POST ID ###
+
+			// Marshals the response struct to a json object
+			jsonResp, err := json.Marshal(Resp)
+			if err != nil {
+				http.Error(w, "500 internal server error", http.StatusInternalServerError)
+				return
+			}
+
+			// Sets the http headers and writes the response to the browser
+			WriteHttpHeader(jsonResp, w)
+		case http.MethodPost:
+			// Declares the variables to store the post comment details and handler response
+			var postComment PostCommentStruct
+			Resp := AuthResponse{Success: true}
+
+			// Decodes the json object to the struct, changing the response to false if it fails
+			err := json.NewDecoder(r.Body).Decode(&postComment)
+			if err != nil {
+				Resp.Success = false
+			}
+
+			// ### CONNECT TO DATABASE ###
+
+			// ### ADD POST COMMENT TO DATABASE ###
+
+			// Marshals the response struct to a json object
+			jsonResp, err := json.Marshal(Resp)
+			if err != nil {
+				http.Error(w, "500 internal server error", http.StatusInternalServerError)
+				return
+			}
+
+			// Sets the http headers and writes the response to the browser
+			WriteHttpHeader(jsonResp, w)
 		default:
 			// Prevents all request types other than POST and GET
 			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
@@ -208,6 +329,285 @@ func Posthandler() http.HandlerFunc {
 
 func Grouphandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		// Prevents the endpoint being called from other url paths
+		if err := UrlPathMatcher(w, r, "/group"); err != nil {
+			return
+		}
 
+		switch r.Method {
+		case http.MethodGet:
+			// Checks to find a group id in the url
+			groupId := r.URL.Query().Get("id")
+			foundId := false
+
+			if groupId != "" {
+				foundId = true
+			}
+
+			// Declares the payload struct
+			var Resp GroupPayload
+
+			// ### CONNECT TO DATABASE ###
+
+			// Gets the group by id if an id was passed in the url
+			// Otherwise, gets all group
+			if foundId {
+				// ### GET GROUP BY ID ###
+
+				// ### CHECK IF USER ID AND GROUP ID MATCH IN GROUP MEMBER TABLE ###
+
+				// ### IF THEY MATCH, GET GROUP DATA FROM DATABASE ###
+
+				// ### ELSE, REQUEST TO JOIN ###
+			} else {
+				// ### GET ALL GROUPS ###
+			}
+
+			// Marshals the response struct to a json object
+			jsonResp, err := json.Marshal(Resp)
+			if err != nil {
+				http.Error(w, "500 internal server error", http.StatusInternalServerError)
+				return
+			}
+
+			// Sets the http headers and writes the response to the browser
+			WriteHttpHeader(jsonResp, w)
+		case http.MethodPost:
+			// Declares the variables to store the group details and handler response
+			var post GroupStruct
+			Resp := AuthResponse{Success: true}
+
+			// Decodes the json object to the struct, changing the response to false if it fails
+			err := json.NewDecoder(r.Body).Decode(&post)
+			if err != nil {
+				Resp.Success = false
+			}
+
+			// ### CONNECT TO DATABASE ###
+
+			// ### ADD GROUP TO DATABASE ###
+
+			// ### ADD GROUP CREATOR TO GROUP MEMBER TABLE ###
+
+			// Marshals the response struct to a json object
+			jsonResp, err := json.Marshal(Resp)
+			if err != nil {
+				http.Error(w, "500 internal server error", http.StatusInternalServerError)
+				return
+			}
+
+			// Sets the http headers and writes the response to the browser
+			WriteHttpHeader(jsonResp, w)
+		default:
+			// Prevents all request types other than POST and GET
+			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
+	}
+}
+
+func GroupPostHandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		// Prevents the endpoint being called from other url paths
+		if err := UrlPathMatcher(w, r, "/group-post"); err != nil {
+			return
+		}
+
+		// ### CHECK USER ID AND GROUP ID MATCH IN GROUP MEMBER TABLE ###
+
+		switch r.Method {
+		case http.MethodGet:
+			// Checks to find a post id in the url
+			postId := r.URL.Query().Get("id")
+			foundId := false
+
+			if postId != "" {
+				foundId = true
+			}
+
+			// Declares the payload struct
+			var Resp GroupPostPayload
+
+			// ### CONNECT TO DATABASE ###
+
+			// Gets the post by id if an id was passed in the url
+			// Otherwise, gets all posts
+			if foundId {
+				// ### GET GROUP POST BY ID ###
+			} else {
+				// ### GET ALL GROUP POSTS ###
+			}
+
+			// Marshals the response struct to a json object
+			jsonResp, err := json.Marshal(Resp)
+			if err != nil {
+				http.Error(w, "500 internal server error", http.StatusInternalServerError)
+				return
+			}
+
+			// Sets the http headers and writes the response to the browser
+			WriteHttpHeader(jsonResp, w)
+		case http.MethodPost:
+			// Declares the variables to store the group post details and handler response
+			var groupPost GroupPostStruct
+			Resp := AuthResponse{Success: true}
+
+			// Decodes the json object to the struct, changing the response to false if it fails
+			err := json.NewDecoder(r.Body).Decode(&groupPost)
+			if err != nil {
+				Resp.Success = false
+			}
+
+			// ### CONNECT TO DATABASE ###
+
+			// ### ADD GROUP POST TO DATABASE ###
+
+			// Marshals the response struct to a json object
+			jsonResp, err := json.Marshal(Resp)
+			if err != nil {
+				http.Error(w, "500 internal server error", http.StatusInternalServerError)
+				return
+			}
+
+			// Sets the http headers and writes the response to the browser
+			WriteHttpHeader(jsonResp, w)
+		default:
+			// Prevents all request types other than POST and GET
+			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
+	}
+}
+
+func GroupPostCommentHandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		// Prevents the endpoint being called from other url paths
+		if err := UrlPathMatcher(w, r, "/group-post-comment"); err != nil {
+			return
+		}
+
+		// ### CHECK USER ID AND GROUP ID MATCH IN GROUP MEMBER TABLE ###
+
+		// Checks to find a post id in the url
+		groupPostId := r.URL.Query().Get("id")
+		if groupPostId == "" {
+			http.Error(w, "400 bad request", http.StatusBadRequest)
+			return
+		}
+
+		// ### CHECK IF USER ID AND POST ID MATCH IN POST MEMBER TABLE ###
+
+		switch r.Method {
+		case http.MethodGet:
+			// Declares the payload struct
+			var Resp GroupPostCommentPayload
+
+			// ### CONNECT TO DATABASE ###
+
+			// ### GET ALL COMMENTS FOR THE GROUP POST ID ###
+
+			// Marshals the response struct to a json object
+			jsonResp, err := json.Marshal(Resp)
+			if err != nil {
+				http.Error(w, "500 internal server error", http.StatusInternalServerError)
+				return
+			}
+
+			// Sets the http headers and writes the response to the browser
+			WriteHttpHeader(jsonResp, w)
+		case http.MethodPost:
+			// Declares the variables to store the group post comment details and handler response
+			var groupPostComment GroupPostCommentStruct
+			Resp := AuthResponse{Success: true}
+
+			// Decodes the json object to the struct, changing the response to false if it fails
+			err := json.NewDecoder(r.Body).Decode(&groupPostComment)
+			if err != nil {
+				Resp.Success = false
+			}
+
+			// ### CONNECT TO DATABASE ###
+
+			// ### ADD GROUP POST COMMENT TO DATABASE ###
+
+			// Marshals the response struct to a json object
+			jsonResp, err := json.Marshal(Resp)
+			if err != nil {
+				http.Error(w, "500 internal server error", http.StatusInternalServerError)
+				return
+			}
+
+			// Sets the http headers and writes the response to the browser
+			WriteHttpHeader(jsonResp, w)
+		default:
+			// Prevents all request types other than POST and GET
+			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
+	}
+}
+
+func GroupEventHandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		// Prevents the endpoint being called from other url paths
+		if err := UrlPathMatcher(w, r, "/group-event"); err != nil {
+			return
+		}
+
+		// ### CHECK USER ID AND GROUP ID MATCH IN GROUP MEMBER TABLE ###
+
+		groupId := r.URL.Query().Get("id")
+		if groupId == "" {
+			http.Error(w, "400 bad request", http.StatusBadRequest)
+			return
+		}
+
+		switch r.Method {
+		case http.MethodGet:
+			// Declares the payload struct
+			var Resp GroupEventPayload
+
+			// ### CONNECT TO DATABASE ###
+
+			// ### GET ALL EVENTS FOR THE GROUP ID ###
+
+			// Marshals the response struct to a json object
+			jsonResp, err := json.Marshal(Resp)
+			if err != nil {
+				http.Error(w, "500 internal server error", http.StatusInternalServerError)
+				return
+			}
+
+			// Sets the http headers and writes the response to the browser
+			WriteHttpHeader(jsonResp, w)
+		case http.MethodPost:
+			// Declares the variables to store the group post comment details and handler response
+			var groupEvent GroupEventStruct
+			Resp := AuthResponse{Success: true}
+
+			// Decodes the json object to the struct, changing the response to false if it fails
+			err := json.NewDecoder(r.Body).Decode(&groupEvent)
+			if err != nil {
+				Resp.Success = false
+			}
+
+			// ### CONNECT TO DATABASE ###
+
+			// ### ADD GROUP EVENT TO DATABASE ###
+
+			// Marshals the response struct to a json object
+			jsonResp, err := json.Marshal(Resp)
+			if err != nil {
+				http.Error(w, "500 internal server error", http.StatusInternalServerError)
+				return
+			}
+
+			// Sets the http headers and writes the response to the browser
+			WriteHttpHeader(jsonResp, w)
+		default:
+			// Prevents all request types other than POST and GET
+			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
 	}
 }

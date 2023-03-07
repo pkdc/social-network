@@ -33,6 +33,10 @@ type UserStruct struct {
 	Public   string `json:"public"`
 }
 
+type UserPayload struct {
+	Data []UserStruct `json:"data"`
+}
+
 type UserFollowerStruct struct {
 	Id       int `json:"id"`
 	SourceId int `json:"sourceid"`
@@ -57,6 +61,10 @@ type PostStruct struct {
 	Privacy   int    `json:"privacy"`
 }
 
+type PostPayload struct {
+	Data []PostStruct `json:"data"`
+}
+
 type PostMemberStruct struct {
 	Id         int `json:"id"`
 	UserId     int `json:"userid"`
@@ -71,12 +79,20 @@ type PostCommentStruct struct {
 	Message   string `json:"message"`
 }
 
+type PostCommentPayload struct {
+	Data []PostCommentStruct `json:"data"`
+}
+
 type GroupStruct struct {
 	Id          int    `json:"id"`
 	Title       string `json:"title"`
 	Creator     int    `json:"creator"`
 	Description string `json:"description"`
 	CreatedAt   string `json:"createdat"`
+}
+
+type GroupPayload struct {
+	Data []GroupStruct `json:"data"`
 }
 
 type GroupRequestStruct struct {
@@ -103,6 +119,10 @@ type GroupEventStruct struct {
 	Date        string `json:"date"`
 }
 
+type GroupEventPayload struct {
+	Data []GroupEventStruct `json:"data"`
+}
+
 type GroupEventMemberStruct struct {
 	Id      int `json:"id"`
 	Status  int `json:"status"`
@@ -118,6 +138,10 @@ type GroupPostStruct struct {
 	CreatedAt string `json:"createdat"`
 }
 
+type GroupPostPayload struct {
+	Data []GroupPostStruct `json:"data"`
+}
+
 type GroupPostCommentStruct struct {
 	Id          int    `json:"id"`
 	GroupPostId int    `json:"postid"`
@@ -126,12 +150,20 @@ type GroupPostCommentStruct struct {
 	Message     string `json:"message"`
 }
 
+type GroupPostCommentPayload struct {
+	Data []GroupPostCommentStruct `json:"data"`
+}
+
 type GroupMessageStruct struct {
 	Id        int    `json:"id"`
 	Message   string `json:"message"`
 	SourceId  int    `json:"sourceid"`
 	GroupId   int    `json:"groupid"`
 	CreatedAt string `json:"createdat"`
+}
+
+type GroupMessagePayload struct {
+	Data []GroupMessageStruct `json:"data"`
 }
 
 type SessionStruct struct {
