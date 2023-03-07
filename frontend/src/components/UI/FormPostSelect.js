@@ -1,7 +1,7 @@
 import React from "react";
-import styles from "./CreatePostSelect.module.css";
+import styles from "./FormPostSelect.module.css";
 
-const CreatePostSelect = (props) => {
+const FormPostSelect = (props) => {
     const classes = `${styles["select"]} ${props.className || ""}`
     return (
         <>
@@ -14,4 +14,4 @@ const CreatePostSelect = (props) => {
     )
 };
 
-export default CreatePostSelect;
+export default FormPostSelect;

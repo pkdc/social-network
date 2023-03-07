@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import Card from "../UI/Card";
 import CreatePostTextarea from "../UI/CreatePostTextarea";
 import SmallButton from "../UI/SmallButton";
-import CreatePostSelect from "../UI/CreatePostSelect";
+import FormPostSelect from "../UI/FormPostSelect";
 import ImgUpload from "../UI/ImgUpload";
 import classes from './CreatePost.module.css';
 
@@ -39,7 +39,7 @@ function CreatePost(props) {
         props.onCreatePost(postData)
 
         contentInput.current.value = "";
-        privacyInputRef.current.value = "public";
+        privacyInputRef.current.value = 0;
         setUploadedImg("");
     }
     const imgUploadHandler = (e) => {
@@ -52,9 +52,9 @@ function CreatePost(props) {
         })
     };
     const privacyOptions = [
-        {value: "public", text: "Public"},
-        {value: "private", text: "Private"},
-        {value: "almost-private", text: "Almost Private"}
+        {value: 0, text: "Public"},
+        {value: 1, text: "Private"},
+        {value: 2, text: "Almost Private"}
     ];
 
     return <form onSubmit={SubmitHandler}>
@@ -79,7 +79,7 @@ function CreatePost(props) {
                     <ImgUpload className={classes["attach"]} name="image" id="image" accept=".jpg, .jpeg, .png, .gif" text="Attach" onChange={imgUploadHandler}/>
                 </div>
                 <div>
-                    <CreatePostSelect options={privacyOptions} className={classes["privacy"]} reference={privacyInputRef}/>
+                    <FormPostSelect options={privacyOptions} className={classes["privacy"]} reference={privacyInputRef}/>
                 </div>
             </div>
         
