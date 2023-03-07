@@ -3,7 +3,7 @@
 
 .card {
     border-radius: 0.75rem;
-    border: 2px solid var(--ultra-violet, purple);
+    /* border: 2px solid var(--ultra-violet, purple); */
     /* background: var(--antiflash-white, white); */
     background-color: white;
     /* background-color: rgb(241, 241, 241); */
