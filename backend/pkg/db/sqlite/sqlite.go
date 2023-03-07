@@ -67,7 +67,12 @@ func RemoveMigration(m *migrate.Migrate) {
 
 func DbConnect() *sql.DB {
 
-	db, _ = sql.Open("sqlite3", "../../pkg/db/database.db")
+	db, err := sql.Open("sqlite3", "../../pkg/db/database.db")
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
 	return db
 }
 

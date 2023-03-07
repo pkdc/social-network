@@ -2,9 +2,7 @@ package main
 
 import (
 	"backend"
-	crud "backend/pkg/db/crud"
 	db "backend/pkg/db/sqlite"
-	"context"
 	"fmt"
 	"net/http"
 	"os/exec"
@@ -13,22 +11,10 @@ import (
 func main() {
 
 	// db.RunMigration()
-	db := db.DbConnect()
+	db.DbConnect()
 	// db.RemoveMigration(m)
 	// db.InsertMockUserData()
 	// db.InsertMockPostData()
-
-	var user crud.UserFollower
-
-	var fol crud.CreateFollowerParams
-
-	fol.SourceID = 1
-	fol.TargetID = 20
-	fol.Status = 0
-
-	user, _ = crud.New(db).CreateFollower(context.Background(), fol)
-
-	fmt.Println(user)
 
 	exec.Command("xdg-open", "https://localhost/").Start()
 
