@@ -14,7 +14,7 @@ RETURNING *;
 DELETE FROM user_follower
 WHERE source_id = ? AND target_id = ?;
 
--- name: UpdateUserFollower :one
+-- name: UpdateFollower :one
 UPDATE user_follower
 set status_ = ?
 WHERE source_id = ? AND target_id = ?
