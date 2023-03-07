@@ -28,6 +28,63 @@ func Homehandler() http.HandlerFunc {
 	}
 }
 
+func SessionHandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		// Prevents the endpoint being called from other url paths
+		if err := UrlPathMatcher(w, r, "/session"); err != nil {
+			return
+		}
+
+		switch r.Method {
+		case http.MethodGet:
+			// Declares the payload struct
+			var Resp SessionStruct
+
+			// ### CONNECT TO DATABASE ###
+
+			// ### GET SESSION FOR USER ###
+
+			// Marshals the response struct to a json object
+			jsonResp, err := json.Marshal(Resp)
+			if err != nil {
+				http.Error(w, "500 internal server error", http.StatusInternalServerError)
+				return
+			}
+
+			// Sets the http headers and writes the response to the browser
+			WriteHttpHeader(jsonResp, w)
+		case http.MethodPost:
+			// Declares the variables to store the post details and handler response
+			var follower SessionStruct
+			Resp := AuthResponse{Success: true}
+
+			// Decodes the json object to the struct, changing the response to false if it fails
+			err := json.NewDecoder(r.Body).Decode(&follower)
+			if err != nil {
+				Resp.Success = false
+			}
+
+			// ### CONNECT TO DATABASE ###
+
+			// ### ADD/UPDATE SESSION FOR USER ###
+
+			// Marshals the response struct to a json object
+			jsonResp, err := json.Marshal(Resp)
+			if err != nil {
+				http.Error(w, "500 internal server error", http.StatusInternalServerError)
+				return
+			}
+
+			// Sets the http headers and writes the response to the browser
+			WriteHttpHeader(jsonResp, w)
+		default:
+			// Prevents all request types other than POST and GET
+			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
+	}
+}
+
 func Loginhandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// Prevents the endpoint being called from other url paths
@@ -185,6 +242,65 @@ func Userhandler() http.HandlerFunc {
 
 		// Sets the http headers and writes the response to the browser
 		WriteHttpHeader(jsonResp, w)
+	}
+}
+
+func UserFollowerHandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		// Prevents the endpoint being called from other url paths
+		if err := UrlPathMatcher(w, r, "/userfollower"); err != nil {
+			return
+		}
+
+		switch r.Method {
+		case http.MethodGet:
+			// Declares the payload struct
+			var Resp UserPayload
+
+			// ### CONNECT TO DATABASE ###
+
+			// ### GET ALL FOLLOWERS FOR USER ###
+
+			// Marshals the response struct to a json object
+			jsonResp, err := json.Marshal(Resp)
+			if err != nil {
+				http.Error(w, "500 internal server error", http.StatusInternalServerError)
+				return
+			}
+
+			// Sets the http headers and writes the response to the browser
+			WriteHttpHeader(jsonResp, w)
+		case http.MethodPost:
+			// Declares the variables to store the post details and handler response
+			var follower UserFollowerStruct
+			Resp := AuthResponse{Success: true}
+
+			// Decodes the json object to the struct, changing the response to false if it fails
+			err := json.NewDecoder(r.Body).Decode(&follower)
+			if err != nil {
+				Resp.Success = false
+			}
+
+			// ### CONNECT TO DATABASE ###
+
+			// ### ADD POST TO DATABASE ###
+
+			// ### CHECK PRIVACY OF THE POST AND ADD TO THE POST MEMBER TABLE ###
+
+			// Marshals the response struct to a json object
+			jsonResp, err := json.Marshal(Resp)
+			if err != nil {
+				http.Error(w, "500 internal server error", http.StatusInternalServerError)
+				return
+			}
+
+			// Sets the http headers and writes the response to the browser
+			WriteHttpHeader(jsonResp, w)
+		default:
+			// Prevents all request types other than POST and GET
+			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
 	}
 }
 
