@@ -3,7 +3,7 @@ SELECT * FROM group_post_comment
 WHERE group_post_id = ?
 ORDER BY created_at;
 
--- name: CreateGroupPost :one
+-- name: CreateGroupPostComment :one
 INSERT INTO group_post_comment (
   author, group_post_id, message_, created_at
 ) VALUES (
@@ -11,6 +11,6 @@ INSERT INTO group_post_comment (
 )
 RETURNING *;
 
--- name: DeleteGroupMessage :exec
+-- name: DeleteGroupPostComment :exec
 DELETE FROM group_post_comment
 WHERE group_post_id = ? AND author = ? AND id = ?;
