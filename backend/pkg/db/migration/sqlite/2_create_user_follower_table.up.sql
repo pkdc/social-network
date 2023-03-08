@@ -1,0 +1,8 @@
+CREATE TABLE user_follower (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  sourceId INTEGER NOT NULL,
+  targetId INTEGER NOT NULL,
+  status_ INTEGER NOT NULL DEFAULT 0,
+  FOREIGN KEY (sourceId) REFERENCES user(id),
+  FOREIGN KEY (targetId) REFERENCES user(id)
+);
