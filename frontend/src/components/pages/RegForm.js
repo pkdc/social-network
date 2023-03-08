@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Form from '../UI/Form';
 import FormInput from "../UI/FormInput";
 import FormLabel from "../UI/FormLabel";
 import FormTextarea from "../UI/FormTextarea";
 import LgButton from "../UI/LgButton";
+import ImgUpload from "../UI/ImgUpload";
 import styles from "./RegForm.module.css";
 
 const RegForm = (props) => {    
@@ -19,6 +20,8 @@ const RegForm = (props) => {
     const [uploadedImg, setUploadedImg] = useState("");
     const [enteredNickname, setEnteredNickname] = useState("");
     const [enteredAbout, setEnteredAbout] = useState("");
+
+    const navigate = useNavigate();
 
     const emailChangeHandler = (e) => {
         setEnteredEmail(e.target.value);
@@ -85,32 +88,32 @@ const RegForm = (props) => {
         setUploadedImg("");
         setEnteredNickname("");
         setEnteredAbout("");
+        navigate("/", {replace: true});
     };
 
     return (
         <>
             <h1 className={styles["title"]}>Register</h1>
             <Form className={styles["reg-form"]} onSubmit={submitHandler}>
-                <FormLabel htmlFor="email">Email</FormLabel>
+                <FormLabel className={styles["reg-label"]} htmlFor="email">Email</FormLabel>
                 <FormInput className={styles["reg-input"]} type="email" name="email" id="email" placeholder="abc@mail.com" value={enteredEmail} onChange={emailChangeHandler}/>
-                <FormLabel htmlFor="password">Password</FormLabel>
+                <FormLabel className={styles["reg-label"]} htmlFor="password">Password</FormLabel>
                 <FormInput className={styles["reg-input"]} type="password" name="password" id="password" placeholder="Password" value={enteredPw} onChange={pwChangeHandler}/>
-                <FormLabel htmlFor="fname">First Name</FormLabel>
+                <FormLabel className={styles["reg-label"]} htmlFor="fname">First Name</FormLabel>
                 <FormInput className={styles["reg-input"]} type="text" name="fname" id="fname" placeholder="John" value={enteredFName} onChange={fNameChangeHandler}/>
-                <FormLabel htmlFor="lname">Last Name</FormLabel>
+                <FormLabel className={styles["reg-label"]} htmlFor="lname">Last Name</FormLabel>
                 <FormInput className={styles["reg-input"]} type="text" name="lname" id="lname" placeholder="Smith" value={enteredLName} onChange={lNameChangeHandler}/>
-                <FormLabel htmlFor="Dob">Date of Birth</FormLabel>
+                <FormLabel className={styles["reg-label"]} htmlFor="Dob">Date of Birth</FormLabel>
                 <FormInput className={styles["reg-input"]} type="date" name="Dob" id="Dob" value={enteredDob} onChange={dobChangeHandler}/>
-                <FormLabel htmlFor="avatar">Avatar (Optional)</FormLabel>
+                <FormLabel className={styles["reg-label"]} >Avatar (Optional)</FormLabel>
                 <figure>
-                    {!uploadedImg && <img src={require("../../images/"+`${defaultImagePath}`)} alt="Preview Uploaded Image" width={"250px"}/>}
-                    {uploadedImg && <img src={uploadedImg} width={"250px"}/>}
-                    <figcaption><p>Preview Uploaded Image</p></figcaption>
+                    {!uploadedImg && <img src={require("../../images/"+`${defaultImagePath}`)} alt="Default Image" className={styles["img-preview"]} width={"250px"}/>}
+                    {uploadedImg && <img src={uploadedImg} className={styles["img-preview"]} width={"250px"}/>}
                 </figure>
-                <FormInput className={styles["reg-input"]} type="file" name="avatar" id="avatar" accept=".jpg, .jpeg, .png, .gif" onChange={avatarHandler}/>
-                <FormLabel htmlFor="nname">Nickname (Optional)</FormLabel>
+                <ImgUpload className={styles["reg-input"]} name="avatar" id="avatar" accept=".jpg, .jpeg, .png, .gif" text="Upload Image" onChange={avatarHandler}/>
+                <FormLabel className={styles["reg-label"]} htmlFor="nname">Nickname (Optional)</FormLabel>
                 <FormInput className={styles["reg-input"]} type="text" name="nname" id="nname" placeholder="Pikachu" value={enteredNickname} onChange={nicknameChangeHandler}/>
-                <FormLabel htmlFor="about">About Me (Optional)</FormLabel>
+                <FormLabel className={styles["reg-label"]} htmlFor="about">About Me (Optional)</FormLabel>
                 <FormTextarea className={styles["reg-input"]} name="about" id="about" placeholder="About me..." rows={5} value={enteredAbout} onChange={aboutChangeHandler}/>
                 <LgButton className={styles["sub-btn"]} type="submit">Register</LgButton>
                 <p>Already have an account? <Link to="/login">Login</Link></p>

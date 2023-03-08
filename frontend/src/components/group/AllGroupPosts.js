@@ -1,4 +1,4 @@
-import Post from "./Post";
+import Post from "./GroupPost";
 
 function AllPosts(props) {
     return <div>
@@ -6,12 +6,8 @@ function AllPosts(props) {
          <Post
         key={post.id}
         id={post.id}
-        avatar={post.avatar}
-        fname={post.fname}
-        lname={post.lname}
-        nname={post.nname}
+        user={post.user}
         content={post.content}
-        image={post.image}
         date={post.date} 
         />
         ))}

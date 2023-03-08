@@ -1,17 +1,19 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { useState } from "react";
+import { createBrowserRouter, RouterProvider, useNavigate } from "react-router-dom";
 import Card from './components/UI/Card';
 import Form from './components/UI/Form';
+import Root from "./components/pages/Root";
 import Landingpage from './components/pages/Landingpage';
 import LoginForm from './components/pages/LoginForm';
 import RegForm from './components/pages/RegForm';
 import PostsPage from './components/pages/PostsPage';
-import { useState } from "react";
 import GroupPage from "./components/pages/GroupPage";
 
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
-
+  // const navigate = useNavigate();
+  
   const loginURL = "http://localhost:8080/login/";
   const regURL = "http://localhost:8080/reg/";
 
@@ -27,6 +29,11 @@ function App() {
       console.log(data);
       if (data.success) {
         setLoggedIn(true);
+        localStorage.setItem("user_id", data.user_id);
+        localStorage.setItem("fname", data.fname);
+        localStorage.setItem("lname", data.lname);
+        data.nname && localStorage.setItem("nname", data.nname);
+        data.avatar && localStorage.setItem("avatar", data.avatar);
       }
     })
     .catch(err => {
@@ -47,6 +54,11 @@ function App() {
           console.log(data);
           if (data.success) {
             setLoggedIn(true);
+            localStorage.setItem("user_id", data.user_id);
+            localStorage.setItem("fname", data.fname);
+            localStorage.setItem("lname", data.lname);
+            data.nname && localStorage.setItem("nname", data.nname);
+            data.avatar && localStorage.setItem("avatar", data.avatar);
           }
       })
       .catch(err => {
@@ -62,10 +74,14 @@ function App() {
   ]);
 
   if (loggedIn) router = createBrowserRouter([
-    {path: "/", element: <PostsPage />},
-    {path: "/login", element: <PostsPage />},
-    {path: "/reg", element: <PostsPage />},
-    {path: "/group", element: <GroupPage />},
+    {
+      path: "/",
+      element: <Root />,
+      children: [
+          {path: "/", element: <PostsPage />},
+          {path: "/group", element: <GroupPage />}
+      ],
+    }
   ]);
 
   return <RouterProvider router={router}/>;

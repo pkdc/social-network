@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Form from '../UI/Form';
 import FormInput from "../UI/FormInput";
 import FormLabel from "../UI/FormLabel";
@@ -9,6 +9,7 @@ import styles from "./LoginForm.module.css";
 const LoginForm = (props) => {  
     const [enteredEmail, setEnteredEmail] = useState("");
     const [enteredPw, setEnteredPw] = useState("");
+    const navigate = useNavigate();
 
     const emailChangeHandler = (e) => {
         setEnteredEmail(e.target.value);
@@ -31,6 +32,7 @@ const LoginForm = (props) => {
         
         setEnteredEmail("");
         setEnteredPw("");
+        navigate("/", {replace: true});
     };
 
     return (

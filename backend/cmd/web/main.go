@@ -4,7 +4,6 @@ import (
 	"backend"
 	"fmt"
 	"net/http"
-	"os/exec"
 )
 
 func main() {
@@ -15,11 +14,12 @@ func main() {
 	// db.InsertMockUserData()
 	// db.InsertMockPostData()
 
-	exec.Command("xdg-open", "https://localhost/").Start()
+	exec.Command("xdg-open", "https://localhost:8080").Start()
 
 	http.HandleFunc("/", backend.Homehandler)
 	http.HandleFunc("/login/", backend.Loginhandler)
 	http.HandleFunc("/reg/", backend.Reghandler)
+	http.HandleFunc("/post/", backend.Posthandler)
 	http.HandleFunc("/logout/", backend.Logouthandler)
 
 	fmt.Println("Starting server at port 8080")
