@@ -13,6 +13,7 @@ function Post(props) {
             </div>
             <div>{props.date}</div>
         <div className={classes.content}>{props.content}</div>
+        {props.image && <div><img src={props.image} alt="" width={"100px"}/></div>}
         <div className={classes.comments}>Comments</div>
     </Card>
 

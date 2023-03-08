@@ -11,6 +11,7 @@ function AllPosts(props) {
         lname={post.lname}
         nname={post.nname}
         content={post.content}
+        image={post.image}
         date={post.date} 
         />
         ))}
