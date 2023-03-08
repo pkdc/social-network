@@ -3,16 +3,15 @@ import classes from './Post.module.css'
 import Card from '../UI/Card';
 
 function Post(props) {
+    const defaultImagePath = "default_avatar.jpg";
     // return <div className={classes.container}>  
     return <Card className={classes.container} >
-          <div className={classes.user}>
-            {/* <img src={profile} alt='' /> */}
-            <div>
-                <div className={classes.username}>{props.user}</div>
-                <div>{props.date}</div>
+            <div className={classes["author"]}>
+                {!props.avatar && <img className={classes["avatar"]} src={require("../../images/"+`${defaultImagePath}`)} alt="" width={"50px"}/>}
+                {props.avatar && <img className={classes["avatar"]} src={props.avatar} alt="" width={"50px"}/>}
+                <div><p className={classes["details"]}>{`${props.fname} ${props.name} (${props.nname})`}</p></div>
             </div>
-          
-        </div>
+            <div>{props.date}</div>
         <div className={classes.content}>{props.content}</div>
         <div className={classes.comments}>Comments</div>
     </Card>

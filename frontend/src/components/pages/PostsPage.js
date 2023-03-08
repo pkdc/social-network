@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import FormLabel from "../UI/FormLabel";
 import FormInput from "../UI/FormInput";
 import FormTextarea from "../UI/FormTextarea";
@@ -9,6 +9,7 @@ import AllPosts from "../posts/AllPosts";
 const PostsPage = () => {
     const postUrl = "http://localhost:8080/post/";
 
+    const [postData, setPostData] = useState([]);
     // const DATA = [
     //     {
     //         id: 1,
@@ -23,16 +24,19 @@ const PostsPage = () => {
     //     date: 'date2'
     // }
     // ]
-    fetch(postUrl)
-    .then(resp => {
-        return resp.json();
-    })
-    .then(data => {
-        console.log(data);
-    })
-    .catch(
-        err => console.log(err)
-    );
+
+    useEffect(() => {
+        fetch(postUrl)
+        .then(resp => {
+            return resp.json();
+        })
+        .then(data => {
+            setPostData(data);
+        })
+        .catch(
+            err => console.log(err)
+        );
+    }, []);
 
     const createPostHandler = (createPostPayloadObj) => {
         console.log("postpage create post", createPostPayloadObj);
@@ -46,7 +50,7 @@ const PostsPage = () => {
             console.log(data);
             if (data) {
                 // render all posts
-
+                
             // navigate("/", {replace: true});
             }
         })
@@ -64,7 +68,7 @@ const PostsPage = () => {
                 <CreatePost onCreatePost={createPostHandler}/>
             </div>
             <div className={styles["all-posts"]}>
-                {/* <AllPosts /> */}
+                <AllPosts posts={postData}/>
             </div>
         </div>
         </>
