@@ -9,7 +9,7 @@ ORDER BY created_at;
 
 -- name: CreateGroupEvent :one
 INSERT INTO group_event (
-  author, group_id, title, description_, created_at, date
+  author, group_id, title, description_, created_at, date_
 ) VALUES (
   ?, ?, ?, ?, ?, ?
 )

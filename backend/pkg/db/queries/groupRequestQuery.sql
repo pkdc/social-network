@@ -16,6 +16,6 @@ set status_ = ?
 WHERE group_id = ? AND user_id = ?
 RETURNING *;
 
--- name: DeleteGroupMember :exec
+-- name: DeleteGroupRequest :exec
 DELETE FROM group_request
 WHERE group_id = ? AND user_id = ?;

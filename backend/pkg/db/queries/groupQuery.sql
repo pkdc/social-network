@@ -4,7 +4,7 @@ WHERE id = ? LIMIT 1;
 
 -- name: CreateGroup :one
 INSERT INTO group_ (
-  title, creator, description, created_at
+  title, creator, description_, created_at
 ) VALUES (
   ?, ?, ?, ?
 )

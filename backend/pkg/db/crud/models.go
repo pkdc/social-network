@@ -20,17 +20,17 @@ type Group struct {
 type GroupEvent struct {
 	ID          int64
 	Author      int64
-	Groupid     int64
+	GroupID     int64
 	Title       string
 	Description sql.NullString
-	Createdat   time.Time
+	CreatedAt   time.Time
 	Date        time.Time
 }
 
 type GroupEventMember struct {
 	ID      int64
-	Userid  int64
-	Eventid int64
+	UserID  int64
+	EventID int64
 	Status  int64
 }
 
@@ -61,9 +61,9 @@ type GroupPost struct {
 type GroupPostComment struct {
 	ID          int64
 	Author      int64
-	Grouppostid int64
+	GroupPostID int64
 	Message     string
-	Createdat   time.Time
+	CreatedAt   time.Time
 }
 
 type GroupRequest struct {

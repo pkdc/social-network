@@ -18,4 +18,4 @@ ORDER BY created_at;
 
 -- name: DeleteGroupMessage :exec
 DELETE FROM group_message
-WHERE group_id = ? AND user_id = ? AND id = ?;
+WHERE group_id = ? AND source_id = ? AND id = ?;
