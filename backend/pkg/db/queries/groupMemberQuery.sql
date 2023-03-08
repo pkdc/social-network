@@ -10,6 +10,12 @@ INSERT INTO group_member (
 )
 RETURNING *;
 
+-- name: UpdateGroupMember :one
+UPDATE group_member
+set status_ = ?
+WHERE group_id = ? AND user_id = ?
+RETURNING *;
+
 -- name: DeleteGroupMember :exec
 DELETE FROM group_member
 WHERE group_id = ? AND user_id = ?;
