@@ -1,0 +1,6 @@
+@import "../var.css";
+
+.select {
+    border-radius: 0.5rem;
+    border-color: var(--ultra-violet, purple);
+}

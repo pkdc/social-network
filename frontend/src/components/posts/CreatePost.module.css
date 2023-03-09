@@ -1,0 +1,58 @@
+.card {
+    border-radius: 1rem;
+}
+.author {
+    margin: 0.2rem 0.2rem 0 0.2rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    color: var(--ultra-violet);
+}
+.avatar {
+    border-radius: 50%;
+    margin-right: 0.5rem;
+}
+.container {
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.08);
+    border-radius: 20px;  
+    padding: 20px;
+    margin: 20px 0px 20px 0px;
+}
+
+.content-container {
+    /* display: grid; */
+    /* grid-template-columns: 20fr 2fr 1fr; */
+    position: relative;
+}
+
+.content{
+    width: 90%;
+    margin-bottom: 10px;
+    /* border: solid; */
+ }
+
+.attach {
+    position: absolute;
+    width: 4rem;
+    top: -1.9rem;
+    right: 1.2rem;
+    padding: 0.2rem;
+}
+ .privacy {
+    position: absolute;
+    width: 4rem;
+    top: -1.9rem;
+    right: 1.2rem;
+    padding: 0.2rem;
+ }
+
+ ::placeholder {
+    font-family: sans-serif;
+ }
+
+
+.btn {
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 1rem;
+}

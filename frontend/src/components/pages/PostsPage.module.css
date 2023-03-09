@@ -1,0 +1,19 @@
+.title {
+    font-size: 3rem;
+    display: flex;
+    justify-content: center;
+    color: var(--ultra-violet, purple);
+    margin: 5rem 0 0 0;
+}
+
+.container {
+    margin: 2.5rem 12rem;
+}
+
+.create-post {
+
+}
+
+.privacy {
+
+}
