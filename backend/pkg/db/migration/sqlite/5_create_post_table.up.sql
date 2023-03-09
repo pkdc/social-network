@@ -3,7 +3,7 @@ CREATE TABLE post (
   author INTEGER NOT NULL,
   message_ TEXT,
   image_ TEXT,
-  createdAt DATETIME NOT NULL,
+  created_at DATETIME NOT NULL,
   privacy INTEGER NOT NULL DEFAULT 0,
   FOREIGN KEY (author) REFERENCES user(id)
 );

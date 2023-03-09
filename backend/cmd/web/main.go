@@ -2,14 +2,15 @@ package main
 
 import (
 	"backend"
+	db "backend/pkg/db/sqlite"
 	"fmt"
 	"net/http"
 )
 
 func main() {
 
-	// db.RunMigration()
-	// db.DbConnect()
+	db.RunMigration()
+	db.DbConnect()
 	// db.RemoveMigration(m)
 	// db.InsertMockUserData()
 	// db.InsertMockPostData()

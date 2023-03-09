@@ -3,6 +3,6 @@ CREATE TABLE group_ (
   title TEXT NOT NULL,
   creator INTEGER NOT NULL,
   description_ TEXT,
-  createdAt DATETIME NOT NULL,
+  created_at DATETIME NOT NULL,
   FOREIGN KEY (creator) REFERENCES user(id)
 );
