@@ -52,6 +52,10 @@ type UserMessageStruct struct {
 	CreatedAt string `json:"createdat"`
 }
 
+type UserMessagePayload struct {
+	Data []UserMessageStruct `json:"data"`
+}
+
 type PostStruct struct {
 	Id        int    `json:"id"`
 	Author    int    `json:"author"`
@@ -102,6 +106,10 @@ type GroupRequestStruct struct {
 	Status  int `json:"status"`
 }
 
+type GroupRequestPayload struct {
+	Data []GroupRequestStruct `json:"data"`
+}
+
 type GroupMemberStruct struct {
 	Id      int `json:"id"`
 	UserId  int `json:"userid"`
@@ -128,6 +136,10 @@ type GroupEventMemberStruct struct {
 	Status  int `json:"status"`
 	UserId  int `json:"userid"`
 	EventId int `json:"eventid"`
+}
+
+type GroupEventMemberPayload struct {
+	Data []GroupEventMemberStruct `json:"data"`
 }
 
 type GroupPostStruct struct {

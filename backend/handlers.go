@@ -54,7 +54,7 @@ func SessionHandler() http.HandlerFunc {
 			// Sets the http headers and writes the response to the browser
 			WriteHttpHeader(jsonResp, w)
 		case http.MethodPost:
-			// Declares the variables to store the post details and handler response
+			// Declares the variables to store the session details and handler response
 			var follower SessionStruct
 			Resp := AuthResponse{Success: true}
 
@@ -248,7 +248,7 @@ func Userhandler() http.HandlerFunc {
 func UserFollowerHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// Prevents the endpoint being called from other url paths
-		if err := UrlPathMatcher(w, r, "/userfollower"); err != nil {
+		if err := UrlPathMatcher(w, r, "/user-follower"); err != nil {
 			return
 		}
 
@@ -271,7 +271,7 @@ func UserFollowerHandler() http.HandlerFunc {
 			// Sets the http headers and writes the response to the browser
 			WriteHttpHeader(jsonResp, w)
 		case http.MethodPost:
-			// Declares the variables to store the post details and handler response
+			// Declares the variables to store the follower details and handler response
 			var follower UserFollowerStruct
 			Resp := AuthResponse{Success: true}
 
@@ -283,9 +283,70 @@ func UserFollowerHandler() http.HandlerFunc {
 
 			// ### CONNECT TO DATABASE ###
 
-			// ### ADD POST TO DATABASE ###
+			// ### ADD FOLLOWER TO DATABASE ###
 
-			// ### CHECK PRIVACY OF THE POST AND ADD TO THE POST MEMBER TABLE ###
+			// Marshals the response struct to a json object
+			jsonResp, err := json.Marshal(Resp)
+			if err != nil {
+				http.Error(w, "500 internal server error", http.StatusInternalServerError)
+				return
+			}
+
+			// Sets the http headers and writes the response to the browser
+			WriteHttpHeader(jsonResp, w)
+		default:
+			// Prevents all request types other than POST and GET
+			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
+	}
+}
+
+func UserMessageHandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		// Prevents the endpoint being called from other url paths
+		if err := UrlPathMatcher(w, r, "/user-message"); err != nil {
+			return
+		}
+
+		targetId := r.URL.Query().Get("id")
+		if targetId == "" {
+			http.Error(w, "400 bad request", http.StatusBadRequest)
+			return
+		}
+
+		switch r.Method {
+		case http.MethodGet:
+			// Declares the payload struct
+			var Resp UserMessagePayload
+
+			// ### CONNECT TO DATABASE ###
+
+			// ### GET ALL MESSAGES FOR THE TARGET ID ###
+
+			// Marshals the response struct to a json object
+			jsonResp, err := json.Marshal(Resp)
+			if err != nil {
+				http.Error(w, "500 internal server error", http.StatusInternalServerError)
+				return
+			}
+
+			// Sets the http headers and writes the response to the browser
+			WriteHttpHeader(jsonResp, w)
+		case http.MethodPost:
+			// Declares the variables to store the user message details and handler response
+			var userMessage UserMessageStruct
+			Resp := AuthResponse{Success: true}
+
+			// Decodes the json object to the struct, changing the response to false if it fails
+			err := json.NewDecoder(r.Body).Decode(&userMessage)
+			if err != nil {
+				Resp.Success = false
+			}
+
+			// ### CONNECT TO DATABASE ###
+
+			// ### ADD USER MESSAGE TO DATABASE ###
 
 			// Marshals the response struct to a json object
 			jsonResp, err := json.Marshal(Resp)
@@ -522,6 +583,140 @@ func Grouphandler() http.HandlerFunc {
 	}
 }
 
+func GroupMemberHandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		// Prevents the endpoint being called from other url paths
+		if err := UrlPathMatcher(w, r, "/group-member"); err != nil {
+			return
+		}
+
+		// ### CHECK USER ID AND GROUP ID MATCH IN GROUP MEMBER TABLE ###
+
+		switch r.Method {
+		case http.MethodGet:
+			// Checks to find a user id in the url
+			userId := r.URL.Query().Get("id")
+			foundId := false
+
+			if userId != "" {
+				foundId = true
+			}
+
+			// Declares the payload struct
+			var Resp UserPayload
+
+			// ### CONNECT TO DATABASE ###
+
+			// Gets the user by id if an id was passed in the url
+			// Otherwise, gets all users
+			if foundId {
+				// ### GET USER BY ID ###
+			} else {
+				// ### GET ALL USERS ###
+			}
+
+			// Marshals the response struct to a json object
+			jsonResp, err := json.Marshal(Resp)
+			if err != nil {
+				http.Error(w, "500 internal server error", http.StatusInternalServerError)
+				return
+			}
+
+			// Sets the http headers and writes the response to the browser
+			WriteHttpHeader(jsonResp, w)
+		case http.MethodPost:
+			// Declares the variables to store the group member details and handler response
+			var groupMember GroupRequestStruct
+			Resp := AuthResponse{Success: true}
+
+			// Decodes the json object to the struct, changing the response to false if it fails
+			err := json.NewDecoder(r.Body).Decode(&groupMember)
+			if err != nil {
+				Resp.Success = false
+			}
+
+			// ### CONNECT TO DATABASE ###
+
+			// ### UPDATE GROUP REQUEST TABLE AND ADD USER TO GROUP MEMBER TABLE ###
+
+			// Marshals the response struct to a json object
+			jsonResp, err := json.Marshal(Resp)
+			if err != nil {
+				http.Error(w, "500 internal server error", http.StatusInternalServerError)
+				return
+			}
+
+			// Sets the http headers and writes the response to the browser
+			WriteHttpHeader(jsonResp, w)
+		default:
+			// Prevents all request types other than POST and GET
+			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
+	}
+}
+
+func GroupRequestHandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		// Prevents the endpoint being called from other url paths
+		if err := UrlPathMatcher(w, r, "/group-request"); err != nil {
+			return
+		}
+
+		// ### CHECK USER ID AND GROUP ID MATCH IN GROUP MEMBER TABLE ###
+
+		switch r.Method {
+		case http.MethodGet:
+			// ### CHECK USER IS GROUP CREATOR ###
+
+			// Declares the payload struct
+			var Resp GroupRequestPayload
+
+			// ### CONNECT TO DATABASE ###
+
+			// ### GET ALL GROUP REQUESTS FOR GROUP ID ###
+
+			// Marshals the response struct to a json object
+			jsonResp, err := json.Marshal(Resp)
+			if err != nil {
+				http.Error(w, "500 internal server error", http.StatusInternalServerError)
+				return
+			}
+
+			// Sets the http headers and writes the response to the browser
+			WriteHttpHeader(jsonResp, w)
+		case http.MethodPost:
+			// Declares the variables to store the group request details and handler response
+			var groupRequest GroupRequestStruct
+			Resp := AuthResponse{Success: true}
+
+			// Decodes the json object to the struct, changing the response to false if it fails
+			err := json.NewDecoder(r.Body).Decode(&groupRequest)
+			if err != nil {
+				Resp.Success = false
+			}
+
+			// ### CONNECT TO DATABASE ###
+
+			// ### ADD GROUP REQUEST TO DATABASE ###
+
+			// Marshals the response struct to a json object
+			jsonResp, err := json.Marshal(Resp)
+			if err != nil {
+				http.Error(w, "500 internal server error", http.StatusInternalServerError)
+				return
+			}
+
+			// Sets the http headers and writes the response to the browser
+			WriteHttpHeader(jsonResp, w)
+		default:
+			// Prevents all request types other than POST and GET
+			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
+	}
+}
+
 func GroupPostHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// Prevents the endpoint being called from other url paths
@@ -611,8 +806,6 @@ func GroupPostCommentHandler() http.HandlerFunc {
 			return
 		}
 
-		// ### CHECK IF USER ID AND POST ID MATCH IN POST MEMBER TABLE ###
-
 		switch r.Method {
 		case http.MethodGet:
 			// Declares the payload struct
@@ -697,7 +890,7 @@ func GroupEventHandler() http.HandlerFunc {
 			// Sets the http headers and writes the response to the browser
 			WriteHttpHeader(jsonResp, w)
 		case http.MethodPost:
-			// Declares the variables to store the group post comment details and handler response
+			// Declares the variables to store the group event details and handler response
 			var groupEvent GroupEventStruct
 			Resp := AuthResponse{Success: true}
 
@@ -710,6 +903,137 @@ func GroupEventHandler() http.HandlerFunc {
 			// ### CONNECT TO DATABASE ###
 
 			// ### ADD GROUP EVENT TO DATABASE ###
+
+			// Marshals the response struct to a json object
+			jsonResp, err := json.Marshal(Resp)
+			if err != nil {
+				http.Error(w, "500 internal server error", http.StatusInternalServerError)
+				return
+			}
+
+			// Sets the http headers and writes the response to the browser
+			WriteHttpHeader(jsonResp, w)
+		default:
+			// Prevents all request types other than POST and GET
+			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
+	}
+}
+
+func GroupEventMemberHandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		// Prevents the endpoint being called from other url paths
+		if err := UrlPathMatcher(w, r, "/group-event-member"); err != nil {
+			return
+		}
+
+		// ### CHECK USER ID AND GROUP ID MATCH IN GROUP MEMBER TABLE ###
+
+		// Checks to find a post id in the url
+		eventId := r.URL.Query().Get("id")
+		if eventId == "" {
+			http.Error(w, "400 bad request", http.StatusBadRequest)
+			return
+		}
+
+		switch r.Method {
+		case http.MethodGet:
+			// Declares the payload struct
+			var Resp GroupEventMemberPayload
+
+			// ### CONNECT TO DATABASE ###
+
+			// ### GET ALL GROUP EVENT MEMBERS ###
+
+			// Marshals the response struct to a json object
+			jsonResp, err := json.Marshal(Resp)
+			if err != nil {
+				http.Error(w, "500 internal server error", http.StatusInternalServerError)
+				return
+			}
+
+			// Sets the http headers and writes the response to the browser
+			WriteHttpHeader(jsonResp, w)
+		case http.MethodPost:
+			// Declares the variables to store the group event member details and handler response
+			var groupPost GroupEventMemberStruct
+			Resp := AuthResponse{Success: true}
+
+			// Decodes the json object to the struct, changing the response to false if it fails
+			err := json.NewDecoder(r.Body).Decode(&groupPost)
+			if err != nil {
+				Resp.Success = false
+			}
+
+			// ### CONNECT TO DATABASE ###
+
+			// ### ADD/UPDATE GROUP EVENT MEMBER TO DATABASE ###
+
+			// Marshals the response struct to a json object
+			jsonResp, err := json.Marshal(Resp)
+			if err != nil {
+				http.Error(w, "500 internal server error", http.StatusInternalServerError)
+				return
+			}
+
+			// Sets the http headers and writes the response to the browser
+			WriteHttpHeader(jsonResp, w)
+		default:
+			// Prevents all request types other than POST and GET
+			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
+	}
+}
+
+func GroupMessageHandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		// Prevents the endpoint being called from other url paths
+		if err := UrlPathMatcher(w, r, "/group-message"); err != nil {
+			return
+		}
+
+		// ### CHECK USER ID AND GROUP ID MATCH IN GROUP MEMBER TABLE ###
+
+		groupId := r.URL.Query().Get("id")
+		if groupId == "" {
+			http.Error(w, "400 bad request", http.StatusBadRequest)
+			return
+		}
+
+		switch r.Method {
+		case http.MethodGet:
+			// Declares the payload struct
+			var Resp GroupMessagePayload
+
+			// ### CONNECT TO DATABASE ###
+
+			// ### GET ALL MESSAGES FOR THE GROUP ID ###
+
+			// Marshals the response struct to a json object
+			jsonResp, err := json.Marshal(Resp)
+			if err != nil {
+				http.Error(w, "500 internal server error", http.StatusInternalServerError)
+				return
+			}
+
+			// Sets the http headers and writes the response to the browser
+			WriteHttpHeader(jsonResp, w)
+		case http.MethodPost:
+			// Declares the variables to store the group message details and handler response
+			var groupMessage GroupMessageStruct
+			Resp := AuthResponse{Success: true}
+
+			// Decodes the json object to the struct, changing the response to false if it fails
+			err := json.NewDecoder(r.Body).Decode(&groupMessage)
+			if err != nil {
+				Resp.Success = false
+			}
+
+			// ### CONNECT TO DATABASE ###
+
+			// ### ADD GROUP MESSAGE TO DATABASE ###
 
 			// Marshals the response struct to a json object
 			jsonResp, err := json.Marshal(Resp)
