@@ -8,6 +8,7 @@ import LoginForm from './components/pages/LoginForm';
 import RegForm from './components/pages/RegForm';
 import PostsPage from './components/pages/PostsPage';
 import GroupPage from "./components/pages/GroupPage";
+import GroupProfilePage from "./components/pages/GroupProfilePage";
 
 
 function App() {
@@ -71,6 +72,8 @@ function App() {
     {path: "/login", element: <LoginForm onLogin={loginHandler}/>},
     {path: "/reg", element: <RegForm onReg={regHandler}/>},
     {path: "/group", element: <GroupPage />},
+    {path: "/groupprofile", element: <GroupProfilePage />},
+    {path: "/groups", element: <GroupPage />},
   ]);
 
   if (loggedIn) router = createBrowserRouter([
@@ -79,9 +82,13 @@ function App() {
       element: <Root />,
       children: [
           {path: "/", element: <PostsPage />},
-          {path: "/group", element: <GroupPage />}
+          {path: "/group", element: <GroupPage />},
+          {path: "/groupprofile", element: <GroupProfilePage />},
+          {path: "/groups", element: <GroupPage />},
       ],
     }
+  
+
   ]);
 
   return <RouterProvider router={router}/>;

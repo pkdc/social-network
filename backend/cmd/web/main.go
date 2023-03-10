@@ -15,7 +15,7 @@ func main() {
 	// db.InsertMockUserData()
 	// db.InsertMockPostData()
 
-	exec.Command("xdg-open", "https://localhost:8080").Start()
+	// exec.Command("xdg-open", "https://localhost:8080").Start()
 
 	mux := http.NewServeMux()
 

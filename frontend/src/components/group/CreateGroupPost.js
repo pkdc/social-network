@@ -24,14 +24,9 @@ const contentInput = useRef();
     }
 
     return <form onSubmit={SubmitHandler}>
-        {/* <div>
-            <label htmlFor="title">Title</label>
-            <input type='text' required id="title" ref={titleInput}/>
-        </div> */}
+
         <Card className={classes.card}>
-         {/* <label htmlFor="content">Post Label</label> */}
             <textarea className={classes.content} placeholder="What's on your mind?" ref={contentInput} rows="4"/>
-            {/* <textarea id='content' placeholder="What's on your mind?"  cols='60' ref={contentInput}></textarea> */}
       
         <div className={classes.btn}>
             <SmallButton>Post</SmallButton>

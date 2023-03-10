@@ -1,0 +1,22 @@
+.inputWrapper {
+    display: flex;
+    gap: 10px;
+}
+
+.input {
+    width: 80%;
+}
+
+.input::placeholder {   
+    padding: 8px;
+}
+
+.send {
+    border: none;
+    background: none;
+    margin-left: -50px;
+}
+
+.send:hover {
+    cursor: pointer;
+}
