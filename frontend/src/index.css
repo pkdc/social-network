@@ -25,6 +25,7 @@ code {
 
 textarea {
   border: none;
+  border-radius: 20px;
   resize: none;
   padding: 8px;
   background-color: rgb(230, 230, 230);    
@@ -40,5 +41,6 @@ input {
 
 ::placeholder {
   font-family: sans-serif;
+  /* padding: 5px; */
 }
 

@@ -1,0 +1,11 @@
+
+
+.username {
+    font-weight: bold;
+}
+
+.comment {
+    display: flex;
+    gap: 10px;
+    background: var(antiflash-white);
+}

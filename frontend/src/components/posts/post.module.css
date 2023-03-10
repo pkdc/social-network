@@ -35,4 +35,16 @@
 .comments {
     display: flex;
     justify-content: flex-end;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--antiflash-white);
 }
+
+.btn {
+    border: none;
+    background: none;
+}
+
+.btn:hover {
+    cursor: pointer;
+}
+

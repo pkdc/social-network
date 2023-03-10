@@ -30,7 +30,7 @@ const contentInput = useRef();
         </div> */}
         <Card className={classes.card}>
          {/* <label htmlFor="content">Post Label</label> */}
-            <textarea className={classes.content} placeholder="What's on your mind?" ref={contentInput} rows="4"/>
+            <textarea className={classes.content} placeholder="What's on your mind?" ref={contentInput} rows="1"/>
             {/* <textarea id='content' placeholder="What's on your mind?"  cols='60' ref={contentInput}></textarea> */}
       
         <div className={classes.btn}>

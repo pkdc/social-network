@@ -13,18 +13,13 @@
     border: none;
     outline: none;
 
-    border-radius: 1rem;
+    border-radius: 25px;
     resize: none;
     width: 90%;
     margin-bottom: 10px;
     padding: 20px;
     font-family: sans-serif;
  }
-
- ::placeholder {
-    font-family: sans-serif;
- }
-
 
 .btn {
     display: flex;
