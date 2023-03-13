@@ -19,15 +19,20 @@ func main() {
 
 	mux := http.NewServeMux()
 
+	// temp
+	http.HandleFunc("/login", backend.Loginhandler)
+	http.HandleFunc("/reg", backend.Reghandler)
+	http.HandleFunc("/post", backend.Posthandler)
+
 	mux.Handle("/", backend.Homehandler())
 	mux.Handle("/session", backend.SessionHandler())
-	mux.Handle("/login", backend.Loginhandler())
+	// mux.Handle("/login", backend.Loginhandler())
 	mux.Handle("/logout", backend.Logouthandler())
-	mux.Handle("/reg", backend.Reghandler())
+	// mux.Handle("/reg", backend.Reghandler())
 	mux.Handle("/user", backend.Userhandler())
 	mux.Handle("/user-follower", backend.UserFollowerHandler())
 	mux.Handle("/user-message", backend.UserMessageHandler())
-	mux.Handle("/post", backend.Posthandler())
+	// mux.Handle("/post", backend.Posthandler())
 	mux.Handle("/post-comment", backend.PostCommentHandler())
 	mux.Handle("/group", backend.Grouphandler())
 	mux.Handle("/group-member", backend.GroupMemberHandler())

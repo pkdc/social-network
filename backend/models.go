@@ -1,7 +1,12 @@
 package backend
 
 type AuthResponse struct {
-	Success bool `json:"success"`
+	UserId  int    `json:"user_id"`
+	Fname   string `json:"fname"`
+	Lname   string `json:"lname"`
+	Nname   string `json:"nname"`
+	Avatar  string `json:"avatar"`
+	Success bool   `json:"success"`
 }
 
 type loginPayload struct {
@@ -65,8 +70,26 @@ type PostStruct struct {
 	Privacy   int    `json:"privacy"`
 }
 
+type PostResponse struct {
+	PostId  int    `json:"post_id"`
+	Fname   string `json:"fname"`
+	Lname   string `json:"lname"`
+	Avatar  string `json:"avatar"`
+	Nname   string `json:"nname"`
+	Content string `json:"content"`
+	Image   string `json:"image"`
+	Date    string `json:"date"`
+}
+
+//	type PostPayload struct {
+//		Data []PostStruct `json:"data"`
+//	}
+
 type PostPayload struct {
-	Data []PostStruct `json:"data"`
+	UserId  int    `json:"user_id"`
+	Content string `json:"content"`
+	Image   string `json:"image"`
+	Privacy string `json:"privacy"`
 }
 
 type PostMemberStruct struct {
