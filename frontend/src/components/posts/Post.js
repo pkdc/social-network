@@ -18,7 +18,10 @@ function Post(props) {
         showComments && setShowComments(false);
     };
 
+    const createCommentHandler = (createCommentPayloadObj) => {
+        // post req
 
+    };
 
 
 
@@ -36,7 +39,7 @@ function Post(props) {
             <>
             {/* <AllComments comments={commentData}/> */}
             <AllComments/>
-            <CreateComment/> 
+            <CreateComment onCreateComment={createCommentHandler}/> 
             </>
         }
         
