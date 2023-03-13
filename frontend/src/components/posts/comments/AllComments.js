@@ -18,8 +18,6 @@ function AllComments(props) {
         />
         ))} */}
         <Comment></Comment>
-
-
     </div>
 }
 

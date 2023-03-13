@@ -71,7 +71,7 @@ type PostStruct struct {
 }
 
 type PostResponse struct {
-	PostId  int    `json:"post_id"`
+	Id      int    `json:"id"`
 	Fname   string `json:"fname"`
 	Lname   string `json:"lname"`
 	Avatar  string `json:"avatar"`

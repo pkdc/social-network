@@ -57,7 +57,6 @@ const PostsPage = () => {
         .catch(err => {
             console.log(err);
         })
-
     };
 
     return (

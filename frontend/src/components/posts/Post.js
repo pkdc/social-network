@@ -9,15 +9,17 @@ import { useState } from 'react';
 function Post(props) {
     const [showComments, setShowComments] = useState(false);
     const defaultImagePath = "default_avatar.jpg";
-    const getCommentUrl = ""
+    const postCommentUrl = "http://localhost:8080/post-comment";
+
     // return <div className={classes.container}>
     const showCommentsHandler = () => {
         console.log(showComments);
         !showComments && setShowComments(true);
         showComments && setShowComments(false);
-
-       
     };
+
+
+
 
 
     return <Card className={classes.container} >
@@ -32,6 +34,7 @@ function Post(props) {
         <div className={classes.comments} onClick={showCommentsHandler}>Comments</div>
         {showComments && 
             <>
+            {/* <AllComments comments={commentData}/> */}
             <AllComments/>
             <CreateComment/> 
             </>

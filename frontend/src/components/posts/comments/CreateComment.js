@@ -4,9 +4,11 @@ import send from '../../assets/send.svg'
 import profile from '../../assets/profile.svg'
 import ImgUpload from '../../UI/ImgUpload'
 import classes from './CreateComment.module.css'
+import Avatar from '../../UI/Avatar'
 
 
 function CreateComment() {
+    const defaultImagePath = "default_avatar.jpg";
     const userId = +localStorage.getItem("user_id");
     // const first = localStorage.getItem("fname");
     // const last = localStorage.getItem("lname");
@@ -39,8 +41,10 @@ function CreateComment() {
     };
 
     return <form className={classes.inputWrapper} onSubmit={SubmitHandler}>
-        <img src={avatar} alt='' />
-    
+        <div className={classes["author"]}>
+                {!avatar && <Avatar className={classes["avatar"]} src={require("../../../images/"+`${defaultImagePath}`)} alt="" width={"50px"}/>}
+                {avatar && <Avatar className={classes["avatar"]} src={avatar} alt="" width={"50px"}/>}
+            </div>
         <textarea className={classes.input} placeholder="Write a comment" ref={commentInput}/>      
         <ImgUpload className={classes["attach"]} name="comment-image" id="comment-image" accept=".jpg, .jpeg, .png, .gif" text="Attach" onChange={CommentImgUploadHandler}/>
         <button className={classes.send}>
