@@ -1,6 +1,7 @@
 .inputWrapper {
     display: flex;
     gap: 10px;
+    align-items: center;
 }
 
 .input {
@@ -11,12 +12,20 @@
     padding: 8px;
 }
 
+.attach {
+    text-align: center;
+}
+
 .send {
     border: none;
     background: none;
-    margin-left: -50px;
+    /* margin-left: -50px; */
 }
 
 .send:hover {
     cursor: pointer;
+}
+
+.comment-img-preview {
+    
 }

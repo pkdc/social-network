@@ -23,8 +23,7 @@
     justify-content: flex-start;
     color: var(--ultra-violet);
 }
-.avatar {
-    border-radius: 50%;
+.post-avatar {
     margin-right: 0.5rem;
 }
 

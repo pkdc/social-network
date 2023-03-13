@@ -2,6 +2,7 @@ import classes from './Post.module.css'
 // import profile from '../assets/profile.svg';
 import AllComments from "./comments/AllComments";
 import CreateComment from './comments/CreateComment';
+import Avatar from '../UI/Avatar';
 import Card from '../UI/Card';
 import { useState } from 'react';
 
@@ -19,12 +20,11 @@ function Post(props) {
     };
 
 
-
     return <Card className={classes.container} >
             <div className={classes["author"]}>
-                {!props.avatar && <img className={classes["avatar"]} src={require("../../images/"+`${defaultImagePath}`)} alt="" width={"50px"}/>}
-                {props.avatar && <img className={classes["avatar"]} src={props.avatar} alt="" width={"50px"}/>}
-                <div><p className={classes["details"]}>{`${props.fname} ${props.name} (${props.nname})`}</p></div>
+                {!props.avatar && <Avatar className={classes["post-avatar"]} src={require("../../images/"+`${defaultImagePath}`)} alt="" width={"50px"}/>}
+                {props.avatar && <Avatar className={classes["post-avatar"]} src={props.avatar} alt="" width={"50px"}/>}
+                <div><p className={classes["details"]}>{`${props.fname} ${props.lname} (${props.nname})`}</p></div>
             </div>
             <div>{props.date}</div>
         <div className={classes.content}>{props.content}</div>
