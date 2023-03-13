@@ -76,7 +76,11 @@ func SessionHandler() http.HandlerFunc {
 			}
 
 			// Sets the http headers and writes the response to the browser
-			WriteHttpHeader(jsonResp, w)
+			// WriteHttpHeader(jsonResp, w)
+			w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusOK)
+			w.Write(jsonResp)
 		default:
 			// Prevents all request types other than POST and GET
 			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)

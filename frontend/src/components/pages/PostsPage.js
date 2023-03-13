@@ -7,7 +7,7 @@ import CreatePost from "../posts/CreatePost";
 import AllPosts from "../posts/AllPosts";
 
 const PostsPage = () => {
-    const postUrl = "http://localhost:8080/post/";
+    const postUrl = "http://localhost:8080/post";
 
     const [postData, setPostData] = useState([]);
     // const DATA = [
