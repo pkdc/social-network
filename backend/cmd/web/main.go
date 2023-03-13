@@ -23,6 +23,7 @@ func main() {
 	http.HandleFunc("/login", backend.Loginhandler)
 	http.HandleFunc("/reg", backend.Reghandler)
 	http.HandleFunc("/post", backend.Posthandler)
+	http.HandleFunc("/post-comment", backend.PostCommentHandler)
 
 	mux.Handle("/", backend.Homehandler())
 	mux.Handle("/session", backend.SessionHandler())
@@ -33,7 +34,7 @@ func main() {
 	mux.Handle("/user-follower", backend.UserFollowerHandler())
 	mux.Handle("/user-message", backend.UserMessageHandler())
 	// mux.Handle("/post", backend.Posthandler())
-	mux.Handle("/post-comment", backend.PostCommentHandler())
+	// mux.Handle("/post-comment", backend.PostCommentHandler())
 	mux.Handle("/group", backend.Grouphandler())
 	mux.Handle("/group-member", backend.GroupMemberHandler())
 	mux.Handle("/group-request", backend.GroupRequestHandler())
