@@ -1,7 +1,7 @@
 
 import classes from './Comment.module.css'
 
-import profile from '../../assets/profile.svg'
+import profile from '../assets/profile.svg'
     
 
 function Comment(props) {

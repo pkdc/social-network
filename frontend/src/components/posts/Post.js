@@ -1,7 +1,7 @@
 import classes from './Post.module.css'
 // import profile from '../assets/profile.svg';
-import AllComments from "./comments/AllComments";
-import CreateComment from './comments/CreateComment';
+import AllComments from "../comments/AllComments";
+import CreateComment from '../comments/CreateComment';
 import Avatar from '../UI/Avatar';
 import Card from '../UI/Card';
 import { useEffect, useState } from 'react';
@@ -52,7 +52,7 @@ function Post(props) {
             <>
             {/* <AllComments comments={commentData}/> */}
             <AllComments comments={commentData}/>
-            <CreateComment onCreateComment={createCommentHandler}/> 
+            <CreateComment pid={props.id} onCreateComment={createCommentHandler}/> 
             </>
         }
         

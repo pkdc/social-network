@@ -28,8 +28,8 @@ function CreatePost(props) {
         const chosenPrivacy = privacyInputRef.current.value;
 
         const postData = {
-            user_id: userId,
-            content: enteredContent,
+            author: userId,
+            message: enteredContent,
             image: uploadedImg,
             privacy: chosenPrivacy
         };
