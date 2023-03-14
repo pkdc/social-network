@@ -71,26 +71,26 @@ type PostStruct struct {
 }
 
 type PostResponse struct {
-	Id      int    `json:"id"`
-	Fname   string `json:"fname"`
-	Lname   string `json:"lname"`
-	Avatar  string `json:"avatar"`
-	Nname   string `json:"nname"`
-	Content string `json:"content"`
-	Image   string `json:"image"`
-	Date    string `json:"date"`
+	Id        int    `json:"id"`
+	Fname     string `json:"fname"`
+	Lname     string `json:"lname"`
+	Avatar    string `json:"avatar"`
+	Nname     string `json:"nname"`
+	Message   string `json:"message"`
+	Image     string `json:"image"`
+	CreatedAt string `json:"createdat"`
 }
-
-//	type PostPayload struct {
-//		Data []PostStruct `json:"data"`
-//	}
 
 type PostPayload struct {
-	UserId  int    `json:"user_id"`
-	Content string `json:"content"`
-	Image   string `json:"image"`
-	Privacy string `json:"privacy"`
+	Data []PostResponse `json:"data"`
 }
+
+// type PostPayload struct {
+// 	UserId  int    `json:"user_id"`
+// 	Content string `json:"content"`
+// 	Image   string `json:"image"`
+// 	Privacy string `json:"privacy"`
+// }
 
 type PostMemberStruct struct {
 	Id         int `json:"id"`

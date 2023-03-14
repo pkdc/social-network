@@ -10,9 +10,9 @@ function AllPosts(props) {
         fname={post.fname}
         lname={post.lname}
         nname={post.nname}
-        content={post.content}
+        message={post.message}
         image={post.image}
-        date={post.date} 
+        createdat={post.createdat} 
         />
         ))}
     </div>
