@@ -4,11 +4,9 @@ import Comment from './Comment';
 
 function AllComments(props) {
 
-
-
     return  <div className={classes.container}>
 
-    {/* {props.comments.map((comment) => (
+    {props.comments.map((comment) => (
          <Comment
         key={comment.id}
         id={comment.id}
@@ -16,8 +14,8 @@ function AllComments(props) {
         comment={comment.comment}
         date={comment.date} 
         />
-        ))} */}
-        <Comment></Comment>
+        ))}
+        {/* <Comment></Comment> */}
     </div>
 }
 

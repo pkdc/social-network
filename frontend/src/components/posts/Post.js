@@ -4,10 +4,12 @@ import AllComments from "./comments/AllComments";
 import CreateComment from './comments/CreateComment';
 import Avatar from '../UI/Avatar';
 import Card from '../UI/Card';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 function Post(props) {
     const [showComments, setShowComments] = useState(false);
+    const [commentData, setCommentData] = useState("");
+
     const defaultImagePath = "default_avatar.jpg";
     const postCommentUrl = "http://localhost:8080/post-comment";
 
@@ -23,7 +25,18 @@ function Post(props) {
 
     };
 
-
+    useEffect(() => {
+        fetch(postCommentUrl)
+        .then(resp => resp.json())
+        .then(data => {
+            console.log("comment data: ", data)
+            setCommentData(data);
+        })
+        .catch(
+            err => console.log(err)
+        );
+    }, []);
+    
 
     return <Card className={classes.container} >
             <div className={classes["author"]}>
@@ -38,7 +51,7 @@ function Post(props) {
         {showComments && 
             <>
             {/* <AllComments comments={commentData}/> */}
-            <AllComments/>
+            <AllComments comments={commentData}/>
             <CreateComment onCreateComment={createCommentHandler}/> 
             </>
         }
