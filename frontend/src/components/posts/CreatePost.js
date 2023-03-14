@@ -25,7 +25,7 @@ function CreatePost(props) {
         // console.log(privacyInputRef.current.value);
 
         const enteredContent = contentInput.current.value
-        const chosenPrivacy = privacyInputRef.current.value;
+        const chosenPrivacy = +privacyInputRef.current.value;
 
         const postData = {
             author: userId,

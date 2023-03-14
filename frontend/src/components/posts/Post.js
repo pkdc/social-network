@@ -1,7 +1,7 @@
 import classes from './Post.module.css'
 // import profile from '../assets/profile.svg';
-import AllComments from "../comments/AllComments";
-import CreateComment from '../comments/CreateComment';
+import AllComments from "./comments/AllComments";
+import CreateComment from './comments/CreateComment';
 import Avatar from '../UI/Avatar';
 import Card from '../UI/Card';
 import { useEffect, useState } from 'react';
@@ -21,7 +21,23 @@ function Post(props) {
     };
 
     const createCommentHandler = (createCommentPayloadObj) => {
-        // post req
+        console.log("create comment for Post", createCommentPayloadObj)
+        const reqOptions = {
+            method: "POST",
+            body: JSON.stringify(createCommentPayloadObj),
+        }
+
+        fetch(postCommentUrl, reqOptions)
+        .then(resp => resp.json())
+        .then(data => {
+            console.log(data);
+            // if (data) {
+               
+            // }
+        })
+        .catch(err => {
+            console.log(err);
+        })
 
     };
 
@@ -50,7 +66,6 @@ function Post(props) {
         <div className={classes.comments} onClick={showCommentsHandler}>Comments</div>
         {showComments && 
             <>
-            {/* <AllComments comments={commentData}/> */}
             <AllComments comments={commentData}/>
             <CreateComment pid={props.id} onCreateComment={createCommentHandler}/> 
             </>

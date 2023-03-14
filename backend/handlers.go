@@ -261,7 +261,7 @@ func PostCommentHandler(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == http.MethodPost {
 		fmt.Printf("-----POST---(create-comment)--\n")
-		var payload PostPayload
+		var payload PostCommentStruct
 
 		err := json.NewDecoder(r.Body).Decode(&payload)
 		if err != nil {
@@ -269,13 +269,15 @@ func PostCommentHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		fmt.Println(payload)
 
-		// userid := payload.UserId
-		// content := payload.Content
-		// image := payload.Image
+		id := payload.Id
+		userid := payload.UserId
+		content := payload.Message
+		image := payload.Image
 
-		// fmt.Printf("userid %d\n", userid)
-		// fmt.Printf("content %s\n", content)
-		// fmt.Printf("image %s\n", image)
+		fmt.Printf("userid %d\n", id)
+		fmt.Printf("userid %d\n", userid)
+		fmt.Printf("content %s\n", content)
+		fmt.Printf("image %s\n", image)
 
 		// var Resp postsResponse
 		// jsonResp, err := json.Marshal(Resp)

@@ -104,6 +104,7 @@ type PostCommentStruct struct {
 	UserId    int    `json:"userid"`
 	CreatedAt string `json:"createdat"`
 	Message   string `json:"message"`
+	Image     string `json:"image"`
 }
 
 type PostCommentPayload struct {

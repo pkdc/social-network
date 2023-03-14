@@ -1,10 +1,10 @@
 import { useState, useRef } from 'react'
 
-import send from '../assets/send.svg'
-import profile from '../assets/profile.svg'
-import ImgUpload from '../UI/ImgUpload'
+import send from '../../assets/send.svg'
+import profile from '../../assets/profile.svg'
+import ImgUpload from '../../UI/ImgUpload'
 import classes from './CreateComment.module.css'
-import Avatar from '../UI/Avatar'
+import Avatar from '../../UI/Avatar'
 
 
 function CreateComment(props) {
@@ -31,7 +31,7 @@ function CreateComment(props) {
             image: uploadedCommentImg
         };
 
-        console.log(commentData)
+        console.log("create comment: ", commentData)
 
         props.onCreateComment(commentData);
 
@@ -51,7 +51,7 @@ function CreateComment(props) {
 
     return <form className={classes.inputWrapper} onSubmit={SubmitHandler}>
         <div className={classes["author"]}>
-                {!avatar && <Avatar className={classes["avatar"]} src={require("../../images/"+`${defaultImagePath}`)} alt="" width={"50px"}/>}
+                {!avatar && <Avatar className={classes["avatar"]} src={require("../../../images/"+`${defaultImagePath}`)} alt="" width={"50px"}/>}
                 {avatar && <Avatar className={classes["avatar"]} src={avatar} alt="" width={"50px"}/>}
             </div>
         <textarea className={classes.input} placeholder="Write a comment" ref={commentInput}/>      
