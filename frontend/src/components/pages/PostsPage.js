@@ -31,6 +31,7 @@ const PostsPage = () => {
             return resp.json();
         })
         .then(data => {
+            console.log("post data: ", data)
             setPostData(data);
         })
         .catch(

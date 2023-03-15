@@ -30,10 +30,7 @@ function Post(props) {
         fetch(postCommentUrl, reqOptions)
         .then(resp => resp.json())
         .then(data => {
-            console.log("comment success", data.success);
-            // if (data) {
-               
-            // }
+            console.log("create comment success", data.success);
         })
         .catch(err => {
             console.log(err);
@@ -46,13 +43,32 @@ function Post(props) {
         .then(resp => resp.json())
         .then(data => {
             console.log("comment data: ", data)
+
+            // construct an array of objs
+            // the objs are postid(key) to comment(value)
+            let commentsForEachPosts = [];
+            
+            for (let p = 0; p < props.numPost; p++) {
+                console.log("post num: ", p)
+                for (let i = 0; i < data.length; i++) {
+                    if (data[i].postid === p) {
+                        let pToC = {};
+                        pToC[`${p}-${i}`] = data[i];
+                        commentsForEachPosts.push(pToC);
+                    }
+                }
+            }
+            console.log("posts to comments arr: ", commentsForEachPosts)
             setCommentData(data);
         })
         .catch(
             err => console.log(err)
         );
     }, []);
-    
+
+    showComments && console.log("comment data(outside): ", commentData)
+
+
 
     return <Card className={classes.container} >
             <div className={classes["author"]}>
@@ -66,7 +82,7 @@ function Post(props) {
         <div className={classes.comments} onClick={showCommentsHandler}>Comments</div>
         {showComments && 
             <>
-            <AllComments comments={commentData}/>
+            <AllComments numPost={props.numPost} comments={commentData}/>
             <CreateComment pid={props.id} onCreateComment={createCommentHandler}/> 
             </>
         }

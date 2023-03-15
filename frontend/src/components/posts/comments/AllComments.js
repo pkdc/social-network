@@ -3,20 +3,36 @@ import classes from './AllComments.module.css'
 import Comment from './Comment';
 
 function AllComments(props) {
+   
+    
+        // let thisPostComments;
 
-    return  <div className={classes.container}>
+        // thisPostComments = props.comments.map((comment) => (
+        //     if (!comment.postId) thisPostComments = <h2>Be the first to comment</h2>;
+        //     comment.postId === i && 
+        //     <div className={classes.container}>
+        //         <Comment
+        //     key={comment.id}
+        //     id={comment.id}
+        //     postId={comment.postid}
+        //     fname={comment.fname}
+        //     lname={comment.lname}
+        //     avatar={comment.avatar}
+        //     nname={comment.nname}
+        //     message={comment.message}
+        //     createdAt={comment.createdat} 
+        //     />
+        //     </div>
+        //     ))
+    
 
-    {props.comments.map((comment) => (
-         <Comment
-        key={comment.id}
-        id={comment.id}
-        user={comment.user}
-        comment={comment.comment}
-        date={comment.date} 
-        />
-        ))}
-        {/* <Comment></Comment> */}
-    </div>
+    return <Comment />
+    
+  
+
+    
+    
+    ;
 }
 
 export default AllComments;

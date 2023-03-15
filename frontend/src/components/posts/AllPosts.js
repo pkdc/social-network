@@ -12,7 +12,8 @@ function AllPosts(props) {
         nname={post.nname}
         message={post.message}
         image={post.image}
-        createdat={post.createdat} 
+        createdat={post.createdat}
+        numPost={props.posts.length}
         />
         ))}
     </div>
