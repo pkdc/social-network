@@ -30,7 +30,7 @@ function Post(props) {
         fetch(postCommentUrl, reqOptions)
         .then(resp => resp.json())
         .then(data => {
-            console.log(data);
+            console.log("comment success", data.success);
             // if (data) {
                
             // }

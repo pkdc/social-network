@@ -47,12 +47,12 @@ const PostsPage = () => {
         fetch(postUrl, reqOptions)
         .then(resp => resp.json())
         .then(data => {
-            console.log(data);
-            if (data) {
-                // render all posts
+            console.log("post success", data.success);
+            // if (data) {
+            //     // render all posts
                 
-            // navigate("/", {replace: true});
-            }
+            // // navigate("/", {replace: true});
+            // }
         })
         .catch(err => {
             console.log(err);

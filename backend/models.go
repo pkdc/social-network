@@ -79,6 +79,7 @@ type PostResponse struct {
 	Message   string `json:"message"`
 	Image     string `json:"image"`
 	CreatedAt string `json:"createdat"`
+	Success   bool   `json:"success"`
 }
 
 type PostPayload struct {
@@ -105,6 +106,19 @@ type PostCommentStruct struct {
 	CreatedAt string `json:"createdat"`
 	Message   string `json:"message"`
 	Image     string `json:"image"`
+}
+
+type PostCommentResponse struct {
+	Id        int    `json:"id"`
+	PostId    int    `json:"postid"`
+	Fname     string `json:"fname"`
+	Lname     string `json:"lname"`
+	Avatar    string `json:"avatar"`
+	Nname     string `json:"nname"`
+	CreatedAt string `json:"createdat"`
+	Message   string `json:"message"`
+	Image     string `json:"image"`
+	Success   bool   `json:"success"`
 }
 
 type PostCommentPayload struct {
