@@ -8,7 +8,8 @@ import { useEffect, useState } from 'react';
 
 function Post(props) {
     const [showComments, setShowComments] = useState(false);
-    const [commentData, setCommentData] = useState("");
+    // const [commentData, setCommentData] = useState("");
+    const [postToCommentArray, setpostToCommentArray] = useState([]);
 
     const defaultImagePath = "default_avatar.jpg";
     const postCommentUrl = "http://localhost:8080/post-comment";
@@ -42,32 +43,33 @@ function Post(props) {
         fetch(postCommentUrl)
         .then(resp => resp.json())
         .then(data => {
-            console.log("comment data: ", data)
+            console.log("raw comment data: ", data)
 
             // construct an array of objs
-            // the objs are postid(key) to comment(value)
-            let commentsForEachPosts = [];
+            // the objs are postid-commentid(key) to comment(value)
+            let postToCommentTempArray = [];
             
             for (let p = 0; p < props.numPost; p++) {
                 console.log("post num: ", p)
-                for (let i = 0; i < data.length; i++) {
-                    if (data[i].postid === p) {
+                for (let c = 0; c < data.length; c++) {
+                    if (data[c].postid === p) {
                         let pToC = {};
-                        pToC[`${p}-${i}`] = data[i];
-                        commentsForEachPosts.push(pToC);
+                        pToC[`${p}-${c}`] = data[c];
+                        postToCommentTempArray.push(pToC);
                     }
                 }
             }
-            console.log("posts to comments arr: ", commentsForEachPosts)
-            setCommentData(data);
+            console.log("posts to comments arr: ", postToCommentTempArray)
+            // setCommentData(data);
+            setpostToCommentArray(postToCommentTempArray);
         })
         .catch(
             err => console.log(err)
         );
     }, []);
 
-    showComments && console.log("comment data(outside): ", commentData)
-
+    // showComments && console.log("comment data(outside): ", commentData)
+    showComments && console.log("commentsForEachPostsArr (outside): ", postToCommentArray)
 
 
     return <Card className={classes.container} >
@@ -82,7 +84,7 @@ function Post(props) {
         <div className={classes.comments} onClick={showCommentsHandler}>Comments</div>
         {showComments && 
             <>
-            <AllComments numPost={props.numPost} comments={commentData}/>
+            <AllComments numPost={props.numPost} postToCommentArr={postToCommentArray}/>
             <CreateComment pid={props.id} onCreateComment={createCommentHandler}/> 
             </>
         }

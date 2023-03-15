@@ -4,10 +4,10 @@ import Comment from './Comment';
 
 function AllComments(props) {
    
-    
+    console.log("postToCommentArr in All comments", props.postToCommentArr)
         // let thisPostComments;
 
-        // thisPostComments = props.comments.map((comment) => (
+        // thisPostComments = props.postToCommentArr.map((comment) => (
         //     if (!comment.postId) thisPostComments = <h2>Be the first to comment</h2>;
         //     comment.postId === i && 
         //     <div className={classes.container}>
