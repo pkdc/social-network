@@ -1,6 +1,6 @@
 import classes from './Post.module.css'
 // import profile from '../assets/profile.svg';
-import AllComments from "./comments/AllComments";
+import AllCommentsForEachPost from "./comments/AllCommentsForEachPost";
 import CreateComment from './comments/CreateComment';
 import Avatar from '../UI/Avatar';
 import Card from '../UI/Card';
@@ -49,12 +49,12 @@ function Post(props) {
             // the objs are postid-commentid(key) to comment(value)
             let postToCommentTempArray = [];
             
-            for (let p = 0; p < props.numPost; p++) {
+            for (let p = 0; p < props.totalNumPost; p++) {
                 console.log("post num: ", p)
                 for (let c = 0; c < data.length; c++) {
                     if (data[c].postid === p) {
                         let pToC = {};
-                        pToC[`${p}-${c}`] = data[c];
+                        pToC[`p${data[c].postid}-c${data[c].id}`] = data[c];
                         postToCommentTempArray.push(pToC);
                     }
                 }
@@ -84,7 +84,7 @@ function Post(props) {
         <div className={classes.comments} onClick={showCommentsHandler}>Comments</div>
         {showComments && 
             <>
-            <AllComments numPost={props.numPost} postToCommentArr={postToCommentArray}/>
+            <AllCommentsForEachPost postNum={props.postNum} totalNumPost={props.totalNumPost} postToCommentArr={postToCommentArray}/>
             <CreateComment pid={props.id} onCreateComment={createCommentHandler}/> 
             </>
         }

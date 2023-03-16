@@ -1,11 +1,10 @@
 
-import classes from './AllComments.module.css'
+import classes from './AllCommentsForEachPost.module.css'
 import Comment from './Comment';
 
 function AllComments(props) {
    
     console.log("postToCommentArr in All comments", props.postToCommentArr)
-        // let thisPostComments;
 
         // thisPostComments = props.postToCommentArr.map((comment) => (
         //     if (!comment.postId) thisPostComments = <h2>Be the first to comment</h2>;
@@ -26,7 +25,25 @@ function AllComments(props) {
         //     ))
     
 
-    return <Comment />
+    return (
+        props.postToCommentArr.map((pToCElement, c) => {
+            const [commentObj] = Object.values(pToCElement);
+
+            if (commentObj.postid === props.postNum) {
+                return <Comment
+                    key={commentObj.id}
+                    id={commentObj.id}
+                    postId={commentObj.postid}
+                    fname={commentObj.fname}
+                    lname={commentObj.lname}
+                    avatar={commentObj.avatar}
+                    nname={commentObj.nname}
+                    message={commentObj.message}
+                    createdAt={commentObj.createdat} 
+                />
+            }
+        })
+    );
     
   
 

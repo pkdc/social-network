@@ -2,7 +2,7 @@ import Post from "./Post";
 
 function AllPosts(props) {
     return <div>
-        {props.posts.map((post) => (
+        {props.posts.map((post, i) => (
          <Post
         key={post.id}
         id={post.id}
@@ -13,7 +13,8 @@ function AllPosts(props) {
         message={post.message}
         image={post.image}
         createdat={post.createdat}
-        numPost={props.posts.length}
+        totalNumPost={props.posts.length}
+        postNum={i}
         />
         ))}
     </div>
