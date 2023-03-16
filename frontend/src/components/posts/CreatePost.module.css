@@ -7,6 +7,8 @@
     flex-direction: row;
     justify-content: flex-start;
     color: var(--ultra-violet);
+    text-decoration: none;
+    align-items: center;
 }
 .avatar {
     border-radius: 50%;
@@ -49,7 +51,6 @@
  ::placeholder {
     font-family: sans-serif;
  }
-
 
 .btn {
     display: flex;

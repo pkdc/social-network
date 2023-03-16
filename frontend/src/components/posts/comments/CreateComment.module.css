@@ -13,17 +13,19 @@
     padding: 8px;
 }
 
-.attach {
-    text-align: center;
+.functions {
+    display: flex;
     position: absolute;
     left: 75%;
+}
+
+.attach {
+   
 }
 
 .send {
     border: none;
     background: none;
-    position: absolute;
-    left: 81%;
 }
 
 .send:hover {

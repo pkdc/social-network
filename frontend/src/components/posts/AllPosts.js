@@ -13,6 +13,7 @@ function AllPosts(props) {
         message={post.message}
         image={post.image}
         createdat={post.createdat}
+        authorId={post.author}
         totalNumPost={props.posts.length}
         postNum={i}
         />

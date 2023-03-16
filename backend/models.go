@@ -63,7 +63,7 @@ type UserMessagePayload struct {
 
 type PostStruct struct {
 	Id        int    `json:"id"`
-	Author    int    `json:"author"`
+	Author    int    `json:"author"` // author uid
 	Message   string `json:"message"`
 	Image     string `json:"image"`
 	CreatedAt string `json:"createdat"`
@@ -72,6 +72,7 @@ type PostStruct struct {
 
 type PostResponse struct {
 	Id        int    `json:"id"`
+	Author    int    `json:"author"` // author uid
 	Fname     string `json:"fname"`
 	Lname     string `json:"lname"`
 	Avatar    string `json:"avatar"`
@@ -102,7 +103,7 @@ type PostMemberStruct struct {
 type PostCommentStruct struct {
 	Id        int    `json:"id"`
 	PostId    int    `json:"postid"`
-	UserId    int    `json:"userid"`
+	UserId    int    `json:"userid"` // author uid
 	CreatedAt string `json:"createdat"`
 	Message   string `json:"message"`
 	Image     string `json:"image"`
@@ -111,6 +112,7 @@ type PostCommentStruct struct {
 type PostCommentResponse struct {
 	Id        int    `json:"id"`
 	PostId    int    `json:"postid"`
+	UserId    int    `json:"userid"`
 	Fname     string `json:"fname"`
 	Lname     string `json:"lname"`
 	Avatar    string `json:"avatar"`

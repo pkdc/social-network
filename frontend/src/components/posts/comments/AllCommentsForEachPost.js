@@ -15,6 +15,7 @@ function AllComments(props) {
                     key={commentObj.id}
                     id={commentObj.id}
                     // postId={commentObj.postid}
+                    authorId={commentObj.userid}
                     fname={commentObj.fname}
                     lname={commentObj.lname}
                     avatar={commentObj.avatar}
