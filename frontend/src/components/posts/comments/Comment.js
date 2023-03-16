@@ -6,14 +6,19 @@ import Avatar from '../../UI/Avatar';
     
 
 function Comment(props) {
-    return <div className={classes.comment}>
-    <Avatar src={props.avatar}/>
-    <div>
-        <div className={classes.username}>{props.user}Username</div>
-        <div className={classes.content}>{props.comment}lorep ipsum hfdshjksdhjkvhjkjkvhjf</div>
-    </div>
-      
-    </div>
+    const defaultImagePath = "default_avatar.jpg";
+    return (
+    <>
+        <div className={classes["author"]}>
+        {!props.avatar && <Avatar className={classes["comment-avatar"]} src={require("../../../images/"+`${defaultImagePath}`)} alt="" width={"50px"}/>}
+                {props.avatar && <Avatar className={classes["comment-avatar"]} src={props.avatar} alt="" width={"50px"}/>}
+            <div><p className={classes["details"]}>{`${props.fname} ${props.lname} (${props.nname})`}</p></div>
+        </div>
+        <div className={classes["create-at"]}>{props.createdAt}</div>
+        <div className={classes.content}>{props.message}</div>
+        {props.image && <div><img src={props.image} alt="" width={"100px"}/></div>}
+    </>
+    );
 }
 
 export default Comment;

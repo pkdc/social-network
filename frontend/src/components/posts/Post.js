@@ -78,13 +78,13 @@ function Post(props) {
                 {props.avatar && <Avatar className={classes["post-avatar"]} src={props.avatar} alt="" width={"50px"}/>}
                 <div><p className={classes["details"]}>{`${props.fname} ${props.lname} (${props.nname})`}</p></div>
             </div>
-            <div>{props.createdat}</div>
+            <div className={classes["create-at"]}>{props.createdat}</div>
         <div className={classes.content}>{props.message}</div>
         {props.image && <div><img src={props.image} alt="" width={"100px"}/></div>}
         <div className={classes.comments} onClick={showCommentsHandler}>Comments</div>
         {showComments && 
             <>
-            <AllCommentsForEachPost postNum={props.postNum} totalNumPost={props.totalNumPost} postToCommentArr={postToCommentArray}/>
+            <AllCommentsForEachPost postNum={props.postNum} postToCommentArr={postToCommentArray}/>
             <CreateComment pid={props.id} onCreateComment={createCommentHandler}/> 
             </>
         }
