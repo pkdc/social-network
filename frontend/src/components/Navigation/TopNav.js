@@ -5,11 +5,12 @@ import styles from "./TopNav.module.css";
 import logout from "../assets/logout.svg";
 import profile from "../assets/profileSmall.svg";
 
-const TopMenu = () => {
+const TopMenu = (props) => {
+
     return (
         <nav>
             <div className={styles["top-nav"]}>
-                <div className={styles.logo}>notFacebook</div>
+                <Link to={"/"} className={styles.logo}>notFacebook</Link>
                 <div className={styles.menu}>
                     <Link className={styles.lnk} to="/">Home</Link>
                     <Link className={styles.lnk} to="/group">Groups</Link>
@@ -23,7 +24,7 @@ const TopMenu = () => {
                     </div>
                 </div>
                 {/* <NotificationBtn>&#128276;</NotificationBtn> */}
-                <LogoutButton><img src={logout} alt=""/></LogoutButton>
+                <LogoutButton onClick={props.onLogout}><img src={logout} alt=""/></LogoutButton>
             </div>
         </nav>
         

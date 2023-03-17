@@ -1,11 +1,11 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 import MainNav from "../Navigation/MainNav";
-import TopMenu from "../Navigation/TopMenu";
+import TopNav from "../Navigation/TopNav";
 
-const Root = () => {
+const Root = (props) => {
     return <>
-    <TopMenu/>
+    <TopNav onLogout={props.onLogout}/>
     {/* <MainNav /> */}
     <Outlet/>
     </>

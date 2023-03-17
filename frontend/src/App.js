@@ -19,6 +19,12 @@ function App() {
   const loginURL = "http://localhost:8080/login/";
   const regURL = "http://localhost:8080/reg/";
 
+//testing
+  localStorage.setItem("user_id", 0);
+  localStorage.setItem("fname", "Mickey");
+  localStorage.setItem("lname", "Mouse");
+  localStorage.setItem("nname", "Rat");
+
   const loginHandler = (loginPayloadObj) => {
     console.log("app.js", loginPayloadObj);
     const reqOptions = {
@@ -68,6 +74,11 @@ function App() {
       })
   };
   
+  const logoutHandler = () => {
+    localStorage.clear();
+    setLoggedIn(false);
+  };
+
   let router = createBrowserRouter([
     {path: "/", element: <Landingpage />},
     {path: "/login", element: <LoginForm onLogin={loginHandler}/>},
@@ -80,8 +91,9 @@ function App() {
   router = createBrowserRouter([
     {
       path: "/",
-      element: <Root />,
+      element: <Root onLogout={logoutHandler} />,
       children: [
+        {path: "/reg", element: <RegForm onReg={regHandler}/>}, // temp
           {path: "/", element: <PostsPage />},
           // {path: "/profile", element: <ProfilePage />},
           {path: "/group", element: <GroupPage />},
