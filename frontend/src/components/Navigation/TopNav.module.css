@@ -47,11 +47,11 @@ a {
     align-items: center;
 }
 
-a:hover {
+a:hover, a:active {
     color: var(--ultra-violet-0);
 }
 
-.lnk:hover {
+.lnk:hover, .menu a.active {
     color: var(--ultra-violet-0);
     border-top: 3px solid var(--ultra-violet-0);
     margin-top: -3px;
