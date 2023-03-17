@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
 import AllEvents from "../group/AllEvents";
+import AllGroupPosts from "../group/AllGroupPosts";
 import CreateEvent from "../group/CreateEvent";
 import CreateGroup from "../group/CreateGroup";
+import CreateGroupPost from "../group/CreateGroupPost";
 import GroupEvent from "../group/GroupEvent";
 import GroupProfile from "../group/GroupProfile";
-import AllPosts from "../posts/AllPosts";
-import CreatePost from "../posts/CreatePost";
+// import AllPosts from "../posts/AllPosts";
+// import CreatePost from "../posts/CreatePost";
 
-import classes from './GroupProfilePage.module.css';
+// import classes from './GroupProfilePage.module.css';
+import classes from './layout.module.css';
 
 const DATA = [
     {
@@ -92,6 +95,7 @@ function GroupProfilePage() {
     function createPostHandler(url, postData) {
         let newEvent = postData(url, postData)
         newEvent.then(() => {
+            console.log("posted")
             // navigate.replace('/??')
         })
 
@@ -113,6 +117,7 @@ function GroupProfilePage() {
     function createEventHandler(url, eventData) {
         let newEvent = postData(url, eventData)
         newEvent.then(() => {
+            console.log("event posted")
             // navigate.replace('/??')
         })
 
@@ -132,11 +137,11 @@ function GroupProfilePage() {
     }
 
     return <div className={classes.container}>
-
         <div className={classes.mid}>
             <GroupProfile></GroupProfile>
-            <CreatePost onCreatePost={createPostHandler}/>
-            <AllPosts posts={DATA}/>
+            <CreateGroupPost/>
+            <AllGroupPosts posts={DATA}/>
+      
         </div>
         <div className={classes.right}>
             <AllEvents events={EVENTS}></AllEvents>

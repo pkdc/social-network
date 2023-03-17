@@ -6,7 +6,7 @@ import TopMenu from "../Navigation/TopMenu";
 const Root = () => {
     return <>
     <TopMenu/>
-    <MainNav />
+    {/* <MainNav /> */}
     <Outlet/>
     </>
     

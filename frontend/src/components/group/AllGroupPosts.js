@@ -1,9 +1,12 @@
 import Post from "./GroupPost";
 
-function AllPosts(props) {
-    return <div>
+import classes from './AllGroupPosts.module.css'
+import GroupPost from "./GroupPost";
+
+function AllGroupPosts(props) {
+    return <div className={classes.container}>
         {props.posts.map((post) => (
-         <Post
+         <GroupPost
         key={post.id}
         id={post.id}
         user={post.user}
@@ -14,4 +17,4 @@ function AllPosts(props) {
     </div>
 }
 
-export default AllPosts;
+export default AllGroupPosts;
