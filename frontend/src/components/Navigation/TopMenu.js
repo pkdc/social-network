@@ -23,7 +23,7 @@ const TopMenu = () => {
                     </div>
                 </div>
                 {/* <NotificationBtn>&#128276;</NotificationBtn> */}
-                <LogoutButton><img src={logout} alt=""/></LogoutButton>
+                <LogoutButton ><img src={logout} alt=""/></LogoutButton>
             </div>
         </nav>
         

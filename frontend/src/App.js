@@ -9,7 +9,7 @@ import RegForm from './components/pages/RegForm';
 import PostsPage from './components/pages/PostsPage';
 import GroupPage from "./components/pages/GroupPage";
 import GroupProfilePage from "./components/pages/GroupProfilePage";
-// import ProfilePage from "./components/pages/ProfilePage";
+import ProfilePage from "./components/pages/ProfilePage";
 
 
 function App() {
@@ -83,7 +83,7 @@ function App() {
       element: <Root />,
       children: [
           {path: "/", element: <PostsPage />},
-          // {path: "/profile", element: <ProfilePage />},
+          {path: "/profile", element: <ProfilePage />},
           {path: "/group", element: <GroupPage />},
           {path: "/groupprofile", element: <GroupProfilePage />},
           {path: "/groups", element: <GroupPage />},

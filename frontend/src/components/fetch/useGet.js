@@ -9,7 +9,7 @@ function useGet(url) {
     useEffect(() => {
         setIsLoading(true)
         fetch(
-            (url)
+            (`https://social-network-cffc1-default-rtdb.firebaseio.com/${url}.json`)
         )
         .then(response => response.json())
         .then((data) => {

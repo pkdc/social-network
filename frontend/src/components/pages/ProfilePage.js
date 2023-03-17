@@ -35,7 +35,7 @@ function ProfilePage() {
         </div>
         <div className={classes.right}>
             <Followers></Followers>
-            <Following
+            <Following></Following>
            
          </div>
 

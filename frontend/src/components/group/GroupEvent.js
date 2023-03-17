@@ -6,6 +6,23 @@ import classes from './GroupEvent.module.css';
 
 function GroupEvent(props) {
 
+
+    //get userid, eventid, status?
+    function handleClick() {
+        fetch('https://social-network-cffc1-default-rtdb.firebaseio.com/group-event-member.json', 
+        {
+            method: 'POST',
+            body: JSON.stringify(),
+            headers: { 
+                'Content-Type': 'application/json' 
+            }
+        }).then(() => {
+            // navigate.replace('/??')
+            console.log("posted")
+        })
+        console.log()
+    }
+
     return <Card className={classes.card}>
 
             <div className={classes.container}>
@@ -14,7 +31,7 @@ function GroupEvent(props) {
         <div>{props.desc}</div>
         <div className={classes.btnWrapper}>
             {/* <button className={classes.btn}>Going</button><button className={classes.btn}>Not going</button> */}
-            <GreyButton className={classes.btn}>Going</GreyButton>
+            <GreyButton className={classes.btn} onClick={handleClick}>Going</GreyButton>
             <GreyButton className={classes.btn}>Not Going</GreyButton>
         </div>
 
