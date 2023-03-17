@@ -6,32 +6,37 @@ import logout from "../assets/logout.svg";
 import profile from "../assets/profileSmall.svg";
 
 const TopMenu = (props) => {
+    let nickname;
     const defaultImagePath = "default_avatar.jpg";
     const userId = +localStorage.getItem("user_id");
     const first = localStorage.getItem("fname");
     const last = localStorage.getItem("lname");
-    const nickname = localStorage.getItem("nname");
+    nickname = localStorage.getItem("nname");
     const avatar = localStorage.getItem("avatar");
-    
+    let details;
+
     const navigate = useNavigate();
     const onClickingLogout = () => {
         props.onLogout();
         navigate("/", {replace: true});
     };
 
+    // nickname && details = `{first} {last} (${nickname})`;
+    // !nickname && details = `{first} {last}`;
+    
     return (
         <nav>
             <div className={styles["top-nav"]}>
                 <Link to={"/"} className={styles.logo}>notFacebook</Link>
                 <div className={styles.menu}>
-                    <NavLink className={({isActive}) => isActive ? styles["active"] : undefined} to="/">Home</NavLink>
-                    <NavLink className={({isActive}) => isActive ? styles["active"] : undefined} to="/group">Groups</NavLink>
-                    <NavLink className={({isActive}) => isActive ? styles["active"] : undefined} to="/messanger">Messenger</NavLink>
+                    <NavLink className={({isActive}) => isActive ? styles["active"] : undefined} to="/" end>Home</NavLink>
+                    <NavLink className={({isActive}) => isActive ? styles["active"] : undefined} to="/group" end>Groups</NavLink>
+                    <NavLink className={({isActive}) => isActive ? styles["active"] : undefined} to="/messanger" end>Messenger</NavLink>
                     <div className={styles.profile}>
                     {/* <img src={profile} alt=""/> */}
-                    <Link className={styles.profile} to="/profile">
-                    <img src={profile} alt=""/>
-                    Maddie Wesst
+                    <Link className={styles.profile} to={`/profile/${userId}`}>
+                    {avatar && <img src={avatar} alt="" width={"25px"}/>}
+                    {nickname ? `${first} ${last} (${nickname})` : `${first} ${last}`}
                     </Link>
                     </div>
                 </div>
