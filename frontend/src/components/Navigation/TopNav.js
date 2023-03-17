@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import LogoutButton from "../UI/LogoutButton";
 import NotificationBtn from "../UI/NotificationBtn";
 import styles from "./TopNav.module.css";
@@ -6,6 +6,11 @@ import logout from "../assets/logout.svg";
 import profile from "../assets/profileSmall.svg";
 
 const TopMenu = (props) => {
+    const navigate = useNavigate();
+    const onClickingLogout = () => {
+        props.onLogout();
+        navigate("/", {replace: true});
+    };
 
     return (
         <nav>
@@ -24,7 +29,7 @@ const TopMenu = (props) => {
                     </div>
                 </div>
                 {/* <NotificationBtn>&#128276;</NotificationBtn> */}
-                <LogoutButton onClick={props.onLogout}><img src={logout} alt=""/></LogoutButton>
+                <LogoutButton onClick={onClickingLogout}><img src={logout} alt=""/></LogoutButton>
             </div>
         </nav>
         

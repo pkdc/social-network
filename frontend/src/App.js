@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { createBrowserRouter, RouterProvider, useNavigate } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Card from './components/UI/Card';
 import Form from './components/UI/Form';
 import Root from "./components/pages/Root";
@@ -14,7 +14,6 @@ import GroupProfilePage from "./components/pages/GroupProfilePage";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
-  // const navigate = useNavigate();
   
   const loginURL = "http://localhost:8080/login/";
   const regURL = "http://localhost:8080/reg/";
