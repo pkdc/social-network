@@ -1,7 +1,9 @@
 import Post from "./Post";
 
+import classes from './AllPosts.module.css'
+
 function AllPosts(props) {
-    return <div>
+    return <div className={classes.container}>
         {props.posts.map((post) => (
          <Post
         key={post.id}

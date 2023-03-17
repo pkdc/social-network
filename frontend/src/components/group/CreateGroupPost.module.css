@@ -1,6 +1,4 @@
-.card {
-    border-radius: 1rem;
-}
+
 
 /* .container {
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.08);
@@ -9,16 +7,27 @@
     margin: 20px 0px 20px 0px;
 } */
 
+.container {
+    width: 100%;
+}
+
 .content{
     border: none;
     outline: none;
 
     border-radius: 1rem;
     resize: none;
-    width: 90%;
-    margin-bottom: 10px;
+    width: 94%;
+    /* margin-bottom: 10px; */
     padding: 20px;
     font-family: sans-serif;
+ }
+
+ .row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
  }
 
  ::placeholder {
@@ -29,4 +38,5 @@
 .btn {
     display: flex;
     justify-content: flex-end;
+    margin-top: 10px;
 }

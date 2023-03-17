@@ -2,7 +2,8 @@ import AllGroups from "../group/AllGroups";
 import AllJoinedGroups from "../group/AllJoinedGroups";
 import CreateGroup from "../group/CreateGroup";
 
-import classes from './GroupPage.module.css';
+// import classes from './GroupPage.module.css';
+import classes from './layout.module.css';
 
 
 const DATA = [
@@ -29,8 +30,8 @@ return <div className={classes.container}>
             <AllGroups allGroups={DATA}></AllGroups>
     </div>
     <div className={classes.right}>
-        <CreateGroup></CreateGroup>
         <AllJoinedGroups myGroups={DATA}></AllJoinedGroups>
+        <CreateGroup></CreateGroup>
     </div>
 
 </div>

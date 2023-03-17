@@ -1,8 +1,10 @@
 import Card from "../UI/Card";
 import JoinedGroup from "./JoinedGroup";
 import classes from './AllJoinedGroups.module.css';
+import useGet from "../fetch/useGet";
 
 function AllJoinedGroups(props) {
+
     return <Card>
         <div className={classes.label}>
         Groups you've joined

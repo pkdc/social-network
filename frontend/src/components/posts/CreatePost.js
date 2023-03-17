@@ -57,12 +57,12 @@ function CreatePost(props) {
         {value: 2, text: "Almost Private"}
     ];
 
-    return <form onSubmit={SubmitHandler}>
+    return <form className={classes.container} onSubmit={SubmitHandler}>
         {/* <div>
             <label htmlFor="title">Title</label>
             <input type='text' required id="title" ref={titleInput}/>
         </div> */}
-        <Card className={classes.card}>
+        <Card className={classes.container}>
             <div className={classes["author"]}>
                 {!avatar && <img className={classes["avatar"]} src={require("../../images/"+`${defaultImagePath}`)} alt="" width={"50px"}/>}
                 {avatar && <img className={classes["avatar"]} src={avatar} alt="" width={"50px"}/>}
@@ -83,9 +83,9 @@ function CreatePost(props) {
                 </div>
             </div>
         
-        <div className={classes.btn}>
+            <div className={classes.btn}>
             <SmallButton>Post</SmallButton>
-        </div>
+         </div>
         </Card>
       
          
