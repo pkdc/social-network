@@ -174,7 +174,7 @@ func Logouthandler() http.HandlerFunc {
 			return
 		}
 
-		// Prevents all request types other than POST
+		// Prevents all request types other than GET
 		if r.Method != http.MethodGet {
 			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
 			return

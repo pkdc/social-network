@@ -1,6 +1,9 @@
 package websocket
 
-import "encoding/json"
+import (
+	"backend"
+	"encoding/json"
+)
 
 // Hub maintains the set of active clients and broadcasts messages to the
 // clients.
@@ -23,6 +26,7 @@ func NewHub() *Hub {
 		clients:    make(map[int]*Client),
 	}
 }
+
 func (h *Hub) Run() {
 	for {
 		select {
@@ -36,7 +40,17 @@ func (h *Hub) Run() {
 				close(client.send)
 			}
 		case message := <-h.broadcast:
-			
+			h.Notif(message)
 		}
 	}
+}
+
+func (h *Hub) Notif(message []byte) {
+	var msg backend.NotifStruct
+
+	if err := json.Unmarshal(message, &msg); err != nil {
+		panic(err)
+	}
+
+	
 }

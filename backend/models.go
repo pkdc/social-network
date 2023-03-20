@@ -182,3 +182,8 @@ type SessionStruct struct {
 	SessionToken string `json:"sessiontoken"`
 	UserId       int    `json:"userid"`
 }
+
+type NotifStruct struct {
+	Type string      `json:"type"`
+	Data interface{} `json:"data"`
+}
