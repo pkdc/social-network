@@ -71,7 +71,7 @@ func (q *Queries) DeleteUser(ctx context.Context, id int64) error {
 
 const getUser = `-- name: GetUser :one
 SELECT id, first_name, last_name, nick_name, email, password_, dob, image_, about, public, COUNT(*) FROM user
-WHERE nick_name = ? LIMIT 1
+WHERE email = ? LIMIT 1
 `
 
 type GetUserRow struct {
@@ -88,8 +88,8 @@ type GetUserRow struct {
 	Count     int64
 }
 
-func (q *Queries) GetUser(ctx context.Context, nickName sql.NullString) (GetUserRow, error) {
-	row := q.db.QueryRowContext(ctx, getUser, nickName)
+func (q *Queries) GetUser(ctx context.Context, email string) (GetUserRow, error) {
+	row := q.db.QueryRowContext(ctx, getUser, email)
 	var i GetUserRow
 	err := row.Scan(
 		&i.ID,

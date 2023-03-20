@@ -1,6 +1,6 @@
 -- name: GetUser :one
 SELECT *, COUNT(*) FROM user
-WHERE nick_name = ? LIMIT 1;
+WHERE email = ? LIMIT 1;
 
 -- name: ListUsers :many
 SELECT * FROM user

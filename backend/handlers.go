@@ -98,7 +98,16 @@ func SessionHandler() http.HandlerFunc {
 }
 
 func Loginhandler(w http.ResponseWriter, r *http.Request) {
-	// fmt.Fprintf(w, "login")
+	// Prevents the endpoint being called from other url paths
+	if err := UrlPathMatcher(w, r, "/login"); err != nil {
+		return
+	}
+
+	// Prevents all request types other than POST
+	if r.Method != http.MethodPost {
+		http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
 
 	if r.Method == http.MethodPost {
 		fmt.Printf("----login-POST-----\n")
@@ -116,14 +125,47 @@ func Loginhandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("Email: %s\n", email)
 		fmt.Printf("password: %s\n", pw)
 
-		// dummy resp
 		var Resp AuthResponse
-		Resp.UserId = 7
-		Resp.Fname = "James"
-		Resp.Lname = "Bond"
-		Resp.Nname = "double-oh-seven"
-		Resp.Avatar = ""
 		Resp.Success = true
+		// ### CONNECT TO DATABASE ###
+
+		db := db.DbConnect()
+
+		var query *crud.Queries
+
+		query = crud.New(db)
+
+		// ### SEARCH DATABASE FROM USER ###
+
+		curUser, err := query.GetUser(context.Background(), payload.Email)
+
+		if err != nil {
+			Resp.Success = false
+			fmt.Println("Unable to find user")
+		}
+
+		if curUser.Count < 1 {
+			Resp.Success = false
+			fmt.Println("Unable to find user")
+		}
+
+		// ### COMPARE PASSWORD WITH THE HASH IN THE DATABASE (SKIP IF USER NOT FOUND) ###
+
+		err = bcrypt.CompareHashAndPassword([]byte(curUser.Password), []byte(payload.Pw))
+
+		if err != nil {
+			Resp.Success = false
+			fmt.Println("Passwords do not match!")
+		}
+
+		// dummy resp
+
+		Resp.UserId = int(curUser.ID)
+		Resp.Fname = curUser.FirstName
+		Resp.Lname = curUser.LastName
+		Resp.Nname = curUser.NickName.String
+		Resp.Avatar = curUser.Image.String
+
 		if email == "f" {
 			Resp.Success = false
 		}
@@ -182,7 +224,7 @@ func Reghandler(w http.ResponseWriter, r *http.Request) {
 
 		// will be used to respond
 		var Resp AuthResponse
-
+		Resp.Success = true
 		// convert password using bcrypt
 		password := []byte(payload.Pw)
 
@@ -252,7 +294,7 @@ func Reghandler(w http.ResponseWriter, r *http.Request) {
 			Resp.Lname = curUser.LastName
 			Resp.Nname = curUser.NickName.String
 			Resp.Avatar = curUser.Image.String
-			Resp.Success = true
+
 			if email == "f" {
 				Resp.Success = false
 			}
