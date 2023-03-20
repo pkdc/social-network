@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"time"
 
+	uuid "github.com/satori/go.uuid"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -158,8 +159,6 @@ func Loginhandler(w http.ResponseWriter, r *http.Request) {
 			fmt.Println("Passwords do not match!")
 		}
 
-		// dummy resp
-
 		Resp.UserId = int(curUser.ID)
 		Resp.Fname = curUser.FirstName
 		Resp.Lname = curUser.LastName
@@ -169,6 +168,49 @@ func Loginhandler(w http.ResponseWriter, r *http.Request) {
 		if email == "f" {
 			Resp.Success = false
 		}
+
+		// ### UPDATE SESSION COOKIE IN DATABASE AND BROWSER (SKIP IF USER NOT FOUND OR IF PASSWORD DOES NOT MATCH) ###
+		sessionExist, err := query.SessionExists(context.Background(), curUser.ID)
+
+		if err != nil {
+			Resp.Success = false
+			fmt.Println("Unable to check session table!")
+		}
+
+		if Resp.Success {
+			// add new session
+			// create cookie
+			var cookie SessionStruct
+
+			cookie.SessionToken = uuid.NewV4().String()
+			cookie.UserId = int(curUser.ID)
+
+			if sessionExist > 0 {
+				// update session in database
+				var newSession crud.UpdateUserSessionParams
+				newSession.UserID = int64(cookie.UserId)
+				newSession.SessionToken = cookie.SessionToken
+				query.UpdateUserSession(context.Background(), newSession)
+
+			} else {
+				// add session to database
+				var session crud.CreateSessionParams
+				session.SessionToken = cookie.SessionToken
+				session.UserID = int64(cookie.UserId)
+				_, err = query.CreateSession(context.Background(), session)
+
+				if err != nil {
+					fmt.Println("Unable to create session!")
+				}
+			}
+
+			http.SetCookie(w, &http.Cookie{
+				Name:  "session_token",
+				Value: cookie.SessionToken,
+			})
+
+		}
+
 		jsonResp, err := json.Marshal(Resp)
 		fmt.Println(string(jsonResp))
 
