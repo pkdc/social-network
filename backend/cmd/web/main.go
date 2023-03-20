@@ -10,10 +10,10 @@ import (
 func main() {
 
 	db.RunMigration()
-	// db.DbConnect()
+	db.DbConnect()
 	// db.RemoveMigration(m)
-	// db.InsertMockUserData()
-	// db.InsertMockPostData()
+	db.InsertMockUserData()
+	db.InsertMockPostData()
 
 	// exec.Command("xdg-open", "https://localhost:8080").Start()
 

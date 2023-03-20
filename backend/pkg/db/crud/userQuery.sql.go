@@ -70,13 +70,27 @@ func (q *Queries) DeleteUser(ctx context.Context, id int64) error {
 }
 
 const getUser = `-- name: GetUser :one
-SELECT id, first_name, last_name, nick_name, email, password_, dob, image_, about, public FROM user
-WHERE id = ? LIMIT 1
+SELECT id, first_name, last_name, nick_name, email, password_, dob, image_, about, public, COUNT(*) FROM user
+WHERE nick_name = ? LIMIT 1
 `
 
-func (q *Queries) GetUser(ctx context.Context, id int64) (User, error) {
-	row := q.db.QueryRowContext(ctx, getUser, id)
-	var i User
+type GetUserRow struct {
+	ID        int64
+	FirstName string
+	LastName  string
+	NickName  sql.NullString
+	Email     string
+	Password  string
+	Dob       sql.NullTime
+	Image     sql.NullString
+	About     sql.NullString
+	Public    int64
+	Count     int64
+}
+
+func (q *Queries) GetUser(ctx context.Context, nickName sql.NullString) (GetUserRow, error) {
+	row := q.db.QueryRowContext(ctx, getUser, nickName)
+	var i GetUserRow
 	err := row.Scan(
 		&i.ID,
 		&i.FirstName,
@@ -88,8 +102,27 @@ func (q *Queries) GetUser(ctx context.Context, id int64) (User, error) {
 		&i.Image,
 		&i.About,
 		&i.Public,
+		&i.Count,
 	)
 	return i, err
+}
+
+const getUserExist = `-- name: GetUserExist :one
+SELECT COUNT(*)
+FROM user
+WHERE email = ? OR nick_name = ?
+`
+
+type GetUserExistParams struct {
+	Email    string
+	NickName sql.NullString
+}
+
+func (q *Queries) GetUserExist(ctx context.Context, arg GetUserExistParams) (int64, error) {
+	row := q.db.QueryRowContext(ctx, getUserExist, arg.Email, arg.NickName)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
 }
 
 const listUsers = `-- name: ListUsers :many

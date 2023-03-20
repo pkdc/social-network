@@ -9,7 +9,7 @@ INSERT INTO post_comment (
 ) VALUES (
   ?, ?, ?, ?, ?
 )
-RETURNING *;c
+RETURNING *;
 
 -- name: DeletePostComment :exec
 DELETE FROM post_comment

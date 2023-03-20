@@ -10,6 +10,8 @@ import (
 	"log"
 	"net/http"
 	"time"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 func UrlPathMatcher(w http.ResponseWriter, r *http.Request, p string) error {
@@ -136,7 +138,17 @@ func Loginhandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func Reghandler(w http.ResponseWriter, r *http.Request) {
-	// fmt.Fprintf(w, "reg")
+	// Prevents the endpoint being called from other url paths
+	if err := UrlPathMatcher(w, r, "/reg"); err != nil {
+		return
+	}
+
+	// Prevents all request types other than POST
+	if r.Method != http.MethodPost {
+		http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
 	if r.Method == http.MethodPost {
 		fmt.Printf("----reg-POST-----\n")
 		var payload regPayload
@@ -165,17 +177,87 @@ func Reghandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Printf("nname: %s\n", nname)
 		fmt.Printf("about: %s\n", about)
 
-		// dummy resp
+		// used to run query
+		var regPayload crud.CreateUserParams
+
+		// will be used to respond
 		var Resp AuthResponse
-		Resp.UserId = 7 // dummy
-		Resp.Fname = fname
-		Resp.Lname = lname
-		Resp.Nname = nname
-		Resp.Avatar = avatar
-		Resp.Success = true
-		if email == "f" {
+
+		// convert password using bcrypt
+		password := []byte(payload.Pw)
+
+		cryptPw, err := bcrypt.GenerateFromPassword(password, 10)
+
+		if err != nil {
 			Resp.Success = false
+			fmt.Println("Unable generate password!")
 		}
+
+		date, err := time.Parse("2006-01-02", payload.Dob)
+
+		if err != nil {
+			Resp.Success = false
+			fmt.Println("Unable to convert date of birth")
+		}
+
+		regPayload.Password = string(cryptPw)
+		regPayload.Email = payload.Email
+		regPayload.FirstName = payload.Fname
+		regPayload.LastName = payload.Lname
+		regPayload.Dob.Time = date
+		regPayload.Image.String = payload.Avatar
+		regPayload.NickName.String = payload.Nname
+		regPayload.About.String = payload.About
+
+		// ### CONNECT TO DATABASE ###
+
+		db := db.DbConnect()
+
+		var query *crud.Queries
+
+		query = crud.New(db)
+
+		// check if user already exists
+
+		var checkExist crud.GetUserExistParams
+
+		checkExist.Email = regPayload.Email
+		checkExist.NickName = regPayload.NickName
+
+		records, err := query.GetUserExist(context.Background(), checkExist)
+
+		if err != nil {
+			Resp.Success = false
+			fmt.Println("Unable to check if user exists")
+		}
+
+		if records > 0 {
+
+			// user already exists
+			Resp.Success = false
+
+		} else {
+
+			// ### ATTEMPT TO ADD USER TO DATABASE ###
+			var curUser crud.User
+			curUser, err := query.CreateUser(context.Background(), regPayload)
+
+			if err != nil {
+				Resp.Success = false
+				fmt.Println("Unable to create user!")
+			}
+
+			Resp.UserId = int(curUser.ID)
+			Resp.Fname = curUser.FirstName
+			Resp.Lname = curUser.LastName
+			Resp.Nname = curUser.NickName.String
+			Resp.Avatar = curUser.Image.String
+			Resp.Success = true
+			if email == "f" {
+				Resp.Success = false
+			}
+		}
+
 		jsonResp, err := json.Marshal(Resp)
 		fmt.Println(string(jsonResp))
 
