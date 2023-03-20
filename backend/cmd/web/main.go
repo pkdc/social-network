@@ -24,11 +24,12 @@ func main() {
 	http.HandleFunc("/reg", backend.Reghandler)
 	http.HandleFunc("/post", backend.Posthandler)
 	http.HandleFunc("/post-comment", backend.PostCommentHandler)
+	http.HandleFunc("/logout", backend.Logouthandler)
 
 	mux.Handle("/", backend.Homehandler())
 	mux.Handle("/session", backend.SessionHandler())
 	// mux.Handle("/login", backend.Loginhandler())
-	mux.Handle("/logout", backend.Logouthandler())
+	// mux.Handle("/logout", backend.Logouthandler())
 	// mux.Handle("/reg", backend.Reghandler())
 	mux.Handle("/user", backend.Userhandler())
 	mux.Handle("/user-follower", backend.UserFollowerHandler())

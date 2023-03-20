@@ -352,6 +352,67 @@ func Reghandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func Logouthandler(w http.ResponseWriter, r *http.Request) {
+	// Prevents the endpoint being called from other url paths
+	if err := UrlPathMatcher(w, r, "/logout"); err != nil {
+		return
+	}
+
+	// Prevents all request types other than POST
+	if r.Method != http.MethodGet {
+		http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	// Declares the handler response
+	Resp := AuthResponse{Success: true}
+
+	c, err := r.Cookie("session_token")
+
+	if err != nil {
+		if err == http.ErrNoCookie {
+			// If the cookie is not set, return an unauthorized status
+			w.WriteHeader(http.StatusUnauthorized)
+			return
+		}
+		// For any other type of error, return a bad request status
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	sessionToken := c.Value
+
+	// ### CONNECT TO DATABASE ###
+
+	db := db.DbConnect()
+
+	var query *crud.Queries
+
+	query = crud.New(db)
+
+	// ### REMOVE SESSION COOKIE FROM DATABASE AND BROWSER ###
+
+	query.DeleteSession(context.Background(), sessionToken)
+
+	http.SetCookie(w, &http.Cookie{
+		Name:  "session_token",
+		Value: "",
+	})
+
+	// Marshals the response struct to a json object
+	jsonResp, err := json.Marshal(Resp)
+	if err != nil {
+		http.Error(w, "500 internal server error", http.StatusInternalServerError)
+		return
+	}
+
+	// Sets the http headers and writes the response to the browser
+	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(jsonResp)
+}
+
 func Posthandler(w http.ResponseWriter, r *http.Request) {
 	// fmt.Fprintf(w, "Post")
 
@@ -631,37 +692,37 @@ func PostCommentHandler(w http.ResponseWriter, r *http.Request) {
 // 	}
 // }
 
-func Logouthandler() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		// Prevents the endpoint being called from other url paths
-		if err := UrlPathMatcher(w, r, "/logout"); err != nil {
-			return
-		}
+// func Logouthandler() http.HandlerFunc {
+// 	return func(w http.ResponseWriter, r *http.Request) {
+// 		// Prevents the endpoint being called from other url paths
+// 		if err := UrlPathMatcher(w, r, "/logout"); err != nil {
+// 			return
+// 		}
 
-		// Prevents all request types other than POST
-		if r.Method != http.MethodGet {
-			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
-			return
-		}
+// 		// Prevents all request types other than POST
+// 		if r.Method != http.MethodGet {
+// 			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
+// 			return
+// 		}
 
-		// Declares the handler response
-		Resp := AuthResponse{Success: true}
+// 		// Declares the handler response
+// 		Resp := AuthResponse{Success: true}
 
-		// ### CONNECT TO DATABASE ###
+// 		// ### CONNECT TO DATABASE ###
 
-		// ### REMOVE SESSION COOKIE FROM DATABASE AND BROWSER ###
+// 		// ### REMOVE SESSION COOKIE FROM DATABASE AND BROWSER ###
 
-		// Marshals the response struct to a json object
-		jsonResp, err := json.Marshal(Resp)
-		if err != nil {
-			http.Error(w, "500 internal server error", http.StatusInternalServerError)
-			return
-		}
+// 		// Marshals the response struct to a json object
+// 		jsonResp, err := json.Marshal(Resp)
+// 		if err != nil {
+// 			http.Error(w, "500 internal server error", http.StatusInternalServerError)
+// 			return
+// 		}
 
-		// Sets the http headers and writes the response to the browser
-		WriteHttpHeader(jsonResp, w)
-	}
-}
+// 		// Sets the http headers and writes the response to the browser
+// 		WriteHttpHeader(jsonResp, w)
+// 	}
+// }
 
 func Userhandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
