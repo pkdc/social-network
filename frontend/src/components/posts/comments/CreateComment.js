@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react'
-
+import { Link } from "react-router-dom";
 import send from '../../assets/send.svg'
 import profile from '../../assets/profile.svg'
 import ImgUpload from '../../UI/ImgUpload'
@@ -50,17 +50,18 @@ function CreateComment(props) {
     };
 
     return <form className={classes.inputWrapper} onSubmit={SubmitHandler}>
-        <div className={classes["author"]}>
-                {!avatar && <Avatar className={classes["avatar"]} src={require("../../../images/"+`${defaultImagePath}`)} alt="" width={"50px"}/>}
-                {avatar && <Avatar className={classes["avatar"]} src={avatar} alt="" width={"50px"}/>}
-            </div>
+        <Link to={`/profile/${userId}`} className={classes["author"]}>
+            {!avatar && <Avatar className={classes["avatar"]} src={require("../../../images/"+`${defaultImagePath}`)} alt="" width={"50px"}/>}
+            {avatar && <Avatar className={classes["avatar"]} src={avatar} alt="" width={"50px"}/>}
+        </Link>
         <textarea className={classes.input} placeholder="Write a comment" ref={commentInput}/>      
-        <button className={classes.send}>
-            {/* send */}
-            <img src={send} alt='' />
-        </button>
-        <div className={classes["attach"]}>
-        {!uploadedCommentImg && <ImgUpload name={`comment-image-${props.pid}`} id={`comment-image-${props.pid}`} accept=".jpg, .jpeg, .png, .gif" text="Attach" onChange={CommentImgUploadHandler}/>}
+        <div className={classes["functions"]}>
+            <div className={classes["attach"]}>
+            {!uploadedCommentImg && <ImgUpload name={`comment-image-${props.pid}`} id={`comment-image-${props.pid}`} accept=".jpg, .jpeg, .png, .gif" text="Attach" onChange={CommentImgUploadHandler}/>}
+            </div>
+            <button className={classes.send}>
+                <img src={send} alt='' />
+            </button>
         </div>
         
         {uploadedCommentImg && 

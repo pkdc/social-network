@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import Card from "../UI/Card";
 import CreatePostTextarea from "../UI/CreatePostTextarea";
 import SmallButton from "../UI/SmallButton";
@@ -64,9 +65,13 @@ function CreatePost(props) {
         </div> */}
         <Card className={classes.card}>
             <div className={classes["author"]}>
+            <Link to={`/profile/${userId}`} >
                 {!avatar && <img className={classes["avatar"]} src={require("../../images/"+`${defaultImagePath}`)} alt="" width={"50px"}/>}
                 {avatar && <img className={classes["avatar"]} src={avatar} alt="" width={"50px"}/>}
+            </Link> 
+            <Link to={`/profile/${userId}`} className={classes["author"]}>
                 <div><p className={classes["details"]}>{`${first} ${last} (${nickname})`}</p></div>
+            </Link>
             </div>
             <div className={classes["content-container"]}>
                 <div>

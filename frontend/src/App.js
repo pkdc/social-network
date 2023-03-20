@@ -85,6 +85,8 @@ function App() {
           {path: "/group", element: <GroupPage />},
           {path: "/groupprofile", element: <GroupProfilePage />},
           {path: "/groups", element: <GroupPage />},
+          {path: "/profile/:userId"}
+          // {path: "/user/:userId", element <UserProfilePage />},
       ],
     }
   

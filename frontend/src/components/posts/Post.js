@@ -1,10 +1,12 @@
+import { useEffect, useState } from 'react';
+import { Link } from "react-router-dom";
 import classes from './Post.module.css'
 // import profile from '../assets/profile.svg';
-import AllComments from "./comments/AllComments";
+import AllCommentsForEachPost from "./comments/AllCommentsForEachPost";
 import CreateComment from './comments/CreateComment';
 import Avatar from '../UI/Avatar';
 import Card from '../UI/Card';
-import { useEffect, useState } from 'react';
+
 
 function Post(props) {
     const [showComments, setShowComments] = useState(false);
@@ -49,12 +51,12 @@ function Post(props) {
             // the objs are postid-commentid(key) to comment(value)
             let postToCommentTempArray = [];
             
-            for (let p = 0; p < props.numPost; p++) {
+            for (let p = 0; p < props.totalNumPost; p++) {
                 console.log("post num: ", p)
                 for (let c = 0; c < data.length; c++) {
                     if (data[c].postid === p) {
                         let pToC = {};
-                        pToC[`${p}-${c}`] = data[c];
+                        pToC[`p${data[c].postid}-c${data[c].id}`] = data[c];
                         postToCommentTempArray.push(pToC);
                     }
                 }
@@ -73,18 +75,22 @@ function Post(props) {
 
 
     return <Card className={classes.container} >
-            <div className={classes["author"]}>
+        <div className={classes["author"]}>
+            <Link to={`/profile/${props.authorId}`}>
                 {!props.avatar && <Avatar className={classes["post-avatar"]} src={require("../../images/"+`${defaultImagePath}`)} alt="" width={"50px"}/>}
                 {props.avatar && <Avatar className={classes["post-avatar"]} src={props.avatar} alt="" width={"50px"}/>}
+            </Link>
+            <Link to={`/profile/${props.authorId}`}>
                 <div><p className={classes["details"]}>{`${props.fname} ${props.lname} (${props.nname})`}</p></div>
-            </div>
-            <div>{props.createdat}</div>
+            </Link>
+        </div>
+        <div className={classes["create-at"]}>{props.createdat}</div>
         <div className={classes.content}>{props.message}</div>
         {props.image && <div><img src={props.image} alt="" width={"100px"}/></div>}
         <div className={classes.comments} onClick={showCommentsHandler}>Comments</div>
         {showComments && 
             <>
-            <AllComments numPost={props.numPost} postToCommentArr={postToCommentArray}/>
+            <AllCommentsForEachPost postNum={props.postNum} postToCommentArr={postToCommentArray}/>
             <CreateComment pid={props.id} onCreateComment={createCommentHandler}/> 
             </>
         }
