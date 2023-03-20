@@ -88,6 +88,7 @@ type PostComment struct {
 	PostID    int64
 	CreatedAt time.Time
 	Message   string
+	Image     sql.NullString
 }
 
 type PostMember struct {

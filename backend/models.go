@@ -1,5 +1,7 @@
 package backend
 
+import "time"
+
 type AuthResponse struct {
 	UserId  int    `json:"user_id"`
 	Fname   string `json:"fname"`
@@ -100,12 +102,12 @@ type PostMemberStruct struct {
 }
 
 type PostCommentStruct struct {
-	Id        int    `json:"id"`
-	PostId    int    `json:"postid"`
-	UserId    int    `json:"userid"`
-	CreatedAt string `json:"createdat"`
-	Message   string `json:"message"`
-	Image     string `json:"image"`
+	Id        int       `json:"id"`
+	PostId    int       `json:"postid"`
+	UserId    int       `json:"userid"`
+	CreatedAt time.Time `json:"createdat"`
+	Message   string    `json:"message"`
+	Image     string    `json:"image"`
 }
 
 type PostCommentResponse struct {

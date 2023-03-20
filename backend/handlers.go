@@ -1,11 +1,15 @@
 package backend
 
 import (
+	"backend/pkg/db/crud"
+	db "backend/pkg/db/sqlite"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"log"
 	"net/http"
+	"time"
 )
 
 func UrlPathMatcher(w http.ResponseWriter, r *http.Request, p string) error {
@@ -270,15 +274,36 @@ func PostCommentHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		fmt.Println(payload)
 
-		id := payload.Id
+		postid := payload.Id
 		userid := payload.UserId
 		content := payload.Message
 		image := payload.Image
+		payload.CreatedAt = time.Now()
 
-		fmt.Printf("userid %d\n", id)
+		fmt.Printf("postid %d\n", postid)
 		fmt.Printf("userid %d\n", userid)
 		fmt.Printf("content %s\n", content)
 		fmt.Printf("image %s\n", image)
+
+		// insert comment into database
+
+		db := db.DbConnect()
+
+		var postComment crud.CreatePostCommentParams
+
+		postComment.PostID = int64(payload.Id)
+		postComment.UserID = int64(payload.UserId)
+		postComment.Message = payload.Message
+		postComment.CreatedAt = payload.CreatedAt
+		postComment.Image.String = payload.Image
+
+		query := crud.New(db)
+
+		_, err = query.CreatePostComment(context.Background(), postComment)
+
+		if err != nil {
+			fmt.Println("Unable to insert new comment")
+		}
 
 		var Resp PostCommentResponse
 		Resp.Success = true

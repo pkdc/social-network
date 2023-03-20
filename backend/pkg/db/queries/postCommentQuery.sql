@@ -5,11 +5,11 @@ ORDER BY created_at;
 
 -- name: CreatePostComment :one
 INSERT INTO post_comment (
-  user_id, post_id, created_at, message_
+  user_id, post_id, created_at, message_, image_
 ) VALUES (
-  ?, ?, ?, ?
+  ?, ?, ?, ?, ?
 )
-RETURNING *;
+RETURNING *;c
 
 -- name: DeletePostComment :exec
 DELETE FROM post_comment
