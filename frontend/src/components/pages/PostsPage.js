@@ -32,7 +32,9 @@ const PostsPage = () => {
         })
         .then(data => {
             console.log("post data: ", data)
-            setPostData(data);
+            const sortedData = data.sort((a, b) => a.createdat > b.createat);
+            console.log("sorted post data: ", sortedData);
+            setPostData(sortedData);
         })
         .catch(
             err => console.log(err)

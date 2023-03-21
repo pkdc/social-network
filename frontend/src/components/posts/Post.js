@@ -51,7 +51,7 @@ function Post(props) {
             // the objs are postid-commentid(key) to comment(value)
             let postToCommentTempArray = [];
             
-            for (let p = 0; p < props.totalNumPost; p++) {
+            for (let p = 1; p <= props.totalNumPost; p++) {
                 console.log("post num: ", p)
                 for (let c = 0; c < data.length; c++) {
                     if (data[c].postid === p) {
