@@ -33,10 +33,14 @@ nav {
 
 .profile {
     display: flex;
+    align-items: center;
     gap: 10px;  
+    color: var(--dim-grey);}
+
+.profile:hover {
+    color: var(--ultra-violet-0);
+    cursor: pointer;
 }
-
-
 
 a {
     /* color: var(--eerie-black); */

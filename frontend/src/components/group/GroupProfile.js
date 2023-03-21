@@ -30,11 +30,7 @@ function GroupProfile( {groupId} ) {
          
             <div className={classes.description}>description</div>
             {/* <div className={classes.members}>Members</div> */}
-      
-            
         </div>
-       
-
     </Card>
 }
 

@@ -15,14 +15,14 @@ import classes from './layout.module.css';
 
 function GroupProfilePage() {
 
-    // const { state } = useLocation();
-    // console.log("state", state);
-    // const { id } = state;
-    // console.log("id", id); 
+    const { state } = useLocation();
+    console.log("state", state);
+    const { id } = state; 
+    console.log("id", id); 
 
     return <div className={classes.container}>
         <div className={classes.mid}>
-            <GroupProfile></GroupProfile>
+            <GroupProfile userId={id}></GroupProfile>
             <CreateGroupPost/>
             <AllGroupPosts/>
       
