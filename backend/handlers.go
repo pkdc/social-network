@@ -10,8 +10,6 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-
-	// "strconv"
 	"time"
 
 	uuid "github.com/satori/go.uuid"
@@ -54,49 +52,48 @@ func SessionHandler() http.HandlerFunc {
 			return
 		}
 
-	switch r.Method {
-	case http.MethodGet:
-		// Declares the payload struct
-		var Resp SessionStruct
+		switch r.Method {
+		case http.MethodGet:
+			// Declares the payload struct
+			var Resp SessionStruct
 
-		// ### CONNECT TO DATABASE ###
+			// ### CONNECT TO DATABASE ###
 
-		db := db.DbConnect()
+			db := db.DbConnect()
 
-		query := crud.New(db)
+			query := crud.New(db)
 
-		// ### GET SESSION FOR USER ###
+			// ### GET SESSION FOR USER ###
 
-		session, err := r.Cookie("SessionToken")
+			session, err := r.Cookie("SessionToken")
 
-		sessionTable, err := query.GetUserId(context.Background(), session.Value)
+			sessionTable, err := query.GetUserId(context.Background(), session.Value)
 
-		if err != nil {
-			http.Error(w, "500 internal server error", http.StatusInternalServerError)
+			if err != nil {
+				http.Error(w, "500 internal server error", http.StatusInternalServerError)
+				return
+			}
+
+			Resp.UserId = int(sessionTable.UserID)
+			Resp.SessionToken = sessionTable.SessionToken
+
+			// Marshals the response struct to a json object
+			jsonResp, err := json.Marshal(Resp)
+			if err != nil {
+				http.Error(w, "500 internal server error", http.StatusInternalServerError)
+				return
+			}
+
+			// Sets the http headers and writes the response to the browser
+
+			WriteHttpHeader(jsonResp, w)
+		default:
+			// Prevents all request types other than POST and GET
+			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
 			return
 		}
 
-		Resp.UserId = int(sessionTable.UserID)
-		Resp.SessionToken = sessionTable.SessionToken
-
-		// Marshals the response struct to a json object
-		jsonResp, err := json.Marshal(Resp)
-		if err != nil {
-			http.Error(w, "500 internal server error", http.StatusInternalServerError)
-			return
-		}
-
-		// Sets the http headers and writes the response to the browser
-		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		w.Write(jsonResp)
-	default:
-		// Prevents all request types other than POST and GET
-		http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
-		return
 	}
-
 }
 
 func Loginhandler() http.HandlerFunc {
@@ -107,237 +104,59 @@ func Loginhandler() http.HandlerFunc {
 			return
 		}
 
-	// Prevents all request types other than POST
-	if r.Method != http.MethodPost {
-		http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
-	if r.Method == http.MethodPost {
-		fmt.Printf("----login-POST-----\n")
-		var payload loginPayload
-
-		err := json.NewDecoder(r.Body).Decode(&payload)
-		if err != nil {
-			log.Fatal(err)
-		}
-		fmt.Println(payload)
-
-		email := payload.Email
-		pw := payload.Pw
-
-		fmt.Printf("Email: %s\n", email)
-		fmt.Printf("password: %s\n", pw)
-
-		var Resp AuthResponse
-		Resp.Success = true
-		// ### CONNECT TO DATABASE ###
-
-		db := db.DbConnect()
-
-		var query *crud.Queries
-
-		query = crud.New(db)
-
-		// ### SEARCH DATABASE FROM USER ###
-
-		curUser, err := query.GetUser(context.Background(), payload.Email)
-
-		if err != nil {
-			Resp.Success = false
-			fmt.Println("Unable to find user")
-		}
-
-		if curUser.Count < 1 {
-			Resp.Success = false
-			fmt.Println("Unable to find user")
-		}
-
-		// ### COMPARE PASSWORD WITH THE HASH IN THE DATABASE (SKIP IF USER NOT FOUND) ###
-
-		err = bcrypt.CompareHashAndPassword([]byte(curUser.Password), []byte(payload.Pw))
-
-		if err != nil {
-			Resp.Success = false
-			fmt.Println("Passwords do not match!")
-		}
-
-		Resp.UserId = int(curUser.ID)
-		Resp.Fname = curUser.FirstName
-		Resp.Lname = curUser.LastName
-		Resp.Nname = curUser.NickName
-		Resp.Avatar = curUser.Image
-		Resp.Email = curUser.Email
-		Resp.About = curUser.About
-		Resp.Dob = curUser.Dob.String()
-
-		if email == "f" {
-			Resp.Success = false
-		}
-
-		// ### UPDATE SESSION COOKIE IN DATABASE AND BROWSER (SKIP IF USER NOT FOUND OR IF PASSWORD DOES NOT MATCH) ###
-		sessionExist, err := query.SessionExists(context.Background(), curUser.ID)
-
-		if err != nil {
-			Resp.Success = false
-			fmt.Println("Unable to check session table!")
-		}
-
-		if Resp.Success {
-			// add new session
-			// create cookie
-			var cookie SessionStruct
-
-			cookie.SessionToken = uuid.NewV4().String()
-			cookie.UserId = int(curUser.ID)
-
-			if sessionExist > 0 {
-				// update session in database
-				var newSession crud.UpdateUserSessionParams
-				newSession.UserID = int64(cookie.UserId)
-				newSession.SessionToken = cookie.SessionToken
-				query.UpdateUserSession(context.Background(), newSession)
-
-			} else {
-				// add session to database
-				var session crud.CreateSessionParams
-				fmt.Println("add session to database")
-				session.SessionToken = cookie.SessionToken
-				session.UserID = int64(cookie.UserId)
-				_, err = query.CreateSession(context.Background(), session)
-
-				if err != nil {
-					fmt.Println("Unable to create session!")
-				}
-			}
-
-			http.SetCookie(w, &http.Cookie{
-				Name:  "session_token",
-				Value: cookie.SessionToken,
-			})
-
-		}
-
-		jsonResp, err := json.Marshal(Resp)
-		fmt.Println(string(jsonResp))
-
-		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		w.Write(jsonResp)
-	}
-}
-
-func Reghandler() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		EnableCors(&w)
-		// Prevents the endpoint being called from other url paths
-		if err := UrlPathMatcher(w, r, "/reg"); err != nil {
+		// Prevents all request types other than POST
+		if r.Method != http.MethodPost {
+			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
 			return
 		}
 
-	// Prevents all request types other than POST
-	if r.Method != http.MethodPost {
-		http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
+		if r.Method == http.MethodPost {
+			fmt.Printf("----login-POST-----\n")
+			var payload loginPayload
 
-	if r.Method == http.MethodPost {
-		fmt.Printf("----reg-POST-----\n")
-		var payload regPayload
+			err := json.NewDecoder(r.Body).Decode(&payload)
+			if err != nil {
+				log.Fatal(err)
+			}
+			fmt.Println(payload)
 
-		err := json.NewDecoder(r.Body).Decode(&payload)
-		if err != nil {
-			log.Fatal(err)
-		}
-		fmt.Println(payload)
+			email := payload.Email
+			pw := payload.Pw
 
-		email := payload.Email
-		pw := payload.Pw
-		fname := payload.Fname
-		lname := payload.Lname
-		dob := payload.Dob
-		avatar := payload.Avatar
-		nname := payload.Nname
-		about := payload.About
+			fmt.Printf("Email: %s\n", email)
+			fmt.Printf("password: %s\n", pw)
 
-		fmt.Printf("Email: %s\n", email)
-		fmt.Printf("password: %s\n", pw)
-		fmt.Printf("fname: %s\n", fname)
-		fmt.Printf("lname: %s\n", lname)
-		fmt.Printf("dob: %s\n", dob)
-		fmt.Printf("avatar: %s\n", avatar)
-		fmt.Printf("nname: %s\n", nname)
-		fmt.Printf("about: %s\n", about)
+			var Resp AuthResponse
+			Resp.Success = true
+			// ### CONNECT TO DATABASE ###
 
-		// used to run query
-		var regPayload crud.CreateUserParams
+			db := db.DbConnect()
 
-		// will be used to respond
-		var Resp AuthResponse
-		Resp.Success = true
-		// convert password using bcrypt
-		password := []byte(payload.Pw)
+			var query *crud.Queries
 
-		cryptPw, err := bcrypt.GenerateFromPassword(password, 10)
+			query = crud.New(db)
 
-		if err != nil {
-			Resp.Success = false
-			fmt.Println("Unable generate password!")
-		}
+			// ### SEARCH DATABASE FROM USER ###
 
-		date, err := time.Parse("2006-01-02", payload.Dob)
-
-		if err != nil {
-			Resp.Success = false
-			fmt.Println("Unable to convert date of birth")
-		}
-
-		regPayload.Password = string(cryptPw)
-		regPayload.Email = payload.Email
-		regPayload.FirstName = payload.Fname
-		regPayload.LastName = payload.Lname
-		regPayload.Dob = date
-		regPayload.Image = payload.Avatar
-		regPayload.NickName = payload.Nname
-		regPayload.About = payload.About
-
-		// ### CONNECT TO DATABASE ###
-
-		db := db.DbConnect()
-
-		var query *crud.Queries
-
-		query = crud.New(db)
-
-		// check if user already exists
-
-		var checkExist crud.GetUserExistParams
-
-		checkExist.Email = regPayload.Email
-		checkExist.NickName = regPayload.NickName
-
-		records, err := query.GetUserExist(context.Background(), checkExist)
-
-		if err != nil {
-			Resp.Success = false
-			fmt.Println("Unable to check if user exists")
-		}
-
-		if records > 0 {
-
-			// user already exists
-			Resp.Success = false
-
-		} else {
-
-			// ### ATTEMPT TO ADD USER TO DATABASE ###
-			var curUser crud.User
-			curUser, err := query.CreateUser(context.Background(), regPayload)
+			curUser, err := query.GetUser(context.Background(), payload.Email)
 
 			if err != nil {
 				Resp.Success = false
-				fmt.Println("Unable to create user!")
+				fmt.Println("Unable to find user")
+			}
+
+			if curUser.Count < 1 {
+				Resp.Success = false
+				fmt.Println("Unable to find user")
+			}
+
+			// ### COMPARE PASSWORD WITH THE HASH IN THE DATABASE (SKIP IF USER NOT FOUND) ###
+
+			err = bcrypt.CompareHashAndPassword([]byte(curUser.Password), []byte(payload.Pw))
+
+			if err != nil {
+				Resp.Success = false
+				fmt.Println("Passwords do not match!")
 			}
 
 			Resp.UserId = int(curUser.ID)
@@ -352,15 +171,189 @@ func Reghandler() http.HandlerFunc {
 			if email == "f" {
 				Resp.Success = false
 			}
+
+			// ### UPDATE SESSION COOKIE IN DATABASE AND BROWSER (SKIP IF USER NOT FOUND OR IF PASSWORD DOES NOT MATCH) ###
+			sessionExist, err := query.SessionExists(context.Background(), curUser.ID)
+
+			if err != nil {
+				Resp.Success = false
+				fmt.Println("Unable to check session table!")
+			}
+
+			if Resp.Success {
+				// add new session
+				// create cookie
+				var cookie SessionStruct
+
+				cookie.SessionToken = uuid.NewV4().String()
+				cookie.UserId = int(curUser.ID)
+
+				if sessionExist > 0 {
+					// update session in database
+					var newSession crud.UpdateUserSessionParams
+					newSession.UserID = int64(cookie.UserId)
+					newSession.SessionToken = cookie.SessionToken
+					query.UpdateUserSession(context.Background(), newSession)
+
+				} else {
+					// add session to database
+					var session crud.CreateSessionParams
+					fmt.Println("add session to database")
+					session.SessionToken = cookie.SessionToken
+					session.UserID = int64(cookie.UserId)
+					_, err = query.CreateSession(context.Background(), session)
+
+					if err != nil {
+						fmt.Println("Unable to create session!")
+					}
+				}
+
+				http.SetCookie(w, &http.Cookie{
+					Name:  "session_token",
+					Value: cookie.SessionToken,
+				})
+
+			}
+
+			jsonResp, err := json.Marshal(Resp)
+			fmt.Println(string(jsonResp))
+
+			WriteHttpHeader(jsonResp, w)
+		}
+	}
+}
+
+func Reghandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		EnableCors(&w)
+		// Prevents the endpoint being called from other url paths
+		if err := UrlPathMatcher(w, r, "/reg"); err != nil {
+			return
 		}
 
-		jsonResp, err := json.Marshal(Resp)
-		fmt.Println(string(jsonResp))
+		// Prevents all request types other than POST
+		if r.Method != http.MethodPost {
+			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
 
-		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		w.Write(jsonResp)
+		if r.Method == http.MethodPost {
+			fmt.Printf("----reg-POST-----\n")
+			var payload regPayload
+
+			err := json.NewDecoder(r.Body).Decode(&payload)
+			if err != nil {
+				log.Fatal(err)
+			}
+			fmt.Println(payload)
+
+			email := payload.Email
+			pw := payload.Pw
+			fname := payload.Fname
+			lname := payload.Lname
+			dob := payload.Dob
+			avatar := payload.Avatar
+			nname := payload.Nname
+			about := payload.About
+
+			fmt.Printf("Email: %s\n", email)
+			fmt.Printf("password: %s\n", pw)
+			fmt.Printf("fname: %s\n", fname)
+			fmt.Printf("lname: %s\n", lname)
+			fmt.Printf("dob: %s\n", dob)
+			fmt.Printf("avatar: %s\n", avatar)
+			fmt.Printf("nname: %s\n", nname)
+			fmt.Printf("about: %s\n", about)
+
+			// used to run query
+			var regPayload crud.CreateUserParams
+
+			// will be used to respond
+			var Resp AuthResponse
+			Resp.Success = true
+			// convert password using bcrypt
+			password := []byte(payload.Pw)
+
+			cryptPw, err := bcrypt.GenerateFromPassword(password, 10)
+
+			if err != nil {
+				Resp.Success = false
+				fmt.Println("Unable generate password!")
+			}
+
+			date, err := time.Parse("2006-01-02", payload.Dob)
+
+			if err != nil {
+				Resp.Success = false
+				fmt.Println("Unable to convert date of birth")
+			}
+
+			regPayload.Password = string(cryptPw)
+			regPayload.Email = payload.Email
+			regPayload.FirstName = payload.Fname
+			regPayload.LastName = payload.Lname
+			regPayload.Dob = date
+			regPayload.Image = payload.Avatar
+			regPayload.NickName = payload.Nname
+			regPayload.About = payload.About
+
+			// ### CONNECT TO DATABASE ###
+
+			db := db.DbConnect()
+
+			var query *crud.Queries
+
+			query = crud.New(db)
+
+			// check if user already exists
+
+			var checkExist crud.GetUserExistParams
+
+			checkExist.Email = regPayload.Email
+			checkExist.NickName = regPayload.NickName
+
+			records, err := query.GetUserExist(context.Background(), checkExist)
+
+			if err != nil {
+				Resp.Success = false
+				fmt.Println("Unable to check if user exists")
+			}
+
+			if records > 0 {
+
+				// user already exists
+				Resp.Success = false
+
+			} else {
+
+				// ### ATTEMPT TO ADD USER TO DATABASE ###
+				var curUser crud.User
+				curUser, err := query.CreateUser(context.Background(), regPayload)
+
+				if err != nil {
+					Resp.Success = false
+					fmt.Println("Unable to create user!")
+				}
+
+				Resp.UserId = int(curUser.ID)
+				Resp.Fname = curUser.FirstName
+				Resp.Lname = curUser.LastName
+				Resp.Nname = curUser.NickName
+				Resp.Avatar = curUser.Image
+				Resp.Email = curUser.Email
+				Resp.About = curUser.About
+				Resp.Dob = curUser.Dob.String()
+
+				if email == "f" {
+					Resp.Success = false
+				}
+			}
+
+			jsonResp, err := json.Marshal(Resp)
+			fmt.Println(string(jsonResp))
+
+			WriteHttpHeader(jsonResp, w)
+		}
 	}
 }
 
@@ -372,289 +365,278 @@ func Logouthandler() http.HandlerFunc {
 			return
 		}
 
-	// Prevents all request types other than POST
-	if r.Method != http.MethodGet {
-		http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
-	// Declares the handler response
-	Resp := AuthResponse{Success: true}
-
-	c, err := r.Cookie("session_token")
-
-	if err != nil {
-		if err == http.ErrNoCookie {
-			// If the cookie is not set, return an unauthorized status
-			w.WriteHeader(http.StatusUnauthorized)
+		// Prevents all request types other than POST
+		if r.Method != http.MethodGet {
+			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
 			return
 		}
-		// For any other type of error, return a bad request status
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
 
-	sessionToken := c.Value
+		// Declares the handler response
+		Resp := AuthResponse{Success: true}
 
-	// ### CONNECT TO DATABASE ###
-
-	db := db.DbConnect()
-
-	var query *crud.Queries
-
-	query = crud.New(db)
-
-	// ### REMOVE SESSION COOKIE FROM DATABASE AND BROWSER ###
-
-	query.DeleteSession(context.Background(), sessionToken)
-
-	http.SetCookie(w, &http.Cookie{
-		Name:  "session_token",
-		Value: "",
-	})
-
-	// Marshals the response struct to a json object
-	jsonResp, err := json.Marshal(Resp)
-	if err != nil {
-		http.Error(w, "500 internal server error", http.StatusInternalServerError)
-		return
-	}
-
-	// Sets the http headers and writes the response to the browser
-	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(jsonResp)
-}
-
-
-func Posthandler(w http.ResponseWriter, r *http.Request) {
-
-	if r.Method == http.MethodPost {
-		fmt.Printf("-----POST---(create-post)--\n")
-		var payload PostStruct
-
-		err := json.NewDecoder(r.Body).Decode(&payload)
-		if err != nil {
-			log.Fatal(err)
-		}
-		fmt.Println(payload)
-
-		author := payload.Author
-		message := payload.Message
-		image := payload.Image
-		privacy := payload.Privacy
-		createdAt := time.Now()
-
-		fmt.Printf("post author userid %d\n", author)
-		fmt.Printf("post message %s\n", message)
-		fmt.Printf("post image %s\n", image)
-		fmt.Printf("post privacy %d\n", privacy)
-		fmt.Printf("post created at %d\n", createdAt)
-
-		var Resp PostResponse
-		Resp.Success = true
-
-		// insert post to database
-
-		db := db.DbConnect()
-
-		var post crud.CreatePostParams
-
-		post.Author = int64(payload.Author)
-		post.Message = payload.Message
-		post.CreatedAt = createdAt
-		post.Image = payload.Image
-		post.Privacy = int64(payload.Privacy)
-
-		query := crud.New(db)
-
-		newPost, err := query.CreatePost(context.Background(), post)
+		c, err := r.Cookie("session_token")
 
 		if err != nil {
-			Resp.Success = false
-			fmt.Println("Unable to insert new post")
-		}
-
-		Resp.Author = int(newPost.Author)
-		Resp.CreatedAt = newPost.CreatedAt.String()
-		Resp.Image = newPost.Image
-		Resp.Message = newPost.Message
-
-		curUser, err := query.GetUserById(context.Background(), newPost.Author)
-
-		if err != nil {
-			Resp.Success = false
-			fmt.Println("Unable to get user information")
-		}
-
-		Resp.Avatar = curUser.Image
-		Resp.Fname = curUser.FirstName
-		Resp.Nname = curUser.NickName
-		Resp.Lname = curUser.LastName
-
-		jsonResp, err := json.Marshal(Resp)
-
-		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		w.Write(jsonResp)
-	}
-
-	if r.Method == http.MethodGet {
-		fmt.Printf("----post-GET---(display-posts)--\n")
-
-		var data []PostResponse
-
-		// get all public posts
-
-		db := db.DbConnect()
-
-		query := crud.New(db)
-
-		posts, err := query.GetAllPosts(context.Background())
-
-		if err != nil {
-			fmt.Println("Unable to get all posts")
-		}
-
-		for _, post := range posts {
-			var newPost PostResponse
-			newPost.Success = true
-			newPost.Id = int(post.ID)
-			newPost.Author = int(post.Author)
-			newPost.Message = post.Message
-			newPost.CreatedAt = post.CreatedAt.String()
-			newPost.Image = post.Image
-
-			curUser, err := query.GetUserById(context.Background(), post.Author)
-
-			if err != nil {
-				newPost.Success = false
-				fmt.Println("Unable to get user information")
+			if err == http.ErrNoCookie {
+				// If the cookie is not set, return an unauthorized status
+				w.WriteHeader(http.StatusUnauthorized)
+				return
 			}
-
-			newPost.Avatar = curUser.Image
-			newPost.Fname = curUser.FirstName
-			newPost.Lname = curUser.LastName
-			newPost.Nname = curUser.NickName
-
-			data = append(data, newPost)
+			// For any other type of error, return a bad request status
+			w.WriteHeader(http.StatusBadRequest)
+			return
 		}
 
-		// fmt.Printf("data %v\n", data)
-		jsonResp, _ := json.Marshal(data)
-		// fmt.Printf("posts resp %s\n", string(jsonResp))
+		sessionToken := c.Value
 
-		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		w.Write(jsonResp)
+		// ### CONNECT TO DATABASE ###
+
+		db := db.DbConnect()
+
+		var query *crud.Queries
+
+		query = crud.New(db)
+
+		// ### REMOVE SESSION COOKIE FROM DATABASE AND BROWSER ###
+
+		query.DeleteSession(context.Background(), sessionToken)
+
+		http.SetCookie(w, &http.Cookie{
+			Name:  "session_token",
+			Value: "",
+		})
+
+		// Marshals the response struct to a json object
+		jsonResp, err := json.Marshal(Resp)
+		if err != nil {
+			http.Error(w, "500 internal server error", http.StatusInternalServerError)
+			return
+		}
+
+		// Sets the http headers and writes the response to the browser
+		WriteHttpHeader(jsonResp, w)
 	}
 }
 
-func PostCommentHandler(w http.ResponseWriter, r *http.Request) {
-	// fmt.Fprintf(w, "Post")
+func Posthandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		EnableCors(&w)
+		if r.Method == http.MethodPost {
+			fmt.Printf("-----POST---(create-post)--\n")
+			var payload PostStruct
 
-	if r.Method == http.MethodPost {
-		fmt.Printf("-----POST---(create-comment)--\n")
-		var payload PostCommentStruct
+			err := json.NewDecoder(r.Body).Decode(&payload)
+			if err != nil {
+				log.Fatal(err)
+			}
+			fmt.Println(payload)
 
-		err := json.NewDecoder(r.Body).Decode(&payload)
-		if err != nil {
-			log.Fatal(err)
-		}
-		fmt.Println(payload)
+			author := payload.Author
+			message := payload.Message
+			image := payload.Image
+			privacy := payload.Privacy
+			createdAt := time.Now()
 
-		postid := payload.PostId
-		userid := payload.UserId
-		content := payload.Message
-		image := payload.Image
-		payload.CreatedAt = time.Now()
+			fmt.Printf("post author userid %d\n", author)
+			fmt.Printf("post message %s\n", message)
+			fmt.Printf("post image %s\n", image)
+			fmt.Printf("post privacy %d\n", privacy)
+			fmt.Printf("post created at %d\n", createdAt)
 
-		fmt.Printf("postid %d\n", postid)
-		fmt.Printf("userid %d\n", userid)
-		fmt.Printf("content %s\n", content)
-		fmt.Printf("image %s\n", image)
+			var Resp PostResponse
+			Resp.Success = true
 
-		// insert comment into database
+			// insert post to database
 
-		db := db.DbConnect()
+			db := db.DbConnect()
 
-		var postComment crud.CreatePostCommentParams
+			var post crud.CreatePostParams
 
-		postComment.PostID = int64(payload.PostId)
-		postComment.UserID = int64(payload.UserId)
-		postComment.Message = payload.Message
-		postComment.CreatedAt = payload.CreatedAt
-		postComment.Image = payload.Image
+			post.Author = int64(payload.Author)
+			post.Message = payload.Message
+			post.CreatedAt = createdAt
+			post.Image = payload.Image
+			post.Privacy = int64(payload.Privacy)
 
-		query := crud.New(db)
+			query := crud.New(db)
 
-		_, err = query.CreatePostComment(context.Background(), postComment)
-
-		if err != nil {
-			fmt.Println("Unable to insert new comment")
-		}
-
-		var Resp PostCommentResponse
-		Resp.Success = true
-		jsonResp, err := json.Marshal(Resp)
-
-		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		w.Write(jsonResp)
-	}
-
-	if r.Method == http.MethodGet {
-		fmt.Printf("----post-comment-GET---(display)--\n")
-
-		var data []PostCommentResponse
-
-		// get all comments
-
-		db := db.DbConnect()
-
-		query := crud.New(db)
-
-		comments, err := query.GetAllComments(context.Background())
-
-		if err != nil {
-			fmt.Println("Unable to get all comments")
-		}
-
-		for _, comment := range comments {
-			var newComment PostCommentResponse
-			newComment.Success = true
-			newComment.PostId = int(comment.PostID)
-			newComment.UserId = int(comment.UserID)
-			newComment.CreatedAt = comment.CreatedAt.String()
-			newComment.Message = comment.Message
-			newComment.Image = comment.Image
-
-			curUser, err := query.GetUserById(context.Background(), comment.UserID)
+			newPost, err := query.CreatePost(context.Background(), post)
 
 			if err != nil {
-				newComment.Success = false
+				Resp.Success = false
+				fmt.Println("Unable to insert new post")
+			}
+
+			Resp.Author = int(newPost.Author)
+			Resp.CreatedAt = newPost.CreatedAt.String()
+			Resp.Image = newPost.Image
+			Resp.Message = newPost.Message
+
+			curUser, err := query.GetUserById(context.Background(), newPost.Author)
+
+			if err != nil {
+				Resp.Success = false
 				fmt.Println("Unable to get user information")
 			}
 
-			newComment.Avatar = curUser.Image
-			newComment.Fname = curUser.FirstName
-			newComment.Lname = curUser.LastName
-			newComment.Nname = curUser.NickName
+			Resp.Avatar = curUser.Image
+			Resp.Fname = curUser.FirstName
+			Resp.Nname = curUser.NickName
+			Resp.Lname = curUser.LastName
 
-			data = append(data, newComment)
+			jsonResp, err := json.Marshal(Resp)
+
+			WriteHttpHeader(jsonResp, w)
 		}
-		fmt.Println(data)
-		jsonResp, _ := json.Marshal(data)
-		// fmt.Printf("posts resp %s\n", string(jsonResp))
 
-		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		w.Write(jsonResp)
+		if r.Method == http.MethodGet {
+			fmt.Printf("----post-GET---(display-posts)--\n")
+
+			var data []PostResponse
+
+			// get all public posts
+
+			db := db.DbConnect()
+
+			query := crud.New(db)
+
+			posts, err := query.GetAllPosts(context.Background())
+
+			if err != nil {
+				fmt.Println("Unable to get all posts")
+			}
+
+			for _, post := range posts {
+				var newPost PostResponse
+				newPost.Success = true
+				newPost.Id = int(post.ID)
+				newPost.Author = int(post.Author)
+				newPost.Message = post.Message
+				newPost.CreatedAt = post.CreatedAt.String()
+				newPost.Image = post.Image
+
+				curUser, err := query.GetUserById(context.Background(), post.Author)
+
+				if err != nil {
+					newPost.Success = false
+					fmt.Println("Unable to get user information")
+				}
+
+				newPost.Avatar = curUser.Image
+				newPost.Fname = curUser.FirstName
+				newPost.Lname = curUser.LastName
+				newPost.Nname = curUser.NickName
+
+				data = append(data, newPost)
+			}
+
+			// fmt.Printf("data %v\n", data)
+			jsonResp, _ := json.Marshal(data)
+			// fmt.Printf("posts resp %s\n", string(jsonResp))
+
+			WriteHttpHeader(jsonResp, w)
+		}
+	}
+}
+
+func PostCommentHandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		// fmt.Fprintf(w, "Post")
+		EnableCors(&w)
+		if r.Method == http.MethodPost {
+			fmt.Printf("-----POST---(create-comment)--\n")
+			var payload PostCommentStruct
+
+			err := json.NewDecoder(r.Body).Decode(&payload)
+			if err != nil {
+				log.Fatal(err)
+			}
+			fmt.Println(payload)
+
+			postid := payload.PostId
+			userid := payload.UserId
+			content := payload.Message
+			image := payload.Image
+			payload.CreatedAt = time.Now()
+
+			fmt.Printf("postid %d\n", postid)
+			fmt.Printf("userid %d\n", userid)
+			fmt.Printf("content %s\n", content)
+			fmt.Printf("image %s\n", image)
+
+			// insert comment into database
+
+			db := db.DbConnect()
+
+			var postComment crud.CreatePostCommentParams
+
+			postComment.PostID = int64(payload.PostId)
+			postComment.UserID = int64(payload.UserId)
+			postComment.Message = payload.Message
+			postComment.CreatedAt = payload.CreatedAt
+			postComment.Image = payload.Image
+
+			query := crud.New(db)
+
+			_, err = query.CreatePostComment(context.Background(), postComment)
+
+			if err != nil {
+				fmt.Println("Unable to insert new comment")
+			}
+
+			var Resp PostCommentResponse
+			Resp.Success = true
+			jsonResp, err := json.Marshal(Resp)
+
+			WriteHttpHeader(jsonResp, w)
+		}
+
+		if r.Method == http.MethodGet {
+			fmt.Printf("----post-comment-GET---(display)--\n")
+
+			var data []PostCommentResponse
+
+			// get all comments
+
+			db := db.DbConnect()
+
+			query := crud.New(db)
+
+			comments, err := query.GetAllComments(context.Background())
+
+			if err != nil {
+				fmt.Println("Unable to get all comments")
+			}
+
+			for _, comment := range comments {
+				var newComment PostCommentResponse
+				newComment.Success = true
+				newComment.PostId = int(comment.PostID)
+				newComment.UserId = int(comment.UserID)
+				newComment.CreatedAt = comment.CreatedAt.String()
+				newComment.Message = comment.Message
+				newComment.Image = comment.Image
+
+				curUser, err := query.GetUserById(context.Background(), comment.UserID)
+
+				if err != nil {
+					newComment.Success = false
+					fmt.Println("Unable to get user information")
+				}
+
+				newComment.Avatar = curUser.Image
+				newComment.Fname = curUser.FirstName
+				newComment.Lname = curUser.LastName
+				newComment.Nname = curUser.NickName
+
+				data = append(data, newComment)
+			}
+			fmt.Println(data)
+			jsonResp, _ := json.Marshal(data)
+			// fmt.Printf("posts resp %s\n", string(jsonResp))
+
+			WriteHttpHeader(jsonResp, w)
+		}
 	}
 }
 
@@ -666,66 +648,42 @@ func Userhandler() http.HandlerFunc {
 			return
 		}
 
-	// Prevents all request types other than GET
-	if r.Method != http.MethodGet {
-		http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
-	// Checks to find a user id in the url
-	userId := r.URL.Query().Get("id")
-	id, err := strconv.Atoi(userId)
-	if err != nil {
-		fmt.Println("Unable to convert to int")
-	}
-
-	foundId := false
-
-	if userId != "" {
-		foundId = true
-	}
-
-	// Declares the payload struct
-	var Resp UserPayload
-
-	// ### CONNECT TO DATABASE ###
-
-	db := db.DbConnect()
-
-	query := crud.New(db)
-
-	if foundId {
-		// ### GET USER BY ID ###
-		user, err := query.GetUserById(context.Background(), int64(id))
-
-		if err != nil {
-			fmt.Println("Unable to find user")
+		// Prevents all request types other than GET
+		if r.Method != http.MethodGet {
+			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
+			return
 		}
 
-		var oneUser UserStruct
-
-		oneUser.Id = int(user.ID)
-		oneUser.Fname = user.FirstName
-		oneUser.Lname = user.LastName
-		oneUser.Nname = user.NickName
-		oneUser.Email = user.Email
-		oneUser.Password = user.Password
-		oneUser.Dob = user.Dob.String()
-		oneUser.Avatar = user.Image
-		oneUser.About = user.About
-		oneUser.Public = int(user.Public)
-
-		Resp.Data = append(Resp.Data, oneUser)
-
-	} else {
-		// ### GET ALL USERS ###
-		users, err := query.ListUsers(context.Background())
-
+		// Checks to find a user id in the url
+		userId := r.URL.Query().Get("id")
+		id, err := strconv.Atoi(userId)
 		if err != nil {
-			fmt.Println("Unable to get users")
+			fmt.Println("Unable to convert to int")
 		}
 
-		for _, user := range users {
+		foundId := false
+
+		if userId != "" {
+			foundId = true
+		}
+
+		// Declares the payload struct
+		var Resp UserPayload
+
+		// ### CONNECT TO DATABASE ###
+
+		db := db.DbConnect()
+
+		query := crud.New(db)
+
+		if foundId {
+			// ### GET USER BY ID ###
+			user, err := query.GetUserById(context.Background(), int64(id))
+
+			if err != nil {
+				fmt.Println("Unable to find user")
+			}
+
 			var oneUser UserStruct
 
 			oneUser.Id = int(user.ID)
@@ -740,20 +698,44 @@ func Userhandler() http.HandlerFunc {
 			oneUser.Public = int(user.Public)
 
 			Resp.Data = append(Resp.Data, oneUser)
+
+		} else {
+			// ### GET ALL USERS ###
+			users, err := query.ListUsers(context.Background())
+
+			if err != nil {
+				fmt.Println("Unable to get users")
+			}
+
+			for _, user := range users {
+				var oneUser UserStruct
+
+				oneUser.Id = int(user.ID)
+				oneUser.Fname = user.FirstName
+				oneUser.Lname = user.LastName
+				oneUser.Nname = user.NickName
+				oneUser.Email = user.Email
+				oneUser.Password = user.Password
+				oneUser.Dob = user.Dob.String()
+				oneUser.Avatar = user.Image
+				oneUser.About = user.About
+				oneUser.Public = int(user.Public)
+
+				Resp.Data = append(Resp.Data, oneUser)
+			}
+
 		}
 
+		// Marshals the response struct to a json object
+		jsonResp, err := json.Marshal(Resp)
+		if err != nil {
+			http.Error(w, "500 internal server error", http.StatusInternalServerError)
+			return
+		}
+
+		// Sets the http headers and writes the response to the browser
+		WriteHttpHeader(jsonResp, w)
 	}
-
-	// Marshals the response struct to a json object
-	jsonResp, err := json.Marshal(Resp)
-	if err != nil {
-		http.Error(w, "500 internal server error", http.StatusInternalServerError)
-		return
-	}
-
-	// Sets the http headers and writes the response to the browser
-	WriteHttpHeader(jsonResp, w)
-
 }
 
 func UserFollowerHandler() http.HandlerFunc {
