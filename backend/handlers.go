@@ -51,31 +51,23 @@ func SessionHandler() http.HandlerFunc {
 
 			// ### CONNECT TO DATABASE ###
 
+			db := db.DbConnect()
+
+			query := crud.New(db)
+
 			// ### GET SESSION FOR USER ###
 
-			// Marshals the response struct to a json object
-			jsonResp, err := json.Marshal(Resp)
+			session, err := r.Cookie("SessionToken")
+
+			sessionTable, err := query.GetUserId(context.Background(), session.Value)
+
 			if err != nil {
 				http.Error(w, "500 internal server error", http.StatusInternalServerError)
 				return
 			}
 
-			// Sets the http headers and writes the response to the browser
-			WriteHttpHeader(jsonResp, w)
-		case http.MethodPost:
-			// Declares the variables to store the session details and handler response
-			var follower SessionStruct
-			Resp := AuthResponse{Success: true}
-
-			// Decodes the json object to the struct, changing the response to false if it fails
-			err := json.NewDecoder(r.Body).Decode(&follower)
-			if err != nil {
-				Resp.Success = false
-			}
-
-			// ### CONNECT TO DATABASE ###
-
-			// ### ADD/UPDATE SESSION FOR USER ###
+			Resp.UserId = int(sessionTable.UserID)
+			Resp.SessionToken = sessionTable.SessionToken
 
 			// Marshals the response struct to a json object
 			jsonResp, err := json.Marshal(Resp)
@@ -85,7 +77,6 @@ func SessionHandler() http.HandlerFunc {
 			}
 
 			// Sets the http headers and writes the response to the browser
-			// WriteHttpHeader(jsonResp, w)
 			w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusOK)
