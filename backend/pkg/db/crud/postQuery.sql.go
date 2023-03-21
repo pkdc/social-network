@@ -7,7 +7,6 @@ package crud
 
 import (
 	"context"
-	"database/sql"
 	"time"
 )
 
@@ -22,8 +21,8 @@ RETURNING id, author, message_, image_, created_at, privacy
 
 type CreatePostParams struct {
 	Author    int64
-	Message   sql.NullString
-	Image     sql.NullString
+	Message   string
+	Image     string
 	CreatedAt time.Time
 	Privacy   int64
 }
@@ -61,6 +60,42 @@ type DeletePostParams struct {
 func (q *Queries) DeletePost(ctx context.Context, arg DeletePostParams) error {
 	_, err := q.db.ExecContext(ctx, deletePost, arg.Author, arg.ID)
 	return err
+}
+
+const getAllPosts = `-- name: GetAllPosts :many
+SELECT id, author, message_, image_, created_at, privacy FROM post
+WHERE privacy = 0
+ORDER BY created_at DESC
+`
+
+func (q *Queries) GetAllPosts(ctx context.Context) ([]Post, error) {
+	rows, err := q.db.QueryContext(ctx, getAllPosts)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Post
+	for rows.Next() {
+		var i Post
+		if err := rows.Scan(
+			&i.ID,
+			&i.Author,
+			&i.Message,
+			&i.Image,
+			&i.CreatedAt,
+			&i.Privacy,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }
 
 const getPosts = `-- name: GetPosts :many

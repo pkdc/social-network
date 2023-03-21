@@ -7,7 +7,7 @@ import CreatePost from "../posts/CreatePost";
 import AllPosts from "../posts/AllPosts";
 
 const PostsPage = () => {
-    const postUrl = "http://localhost:8080/post/";
+    const postUrl = "http://localhost:8080/post";
 
     const [postData, setPostData] = useState([]);
     // const DATA = [
@@ -31,7 +31,10 @@ const PostsPage = () => {
             return resp.json();
         })
         .then(data => {
-            setPostData(data);
+            console.log("post data: ", data)
+            const sortedData = data.sort((a, b) => a.createdat > b.createat);
+            console.log("sorted post data: ", sortedData);
+            setPostData(sortedData);
         })
         .catch(
             err => console.log(err)
@@ -47,17 +50,16 @@ const PostsPage = () => {
         fetch(postUrl, reqOptions)
         .then(resp => resp.json())
         .then(data => {
-            console.log(data);
-            if (data) {
-                // render all posts
+            console.log("post success", data.success);
+            // if (data) {
+            //     // render all posts
                 
-            // navigate("/", {replace: true});
-            }
+            // // navigate("/", {replace: true});
+            // }
         })
         .catch(err => {
             console.log(err);
         })
-
     };
 
     return (

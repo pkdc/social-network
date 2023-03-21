@@ -1,7 +1,17 @@
 package backend
 
+import "time"
+
 type AuthResponse struct {
-	Success bool `json:"success"`
+	UserId  int    `json:"user_id"`
+	Fname   string `json:"fname"`
+	Lname   string `json:"lname"`
+	Nname   string `json:"nname"`
+	Avatar  string `json:"avatar"`
+	About   string `json:"about"`
+	Email   string `json:"email"`
+	Dob     string `json:"dob"`
+	Success bool   `json:"success"`
 }
 
 type loginPayload struct {
@@ -30,7 +40,7 @@ type UserStruct struct {
 	Dob      string `json:"dob"`
 	Avatar   string `json:"avatar"`
 	About    string `json:"about"`
-	Public   string `json:"public"`
+	Public   int    `json:"public"`
 }
 
 type UserPayload struct {
@@ -58,16 +68,36 @@ type UserMessagePayload struct {
 
 type PostStruct struct {
 	Id        int    `json:"id"`
-	Author    int    `json:"author"`
+	Author    int    `json:"author"` // author uid
 	Message   string `json:"message"`
 	Image     string `json:"image"`
 	CreatedAt string `json:"createdat"`
 	Privacy   int    `json:"privacy"`
 }
 
-type PostPayload struct {
-	Data []PostStruct `json:"data"`
+type PostResponse struct {
+	Id        int    `json:"id"`
+	Author    int    `json:"author"` // author uid
+	Fname     string `json:"fname"`
+	Lname     string `json:"lname"`
+	Avatar    string `json:"avatar"`
+	Nname     string `json:"nname"`
+	Message   string `json:"message"`
+	Image     string `json:"image"`
+	CreatedAt string `json:"createdat"`
+	Success   bool   `json:"success"`
 }
+
+type PostPayload struct {
+	Data []PostResponse `json:"data"`
+}
+
+// type PostPayload struct {
+// 	UserId  int    `json:"user_id"`
+// 	Content string `json:"content"`
+// 	Image   string `json:"image"`
+// 	Privacy string `json:"privacy"`
+// }
 
 type PostMemberStruct struct {
 	Id         int `json:"id"`
@@ -76,11 +106,26 @@ type PostMemberStruct struct {
 }
 
 type PostCommentStruct struct {
+	Id        int       `json:"id"`
+	PostId    int       `json:"postid"`
+	UserId    int       `json:"userid"`
+	CreatedAt time.Time `json:"createdat"`
+	Message   string    `json:"message"`
+	Image     string    `json:"image"`
+}
+
+type PostCommentResponse struct {
 	Id        int    `json:"id"`
 	PostId    int    `json:"postid"`
 	UserId    int    `json:"userid"`
+	Fname     string `json:"fname"`
+	Lname     string `json:"lname"`
+	Avatar    string `json:"avatar"`
+	Nname     string `json:"nname"`
 	CreatedAt string `json:"createdat"`
 	Message   string `json:"message"`
+	Image     string `json:"image"`
+	Success   bool   `json:"success"`
 }
 
 type PostCommentPayload struct {

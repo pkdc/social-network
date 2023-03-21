@@ -21,10 +21,12 @@
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
-    color: var(--ultra-violet);
 }
-.avatar {
-    border-radius: 50%;
+.author a {
+    color: var(--ultra-violet);
+    text-decoration: none;
+}
+.post-avatar {
     margin-right: 0.5rem;
 }
 
@@ -37,6 +39,10 @@
     
 }
 
+.create-at {
+    margin: 0 10px;;
+}
+
 .content {
     margin: 10px;
 }
@@ -45,4 +51,9 @@
 .comments {
     display: flex;
     justify-content: flex-end;
+    cursor: pointer;
+}
+
+.comments:hover {
+    color: var(--ultra-violet);
 }

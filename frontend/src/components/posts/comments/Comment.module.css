@@ -1,11 +1,28 @@
-
-
-.username {
-    font-weight: bold;
-}
-
 .comment {
     display: flex;
     gap: 10px;
     background: var(antiflash-white);
+}
+
+.author {
+    margin: 0.2rem 0.2rem 0 0.2rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+.author a {
+    color: var(--ultra-violet);
+    text-decoration: none;
+}
+
+.comment-avatar {
+    margin-right: 0.5rem;
+}
+
+.content {
+    margin: 0 10px;
+}
+
+.create-at {
+    margin: 0 10px;;
 }

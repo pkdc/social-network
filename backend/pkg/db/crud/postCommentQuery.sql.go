@@ -12,11 +12,11 @@ import (
 
 const createPostComment = `-- name: CreatePostComment :one
 INSERT INTO post_comment (
-  user_id, post_id, created_at, message_
+  user_id, post_id, created_at, message_, image_
 ) VALUES (
-  ?, ?, ?, ?
+  ?, ?, ?, ?, ?
 )
-RETURNING id, user_id, post_id, created_at, message_
+RETURNING id, user_id, post_id, created_at, message_, image_
 `
 
 type CreatePostCommentParams struct {
@@ -24,6 +24,7 @@ type CreatePostCommentParams struct {
 	PostID    int64
 	CreatedAt time.Time
 	Message   string
+	Image     string
 }
 
 func (q *Queries) CreatePostComment(ctx context.Context, arg CreatePostCommentParams) (PostComment, error) {
@@ -32,6 +33,7 @@ func (q *Queries) CreatePostComment(ctx context.Context, arg CreatePostCommentPa
 		arg.PostID,
 		arg.CreatedAt,
 		arg.Message,
+		arg.Image,
 	)
 	var i PostComment
 	err := row.Scan(
@@ -40,6 +42,7 @@ func (q *Queries) CreatePostComment(ctx context.Context, arg CreatePostCommentPa
 		&i.PostID,
 		&i.CreatedAt,
 		&i.Message,
+		&i.Image,
 	)
 	return i, err
 }
@@ -59,8 +62,43 @@ func (q *Queries) DeletePostComment(ctx context.Context, arg DeletePostCommentPa
 	return err
 }
 
+const getAllComments = `-- name: GetAllComments :many
+SELECT id, user_id, post_id, created_at, message_, image_ FROM post_comment
+ORDER BY created_at DESC
+`
+
+func (q *Queries) GetAllComments(ctx context.Context) ([]PostComment, error) {
+	rows, err := q.db.QueryContext(ctx, getAllComments)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []PostComment
+	for rows.Next() {
+		var i PostComment
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.PostID,
+			&i.CreatedAt,
+			&i.Message,
+			&i.Image,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getPostComments = `-- name: GetPostComments :many
-SELECT id, user_id, post_id, created_at, message_ FROM post_comment
+SELECT id, user_id, post_id, created_at, message_, image_ FROM post_comment
 WHERE post_id = ?
 ORDER BY created_at
 `
@@ -80,6 +118,7 @@ func (q *Queries) GetPostComments(ctx context.Context, postID int64) ([]PostComm
 			&i.PostID,
 			&i.CreatedAt,
 			&i.Message,
+			&i.Image,
 		); err != nil {
 			return nil, err
 		}

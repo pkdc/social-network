@@ -1,6 +1,10 @@
 -- name: GetUser :one
+SELECT *, COUNT(*) FROM user
+WHERE email = ? LIMIT 1;
+
+-- name: GetUserById :one
 SELECT * FROM user
-WHERE id = ? LIMIT 1;
+WHERE id = ?;
 
 -- name: ListUsers :many
 SELECT * FROM user
@@ -31,3 +35,8 @@ about = ?,
 public = ?
 WHERE id = ?
 RETURNING *;
+
+-- name: GetUserExist :one
+SELECT COUNT(*)
+FROM user
+WHERE email = ? OR nick_name = ?;

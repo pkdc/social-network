@@ -3,7 +3,7 @@ CREATE TABLE group_event (
   author INTEGER NOT NULL,
   group_id INTEGER NOT NULL,
   title TEXT NOT NULL,
-  description_ TEXT,
+  description_ TEXT NOT NULL,
   created_at DATETIME NOT NULL,
   date_ DATETIME NOT NULL,
   FOREIGN KEY (author) REFERENCES user(id),

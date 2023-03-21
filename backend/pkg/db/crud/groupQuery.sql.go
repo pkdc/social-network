@@ -7,7 +7,6 @@ package crud
 
 import (
 	"context"
-	"database/sql"
 	"time"
 )
 
@@ -23,7 +22,7 @@ RETURNING id, title, creator, description_, created_at
 type CreateGroupParams struct {
 	Title       string
 	Creator     int64
-	Description sql.NullString
+	Description string
 	CreatedAt   time.Time
 }
 

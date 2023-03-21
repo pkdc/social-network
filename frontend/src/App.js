@@ -15,8 +15,8 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false);
   // const navigate = useNavigate();
   
-  const loginURL = "http://localhost:8080/login/";
-  const regURL = "http://localhost:8080/reg/";
+  const loginURL = "http://localhost:8080/login";
+  const regURL = "http://localhost:8080/reg";
 
   const loginHandler = (loginPayloadObj) => {
     console.log("app.js", loginPayloadObj);
@@ -95,6 +95,8 @@ function App() {
           {path: "/group", element: <GroupPage />},
           {path: "/groupprofile", element: <GroupProfilePage />},
           {path: "/groups", element: <GroupPage />},
+          {path: "/profile/:userId"}
+          // {path: "/user/:userId", element <UserProfilePage />},
       ],
     }
   
