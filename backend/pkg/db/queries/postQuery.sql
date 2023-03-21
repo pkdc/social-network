@@ -2,6 +2,11 @@
 SELECT * FROM post
 WHERE author = ?;
 
+-- name: GetAllPosts :many
+SELECT * FROM post
+WHERE privary = 0
+ORDER BY created_at;
+
 -- name: CreatePost :one
 INSERT INTO post (
   author, message_, image_, created_at, privacy
