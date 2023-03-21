@@ -22,6 +22,11 @@ function App() {
     console.log("app.js", loginPayloadObj);
     const reqOptions = {
       method: "POST",
+      credentials: "include",
+      mode: "cors",
+      headers: {
+        'Content-Type': 'application/json'
+      },
       body: JSON.stringify(loginPayloadObj)
     };
     fetch(loginURL, reqOptions)
@@ -46,6 +51,11 @@ function App() {
     console.log("app.js", regPayloadObj);
     const reqOptions = {
       method: "POST",
+      credentials: "include",
+      mode: "cors",
+      headers: {
+        'Content-Type': 'application/json'
+    },
       body: JSON.stringify(regPayloadObj)
     };
   
