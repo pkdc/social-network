@@ -27,6 +27,7 @@ code {
 
 textarea {
   border: none;
+  outline: none;
   border-radius: 20px;
   resize: none;
   padding: 8px;
@@ -35,9 +36,11 @@ textarea {
 
 input {
   border: none;
+  outline: none;
   background-color: rgb(230, 230, 230);
   padding: 8px;
   border-radius: 15px;
+
   
 }
 

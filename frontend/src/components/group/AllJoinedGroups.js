@@ -3,20 +3,22 @@ import JoinedGroup from "./JoinedGroup";
 import classes from './AllJoinedGroups.module.css';
 import useGet from "../fetch/useGet";
 
-function AllJoinedGroups(props) {
+function AllJoinedGroups(   ) {
+
+    const { data } = useGet("/group");
 
     return <Card>
         <div className={classes.label}>
         Groups you've joined
         </div>
-           {props.myGroups.map((group) => (
-            <JoinedGroup
+        {data.map((group) => (
+         <JoinedGroup
         key={group.id}
         id={group.id}
         title={group.title} 
-        members={group.members}
-        desc={group.desc}  
-        img={group.img}
+        creator={group.creator}
+        description={group.description}  
+        // img={group.img}
         />
         ))}
     </Card>

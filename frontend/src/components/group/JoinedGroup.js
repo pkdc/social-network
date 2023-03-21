@@ -8,18 +8,18 @@ function JoinedGroup(props) {
     // const { data, isLoading, error } = useGet("/group")
 
     function handleClick(e) {
-    //     const id = e.target.id //??
-    
-        // console.log(data)
+        const id = e.target.id
+        
+            console.log("id: ", id)
         navigate("/groupprofile", {
             state: {
-                // data
+                id
             }
         })
         
     }
     return <div>
-          <div className={classes.container} onClick={handleClick} >
+          <div id={props.id} className={classes.container} onClick={handleClick} >
                 <div className={classes.img}></div>
                 <div>
                     <div className={classes.title}>{props.title}</div>

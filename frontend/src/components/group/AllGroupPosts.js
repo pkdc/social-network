@@ -6,17 +6,17 @@ import useGet from "../fetch/useGet";
 
 function AllGroupPosts(props) {
 
-    const { data } = useGet("/groupposts")
-    console.log(data)
+    const { data } = useGet("/group-posts")
 
     return <div className={classes.container}>
         {data.map((post) => (
          <GroupPost
         key={post.id}
         id={post.id}
-        user={post.user}
-        content={post.content}
-        date={post.date} 
+        author={post.author}
+        message={post.message}
+        image={post.image}
+        createdat={post.createdat} 
         />
         ))}
     </div>
