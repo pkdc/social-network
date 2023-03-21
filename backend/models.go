@@ -8,6 +8,9 @@ type AuthResponse struct {
 	Lname   string `json:"lname"`
 	Nname   string `json:"nname"`
 	Avatar  string `json:"avatar"`
+	About   string `json:"about"`
+	Email   string `json:"email"`
+	Dob     string `json:"dob"`
 	Success bool   `json:"success"`
 }
 

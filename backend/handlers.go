@@ -154,6 +154,9 @@ func Loginhandler(w http.ResponseWriter, r *http.Request) {
 		Resp.Lname = curUser.LastName
 		Resp.Nname = curUser.NickName.String
 		Resp.Avatar = curUser.Image.String
+		Resp.Email = curUser.Email
+		Resp.About = curUser.About.String
+		Resp.Dob = curUser.Dob.Time.String()
 
 		if email == "f" {
 			Resp.Success = false
@@ -326,6 +329,9 @@ func Reghandler(w http.ResponseWriter, r *http.Request) {
 			Resp.Lname = curUser.LastName
 			Resp.Nname = curUser.NickName.String
 			Resp.Avatar = curUser.Image.String
+			Resp.Email = curUser.Email
+			Resp.About = curUser.About.String
+			Resp.Dob = curUser.Dob.Time.String()
 
 			if email == "f" {
 				Resp.Success = false
@@ -404,7 +410,6 @@ func Logouthandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func Posthandler(w http.ResponseWriter, r *http.Request) {
-	// fmt.Fprintf(w, "Post")
 
 	if r.Method == http.MethodPost {
 		fmt.Printf("-----POST---(create-post)--\n")
@@ -416,20 +421,59 @@ func Posthandler(w http.ResponseWriter, r *http.Request) {
 		}
 		fmt.Println(payload)
 
-		id := payload.Id
 		author := payload.Author
 		message := payload.Message
 		image := payload.Image
 		privacy := payload.Privacy
+		createdAt := time.Now()
 
-		fmt.Printf("post id %d\n", id)
 		fmt.Printf("post author userid %d\n", author)
 		fmt.Printf("post message %s\n", message)
 		fmt.Printf("post image %s\n", image)
 		fmt.Printf("post privacy %d\n", privacy)
+		fmt.Printf("post created at %d\n", createdAt)
 
 		var Resp PostResponse
 		Resp.Success = true
+
+		// insert post to database
+
+		db := db.DbConnect()
+
+		var post crud.CreatePostParams
+
+		post.Author = int64(payload.Author)
+		post.Message.String = payload.Message
+		post.CreatedAt = createdAt
+		post.Image.String = payload.Image
+		post.Privacy = int64(payload.Privacy)
+
+		query := crud.New(db)
+
+		newPost, err := query.CreatePost(context.Background(), post)
+
+		if err != nil {
+			Resp.Success = false
+			fmt.Println("Unable to insert new post")
+		}
+
+		Resp.Author = int(newPost.Author)
+		Resp.CreatedAt = newPost.CreatedAt.String()
+		Resp.Image = newPost.Image.String
+		Resp.Message = newPost.Message.String
+
+		curUser, err := query.GetUserById(context.Background(), newPost.ID)
+
+		if err != nil {
+			Resp.Success = false
+			fmt.Println("Unable to get user information")
+		}
+
+		Resp.Avatar = curUser.Image.String
+		Resp.Fname = curUser.FirstName
+		Resp.Nname = curUser.NickName.String
+		Resp.Lname = curUser.LastName
+
 		jsonResp, err := json.Marshal(Resp)
 
 		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")

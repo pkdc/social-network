@@ -27,7 +27,7 @@ func main() {
 	http.HandleFunc("/logout", backend.Logouthandler)
 
 	mux.Handle("/", backend.Homehandler())
-	mux.Handle("/session", backend.SessionHandler())
+	// mux.Handle("/session", backend.SessionHandler())
 	// mux.Handle("/login", backend.Loginhandler())
 	// mux.Handle("/logout", backend.Logouthandler())
 	// mux.Handle("/reg", backend.Reghandler())

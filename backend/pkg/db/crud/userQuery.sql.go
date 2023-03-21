@@ -107,6 +107,29 @@ func (q *Queries) GetUser(ctx context.Context, email string) (GetUserRow, error)
 	return i, err
 }
 
+const getUserById = `-- name: GetUserById :one
+SELECT id, first_name, last_name, nick_name, email, password_, dob, image_, about, public FROM user
+WHERE id = ?
+`
+
+func (q *Queries) GetUserById(ctx context.Context, id int64) (User, error) {
+	row := q.db.QueryRowContext(ctx, getUserById, id)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.FirstName,
+		&i.LastName,
+		&i.NickName,
+		&i.Email,
+		&i.Password,
+		&i.Dob,
+		&i.Image,
+		&i.About,
+		&i.Public,
+	)
+	return i, err
+}
+
 const getUserExist = `-- name: GetUserExist :one
 SELECT COUNT(*)
 FROM user
