@@ -7,7 +7,6 @@ package crud
 
 import (
 	"context"
-	"database/sql"
 	"time"
 )
 
@@ -24,7 +23,7 @@ type CreateGroupEventParams struct {
 	Author      int64
 	GroupID     int64
 	Title       string
-	Description sql.NullString
+	Description string
 	CreatedAt   time.Time
 	Date        time.Time
 }

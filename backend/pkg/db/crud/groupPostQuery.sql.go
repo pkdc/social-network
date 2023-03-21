@@ -7,7 +7,6 @@ package crud
 
 import (
 	"context"
-	"database/sql"
 	"time"
 )
 
@@ -24,7 +23,7 @@ type CreateGroupPostParams struct {
 	Author    int64
 	GroupID   int64
 	Message   string
-	Image     sql.NullString
+	Image     string
 	CreatedAt time.Time
 }
 

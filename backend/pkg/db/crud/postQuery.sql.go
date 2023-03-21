@@ -7,7 +7,6 @@ package crud
 
 import (
 	"context"
-	"database/sql"
 	"time"
 )
 
@@ -22,8 +21,8 @@ RETURNING id, author, message_, image_, created_at, privacy
 
 type CreatePostParams struct {
 	Author    int64
-	Message   sql.NullString
-	Image     sql.NullString
+	Message   string
+	Image     string
 	CreatedAt time.Time
 	Privacy   int64
 }
@@ -65,8 +64,8 @@ func (q *Queries) DeletePost(ctx context.Context, arg DeletePostParams) error {
 
 const getAllPosts = `-- name: GetAllPosts :many
 SELECT id, author, message_, image_, created_at, privacy FROM post
-WHERE privary = 0
-ORDER BY created_at
+WHERE privacy = 0
+ORDER BY created_at DESC
 `
 
 func (q *Queries) GetAllPosts(ctx context.Context) ([]Post, error) {

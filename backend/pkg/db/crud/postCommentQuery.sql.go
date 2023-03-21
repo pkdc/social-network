@@ -7,7 +7,6 @@ package crud
 
 import (
 	"context"
-	"database/sql"
 	"time"
 )
 
@@ -25,7 +24,7 @@ type CreatePostCommentParams struct {
 	PostID    int64
 	CreatedAt time.Time
 	Message   string
-	Image     sql.NullString
+	Image     string
 }
 
 func (q *Queries) CreatePostComment(ctx context.Context, arg CreatePostCommentParams) (PostComment, error) {
@@ -61,6 +60,41 @@ type DeletePostCommentParams struct {
 func (q *Queries) DeletePostComment(ctx context.Context, arg DeletePostCommentParams) error {
 	_, err := q.db.ExecContext(ctx, deletePostComment, arg.UserID, arg.PostID)
 	return err
+}
+
+const getAllComments = `-- name: GetAllComments :many
+SELECT id, user_id, post_id, created_at, message_, image_ FROM post_comment
+ORDER BY created_at DESC
+`
+
+func (q *Queries) GetAllComments(ctx context.Context) ([]PostComment, error) {
+	rows, err := q.db.QueryContext(ctx, getAllComments)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []PostComment
+	for rows.Next() {
+		var i PostComment
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.PostID,
+			&i.CreatedAt,
+			&i.Message,
+			&i.Image,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }
 
 const getPostComments = `-- name: GetPostComments :many

@@ -40,7 +40,7 @@ type UserStruct struct {
 	Dob      string `json:"dob"`
 	Avatar   string `json:"avatar"`
 	About    string `json:"about"`
-	Public   string `json:"public"`
+	Public   int    `json:"public"`
 }
 
 type UserPayload struct {

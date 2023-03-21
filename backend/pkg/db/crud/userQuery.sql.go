@@ -7,7 +7,7 @@ package crud
 
 import (
 	"context"
-	"database/sql"
+	"time"
 )
 
 const createUser = `-- name: CreateUser :one
@@ -22,12 +22,12 @@ RETURNING id, first_name, last_name, nick_name, email, password_, dob, image_, a
 type CreateUserParams struct {
 	FirstName string
 	LastName  string
-	NickName  sql.NullString
+	NickName  string
 	Email     string
 	Password  string
-	Dob       sql.NullTime
-	Image     sql.NullString
-	About     sql.NullString
+	Dob       time.Time
+	Image     string
+	About     string
 	Public    int64
 }
 
@@ -78,12 +78,12 @@ type GetUserRow struct {
 	ID        int64
 	FirstName string
 	LastName  string
-	NickName  sql.NullString
+	NickName  string
 	Email     string
 	Password  string
-	Dob       sql.NullTime
-	Image     sql.NullString
-	About     sql.NullString
+	Dob       time.Time
+	Image     string
+	About     string
 	Public    int64
 	Count     int64
 }
@@ -138,7 +138,7 @@ WHERE email = ? OR nick_name = ?
 
 type GetUserExistParams struct {
 	Email    string
-	NickName sql.NullString
+	NickName string
 }
 
 func (q *Queries) GetUserExist(ctx context.Context, arg GetUserExistParams) (int64, error) {
@@ -205,12 +205,12 @@ RETURNING id, first_name, last_name, nick_name, email, password_, dob, image_, a
 type UpdateUserParams struct {
 	FirstName string
 	LastName  string
-	NickName  sql.NullString
+	NickName  string
 	Email     string
 	Password  string
-	Dob       sql.NullTime
-	Image     sql.NullString
-	About     sql.NullString
+	Dob       time.Time
+	Image     string
+	About     string
 	Public    int64
 	ID        int64
 }

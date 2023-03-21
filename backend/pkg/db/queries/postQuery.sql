@@ -4,8 +4,8 @@ WHERE author = ?;
 
 -- name: GetAllPosts :many
 SELECT * FROM post
-WHERE privary = 0
-ORDER BY created_at;
+WHERE privacy = 0
+ORDER BY created_at DESC;
 
 -- name: CreatePost :one
 INSERT INTO post (
