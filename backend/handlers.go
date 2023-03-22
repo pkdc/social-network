@@ -232,10 +232,10 @@ func Reghandler() http.HandlerFunc {
 		}
 
 		// Prevents all request types other than POST
-		if r.Method != http.MethodPost {
-			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
-			return
-		}
+		// if r.Method != http.MethodPost {
+		// 	http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
+		// 	return
+		// }
 
 		if r.Method == http.MethodPost {
 			fmt.Printf("----reg-POST-----\n")
@@ -366,10 +366,10 @@ func Logouthandler() http.HandlerFunc {
 		}
 
 		// Prevents all request types other than POST
-		if r.Method != http.MethodGet {
-			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
-			return
-		}
+		// if r.Method != http.MethodGet {
+		// 	http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
+		// 	return
+		// }
 
 		// Declares the handler response
 		Resp := AuthResponse{Success: true}
@@ -776,7 +776,24 @@ func UserFollowerHandler() http.HandlerFunc {
 
 			// ### CONNECT TO DATABASE ###
 
+			db := db.DbConnect()
+
+			query := crud.New(db)
+
 			// ### ADD FOLLOWER TO DATABASE ###
+
+			var newFollower crud.CreateFollowerParams
+
+			newFollower.SourceID = int64(follower.SourceId)
+			newFollower.TargetID = int64(follower.TargetId)
+			newFollower.Status = int64(follower.Status)
+
+			_, err = query.CreateFollower(context.Background(), newFollower)
+
+			if err != nil {
+				fmt.Println("Unable to insert follower")
+				Resp.Success = false
+			}
 
 			// Marshals the response struct to a json object
 			jsonResp, err := json.Marshal(Resp)
@@ -907,11 +924,11 @@ func Grouphandler() http.HandlerFunc {
 			WriteHttpHeader(jsonResp, w)
 		case http.MethodPost:
 			// Declares the variables to store the group details and handler response
-			var post GroupStruct
+			var group GroupStruct
 			Resp := AuthResponse{Success: true}
 
 			// Decodes the json object to the struct, changing the response to false if it fails
-			err := json.NewDecoder(r.Body).Decode(&post)
+			err := json.NewDecoder(r.Body).Decode(&group)
 			if err != nil {
 				Resp.Success = false
 			}
