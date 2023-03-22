@@ -9,6 +9,7 @@ import RegForm from './components/pages/RegForm';
 import PostsPage from './components/pages/PostsPage';
 import GroupPage from "./components/pages/GroupPage";
 import GroupProfilePage from "./components/pages/GroupProfilePage";
+import ProfilePage from "./components/pages/ProfilePage";
 
 
 function App() {
@@ -81,17 +82,17 @@ function App() {
     {path: "/", element: <Landingpage />},
     {path: "/login", element: <LoginForm onLogin={loginHandler}/>},
     {path: "/reg", element: <RegForm onReg={regHandler}/>},
-    {path: "/group", element: <GroupPage />},
     {path: "/groupprofile", element: <GroupProfilePage />},
     {path: "/groups", element: <GroupPage />},
   ]);
 
-  if (loggedIn) router = createBrowserRouter([
+ if (loggedIn) router = createBrowserRouter([
     {
       path: "/",
       element: <Root />,
       children: [
           {path: "/", element: <PostsPage />},
+          {path: "/profile", element: <ProfilePage />},
           {path: "/group", element: <GroupPage />},
           {path: "/groupprofile", element: <GroupProfilePage />},
           {path: "/groups", element: <GroupPage />},

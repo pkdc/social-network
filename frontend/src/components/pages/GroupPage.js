@@ -2,7 +2,8 @@ import AllGroups from "../group/AllGroups";
 import AllJoinedGroups from "../group/AllJoinedGroups";
 import CreateGroup from "../group/CreateGroup";
 
-import classes from './GroupPage.module.css';
+// import classes from './GroupPage.module.css';
+import classes from './layout.module.css';
 
 
 const DATA = [
@@ -26,11 +27,11 @@ function GroupPage() {
 
 return <div className={classes.container}>
     <div className={classes.mid}>
-            <AllGroups allGroups={DATA}></AllGroups>
+            <AllGroups></AllGroups>
     </div>
     <div className={classes.right}>
+        <AllJoinedGroups></AllJoinedGroups>
         <CreateGroup></CreateGroup>
-        <AllJoinedGroups myGroups={DATA}></AllJoinedGroups>
     </div>
 
 </div>
