@@ -840,7 +840,19 @@ func UserMessageHandler() http.HandlerFunc {
 
 			// ### CONNECT TO DATABASE ###
 
+			db := db.DbConnect()
+
+			query := crud.New(db)
+
 			// ### ADD USER MESSAGE TO DATABASE ###
+
+			var message crud.CreateMessageParams
+			message.CreatedAt = time.Now()
+			message.Message = userMessage.Message
+			message.SourceID = int64(userMessage.SourceId)
+			message.TargetID = int64(userMessage.TargetId)
+
+			query.CreateMessage(context.Background(), message)
 
 			// Marshals the response struct to a json object
 			jsonResp, err := json.Marshal(Resp)
