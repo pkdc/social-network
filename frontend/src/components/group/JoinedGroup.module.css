@@ -12,12 +12,12 @@
     border-radius: 20px;
 }
 
-.wrapper {
+/* .wrapper {
     display: flex; 
     justify-content: center;
     align-items: center;
     gap: 10px;
-}
+} */
 
 
 .img {
@@ -27,15 +27,15 @@
     background: var(--antiflash-white);
 }
 
-.desc {
+/* .desc {
     color: grey;
-}
+} */
  
-.members {
+/* .members {
     color: grey;
     font-size: 0.8rem;
     margin-bottom: 12px;
-}
+} */
 
 .btn {
 

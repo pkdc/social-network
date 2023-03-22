@@ -1,0 +1,87 @@
+.container {
+    width: 100%;
+    margin-top: -40px;
+}
+
+.wrapper {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    width: 100%;
+}
+
+.column {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 20px;
+
+}
+
+.row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.btn {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+   
+}
+
+.img {
+
+    padding: 50px;
+    border-radius: 50%;
+    background: rgb(188, 188, 188);
+}
+
+.username {
+    /* margin-top: -10ypx; */
+
+}
+
+.followers {
+    display: flex;
+    gap: 20px;
+}
+
+
+
+
+.count {
+    font-weight: bold;
+}
+
+
+
+.private {
+    display: flex;
+    justify-content: flex-end;
+    margin: 10px;
+}
+
+
+
+
+
+/* left-side */
+
+/* .follow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+} */
+
+/* .wrapper {
+    /* left-side
+    align-items: center;
+} */
+
+/* .followers {
+     align-items: center;
+    justify-content: center;
+} */
