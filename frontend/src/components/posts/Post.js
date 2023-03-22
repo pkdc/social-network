@@ -6,7 +6,7 @@ import AllCommentsForEachPost from "./comments/AllCommentsForEachPost";
 import CreateComment from './comments/CreateComment';
 import Avatar from '../UI/Avatar';
 import Card from '../UI/Card';
-import AllComments from './comments/AllComments';
+// import AllComments from './comments/AllComments';
 
 
 function Post(props) {

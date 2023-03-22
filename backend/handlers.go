@@ -232,10 +232,10 @@ func Reghandler() http.HandlerFunc {
 		}
 
 		// Prevents all request types other than POST
-		if r.Method != http.MethodPost {
-			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
-			return
-		}
+		// if r.Method != http.MethodPost {
+		// 	http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
+		// 	return
+		// }
 
 		if r.Method == http.MethodPost {
 			fmt.Printf("----reg-POST-----\n")

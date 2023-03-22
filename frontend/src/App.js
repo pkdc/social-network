@@ -86,8 +86,7 @@ function App() {
     {path: "/groups", element: <GroupPage />},
   ]);
 
-  // if (loggedIn) 
-  router = createBrowserRouter([
+ if (loggedIn) router = createBrowserRouter([
     {
       path: "/",
       element: <Root />,
