@@ -26,7 +26,7 @@ func main() {
 	mux.Handle("/reg", backend.Reghandler())
 	mux.Handle("/user", backend.Userhandler())
 	mux.Handle("/user-follower", backend.UserFollowerHandler())
-	mux.Handle("/user-follower", backend.UserFollowingHandler())
+	mux.Handle("/user-following", backend.UserFollowingHandler())
 	mux.Handle("/user-message", backend.UserMessageHandler())
 	mux.Handle("/post", backend.Posthandler())
 	mux.Handle("/post-comment", backend.PostCommentHandler())

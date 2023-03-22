@@ -865,7 +865,7 @@ func UserFollowingHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		EnableCors(&w)
 		// Prevents the endpoint being called from other url paths
-		if err := UrlPathMatcher(w, r, "/user-follower"); err != nil {
+		if err := UrlPathMatcher(w, r, "/user-following"); err != nil {
 			return
 		}
 
@@ -873,15 +873,15 @@ func UserFollowingHandler() http.HandlerFunc {
 		case http.MethodGet:
 
 			// Checks to find a user id in the url
-			targetId := r.URL.Query().Get("id")
-			id, err := strconv.Atoi(targetId)
+			sourceId := r.URL.Query().Get("id")
+			id, err := strconv.Atoi(sourceId)
 			if err != nil {
 				fmt.Println("Unable to convert to int")
 			}
 
 			foundId := false
 
-			if targetId != "" {
+			if sourceId != "" {
 				foundId = true
 			}
 
@@ -896,13 +896,13 @@ func UserFollowingHandler() http.HandlerFunc {
 
 			if foundId {
 				// ### GET USER FOLLOWERS ###
-				followers, err := query.GetFollowers(context.Background(), int64(id))
+				followings, err := query.GetFollowings(context.Background(), int64(id))
 
 				if err != nil {
 					fmt.Println("Unable to find followers")
 				}
 
-				for _, follower := range followers {
+				for _, follower := range followings {
 					user, err := query.GetUserById(context.Background(), follower.SourceID)
 
 					if err != nil {
@@ -925,47 +925,6 @@ func UserFollowingHandler() http.HandlerFunc {
 					Resp.Data = append(Resp.Data, oneUser)
 				}
 
-			}
-
-			// Marshals the response struct to a json object
-			jsonResp, err := json.Marshal(Resp)
-			if err != nil {
-				http.Error(w, "500 internal server error", http.StatusInternalServerError)
-				return
-			}
-
-			// Sets the http headers and writes the response to the browser
-			WriteHttpHeader(jsonResp, w)
-		case http.MethodPost:
-			// Declares the variables to store the follower details and handler response
-			var follower UserFollowerStruct
-			Resp := AuthResponse{Success: true}
-
-			// Decodes the json object to the struct, changing the response to false if it fails
-			err := json.NewDecoder(r.Body).Decode(&follower)
-			if err != nil {
-				Resp.Success = false
-			}
-
-			// ### CONNECT TO DATABASE ###
-
-			db := db.DbConnect()
-
-			query := crud.New(db)
-
-			// ### ADD FOLLOWER TO DATABASE ###
-
-			var newFollower crud.CreateFollowerParams
-
-			newFollower.SourceID = int64(follower.SourceId)
-			newFollower.TargetID = int64(follower.TargetId)
-			newFollower.Status = int64(follower.Status)
-
-			_, err = query.CreateFollower(context.Background(), newFollower)
-
-			if err != nil {
-				fmt.Println("Unable to insert follower")
-				Resp.Success = false
 			}
 
 			// Marshals the response struct to a json object
