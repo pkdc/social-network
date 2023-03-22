@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { createBrowserRouter, RouterProvider, useNavigate } from "react-router-dom";
-import Card from './components/UI/Card';
-import Form from './components/UI/Form';
+// import Card from './components/UI/Card';
+// import Form from './components/UI/Form';
 import Root from "./components/pages/Root";
 import Landingpage from './components/pages/Landingpage';
 import LoginForm from './components/pages/LoginForm';

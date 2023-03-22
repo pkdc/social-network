@@ -103,12 +103,12 @@ func Loginhandler() http.HandlerFunc {
 		if err := UrlPathMatcher(w, r, "/login"); err != nil {
 			return
 		}
-
+		// this stops OPTIONS method from running and therefore not allowing to set access control allow headers
 		// Prevents all request types other than POST
-		if r.Method != http.MethodPost {
-			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
-			return
-		}
+		// if r.Method != http.MethodPost {
+		// 	http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
+		// 	return
+		// }
 
 		if r.Method == http.MethodPost {
 			fmt.Printf("----login-POST-----\n")
@@ -631,7 +631,6 @@ func PostCommentHandler() http.HandlerFunc {
 
 				data = append(data, newComment)
 			}
-			fmt.Println(data)
 			jsonResp, _ := json.Marshal(data)
 			// fmt.Printf("posts resp %s\n", string(jsonResp))
 
