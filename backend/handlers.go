@@ -366,10 +366,10 @@ func Logouthandler() http.HandlerFunc {
 		}
 
 		// Prevents all request types other than POST
-		if r.Method != http.MethodGet {
-			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
-			return
-		}
+		// if r.Method != http.MethodGet {
+		// 	http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
+		// 	return
+		// }
 
 		// Declares the handler response
 		Resp := AuthResponse{Success: true}
@@ -747,12 +747,61 @@ func UserFollowerHandler() http.HandlerFunc {
 
 		switch r.Method {
 		case http.MethodGet:
+
+			// Checks to find a user id in the url
+			targetId := r.URL.Query().Get("id")
+			id, err := strconv.Atoi(targetId)
+			if err != nil {
+				fmt.Println("Unable to convert to int")
+			}
+
+			foundId := false
+
+			if targetId != "" {
+				foundId = true
+			}
+
 			// Declares the payload struct
 			var Resp UserPayload
 
 			// ### CONNECT TO DATABASE ###
 
-			// ### GET ALL FOLLOWERS FOR USER ###
+			db := db.DbConnect()
+
+			query := crud.New(db)
+
+			if foundId {
+				// ### GET USER FOLLOWERS ###
+				followers, err := query.GetFollowers(context.Background(), int64(id))
+
+				if err != nil {
+					fmt.Println("Unable to find followers")
+				}
+
+				for _, follower := range followers {
+					user, err := query.GetUserById(context.Background(), follower.SourceID)
+
+					if err != nil {
+						fmt.Println("Unable to find user")
+					}
+
+					var oneUser UserStruct
+
+					oneUser.Id = int(user.ID)
+					oneUser.Fname = user.FirstName
+					oneUser.Lname = user.LastName
+					oneUser.Nname = user.NickName
+					oneUser.Email = user.Email
+					oneUser.Password = user.Password
+					oneUser.Dob = user.Dob.String()
+					oneUser.Avatar = user.Image
+					oneUser.About = user.About
+					oneUser.Public = int(user.Public)
+
+					Resp.Data = append(Resp.Data, oneUser)
+				}
+
+			}
 
 			// Marshals the response struct to a json object
 			jsonResp, err := json.Marshal(Resp)
@@ -776,7 +825,147 @@ func UserFollowerHandler() http.HandlerFunc {
 
 			// ### CONNECT TO DATABASE ###
 
+			db := db.DbConnect()
+
+			query := crud.New(db)
+
 			// ### ADD FOLLOWER TO DATABASE ###
+
+			var newFollower crud.CreateFollowerParams
+
+			newFollower.SourceID = int64(follower.SourceId)
+			newFollower.TargetID = int64(follower.TargetId)
+			newFollower.Status = int64(follower.Status)
+
+			_, err = query.CreateFollower(context.Background(), newFollower)
+
+			if err != nil {
+				fmt.Println("Unable to insert follower")
+				Resp.Success = false
+			}
+
+			// Marshals the response struct to a json object
+			jsonResp, err := json.Marshal(Resp)
+			if err != nil {
+				http.Error(w, "500 internal server error", http.StatusInternalServerError)
+				return
+			}
+
+			// Sets the http headers and writes the response to the browser
+			WriteHttpHeader(jsonResp, w)
+		default:
+			// Prevents all request types other than POST and GET
+			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
+	}
+}
+
+func UserFollowingHandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		EnableCors(&w)
+		// Prevents the endpoint being called from other url paths
+		if err := UrlPathMatcher(w, r, "/user-following"); err != nil {
+			return
+		}
+
+		switch r.Method {
+		case http.MethodGet:
+
+			// Checks to find a user id in the url
+			sourceId := r.URL.Query().Get("id")
+			id, err := strconv.Atoi(sourceId)
+			if err != nil {
+				fmt.Println("Unable to convert to int")
+			}
+
+			foundId := false
+
+			if sourceId != "" {
+				foundId = true
+			}
+
+			// Declares the payload struct
+			var Resp UserPayload
+
+			// ### CONNECT TO DATABASE ###
+
+			db := db.DbConnect()
+
+			query := crud.New(db)
+
+			if foundId {
+				// ### GET USER FOLLOWERS ###
+				followings, err := query.GetFollowings(context.Background(), int64(id))
+
+				if err != nil {
+					fmt.Println("Unable to find followers")
+				}
+
+				for _, follower := range followings {
+					user, err := query.GetUserById(context.Background(), follower.SourceID)
+
+					if err != nil {
+						fmt.Println("Unable to find user")
+					}
+
+					var oneUser UserStruct
+
+					oneUser.Id = int(user.ID)
+					oneUser.Fname = user.FirstName
+					oneUser.Lname = user.LastName
+					oneUser.Nname = user.NickName
+					oneUser.Email = user.Email
+					oneUser.Password = user.Password
+					oneUser.Dob = user.Dob.String()
+					oneUser.Avatar = user.Image
+					oneUser.About = user.About
+					oneUser.Public = int(user.Public)
+
+					Resp.Data = append(Resp.Data, oneUser)
+				}
+
+			}
+
+			// Marshals the response struct to a json object
+			jsonResp, err := json.Marshal(Resp)
+			if err != nil {
+				http.Error(w, "500 internal server error", http.StatusInternalServerError)
+				return
+			}
+
+			// Sets the http headers and writes the response to the browser
+			WriteHttpHeader(jsonResp, w)
+		case http.MethodPost:
+			// Declares the variables to store the follower details and handler response
+			var follower UserFollowerStruct
+			Resp := AuthResponse{Success: true}
+
+			// Decodes the json object to the struct, changing the response to false if it fails
+			err := json.NewDecoder(r.Body).Decode(&follower)
+			if err != nil {
+				Resp.Success = false
+			}
+
+			// ### CONNECT TO DATABASE ###
+
+			db := db.DbConnect()
+
+			query := crud.New(db)
+
+			// ### delete FOLLOWER TO DATABASE ###
+
+			var newFollower crud.DeleteFollowerParams
+
+			newFollower.SourceID = int64(follower.SourceId)
+			newFollower.TargetID = int64(follower.TargetId)
+
+			err = query.DeleteFollower(context.Background(), newFollower)
+
+			if err != nil {
+				fmt.Println("Unable to insert follower")
+				Resp.Success = false
+			}
 
 			// Marshals the response struct to a json object
 			jsonResp, err := json.Marshal(Resp)
@@ -907,11 +1096,11 @@ func Grouphandler() http.HandlerFunc {
 			WriteHttpHeader(jsonResp, w)
 		case http.MethodPost:
 			// Declares the variables to store the group details and handler response
-			var post GroupStruct
+			var group GroupStruct
 			Resp := AuthResponse{Success: true}
 
 			// Decodes the json object to the struct, changing the response to false if it fails
-			err := json.NewDecoder(r.Body).Decode(&post)
+			err := json.NewDecoder(r.Body).Decode(&group)
 			if err != nil {
 				Resp.Success = false
 			}

@@ -84,6 +84,39 @@ func (q *Queries) GetFollowers(ctx context.Context, targetID int64) ([]UserFollo
 	return items, nil
 }
 
+const getFollowings = `-- name: GetFollowings :many
+SELECT id, source_id, target_id, status_ FROM user_follower
+WHERE source_id = ?
+`
+
+func (q *Queries) GetFollowings(ctx context.Context, sourceID int64) ([]UserFollower, error) {
+	rows, err := q.db.QueryContext(ctx, getFollowings, sourceID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []UserFollower
+	for rows.Next() {
+		var i UserFollower
+		if err := rows.Scan(
+			&i.ID,
+			&i.SourceID,
+			&i.TargetID,
+			&i.Status,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const updateFollower = `-- name: UpdateFollower :one
 UPDATE user_follower
 set status_ = ?
