@@ -936,6 +936,46 @@ func UserFollowingHandler() http.HandlerFunc {
 
 			// Sets the http headers and writes the response to the browser
 			WriteHttpHeader(jsonResp, w)
+		case http.MethodPost:
+			// Declares the variables to store the follower details and handler response
+			var follower UserFollowerStruct
+			Resp := AuthResponse{Success: true}
+
+			// Decodes the json object to the struct, changing the response to false if it fails
+			err := json.NewDecoder(r.Body).Decode(&follower)
+			if err != nil {
+				Resp.Success = false
+			}
+
+			// ### CONNECT TO DATABASE ###
+
+			db := db.DbConnect()
+
+			query := crud.New(db)
+
+			// ### delete FOLLOWER TO DATABASE ###
+
+			var newFollower crud.DeleteFollowerParams
+
+			newFollower.SourceID = int64(follower.SourceId)
+			newFollower.TargetID = int64(follower.TargetId)
+
+			err = query.DeleteFollower(context.Background(), newFollower)
+
+			if err != nil {
+				fmt.Println("Unable to insert follower")
+				Resp.Success = false
+			}
+
+			// Marshals the response struct to a json object
+			jsonResp, err := json.Marshal(Resp)
+			if err != nil {
+				http.Error(w, "500 internal server error", http.StatusInternalServerError)
+				return
+			}
+
+			// Sets the http headers and writes the response to the browser
+			WriteHttpHeader(jsonResp, w)
 		default:
 			// Prevents all request types other than POST and GET
 			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
