@@ -7,10 +7,10 @@ function AllPosts(props) {
 
     //props.userId
 
-    const { data } = useGet(`/posts`)
+    // const { data } = useGet(`/posts`)
 
     return <div className={classes.container}>
-        {data.map((post) => (
+        {props.posts.map((post, i) => (
          <Post
         key={post.id}
         id={post.id}
