@@ -46,11 +46,46 @@ func (h *Hub) Run() {
 }
 
 func (h *Hub) Notif(message []byte) {
-	var msg backend.NotifStruct
+	var not backend.NotifStruct
+	var msg backend.UserMessageStruct
 
-	if err := json.Unmarshal(message, &msg); err != nil {
-		panic(err)
+	if err := json.Unmarshal(message, &not); err != nil {
+		if err := json.Unmarshal(message, &msg); err != nil {
+			panic(err)
+		}
 	}
 
-	
+	if not.Type != "" {
+		sendNoti, err := json.Marshal(not)
+		if err != nil {
+			panic(err)
+		}
+
+		for _, c := range h.clients {
+			if c.userID != not.UserId {
+				select {
+				case c.send <- sendNoti:
+				default:
+					close(c.send)
+					delete(h.clients, c.userID)
+				}
+			}
+		}
+	} else {
+		sendMsg, err := json.Marshal(msg)
+		if err != nil {
+			panic(err)
+		}
+
+		for _, c := range h.clients {
+			if c.userID == msg.TargetId {
+				select {
+				case c.send <- sendMsg:
+				default:
+					close(c.send)
+					delete(h.clients, c.userID)
+				}
+			}
+		}
+	}
 }
