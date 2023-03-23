@@ -9,6 +9,7 @@ import RegForm from './components/pages/RegForm';
 import PostsPage from './components/pages/PostsPage';
 import GroupPage from "./components/pages/GroupPage";
 import GroupProfilePage from "./components/pages/GroupProfilePage";
+import useGet from "./components/fetch/useGet";
 // import ProfilePage from "./components/pages/ProfilePage";
 
 
@@ -17,6 +18,7 @@ function App() {
   
   const loginURL = "http://localhost:8080/login/";
   const regURL = "http://localhost:8080/reg/";
+  const logoutURL = "http://localhost:8080/logout/";
 
   //  testing
   localStorage.setItem("user_id", 25);
@@ -76,6 +78,14 @@ function App() {
   
   const logoutHandler = () => {
     localStorage.clear();
+    // useEffect(() => {
+
+    // }, []);
+    fetch(logoutURL)
+    .then(resp => resp.json())
+    .then(data => console.log(data))
+    .catch(err => console.log(err))
+    
     setLoggedIn(false);
   };
 
