@@ -10,6 +10,7 @@ import AllEvents from "../group/AllEvents";
 import FollowRequest from "../requests/FollowRequest";
 import Card from "../UI/Card";
 import GroupRequest from "../requests/GroupRequests";
+import useGet from "../fetch/useGet";
 
 const EVENTS = [
     {
@@ -27,9 +28,12 @@ const EVENTS = [
 ]
 
 const PostsPage = () => {
+    const sessionUrl = "http://localhost:8080/session";
     const postUrl = "http://localhost:8080/post";
 
     const [postData, setPostData] = useState([]);
+
+    useGet(sessionUrl);
 
     useEffect(() => {
         fetch(postUrl)
