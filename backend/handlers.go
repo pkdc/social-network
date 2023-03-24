@@ -209,8 +209,9 @@ func Loginhandler() http.HandlerFunc {
 				}
 
 				http.SetCookie(w, &http.Cookie{
-					Name:  "session_token",
-					Value: cookie.SessionToken,
+					Name:   "session_token",
+					Value:  cookie.SessionToken,
+					MaxAge: 34550000,
 				})
 
 			}
@@ -408,9 +409,8 @@ func Logouthandler() http.HandlerFunc {
 		query.DeleteSession(context.Background(), sessionToken)
 
 		http.SetCookie(w, &http.Cookie{
-			Name:   "session_token",
-			Value:  "",
-			MaxAge: 9999999999,
+			Name:  "session_token",
+			Value: "",
 		})
 
 		// Marshals the response struct to a json object

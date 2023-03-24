@@ -44,8 +44,10 @@ function App() {
         localStorage.setItem("user_id", data.user_id);
         localStorage.setItem("fname", data.fname);
         localStorage.setItem("lname", data.lname);
+        localStorage.setItem("dob", data.dob);
         data.nname && localStorage.setItem("nname", data.nname);
         data.avatar && localStorage.setItem("avatar", data.avatar);
+        data.about && localStorage.setItem("about", data.about);
       }
     })
     .catch(err => {
@@ -69,14 +71,17 @@ function App() {
       .then(resp => resp.json())
       .then(data => {
           console.log(data);
-          if (data.success) {
-            setLoggedIn(true);
-            localStorage.setItem("user_id", data.user_id);
-            localStorage.setItem("fname", data.fname);
-            localStorage.setItem("lname", data.lname);
-            data.nname && localStorage.setItem("nname", data.nname);
-            data.avatar && localStorage.setItem("avatar", data.avatar);
-          }
+          // redirect to login
+          // if (data.success) {
+          //   setLoggedIn(true);
+          //   localStorage.setItem("user_id", data.user_id);
+          //   localStorage.setItem("fname", data.fname);
+          //   localStorage.setItem("lname", data.lname);
+          //   localStorage.setItem("dob", data.dob);
+          //   data.nname && localStorage.setItem("nname", data.nname);
+          //   data.avatar && localStorage.setItem("avatar", data.avatar);
+          //   data.about && localStorage.setItem("about", data.about);
+          // }
       })
       .catch(err => {
         console.log(err);

@@ -88,7 +88,7 @@ const RegForm = (props) => {
         setUploadedImg("");
         setEnteredNickname("");
         setEnteredAbout("");
-        navigate("/", {replace: true});
+        navigate("/login", {replace: true});
     };
 
     return (
