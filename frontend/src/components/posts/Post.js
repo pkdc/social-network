@@ -19,7 +19,7 @@ function Post(props) {
 
     // return <div className={classes.container}>
     const showCommentsHandler = () => {
-        console.log(showComments);
+        // console.log(showComments);
         !showComments && setShowComments(true);
         showComments && setShowComments(false);
     };
@@ -46,14 +46,14 @@ function Post(props) {
         fetch(postCommentUrl)
         .then(resp => resp.json())
         .then(data => {
-            console.log("raw comment data: ", data)
+            // console.log("raw comment data: ", data)
 
             // construct an array of objs
             // the objs are postid-commentid(key) to comment(value)
             let postToCommentTempArray = [];
             
             for (let p = 1; p <= props.totalNumPost; p++) {
-                console.log("post num: ", p)
+                // console.log("post num: ", p)
                 for (let c = 0; c < data.length; c++) {
                     if (data[c].postid === p) {
                         let pToC = {};
@@ -62,7 +62,7 @@ function Post(props) {
                     }
                 }
             }
-            console.log("posts to comments arr: ", postToCommentTempArray)
+            // console.log("posts to comments arr: ", postToCommentTempArray)
             // setCommentData(data);
             setpostToCommentArray(postToCommentTempArray);
         })

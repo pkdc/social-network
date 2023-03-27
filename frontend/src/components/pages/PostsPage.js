@@ -11,20 +11,6 @@ import FollowRequest from "../requests/FollowRequest";
 import Card from "../UI/Card";
 import GroupRequest from "../requests/GroupRequests";
 
-const EVENTS = [
-    {
-        id: 1,
-        title: 'title1',
-        desc: 'this is the description',
-        date: '2 MARCH'
-},
-{
-    id: 2,
-    title: 'title2',
-    desc: 'this is the description2',
-    date: '5 MAY'
-}
-]
 
 const PostsPage = () => {
     const postUrl = "http://localhost:8080/post";
@@ -37,9 +23,9 @@ const PostsPage = () => {
             return resp.json();
         })
         .then(data => {
-            console.log("post data: ", data)
+            // console.log("post data: ", data)
             const sortedData = data.sort((a, b) => a.createdat > b.createat);
-            console.log("sorted post data: ", sortedData);
+            // console.log("sorted post data: ", sortedData);
             setPostData(sortedData);
         })
         .catch(

@@ -5,12 +5,13 @@ import useGet from "../fetch/useGet";
 
 function AllPosts(props) {
 
-    //props.userId
+    const userId = props.userId
+    console.log("user id posts", userId)
 
-    // const { data } = useGet(`/posts`)
+    const { data } = useGet(`/post?id=${userId}`)
 
     return <div className={classes.container}>
-        {props.posts.map((post, i) => (
+        {data.map((post) => (
          <Post
         key={post.id}
         id={post.id}
@@ -22,8 +23,8 @@ function AllPosts(props) {
         image={post.image}
         createdat={post.createdat}
         authorId={post.author}
-        totalNumPost={props.posts.length}
-        postNum={i}
+        // totalNumPost={props.posts.length}
+        // postNum={i}
         />
         ))}
     </div>

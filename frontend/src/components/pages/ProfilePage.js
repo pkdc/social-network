@@ -1,4 +1,5 @@
 import { useLocation } from "react-router-dom";
+import useGet from "../fetch/useGet";
 import AllPosts from "../posts/AllPosts"
 import CreatePost from "../posts/CreatePost";
 import Followers from "../profile/followers";
@@ -9,28 +10,14 @@ import FollowRequest from "../requests/FollowRequest";
 // import classes from './ProfilePage.module.css';
 import classes from './layout.module.css';
 
-// const DATA = [
-//     {
-//         id: 1,
-//         user: 'username',
-//         content: 'this is the post content',
-//         date: 'date'
-// },
-// {
-//     id: 2,
-//     user: 'username2',
-//     content: 'this is the post content2',
-//     date: 'date2'
-// }
-// ]
-
 function ProfilePage() {
 
     const { state } = useLocation();
-    console.log("state", state);
-
     const { id } = state;
     console.log("id", id); 
+
+
+
 
     return <div className={classes.container}>
      <div className={classes.mid}>

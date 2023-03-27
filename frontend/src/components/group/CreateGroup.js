@@ -25,7 +25,7 @@ function CreateGroup() {
 
         console.log(data)
     
-        fetch('https://social-network-cffc1-default-rtdb.firebaseio.com/group.json', 
+        fetch('https://localhost:8080/group', 
         {
             method: 'POST',
             body: JSON.stringify(data),

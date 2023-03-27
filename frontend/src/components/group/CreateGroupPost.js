@@ -21,14 +21,14 @@ const [ message, setMessage ] = useState('')
 
 
         const data = {
-            // id: ?,
+            id: 0,
             author: "username",
             message: message,
             // image: ?,
             createdat: created,
         };
 
-        fetch('https://social-network-cffc1-default-rtdb.firebaseio.com/group-posts.json', 
+        fetch('https://localhost:8080/group-post', 
         {
             method: 'POST',
             body: JSON.stringify(data),

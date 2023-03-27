@@ -4,7 +4,7 @@ import Comment from './Comment';
 
 function AllComments(props) {
    
-    console.log("postToCommentArr in All comments", props.postToCommentArr)   
+    // console.log("postToCommentArr in All comments", props.postToCommentArr)   
 
     return (
         props.postToCommentArr.map((pToCElement, c) => {

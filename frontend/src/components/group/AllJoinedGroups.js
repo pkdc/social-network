@@ -5,13 +5,13 @@ import useGet from "../fetch/useGet";
 
 function AllJoinedGroups(   ) {
 
-    const { data } = useGet("/group");
+    // const { data } = useGet("/group");
 
     return <Card>
         <div className={classes.label}>
         Groups you've joined
         </div>
-        {data.map((group) => (
+        {/* {data.map((group) => (
          <JoinedGroup
         key={group.id}
         id={group.id}
@@ -20,7 +20,7 @@ function AllJoinedGroups(   ) {
         description={group.description}  
         // img={group.img}
         />
-        ))}
+        ))} */}
     </Card>
 }
 

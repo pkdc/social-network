@@ -22,13 +22,15 @@ nav {
 
 .logo {
     font-weight: bold;
+    margin-left: 30px;
+
 }
 
 .menu {
     display: flex;
     gap: 30px;
     font-weight: 500;
-    margin-left: 780px;
+    margin-left: -750px;
 }
 
 .profile {
