@@ -1212,9 +1212,40 @@ func Grouphandler() http.HandlerFunc {
 
 			// ### CONNECT TO DATABASE ###
 
+			db := db.DbConnect()
+
+			query := crud.New(db)
+
 			// ### ADD GROUP TO DATABASE ###
 
+			var groupData crud.CreateGroupParams
+
+			groupData.CreatedAt = time.Now()
+			groupData.Creator = int64(group.Creator)
+			groupData.Description = group.Description
+			groupData.Title = group.Title
+
+			newGroup, err := query.CreateGroup(context.Background(), groupData)
+
+			if err != nil {
+				Resp.Success = false
+				fmt.Println("Unable to create new group")
+			}
+
 			// ### ADD GROUP CREATOR TO GROUP MEMBER TABLE ###
+
+			var creator crud.CreateGroupMemberParams
+
+			creator.GroupID = newGroup.ID
+			creator.Status = 1
+			creator.UserID = newGroup.Creator
+
+			_, err = query.CreateGroupMember(context.Background(), creator)
+
+			if err != nil {
+				Resp.Success = false
+				fmt.Println("Unable to add creator to members list")
+			}
 
 			// Marshals the response struct to a json object
 			jsonResp, err := json.Marshal(Resp)
