@@ -31,36 +31,51 @@ func (h *Hub) Run() {
 	for {
 		select {
 		case client := <-h.register:
-			// h.clients[client] = true
+			// Adds connected user to the client list
 			h.clients[client.userID] = client
 
 		case client := <-h.unregister:
+			// Removes client from client list when disconnected
 			if _, ok := h.clients[client.userID]; ok {
 				delete(h.clients, client.userID)
 				close(client.send)
 			}
 		case message := <-h.broadcast:
+			// Sends message/notification to appropriate users
 			h.Notif(message)
 		}
 	}
 }
 
 func (h *Hub) Notif(message []byte) {
+	// Initialises variables for the different messages going through websocket
 	var not backend.NotifStruct
-	var msg backend.UserMessageStruct
+	var userMsg backend.UserMessageStruct
+	var groupMsg backend.GroupMessageStruct
+	t := 0
 
-	if err := json.Unmarshal(message, &not); err != nil {
-		if err := json.Unmarshal(message, &msg); err != nil {
-			panic(err)
-		}
+	// Checks whether the message is a notification, user message or group message
+	if err := json.Unmarshal(message, &not); err == nil {
+		t = 1
+	} else if err := json.Unmarshal(message, &userMsg); err == nil {
+		t = 2
+	} else if err := json.Unmarshal(message, &groupMsg); err == nil {
+		t = 3
+	} else {
+		panic(err)
 	}
 
-	if not.Type != "" {
+	switch t {
+	case 1:
+		// NOTIFICATION
+
+		// Marshals the struct to a json object
 		sendNoti, err := json.Marshal(not)
 		if err != nil {
 			panic(err)
 		}
 
+		// Loops through the clients and sends to all users other than the sender
 		for _, c := range h.clients {
 			if c.userID != not.UserId {
 				select {
@@ -71,14 +86,18 @@ func (h *Hub) Notif(message []byte) {
 				}
 			}
 		}
-	} else {
-		sendMsg, err := json.Marshal(msg)
+	case 2:
+		// USER MESSAGE
+
+		// Marshals the struct to a json object
+		sendMsg, err := json.Marshal(userMsg)
 		if err != nil {
 			panic(err)
 		}
 
+		// Loops through the clients and sends to the target user
 		for _, c := range h.clients {
-			if c.userID == msg.TargetId {
+			if c.userID == userMsg.TargetId {
 				select {
 				case c.send <- sendMsg:
 				default:
@@ -87,5 +106,41 @@ func (h *Hub) Notif(message []byte) {
 				}
 			}
 		}
+	case 3:
+		// GROUP MESSAGE
+
+		// Marshals the struct to a json object
+		sendMsg, err := json.Marshal(groupMsg)
+		if err != nil {
+			panic(err)
+		}
+
+		// Variable to store the group members
+		var members []backend.GroupMemberStruct
+
+		// ### SEARCH FOR GROUP MEMBERS ###
+
+		// Loops through the clients and sends to the other group members
+		for _, c := range h.clients {
+			if IsMember(members, c.userID) && c.userID != groupMsg.SourceId {
+				select {
+				case c.send <- sendMsg:
+				default:
+					close(c.send)
+					delete(h.clients, c.userID)
+				}
+			}
+		}
+	default:
+		return
 	}
+}
+
+func IsMember(s []backend.GroupMemberStruct, e int) bool {
+    for _, a := range s {
+        if a.UserId == e {
+            return true
+        }
+    }
+    return false
 }
