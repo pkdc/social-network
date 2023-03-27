@@ -89,6 +89,50 @@ func (q *Queries) GetGroupMembers(ctx context.Context, arg GetGroupMembersParams
 	return items, nil
 }
 
+const getGroupMembersByGroupId = `-- name: GetGroupMembersByGroupId :many
+SELECT user.id, user.first_name, user.last_name, user.nick_name, user.email, user.password_, user.dob, user.image_, user.about, user.public FROM group_member JOIN user ON group_member.user_id = user.id
+WHERE group_member.group_id = ? AND group_member.status_ = ?
+`
+
+type GetGroupMembersByGroupIdParams struct {
+	GroupID int64
+	Status  int64
+}
+
+func (q *Queries) GetGroupMembersByGroupId(ctx context.Context, arg GetGroupMembersByGroupIdParams) ([]User, error) {
+	rows, err := q.db.QueryContext(ctx, getGroupMembersByGroupId, arg.GroupID, arg.Status)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []User
+	for rows.Next() {
+		var i User
+		if err := rows.Scan(
+			&i.ID,
+			&i.FirstName,
+			&i.LastName,
+			&i.NickName,
+			&i.Email,
+			&i.Password,
+			&i.Dob,
+			&i.Image,
+			&i.About,
+			&i.Public,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const updateGroupMember = `-- name: UpdateGroupMember :one
 UPDATE group_member
 set status_ = ?
