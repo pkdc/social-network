@@ -54,6 +54,39 @@ func (q *Queries) DeleteGroup(ctx context.Context, id int64) error {
 	return err
 }
 
+const getAllGroups = `-- name: GetAllGroups :many
+SELECT id, title, creator, description_, created_at FROM group_
+`
+
+func (q *Queries) GetAllGroups(ctx context.Context) ([]Group, error) {
+	rows, err := q.db.QueryContext(ctx, getAllGroups)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Group
+	for rows.Next() {
+		var i Group
+		if err := rows.Scan(
+			&i.ID,
+			&i.Title,
+			&i.Creator,
+			&i.Description,
+			&i.CreatedAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getGroup = `-- name: GetGroup :one
 SELECT id, title, creator, description_, created_at FROM group_
 WHERE id = ? LIMIT 1

@@ -9,6 +9,24 @@ import (
 	"context"
 )
 
+const checkIfMember = `-- name: CheckIfMember :one
+SELECT COUNT(*) FROM group_member
+WHERE group_id = ? AND user_id = ? AND status_ = ? LIMIT 1
+`
+
+type CheckIfMemberParams struct {
+	GroupID int64
+	UserID  int64
+	Status  int64
+}
+
+func (q *Queries) CheckIfMember(ctx context.Context, arg CheckIfMemberParams) (int64, error) {
+	row := q.db.QueryRowContext(ctx, checkIfMember, arg.GroupID, arg.UserID, arg.Status)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
 const createGroupMember = `-- name: CreateGroupMember :one
 INSERT INTO group_member (
   user_id, group_id, status_
