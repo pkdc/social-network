@@ -2,7 +2,11 @@ package websocket
 
 import (
 	"backend"
+	"backend/pkg/db/crud"
+	db "backend/pkg/db/sqlite"
+	"context"
 	"encoding/json"
+	"fmt"
 )
 
 // Hub maintains the set of active clients and broadcasts messages to the
@@ -116,13 +120,28 @@ func (h *Hub) Notif(message []byte) {
 		}
 
 		// Variable to store the group members
-		var members []backend.GroupMemberStruct
+		// var members []backend.GroupMemberStruct
 
 		// ### SEARCH FOR GROUP MEMBERS ###
 
+		db := db.DbConnect()
+
+		query := crud.New(db)
+
+		var group crud.GetGroupMembersByGroupIdParams
+
+		group.GroupID = int64(groupMsg.GroupId)
+		group.Status = 1
+
+		users, err := query.GetGroupMembersByGroupId(context.Background(), group)
+
+		if err != nil {
+			fmt.Println("Could not get user list")
+		}
+
 		// Loops through the clients and sends to the other group members
 		for _, c := range h.clients {
-			if IsMember(members, c.userID) && c.userID != groupMsg.SourceId {
+			if IsMember(users, c.userID) && c.userID != groupMsg.SourceId {
 				select {
 				case c.send <- sendMsg:
 				default:
@@ -136,11 +155,11 @@ func (h *Hub) Notif(message []byte) {
 	}
 }
 
-func IsMember(s []backend.GroupMemberStruct, e int) bool {
-    for _, a := range s {
-        if a.UserId == e {
-            return true
-        }
-    }
-    return false
+func IsMember(s []crud.User, e int) bool {
+	for _, a := range s {
+		if int(a.ID) == e {
+			return true
+		}
+	}
+	return false
 }
