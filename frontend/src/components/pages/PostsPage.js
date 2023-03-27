@@ -30,11 +30,37 @@ import useGet from "../fetch/useGet";
 const PostsPage = () => {
     const sessionUrl = "http://localhost:8080/session";
     const postUrl = "http://localhost:8080/post";
+    const postCommentUrl = "http://localhost:8080/post-comment";
 
     const [postData, setPostData] = useState([]);
+    const [commentData, setCommentData] = useState([]);
 
-    useGet(sessionUrl);
+    // useGet(sessionUrl);
 
+    // useEffect(() => {
+    //     // const reqOptions = {
+    //     //     method: "GET",
+    //     //     credentials: "include",
+    //     //     mode: "cors",
+    //     //     headers: {
+    //     //         'Content-Type': 'application/json'
+    //     //     }
+    //     // };
+    //     // fetch(sessionUrl, reqOptions)
+    //     fetch(sessionUrl)
+    //     .then(resp => {
+    //         console.log("session resp: ", resp)
+    //         return resp.json();
+    //     })
+    //     .then(data => {
+    //         console.log("session resp: ", data)
+    //     })
+    //     .catch(
+    //         err => console.log(err)
+    //     );
+    // }, []);
+
+    // get posts
     useEffect(() => {
         fetch(postUrl)
         .then(resp => {
@@ -51,6 +77,23 @@ const PostsPage = () => {
         );
     }, []);
 
+    // get comments
+    useEffect(() => {
+        fetch(postCommentUrl)
+        .then(resp => resp.json())
+        .then(data => {
+            console.log("post page raw comment data: ", data)
+            const sortedData = data.sort((a, b) => a.createat > b.createat);
+            console.log("post page sorted comment data: ", data)
+            setCommentData(sortedData);
+        })
+        .catch(
+            err => console.log(err)
+        );
+    }, []);
+    console.log("post page commentData", commentData);
+
+    // create post
     const createPostHandler = (createPostPayloadObj) => {
         console.log("postpage create post", createPostPayloadObj);
         const reqOptions = {
@@ -78,10 +121,8 @@ const PostsPage = () => {
        
     
             <div className={styles.mid}>
-            <CreatePost onCreatePost={createPostHandler}/>
-            <AllPosts posts={postData}/>
-                
-          
+                <CreatePost onCreatePost={createPostHandler}/>
+                <AllPosts posts={postData} comments={commentData}/>
             </div>
 
             <div className={styles.right}>

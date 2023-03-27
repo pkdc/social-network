@@ -15,7 +15,7 @@ function Post(props) {
     const [postToCommentArray, setpostToCommentArray] = useState([]);
 
     const defaultImagePath = "default_avatar.jpg";
-    const postCommentUrl = "http://localhost:8080/post-comment";
+    const postCommentUrl = "http://localhost:8080/post-comment"; // temp
 
     // return <div className={classes.container}>
     const showCommentsHandler = () => {
@@ -42,34 +42,34 @@ function Post(props) {
 
     };
 
-    useEffect(() => {
-        fetch(postCommentUrl)
-        .then(resp => resp.json())
-        .then(data => {
-            console.log("raw comment data: ", data)
+    // useEffect(() => {
+    //     fetch(postCommentUrl)
+    //     .then(resp => resp.json())
+    //     .then(data => {
+    //         console.log("raw comment data: ", data)
 
-            // construct an array of objs
-            // the objs are postid-commentid(key) to comment(value)
-            let postToCommentTempArray = [];
+    //         // construct an array of objs
+    //         // the objs are postid-commentid(key) to comment(value)
+    //         let postToCommentTempArray = [];
             
-            for (let p = 1; p <= props.totalNumPost; p++) {
-                console.log("post num: ", p)
-                for (let c = 0; c < data.length; c++) {
-                    if (data[c].postid === p) {
-                        let pToC = {};
-                        pToC[`p${data[c].postid}-c${data[c].id}`] = data[c];
-                        postToCommentTempArray.push(pToC);
-                    }
-                }
-            }
-            console.log("posts to comments arr: ", postToCommentTempArray)
-            // setCommentData(data);
-            setpostToCommentArray(postToCommentTempArray);
-        })
-        .catch(
-            err => console.log(err)
-        );
-    }, []);
+    //         for (let p = 1; p <= props.totalNumPost; p++) {
+    //             console.log("post num: ", p)
+    //             for (let c = 0; c < data.length; c++) {
+    //                 if (data[c].postid === p) {
+    //                     let pToC = {};
+    //                     pToC[`p${data[c].postid}-c${data[c].id}`] = data[c];
+    //                     postToCommentTempArray.push(pToC);
+    //                 }
+    //             }
+    //         }
+    //         console.log("posts to comments arr: ", postToCommentTempArray)
+    //         // setCommentData(data);
+    //         setpostToCommentArray(postToCommentTempArray);
+    //     })
+    //     .catch(
+    //         err => console.log(err)
+    //     );
+    // }, []);
 
     // showComments && console.log("comment data(outside): ", commentData)
     showComments && console.log("commentsForEachPostsArr (outside): ", postToCommentArray)

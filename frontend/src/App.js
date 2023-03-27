@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Root from "./components/pages/Root";
 import Landingpage from './components/pages/Landingpage';
@@ -93,6 +93,8 @@ function App() {
       })
   };
 
+useEffect(() => {localStorage.getItem("user_id") && setLoggedIn(true)}, []);
+  
   console.log("reg success", regSuccess);
   
   const logoutHandler = () => {
@@ -112,6 +114,9 @@ function App() {
     .catch(err => console.log(err))
     
     setLoggedIn(false);
+
+    // in case the next user wants to reg
+    setRegSuccess(false);
   };
 
   let router = createBrowserRouter([
