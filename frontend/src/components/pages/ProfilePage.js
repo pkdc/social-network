@@ -25,7 +25,7 @@ import classes from './layout.module.css';
 // ]
 
 function ProfilePage() {
-
+    const sessionUrl = "http://localhost:8080/session";
     const { state } = useLocation();
     console.log("state", state);
 

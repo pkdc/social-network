@@ -12,6 +12,7 @@ import ProfilePage from "./components/pages/ProfilePage";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
+  const [regSuccess, setRegSuccess] = useState(false);
   
   const loginURL = "http://localhost:8080/login";
   const regURL = "http://localhost:8080/reg";
@@ -72,7 +73,9 @@ function App() {
       .then(data => {
           console.log(data);
           // redirect to login
-          // if (data.success) {
+          if (data.success) {
+            console.log(data.success);
+            setRegSuccess(true);
           //   setLoggedIn(true);
           //   localStorage.setItem("user_id", data.user_id);
           //   localStorage.setItem("fname", data.fname);
@@ -81,12 +84,16 @@ function App() {
           //   data.nname && localStorage.setItem("nname", data.nname);
           //   data.avatar && localStorage.setItem("avatar", data.avatar);
           //   data.about && localStorage.setItem("about", data.about);
-          // }
+          } else {
+            setRegSuccess(false);
+          }
       })
       .catch(err => {
         console.log(err);
       })
   };
+
+  console.log("reg success", regSuccess);
   
   const logoutHandler = () => {
     localStorage.clear();
@@ -110,7 +117,7 @@ function App() {
   let router = createBrowserRouter([
     {path: "/", element: <Landingpage />},
     {path: "/login", element: <LoginForm onLogin={loginHandler}/>},
-    {path: "/reg", element: <RegForm onReg={regHandler}/>},
+    {path: "/reg", element: <RegForm onReg={regHandler} success={regSuccess} />},
     {path: "/groupprofile", element: <GroupProfilePage />},
     {path: "/groups", element: <GroupPage />},
   ]);
@@ -120,7 +127,6 @@ function App() {
       path: "/",
       element: <Root onLogout={logoutHandler} />,
       children: [
-        {path: "/reg", element: <RegForm onReg={regHandler}/>}, // temp
           {path: "/", element: <PostsPage />},
           {path: "/profile", element: <ProfilePage />},
           {path: "/group", element: <GroupPage />},

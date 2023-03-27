@@ -211,7 +211,7 @@ func Loginhandler() http.HandlerFunc {
 				http.SetCookie(w, &http.Cookie{
 					Name:   "session_token",
 					Value:  cookie.SessionToken,
-					MaxAge: 34550000,
+					MaxAge: 34560000,
 				})
 
 			}
