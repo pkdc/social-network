@@ -61,17 +61,24 @@ func (q *Queries) DeleteMessage(ctx context.Context, arg DeleteMessageParams) er
 
 const getMessages = `-- name: GetMessages :many
 SELECT id, source_id, target_id, message_, created_at FROM user_message
-WHERE target_id = ? OR source_id = ?
+WHERE target_id = ? AND source_id = ? OR source_id = ? AND target_id = ?
 ORDER BY created_at
 `
 
 type GetMessagesParams struct {
-	TargetID int64
-	SourceID int64
+	TargetID   int64
+	SourceID   int64
+	SourceID_2 int64
+	TargetID_2 int64
 }
 
 func (q *Queries) GetMessages(ctx context.Context, arg GetMessagesParams) ([]UserMessage, error) {
-	rows, err := q.db.QueryContext(ctx, getMessages, arg.TargetID, arg.SourceID)
+	rows, err := q.db.QueryContext(ctx, getMessages,
+		arg.TargetID,
+		arg.SourceID,
+		arg.SourceID_2,
+		arg.TargetID_2,
+	)
 	if err != nil {
 		return nil, err
 	}
