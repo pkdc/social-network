@@ -1,14 +1,19 @@
+import useGet from "../fetch/useGet";
 import GroupEvent from "./GroupEvent";
 
-function AllEvents(props) {
+function AllEvents() {
+
+const { data } = useGet("/group-event")
+console.log("event data", data)
+
     return <div>
-        {props.events.map((event) => (
+        {data.map((event) => (
          <GroupEvent
         key={event.id}
         id={event.id}
         date={event.date}
         title={event.title}   
-        desc={event.desc}
+        description={event.description}
         />
         ))}
     </div>

@@ -5,7 +5,6 @@
 package crud
 
 import (
-	"database/sql"
 	"time"
 )
 
@@ -13,7 +12,7 @@ type Group struct {
 	ID          int64
 	Title       string
 	Creator     int64
-	Description sql.NullString
+	Description string
 	CreatedAt   time.Time
 }
 
@@ -22,7 +21,7 @@ type GroupEvent struct {
 	Author      int64
 	GroupID     int64
 	Title       string
-	Description sql.NullString
+	Description string
 	CreatedAt   time.Time
 	Date        time.Time
 }
@@ -54,7 +53,7 @@ type GroupPost struct {
 	Author    int64
 	GroupID   int64
 	Message   string
-	Image     sql.NullString
+	Image     string
 	CreatedAt time.Time
 }
 
@@ -76,8 +75,8 @@ type GroupRequest struct {
 type Post struct {
 	ID        int64
 	Author    int64
-	Message   sql.NullString
-	Image     sql.NullString
+	Message   string
+	Image     string
 	CreatedAt time.Time
 	Privacy   int64
 }
@@ -88,6 +87,7 @@ type PostComment struct {
 	PostID    int64
 	CreatedAt time.Time
 	Message   string
+	Image     string
 }
 
 type PostMember struct {
@@ -105,12 +105,12 @@ type User struct {
 	ID        int64
 	FirstName string
 	LastName  string
-	NickName  sql.NullString
+	NickName  string
 	Email     string
 	Password  string
-	Dob       sql.NullTime
-	Image     sql.NullString
-	About     sql.NullString
+	Dob       time.Time
+	Image     string
+	About     string
 	Public    int64
 }
 

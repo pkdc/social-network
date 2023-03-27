@@ -1,8 +1,16 @@
 import Post from "./Post";
 
+import classes from './AllPosts.module.css'
+import useGet from "../fetch/useGet";
+
 function AllPosts(props) {
-    return <div>
-        {props.posts.map((post) => (
+
+    //props.userId
+
+    // const { data } = useGet(`/posts`)
+
+    return <div className={classes.container}>
+        {props.posts.map((post, i) => (
          <Post
         key={post.id}
         id={post.id}
@@ -10,9 +18,12 @@ function AllPosts(props) {
         fname={post.fname}
         lname={post.lname}
         nname={post.nname}
-        content={post.content}
+        message={post.message}
         image={post.image}
-        date={post.date} 
+        createdat={post.createdat}
+        authorId={post.author}
+        totalNumPost={props.posts.length}
+        postNum={i}
         />
         ))}
     </div>

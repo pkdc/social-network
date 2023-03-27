@@ -2,6 +2,10 @@
 SELECT * FROM user_follower
 WHERE target_id = ?;
 
+-- name: GetFollowings :many
+SELECT * FROM user_follower
+WHERE source_id = ?;
+
 -- name: CreateFollower :one
 INSERT INTO user_follower (
   source_id, target_id, status_

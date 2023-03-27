@@ -2,28 +2,34 @@ import React, { useEffect, useState } from "react";
 import FormLabel from "../UI/FormLabel";
 import FormInput from "../UI/FormInput";
 import FormTextarea from "../UI/FormTextarea";
-import styles from "./PostsPage.module.css";
+// import styles from "./PostsPage.module.css";
+import styles from './layout.module.css';
 import CreatePost from "../posts/CreatePost";
 import AllPosts from "../posts/AllPosts";
+import AllEvents from "../group/AllEvents";
+import FollowRequest from "../requests/FollowRequest";
+import Card from "../UI/Card";
+import GroupRequest from "../requests/GroupRequests";
+
+const EVENTS = [
+    {
+        id: 1,
+        title: 'title1',
+        desc: 'this is the description',
+        date: '2 MARCH'
+},
+{
+    id: 2,
+    title: 'title2',
+    desc: 'this is the description2',
+    date: '5 MAY'
+}
+]
 
 const PostsPage = () => {
-    const postUrl = "http://localhost:8080/post/";
+    const postUrl = "http://localhost:8080/post";
 
     const [postData, setPostData] = useState([]);
-    // const DATA = [
-    //     {
-    //         id: 1,
-    //         user: 'username',
-    //         content: 'this is the post content',
-    //         date: 'date'
-    // },
-    // {
-    //     id: 2,
-    //     user: 'username2',
-    //     content: 'this is the post content2',
-    //     date: 'date2'
-    // }
-    // ]
 
     useEffect(() => {
         fetch(postUrl)
@@ -31,7 +37,10 @@ const PostsPage = () => {
             return resp.json();
         })
         .then(data => {
-            setPostData(data);
+            console.log("post data: ", data)
+            const sortedData = data.sort((a, b) => a.createdat > b.createat);
+            console.log("sorted post data: ", sortedData);
+            setPostData(sortedData);
         })
         .catch(
             err => console.log(err)
@@ -47,31 +56,45 @@ const PostsPage = () => {
         fetch(postUrl, reqOptions)
         .then(resp => resp.json())
         .then(data => {
-            console.log(data);
-            if (data) {
-                // render all posts
+            console.log("post success", data.success);
+            // if (data) {
+            //     // render all posts
                 
-            // navigate("/", {replace: true});
-            }
+            // // navigate("/", {replace: true});
+            // }
         })
         .catch(err => {
             console.log(err);
         })
-
     };
 
-    return (
-        <>
-        <h1 className={styles["title"]}>Create New Post</h1>
-        <div className={styles["container"]}>
-            <div className={styles["create-post"]}>
-                <CreatePost onCreatePost={createPostHandler}/>
+    return ( <div className={styles.container}>
+        
+        {/* <h1 className={styles["title"]}>Create New Post</h1> */}
+       
+    
+            <div className={styles.mid}>
+            <CreatePost onCreatePost={createPostHandler}/>
+            <AllPosts posts={postData}/>
+                
+          
             </div>
-            <div className={styles["all-posts"]}>
-                <AllPosts posts={postData}/>
-            </div>
+
+            <div className={styles.right}>
+                <Card className={styles.requests}>
+                    <div className={styles.label}>Follow Requests</div>
+                    <FollowRequest></FollowRequest>
+                    <FollowRequest></FollowRequest>
+                </Card>
+                <Card className={styles.requests}>
+                    <div className={styles.label}>Group Requests</div>
+                    <GroupRequest></GroupRequest>
+                    <GroupRequest></GroupRequest>
+
+                </Card>
+           </div>
+         
         </div>
-        </>
     )
 };
 

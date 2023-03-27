@@ -9,14 +9,11 @@
 }
 
 .link-container {
-    margin-top: 2rem;
-   text-align: center;
+    margin: 5rem 0;
+    width: 100%;
 }
 
 .nav-link-btn {
-    /* text-decoration: none; */
-    margin: 1rem 0;
+    margin: 0 auto;
     width: 60%;
-    
 }
-

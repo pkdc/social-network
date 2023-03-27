@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import Card from "../UI/Card";
 import CreatePostTextarea from "../UI/CreatePostTextarea";
 import SmallButton from "../UI/SmallButton";
@@ -25,11 +26,11 @@ function CreatePost(props) {
         // console.log(privacyInputRef.current.value);
 
         const enteredContent = contentInput.current.value
-        const chosenPrivacy = privacyInputRef.current.value;
+        const chosenPrivacy = +privacyInputRef.current.value;
 
         const postData = {
-            user_id: userId,
-            content: enteredContent,
+            author: userId,
+            message: enteredContent,
             image: uploadedImg,
             privacy: chosenPrivacy
         };
@@ -57,16 +58,20 @@ function CreatePost(props) {
         {value: 2, text: "Almost Private"}
     ];
 
-    return <form onSubmit={SubmitHandler}>
+    return <form className={classes.container} onSubmit={SubmitHandler}>
         {/* <div>
             <label htmlFor="title">Title</label>
             <input type='text' required id="title" ref={titleInput}/>
         </div> */}
-        <Card className={classes.card}>
+        <Card className={classes.container}>
             <div className={classes["author"]}>
+            <Link to={`/profile/${userId}`} >
                 {!avatar && <img className={classes["avatar"]} src={require("../../images/"+`${defaultImagePath}`)} alt="" width={"50px"}/>}
                 {avatar && <img className={classes["avatar"]} src={avatar} alt="" width={"50px"}/>}
+            </Link> 
+            <Link to={`/profile/${userId}`} className={classes["author"]}>
                 <div><p className={classes["details"]}>{`${first} ${last} (${nickname})`}</p></div>
+            </Link>
             </div>
             <div className={classes["content-container"]}>
                 <div>
@@ -83,9 +88,9 @@ function CreatePost(props) {
                 </div>
             </div>
         
-        <div className={classes.btn}>
+            <div className={classes.btn}>
             <SmallButton>Post</SmallButton>
-        </div>
+         </div>
         </Card>
       
          

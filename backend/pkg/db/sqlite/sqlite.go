@@ -96,6 +96,8 @@ func InsertMockUserData() {
 
 	// insert into database
 
+	db := DbConnect()
+
 	for _, user := range responseObject {
 
 		stmt, err := db.Prepare("INSERT INTO user(first_name, last_name, nick_name, email, password_, dob, image_, about, public) VALUES(?,?,?,?,?,?,?,?,?);")
@@ -129,9 +131,8 @@ func InsertMockPostData() {
 
 		json.Unmarshal(resData, &responseObject)
 
-		fmt.Println(responseObject)
-
 		// insert into database
+		db := DbConnect()
 
 		for _, post := range responseObject {
 

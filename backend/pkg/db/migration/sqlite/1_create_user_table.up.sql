@@ -2,11 +2,11 @@ CREATE TABLE user (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   first_name TEXT NOT NULL,
   last_name TEXT NOT NULL,
-  nick_name TEXT,
+  nick_name TEXT NOT NULL,
   email TEXT NOT NULL,
   password_ TEXT NOT NULL,
-  dob DATE,
-  image_ TEXT,
-  about TEXT,
+  dob DATE NOT NULL,
+  image_ TEXT NOT NULL,
+  about TEXT NOT NULL,
   public INTEGER NOT NULL DEFAULT 0
 );

@@ -16,3 +16,7 @@
     margin: 2rem 0;
     width: 60%;
 }
+
+p a {
+    display: inline;
+}
