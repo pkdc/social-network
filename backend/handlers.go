@@ -1116,34 +1116,89 @@ func Grouphandler() http.HandlerFunc {
 				foundId = true
 			}
 
-			// Declares the payload struct
-			var Resp GroupPayload
+			gId, err := strconv.Atoi(groupId)
+
+			if err != nil {
+				fmt.Println("Unable to convert group ID")
+			}
 
 			// ### CONNECT TO DATABASE ###
+
+			db := db.DbConnect()
+
+			query := crud.New(db)
 
 			// Gets the group by id if an id was passed in the url
 			// Otherwise, gets all group
 			if foundId {
-				// ### GET GROUP BY ID ###
+				// Declares the payload struct
+				var group crud.Group
+				// GET USER ID FROM SESSION
+				session, err := r.Cookie("SessionToken")
+
+				sessionTable, err := query.GetUserId(context.Background(), session.Value)
+
+				if err != nil {
+					http.Error(w, "500 internal server error", http.StatusInternalServerError)
+					return
+				}
 
 				// ### CHECK IF USER ID AND GROUP ID MATCH IN GROUP MEMBER TABLE ###
+				var member crud.CheckIfMemberParams
+
+				member.GroupID = int64(gId)
+				member.Status = 1
+				member.UserID = sessionTable.UserID
+
+				groupData, err := query.CheckIfMember(context.Background(), member)
+
+				if err != nil {
+					fmt.Println("Unable to get group data")
+				}
 
 				// ### IF THEY MATCH, GET GROUP DATA FROM DATABASE ###
 
-				// ### ELSE, REQUEST TO JOIN ###
+				if groupData == 1 {
+					// ### GET GROUP BY ID ###
+					group, err = query.GetGroup(context.Background(), int64(gId))
+
+					if err != nil {
+						fmt.Println("Unable to get group id")
+					}
+
+				} else {
+					// ### ELSE, REQUEST TO JOIN ###
+					//empty response
+				}
+
+				// Marshals the response struct to a json object
+				jsonResp, err := json.Marshal(group)
+
+				if err != nil {
+					http.Error(w, "500 internal server error", http.StatusInternalServerError)
+					return
+				}
+
+				WriteHttpHeader(jsonResp, w)
 			} else {
 				// ### GET ALL GROUPS ###
+
+				groups, err := query.GetAllGroups(context.Background())
+
+				if err != nil {
+					fmt.Println("Unable to get groups")
+				}
+
+				jsonResp, err := json.Marshal(groups)
+
+				if err != nil {
+					http.Error(w, "500 internal server error", http.StatusInternalServerError)
+					return
+				}
+
+				WriteHttpHeader(jsonResp, w)
 			}
 
-			// Marshals the response struct to a json object
-			jsonResp, err := json.Marshal(Resp)
-			if err != nil {
-				http.Error(w, "500 internal server error", http.StatusInternalServerError)
-				return
-			}
-
-			// Sets the http headers and writes the response to the browser
-			WriteHttpHeader(jsonResp, w)
 		case http.MethodPost:
 			// Declares the variables to store the group details and handler response
 			var group GroupStruct

@@ -2,6 +2,9 @@
 SELECT * FROM group_
 WHERE id = ? LIMIT 1;
 
+-- name: GetAllGroups :many
+SELECT * FROM group_;
+
 -- name: CreateGroup :one
 INSERT INTO group_ (
   title, creator, description_, created_at
