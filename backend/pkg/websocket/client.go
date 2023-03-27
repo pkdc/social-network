@@ -1,6 +1,10 @@
 package websocket
 
 import (
+	"backend/pkg/db/crud"
+	db "backend/pkg/db/sqlite"
+	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -59,7 +63,7 @@ func (c *Client) readPump() {
 			}
 			break
 		}
-		
+
 		c.hub.broadcast <- message
 	}
 }
@@ -114,16 +118,24 @@ func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		return
 	}
-	// cookie, err := r.Cookie("session")
-	// if err != nil {
-	// 	return
-	// }
-	// foundVal := cookie.Value
-	// ### SEARCH DATABASE FOR USER ID ###
+	cookie, err := r.Cookie("session")
 	if err != nil {
 		return
 	}
-	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256), userID: 0}
+	foundVal := cookie.Value
+	// ### SEARCH DATABASE FOR USER ID ###
+
+	db := db.DbConnect()
+
+	query := crud.New(db)
+
+	session, err := query.GetUserId(context.Background(), foundVal)
+
+	if err != nil {
+		fmt.Println("Could not find session")
+	}
+
+	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256), userID: int(session.UserID)}
 	client.hub.register <- client
 	// Allow collection of memory referenced by the caller by doing all work in
 	// new goroutines.
