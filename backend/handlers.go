@@ -992,23 +992,57 @@ func UserMessageHandler() http.HandlerFunc {
 			return
 		}
 
-		targetId := r.URL.Query().Get("id")
+		targetId := r.URL.Query().Get("targetid")
 		if targetId == "" {
 			http.Error(w, "400 bad request", http.StatusBadRequest)
 			return
 		}
 
+		tId, err := strconv.Atoi(targetId)
+		if err != nil {
+			http.Error(w, "400 bad request", http.StatusBadRequest)
+			return
+		}
+
+		sourceId := r.URL.Query().Get("sourceid")
+		if sourceId == "" {
+			http.Error(w, "400 bad request", http.StatusBadRequest)
+			return
+		}
+
+		sId, err := strconv.Atoi(sourceId)
+		if err != nil {
+			http.Error(w, "400 bad request", http.StatusBadRequest)
+			return
+		}
 		switch r.Method {
 		case http.MethodGet:
 			// Declares the payload struct
-			var Resp UserMessagePayload
+			var allMessages []crud.UserMessage
 
 			// ### CONNECT TO DATABASE ###
 
-			// ### GET ALL MESSAGES FOR THE TARGET ID ###
+			db := db.DbConnect()
+
+			query := crud.New(db)
+
+			// ### GET ALL MESSAGES FOR THE TARGET ID AND SOURCE ID ####
+			var msg crud.GetMessagesParams
+
+			msg.SourceID = int64(sId)
+			msg.SourceID_2 = int64(tId)
+			msg.TargetID = int64(tId)
+			msg.TargetID_2 = int64(sId)
+
+			allMessages, err = query.GetMessages(context.Background(), msg)
+
+			if err != nil {
+				http.Error(w, "500 internal server error", http.StatusInternalServerError)
+				return
+			}
 
 			// Marshals the response struct to a json object
-			jsonResp, err := json.Marshal(Resp)
+			jsonResp, err := json.Marshal(allMessages)
 			if err != nil {
 				http.Error(w, "500 internal server error", http.StatusInternalServerError)
 				return
@@ -1029,7 +1063,23 @@ func UserMessageHandler() http.HandlerFunc {
 
 			// ### CONNECT TO DATABASE ###
 
+			db := db.DbConnect()
+
+			query := crud.New(db)
+
 			// ### ADD USER MESSAGE TO DATABASE ###
+
+			var message crud.CreateMessageParams
+			message.CreatedAt = time.Now()
+			message.Message = userMessage.Message
+			message.SourceID = int64(userMessage.SourceId)
+			message.TargetID = int64(userMessage.TargetId)
+
+			_, err = query.CreateMessage(context.Background(), message)
+
+			if err != nil {
+				Resp.Success = false
+			}
 
 			// Marshals the response struct to a json object
 			jsonResp, err := json.Marshal(Resp)

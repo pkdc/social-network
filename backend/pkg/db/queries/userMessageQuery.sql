@@ -1,6 +1,6 @@
 -- name: GetMessages :many
 SELECT * FROM user_message
-WHERE target_id = ? OR source_id = ?
+WHERE target_id = ? AND source_id = ? OR source_id = ? AND target_id = ?
 ORDER BY created_at;
 
 -- name: CreateMessage :one
