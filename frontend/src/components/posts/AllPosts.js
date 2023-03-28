@@ -15,7 +15,7 @@ function AllPosts(props) {
     for (let i = 0; i < props.posts.length; i++) {
         let thisPostComments = [];
         for (let j = 0; j < props.comments.length; j++) {
-            props.comments[j] && props.comments[j].postid === i && thisPostComments.push(props.comments[j]);
+            props.comments[j] && props.comments[j].postid === props.posts[i].id && thisPostComments.push(props.comments[j]);
         }
         eachPostCommentsArr.push(thisPostComments);        
     }

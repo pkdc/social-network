@@ -4,7 +4,7 @@ import Comment from './Comment';
 
 function AllComments(props) {
    
-    console.log("comments in All comments", props.comments)   
+    // console.log("comments in All comments", props.comments);
 
     return (
         props.comments.map((comment) => {

@@ -14,7 +14,7 @@ function Post(props) {
     // const [commentData, setCommentData] = useState("");
     const [postToCommentArray, setpostToCommentArray] = useState([]);
 
-    console.log("comment for post: ", props.postNum, " comments: ", props.commentsForThisPost)
+    // console.log("comment for post: ", props.postNum, " comments: ", props.commentsForThisPost)
 
     const defaultImagePath = "default_avatar.jpg";
     const postCommentUrl = "http://localhost:8080/post-comment"; // temp
