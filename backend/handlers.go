@@ -1593,8 +1593,22 @@ func GroupPostHandler() http.HandlerFunc {
 
 		switch r.Method {
 		case http.MethodGet:
-			// Checks to find a post id in the url
-			postId := r.URL.Query().Get("id")
+			// Checks to find a group id in the url
+			groupId := r.URL.Query().Get("groupid")
+			postId := r.URL.Query().Get("postid")
+
+			gId, err := strconv.Atoi(groupId)
+
+			if err != nil {
+				fmt.Println("Unable to convert group ID")
+			}
+
+			pId, err := strconv.Atoi(postId)
+
+			if err != nil {
+				fmt.Println("Unable to convert post ID")
+			}
+
 			foundId := false
 
 			if postId != "" {
@@ -1606,12 +1620,51 @@ func GroupPostHandler() http.HandlerFunc {
 
 			// ### CONNECT TO DATABASE ###
 
+			db := db.DbConnect()
+
+			query := crud.New(db)
+
 			// Gets the post by id if an id was passed in the url
+
 			// Otherwise, gets all posts
 			if foundId {
 				// ### GET GROUP POST BY ID ###
+				groupPost, err := query.GetGroupPostById(context.Background(), int64(pId))
+
+				if err != nil {
+					fmt.Println("Unable to get group post")
+				}
+
+				var onePost GroupPostStruct
+
+				onePost.Id = int(groupPost.ID)
+				onePost.Author = int(groupPost.Author)
+				onePost.Message = groupPost.Message
+				onePost.Image = groupPost.Image
+				onePost.CreatedAt = groupPost.CreatedAt.String()
+
+				Resp.Data = append(Resp.Data, onePost)
+
 			} else {
 				// ### GET ALL GROUP POSTS ###
+				groupPosts, err := query.GetGroupPosts(context.Background(), int64(gId))
+
+				if err != nil {
+					fmt.Println("Unable to get group post")
+				}
+
+				for _, post := range groupPosts {
+					var onePost GroupPostStruct
+
+					onePost.Id = int(post.ID)
+					onePost.Author = int(post.Author)
+					onePost.Message = post.Message
+					onePost.Image = post.Image
+					onePost.CreatedAt = post.CreatedAt.String()
+
+					Resp.Data = append(Resp.Data, onePost)
+				}
+
 			}
 
 			// Marshals the response struct to a json object
