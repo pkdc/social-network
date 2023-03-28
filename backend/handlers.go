@@ -1801,7 +1801,22 @@ func GroupPostCommentHandler() http.HandlerFunc {
 
 			// ### CONNECT TO DATABASE ###
 
+			db := db.DbConnect()
+
+			query := crud.New(db)
+
 			// ### ADD GROUP POST COMMENT TO DATABASE ###
+
+			_, err = query.CreateGroupPostComment(context.Background(), crud.CreateGroupPostCommentParams{
+				Author:      int64(groupPostComment.Author),
+				GroupPostID: int64(groupPostComment.GroupPostId),
+				Message:     groupPostComment.Message,
+				CreatedAt:   time.Now(),
+			})
+
+			if err != nil {
+				fmt.Println("Unable to create comment")
+			}
 
 			// Marshals the response struct to a json object
 			jsonResp, err := json.Marshal(Resp)
