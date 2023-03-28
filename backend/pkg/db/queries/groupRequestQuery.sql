@@ -19,3 +19,7 @@ RETURNING *;
 -- name: DeleteGroupRequest :exec
 DELETE FROM group_request
 WHERE group_id = ? AND user_id = ?;
+
+-- name: GetAllGroupRequests :many
+SELECT * FROM group_request
+WHERE group_id = ?;

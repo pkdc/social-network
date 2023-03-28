@@ -16,3 +16,7 @@ RETURNING *;
 -- name: DeleteGroup :exec
 DELETE FROM group_
 WHERE id = ?;
+
+-- name: CheckIfCreator :one
+SELECT COUNT(*) FROM group_
+WHERE creator = ? AND id = ? LIMIT 1;
