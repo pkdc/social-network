@@ -2,6 +2,7 @@
     display: flex;
     gap: 10px;
     background: var(antiflash-white);
+    margin: 0px 10px;
 }
 
 .author {

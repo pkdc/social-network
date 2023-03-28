@@ -13,7 +13,6 @@ function AllPosts(props) {
     let eachPostCommentsArr = [];
 
     for (let i = 0; i < props.posts.length; i++) {
-        console.log("i: ", i);
         let thisPostComments = [];
         for (let j = 0; j < props.comments.length; j++) {
             props.comments[j] && props.comments[j].postid === i && thisPostComments.push(props.comments[j]);
@@ -46,9 +45,9 @@ function AllPosts(props) {
             image={post.image}
             createdat={post.createdat}
             authorId={post.author}
-            totalNumPost={props.posts.length}
+            // totalNumPost={props.posts.length}
             postNum={p}
-            
+            commentsForThisPost={eachPostCommentsArr[p]}
         />
         ))}
     </div>
