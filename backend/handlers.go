@@ -1737,6 +1737,12 @@ func GroupPostCommentHandler() http.HandlerFunc {
 
 		// Checks to find a post id in the url
 		groupPostId := r.URL.Query().Get("id")
+		gPostId, err := strconv.Atoi(groupPostId)
+
+		if err != nil {
+			fmt.Println("Unable to convert group post ID")
+		}
+
 		if groupPostId == "" {
 			http.Error(w, "400 bad request", http.StatusBadRequest)
 			return
@@ -1749,7 +1755,29 @@ func GroupPostCommentHandler() http.HandlerFunc {
 
 			// ### CONNECT TO DATABASE ###
 
+			db := db.DbConnect()
+
+			query := crud.New(db)
+
 			// ### GET ALL COMMENTS FOR THE GROUP POST ID ###
+
+			comments, err := query.GetGroupPostComments(context.Background(), int64(gPostId))
+
+			if err != nil {
+				fmt.Println("Unable to get comments")
+			}
+
+			for _, comment := range comments {
+				var newComment GroupPostCommentStruct
+
+				newComment.Id = int(comment.ID)
+				newComment.Author = int(comment.Author)
+				newComment.Message = comment.Message
+				newComment.GroupPostId = int(comment.GroupPostID)
+				newComment.CreatedAt = comment.CreatedAt.String()
+
+				Resp.Data = append(Resp.Data, newComment)
+			}
 
 			// Marshals the response struct to a json object
 			jsonResp, err := json.Marshal(Resp)
@@ -1773,7 +1801,22 @@ func GroupPostCommentHandler() http.HandlerFunc {
 
 			// ### CONNECT TO DATABASE ###
 
+			db := db.DbConnect()
+
+			query := crud.New(db)
+
 			// ### ADD GROUP POST COMMENT TO DATABASE ###
+
+			_, err = query.CreateGroupPostComment(context.Background(), crud.CreateGroupPostCommentParams{
+				Author:      int64(groupPostComment.Author),
+				GroupPostID: int64(groupPostComment.GroupPostId),
+				Message:     groupPostComment.Message,
+				CreatedAt:   time.Now(),
+			})
+
+			if err != nil {
+				fmt.Println("Unable to create comment")
+			}
 
 			// Marshals the response struct to a json object
 			jsonResp, err := json.Marshal(Resp)
