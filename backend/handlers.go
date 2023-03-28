@@ -1277,11 +1277,30 @@ func GroupMemberHandler() http.HandlerFunc {
 		switch r.Method {
 		case http.MethodGet:
 			// Checks to find a user id in the url
-			userId := r.URL.Query().Get("id")
-			foundId := false
+			userId := r.URL.Query().Get("userid")
+			groupId := r.URL.Query().Get("groupid")
+
+			uId, err := strconv.Atoi(userId)
+
+			if err != nil {
+				fmt.Println("Unable to convert user ID")
+			}
+
+			gId, err := strconv.Atoi(groupId)
+
+			if err != nil {
+				fmt.Println("Unable to convert group ID")
+			}
+
+			foundUserId := false
+			foundGroupId := false
 
 			if userId != "" {
-				foundId = true
+				foundUserId = true
+			}
+
+			if groupId != "" {
+				foundGroupId = true
 			}
 
 			// Declares the payload struct
@@ -1289,12 +1308,47 @@ func GroupMemberHandler() http.HandlerFunc {
 
 			// ### CONNECT TO DATABASE ###
 
-			// Gets the user by id if an id was passed in the url
-			// Otherwise, gets all users
-			if foundId {
-				// ### GET USER BY ID ###
-			} else {
-				// ### GET ALL USERS ###
+			db := db.DbConnect()
+
+			query := crud.New(db)
+
+			// gets all groups user is a member of
+			if foundUserId {
+				groups, err := query.GetAllGroupsByUser(context.Background(), int64(uId))
+
+				if err != nil {
+					fmt.Println("Unable to get groups")
+				}
+
+				var groupsResp GroupPayload
+
+				for _, group := range groups {
+					var oneGroup GroupStruct
+
+					oneGroup.CreatedAt = group.CreatedAt.String()
+					oneGroup.Description = group.Description
+					oneGroup.Creator = int(group.Creator)
+					oneGroup.Id = int(group.ID)
+					oneGroup.Title = group.Title
+
+					groupsResp.Data = append(groupsResp.Data, oneGroup)
+				}
+
+				// Marshals the response struct to a json object
+				jsonResp, err := json.Marshal(groupsResp)
+				if err != nil {
+					http.Error(w, "500 internal server error", http.StatusInternalServerError)
+					return
+				}
+
+				// Sets the http headers and writes the response to the browser
+				WriteHttpHeader(jsonResp, w)
+
+			}
+
+			// get all members with the following group id
+			if foundGroupId {
+
 			}
 
 			// Marshals the response struct to a json object
