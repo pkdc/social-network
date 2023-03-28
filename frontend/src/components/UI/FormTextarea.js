@@ -4,7 +4,7 @@ const FormTextarea = (props) => {
     const classes = `${styles["textarea"]} ${props.className || ""}`
     return (
         <div>
-            <textarea className={classes} name={props.name} id={props.id} placeholder={props.placeholder} rows={props.rows} onChange={props.onChange}>{props.children}</textarea>
+            <textarea className={classes} name={props.name} id={props.id} placeholder={props.placeholder} rows={props.rows} value={props.value} onChange={props.onChange}>{props.children}</textarea>
         </div>
     )
 };

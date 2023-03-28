@@ -4,6 +4,7 @@ import NotificationBtn from "../UI/NotificationBtn";
 import styles from "./TopNav.module.css";
 import logout from "../assets/logout.svg";
 import profile from "../assets/profileSmall.svg";
+import Avatar from "../UI/Avatar";
 
 const TopMenu = (props) => {
     let nickname;
@@ -35,7 +36,7 @@ const TopMenu = (props) => {
                     {/* <img src={profile} alt=""/> */}
                     <Link className={styles.profile} to={`/profile/${userId}`}>
                     {!avatar && <img className={styles["avatar"]} src={require("../../images/"+`${defaultImagePath}`)} alt="" width={"35px"}/>}
-                    {avatar && <img src={avatar} alt="" width={"35px"}/>}
+                    {avatar && <Avatar src={avatar} alt="" width={"35px"}/>}
                     {nickname ? `${first} ${last} (${nickname})` : `${first} ${last}`}
                     </Link>
                     </div>

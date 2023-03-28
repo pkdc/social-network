@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
 import classes from './Post.module.css'
 // import profile from '../assets/profile.svg';
-import AllCommentsForEachPost from "./comments/AllCommentsForEachPost";
+import AllComments from "./comments/AllComments";
 import CreateComment from './comments/CreateComment';
 import Avatar from '../UI/Avatar';
 import Card from '../UI/Card';
@@ -11,11 +11,11 @@ import Card from '../UI/Card';
 
 function Post(props) {
     const [showComments, setShowComments] = useState(false);
-    // const [commentData, setCommentData] = useState("");
-    const [postToCommentArray, setpostToCommentArray] = useState([]);
+
+    // console.log("comment for post: ", props.postNum, " comments: ", props.commentsForThisPost)
 
     const defaultImagePath = "default_avatar.jpg";
-    const postCommentUrl = "http://localhost:8080/post-comment";
+    const postCommentUrl = "http://localhost:8080/post-comment"; // temp
 
     // return <div className={classes.container}>
     const showCommentsHandler = () => {
@@ -35,45 +35,12 @@ function Post(props) {
         .then(resp => resp.json())
         .then(data => {
             console.log("create comment success", data.success);
+            props.onCreateCommentSuccessful(data.success); // lift it up to PostPage
         })
         .catch(err => {
             console.log(err);
         })
-
     };
-
-    useEffect(() => {
-        fetch(postCommentUrl)
-        .then(resp => resp.json())
-        .then(data => {
-            console.log("raw comment data: ", data)
-
-            // construct an array of objs
-            // the objs are postid-commentid(key) to comment(value)
-            let postToCommentTempArray = [];
-            
-            for (let p = 1; p <= props.totalNumPost; p++) {
-                console.log("post num: ", p)
-                for (let c = 0; c < data.length; c++) {
-                    if (data[c].postid === p) {
-                        let pToC = {};
-                        pToC[`p${data[c].postid}-c${data[c].id}`] = data[c];
-                        postToCommentTempArray.push(pToC);
-                    }
-                }
-            }
-            console.log("posts to comments arr: ", postToCommentTempArray)
-            // setCommentData(data);
-            setpostToCommentArray(postToCommentTempArray);
-        })
-        .catch(
-            err => console.log(err)
-        );
-    }, []);
-
-    // showComments && console.log("comment data(outside): ", commentData)
-    showComments && console.log("commentsForEachPostsArr (outside): ", postToCommentArray)
-
 
     return <Card className={classes.container} >
         <div className={classes["author"]}>
@@ -85,21 +52,17 @@ function Post(props) {
                 <div><p className={classes["details"]}>{`${props.fname} ${props.lname} (${props.nname})`}</p></div>
             </Link>
         </div>
-        <div className={classes["create-at"]}>{props.createdat}</div>
+        <div className={classes["create-at"]}>{props.createdat.split(".")[0]}</div>
         <div className={classes.content}>{props.message}</div>
         {props.image && <div><img src={props.image} alt="" width={"100px"}/></div>}
-        <div className={classes.comments} onClick={showCommentsHandler}>Comments</div>
+        <div className={classes.comments} onClick={showCommentsHandler}>{props.commentsForThisPost.length} Comments</div>
         {showComments && 
             <>
-            <AllCommentsForEachPost postNum={props.postNum} postToCommentArr={postToCommentArray}/>
-            <CreateComment pid={props.id} onCreateComment={createCommentHandler}/> 
+                <AllComments comments={props.commentsForThisPost}/>
+                <CreateComment pid={props.id} onCreateComment={createCommentHandler}/> 
             </>
         }
-        
     </Card>
-
-      
-    // </div>
 }
 
 export default Post

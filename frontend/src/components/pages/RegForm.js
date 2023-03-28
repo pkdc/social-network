@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Form from '../UI/Form';
 import FormInput from "../UI/FormInput";
@@ -23,6 +23,10 @@ const RegForm = (props) => {
 
     const navigate = useNavigate();
 
+    useEffect(() => {
+        props.success && navigate("/login", {replace: true})
+    }, [props.success]);
+    
     const emailChangeHandler = (e) => {
         setEnteredEmail(e.target.value);
         console.log(enteredEmail);
@@ -88,7 +92,7 @@ const RegForm = (props) => {
         setUploadedImg("");
         setEnteredNickname("");
         setEnteredAbout("");
-        navigate("/", {replace: true});
+        // navigate("/login", {replace: true});
     };
 
     return (

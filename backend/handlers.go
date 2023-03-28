@@ -209,8 +209,9 @@ func Loginhandler() http.HandlerFunc {
 				}
 
 				http.SetCookie(w, &http.Cookie{
-					Name:  "session_token",
-					Value: cookie.SessionToken,
+					Name:   "session_token",
+					Value:  cookie.SessionToken,
+					MaxAge: 34560000,
 				})
 
 			}
@@ -360,8 +361,14 @@ func Reghandler() http.HandlerFunc {
 func Logouthandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		EnableCors(&w)
+
 		// Prevents the endpoint being called from other url paths
 		if err := UrlPathMatcher(w, r, "/logout"); err != nil {
+			return
+		}
+
+		if r.Method == "OPTIONS" {
+			w.WriteHeader(http.StatusOK)
 			return
 		}
 
