@@ -1303,9 +1303,6 @@ func GroupMemberHandler() http.HandlerFunc {
 				foundGroupId = true
 			}
 
-			// Declares the payload struct
-			var Resp UserPayload
-
 			// ### CONNECT TO DATABASE ###
 
 			db := db.DbConnect()
@@ -1348,18 +1345,46 @@ func GroupMemberHandler() http.HandlerFunc {
 
 			// get all members with the following group id
 			if foundGroupId {
+				users, err := query.GetGroupMembersByGroupId(context.Background(), crud.GetGroupMembersByGroupIdParams{
+					GroupID: int64(gId),
+					Status:  1,
+				})
 
+				if err != nil {
+					fmt.Println("Unable to get members")
+				}
+
+				// Declares the payload struct
+				var usersResp UserPayload
+
+				for _, user := range users {
+					var oneUser UserStruct
+
+					oneUser.Id = int(user.ID)
+					oneUser.Fname = user.FirstName
+					oneUser.Lname = user.LastName
+					oneUser.Nname = user.NickName
+					oneUser.Email = user.Email
+					oneUser.Password = user.Password
+					oneUser.Dob = user.Dob.String()
+					oneUser.Avatar = user.Image
+					oneUser.About = user.About
+					oneUser.Public = int(user.Public)
+
+					usersResp.Data = append(usersResp.Data, oneUser)
+				}
+
+				// Marshals the response struct to a json object
+				jsonResp, err := json.Marshal(usersResp)
+				if err != nil {
+					http.Error(w, "500 internal server error", http.StatusInternalServerError)
+					return
+				}
+
+				// Sets the http headers and writes the response to the browser
+				WriteHttpHeader(jsonResp, w)
 			}
 
-			// Marshals the response struct to a json object
-			jsonResp, err := json.Marshal(Resp)
-			if err != nil {
-				http.Error(w, "500 internal server error", http.StatusInternalServerError)
-				return
-			}
-
-			// Sets the http headers and writes the response to the browser
-			WriteHttpHeader(jsonResp, w)
 		case http.MethodPost:
 			// Declares the variables to store the group member details and handler response
 			var groupMember GroupRequestStruct
