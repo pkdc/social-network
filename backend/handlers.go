@@ -623,6 +623,7 @@ func PostCommentHandler() http.HandlerFunc {
 				newComment.CreatedAt = comment.CreatedAt.String()
 				newComment.Message = comment.Message
 				newComment.Image = comment.Image
+				newComment.Id = int(comment.ID)
 
 				curUser, err := query.GetUserById(context.Background(), comment.UserID)
 
