@@ -2106,6 +2106,12 @@ func GroupMessageHandler() http.HandlerFunc {
 			return
 		}
 
+		gId, err := strconv.Atoi(groupId)
+
+		if err != nil {
+			fmt.Println("Unable to convert group ID")
+		}
+
 		switch r.Method {
 		case http.MethodGet:
 			// Declares the payload struct
@@ -2113,7 +2119,29 @@ func GroupMessageHandler() http.HandlerFunc {
 
 			// ### CONNECT TO DATABASE ###
 
+			db := db.DbConnect()
+
+			query := crud.New(db)
+
 			// ### GET ALL MESSAGES FOR THE GROUP ID ###
+
+			messages, err := query.GetGroupMessages(context.Background(), int64(gId))
+
+			if err != nil {
+				fmt.Println("Unable to get group messages")
+			}
+
+			for _, message := range messages {
+				var newMessage GroupMessageStruct
+
+				newMessage.Id = int(message.ID)
+				newMessage.Message = message.Message
+				newMessage.SourceId = int(message.SourceID)
+				newMessage.GroupId = int(message.GroupID)
+				newMessage.CreatedAt = message.CreatedAt.String()
+
+				Resp.Data = append(Resp.Data, newMessage)
+			}
 
 			// Marshals the response struct to a json object
 			jsonResp, err := json.Marshal(Resp)
@@ -2137,7 +2165,23 @@ func GroupMessageHandler() http.HandlerFunc {
 
 			// ### CONNECT TO DATABASE ###
 
+			db := db.DbConnect()
+
+			query := crud.New(db)
+
 			// ### ADD GROUP MESSAGE TO DATABASE ###
+
+			_, err = query.CreateGroupMessage(context.Background(), crud.CreateGroupMessageParams{
+				SourceID:  int64(groupMessage.SourceId),
+				GroupID:   int64(groupMessage.GroupId),
+				Message:   groupMessage.Message,
+				CreatedAt: time.Now(),
+			})
+
+			if err != nil {
+				Resp.Success = false
+				fmt.Println("Unable to create group message")
+			}
 
 			// Marshals the response struct to a json object
 			jsonResp, err := json.Marshal(Resp)
