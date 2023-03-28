@@ -51,6 +51,23 @@ func (q *Queries) DeleteGroupEventMember(ctx context.Context, arg DeleteGroupEve
 	return err
 }
 
+const getGroupEventMember = `-- name: GetGroupEventMember :one
+SELECT COUNT(*) FROM group_event_member
+WHERE event_id = ? AND user_id = ? LIMIT 1
+`
+
+type GetGroupEventMemberParams struct {
+	EventID int64
+	UserID  int64
+}
+
+func (q *Queries) GetGroupEventMember(ctx context.Context, arg GetGroupEventMemberParams) (int64, error) {
+	row := q.db.QueryRowContext(ctx, getGroupEventMember, arg.EventID, arg.UserID)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
 const getGroupEventMembers = `-- name: GetGroupEventMembers :many
 SELECT id, user_id, event_id, status_ FROM group_event_member
 WHERE event_id = ?

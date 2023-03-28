@@ -2,6 +2,10 @@
 SELECT * FROM group_event_member
 WHERE event_id = ?;
 
+-- name: GetGroupEventMember :one
+SELECT COUNT(*) FROM group_event_member
+WHERE event_id = ? AND user_id = ? LIMIT 1;
+
 -- name: GetGroupEventMembersGoing :many
 SELECT * FROM group_event_member
 WHERE event_id = ? AND status_ = 1;

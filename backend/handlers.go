@@ -1971,6 +1971,12 @@ func GroupEventMemberHandler() http.HandlerFunc {
 			return
 		}
 
+		eId, err := strconv.Atoi(eventId)
+
+		if err != nil {
+			fmt.Println("Unable to convert event ID")
+		}
+
 		switch r.Method {
 		case http.MethodGet:
 			// Declares the payload struct
@@ -1978,7 +1984,28 @@ func GroupEventMemberHandler() http.HandlerFunc {
 
 			// ### CONNECT TO DATABASE ###
 
+			db := db.DbConnect()
+
+			query := crud.New(db)
+
 			// ### GET ALL GROUP EVENT MEMBERS ###
+
+			members, err := query.GetGroupEventMembers(context.Background(), int64(eId))
+
+			if err != nil {
+				fmt.Println("Unable to get all members")
+			}
+
+			for _, member := range members {
+				var newMember GroupEventMemberStruct
+
+				newMember.Id = int(member.ID)
+				newMember.Status = int(member.Status)
+				newMember.UserId = int(member.UserID)
+				newMember.EventId = int(member.EventID)
+
+				Resp.Data = append(Resp.Data, newMember)
+			}
 
 			// Marshals the response struct to a json object
 			jsonResp, err := json.Marshal(Resp)
@@ -2002,7 +2029,49 @@ func GroupEventMemberHandler() http.HandlerFunc {
 
 			// ### CONNECT TO DATABASE ###
 
+			db := db.DbConnect()
+
+			query := crud.New(db)
+
 			// ### ADD/UPDATE GROUP EVENT MEMBER TO DATABASE ###
+
+			exists, err := query.GetGroupEventMember(context.Background(), crud.GetGroupEventMemberParams{
+				EventID: int64(groupPost.EventId),
+				UserID:  int64(groupPost.UserId),
+			})
+
+			if err != nil {
+				Resp.Success = false
+				fmt.Println("Unable to get event member")
+			}
+
+			if exists > 0 {
+				// update
+				_, err = query.UpdateGroupEventMember(context.Background(), crud.UpdateGroupEventMemberParams{
+					Status:  int64(groupPost.Status),
+					EventID: int64(groupPost.EventId),
+					UserID:  int64(groupPost.UserId),
+				})
+
+				if err != nil {
+					Resp.Success = false
+					fmt.Println("Unable to update event member")
+				}
+
+			} else {
+				// add
+				_, err = query.CreateGroupEventMember(context.Background(), crud.CreateGroupEventMemberParams{
+					Status:  int64(groupPost.Status),
+					EventID: int64(groupPost.EventId),
+					UserID:  int64(groupPost.UserId),
+				})
+
+				if err != nil {
+					Resp.Success = false
+					fmt.Println("Unable to add event member")
+				}
+
+			}
 
 			// Marshals the response struct to a json object
 			jsonResp, err := json.Marshal(Resp)
