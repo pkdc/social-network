@@ -1846,6 +1846,13 @@ func GroupEventHandler() http.HandlerFunc {
 		// ### CHECK USER ID AND GROUP ID MATCH IN GROUP MEMBER TABLE ###
 
 		groupId := r.URL.Query().Get("id")
+
+		gId, err := strconv.Atoi(groupId)
+
+		if err != nil {
+			fmt.Println("Unable to convert group ID")
+		}
+
 		if groupId == "" {
 			http.Error(w, "400 bad request", http.StatusBadRequest)
 			return
@@ -1858,7 +1865,28 @@ func GroupEventHandler() http.HandlerFunc {
 
 			// ### CONNECT TO DATABASE ###
 
+			db := db.DbConnect()
+
+			query := crud.New(db)
+
 			// ### GET ALL EVENTS FOR THE GROUP ID ###
+
+			events, err := query.GetGroupEvents(context.Background(), int64(gId))
+
+			for _, event := range events {
+				var newEvent GroupEventStruct
+
+				newEvent.Id = int(event.ID)
+				newEvent.GroupId = int(event.GroupID)
+				newEvent.Author = int(event.Author)
+				newEvent.Title = event.Title
+				newEvent.Description = event.Description
+				newEvent.CreatedAt = event.CreatedAt.String()
+				newEvent.Date = event.Date.String()
+
+				Resp.Data = append(Resp.Data, newEvent)
+
+			}
 
 			// Marshals the response struct to a json object
 			jsonResp, err := json.Marshal(Resp)
