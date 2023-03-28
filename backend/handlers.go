@@ -1908,9 +1908,34 @@ func GroupEventHandler() http.HandlerFunc {
 				Resp.Success = false
 			}
 
+			date, err := time.Parse("“Monday, 02-Jan-06 15:04:05 MST”", groupEvent.Date)
+
+			if err != nil {
+				Resp.Success = false
+				fmt.Println("Unable to convert date")
+			}
+
 			// ### CONNECT TO DATABASE ###
 
+			db := db.DbConnect()
+
+			query := crud.New(db)
+
 			// ### ADD GROUP EVENT TO DATABASE ###
+
+			_, err = query.CreateGroupEvent(context.Background(), crud.CreateGroupEventParams{
+				Author:      int64(groupEvent.Author),
+				GroupID:     int64(groupEvent.GroupId),
+				Title:       groupEvent.Title,
+				Description: groupEvent.Description,
+				CreatedAt:   time.Now(),
+				Date:        date,
+			})
+
+			if err != nil {
+				Resp.Success = false
+				fmt.Println("Unable to create event")
+			}
 
 			// Marshals the response struct to a json object
 			jsonResp, err := json.Marshal(Resp)
