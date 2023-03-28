@@ -1464,13 +1464,67 @@ func GroupRequestHandler() http.HandlerFunc {
 		case http.MethodGet:
 			// ### CHECK USER IS GROUP CREATOR ###
 
+			// get group id from url
+			groupId := r.URL.Query().Get("groupid")
+
+			gId, err := strconv.Atoi(groupId)
+
+			if err != nil {
+				fmt.Println("Unable to convert group ID")
+			}
+
+			// connect to database
+
+			db := db.DbConnect()
+
+			query := crud.New(db)
+
+			// get user from cookie
+
+			session, err := r.Cookie("SessionToken")
+
+			sessionTable, err := query.GetUserId(context.Background(), session.Value)
+
+			if err != nil {
+				http.Error(w, "500 internal server error", http.StatusInternalServerError)
+				return
+			}
+
+			uId := sessionTable.UserID
+
+			creator, err := query.CheckIfCreator(context.Background(), crud.CheckIfCreatorParams{
+				Creator: uId,
+				ID:      int64(gId),
+			})
+
+			if err != nil {
+				http.Error(w, "500 internal server error", http.StatusInternalServerError)
+				return
+			}
+
 			// Declares the payload struct
 			var Resp GroupRequestPayload
 
-			// ### CONNECT TO DATABASE ###
-
 			// ### GET ALL GROUP REQUESTS FOR GROUP ID ###
+			if creator > 0 {
+				groups, err := query.GetAllGroupRequests(context.Background(), int64(gId))
 
+				if err != nil {
+					fmt.Println("Unable to get groups")
+				}
+
+				for _, group := range groups {
+					var oneGroup GroupRequestStruct
+
+					oneGroup.Id = int(group.ID)
+					oneGroup.UserId = int(group.UserID)
+					oneGroup.GroupId = int(group.GroupID)
+					oneGroup.Status = group.Status
+
+					Resp.Data = append(Resp.Data, oneGroup)
+				}
+
+			}
 			// Marshals the response struct to a json object
 			jsonResp, err := json.Marshal(Resp)
 			if err != nil {
@@ -1493,7 +1547,22 @@ func GroupRequestHandler() http.HandlerFunc {
 
 			// ### CONNECT TO DATABASE ###
 
+			db := db.DbConnect()
+
+			query := crud.New(db)
+
 			// ### ADD GROUP REQUEST TO DATABASE ###
+
+			_, err = query.CreateGroupRequest(context.Background(), crud.CreateGroupRequestParams{
+				UserID:  int64(groupRequest.UserId),
+				GroupID: int64(groupRequest.GroupId),
+				Status:  groupRequest.Status,
+			})
+
+			if err != nil {
+				Resp.Success = false
+				fmt.Println("Unable to add new group request")
+			}
 
 			// Marshals the response struct to a json object
 			jsonResp, err := json.Marshal(Resp)

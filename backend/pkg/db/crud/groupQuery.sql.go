@@ -10,6 +10,23 @@ import (
 	"time"
 )
 
+const checkIfCreator = `-- name: CheckIfCreator :one
+SELECT COUNT(*) FROM group_
+WHERE creator = ? AND id = ? LIMIT 1
+`
+
+type CheckIfCreatorParams struct {
+	Creator int64
+	ID      int64
+}
+
+func (q *Queries) CheckIfCreator(ctx context.Context, arg CheckIfCreatorParams) (int64, error) {
+	row := q.db.QueryRowContext(ctx, checkIfCreator, arg.Creator, arg.ID)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
 const createGroup = `-- name: CreateGroup :one
 INSERT INTO group_ (
   title, creator, description_, created_at
