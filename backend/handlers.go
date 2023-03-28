@@ -1689,7 +1689,24 @@ func GroupPostHandler() http.HandlerFunc {
 
 			// ### CONNECT TO DATABASE ###
 
+			db := db.DbConnect()
+
+			query := crud.New(db)
+
 			// ### ADD GROUP POST TO DATABASE ###
+
+			_, err = query.CreateGroupPost(context.Background(), crud.CreateGroupPostParams{
+				Author:    int64(groupPost.Author),
+				GroupID:   int64(groupPost.Id),
+				Message:   groupPost.Message,
+				Image:     groupPost.Image,
+				CreatedAt: time.Now(),
+			})
+
+			if err != nil {
+				Resp.Success = false
+				fmt.Println("Unable to create group post")
+			}
 
 			// Marshals the response struct to a json object
 			jsonResp, err := json.Marshal(Resp)
