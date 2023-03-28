@@ -67,10 +67,13 @@ const PostsPage = () => {
             return resp.json();
         })
         .then(data => {
-            console.log("post data: ", data)
-            const sortedData = data.sort((a, b) => a.createdat > b.createat);
-            console.log("sorted post data: ", sortedData);
-            setPostData(sortedData);
+            // console.log("post data: ", data)
+            // setPostData(data) // no need to sort
+            // console.log("parsed 0", Date.parse(data[0].createdat));
+            // console.log("parsed 1", Date.parse(data[1].createdat));
+            data.sort((a, b) => Date.parse(b.createdat) - Date.parse(a.createdat)); // not working. convert to timestamp
+            console.log("sorted post data: ", data);
+            setPostData(data);
         })
         .catch(
             err => console.log(err)
@@ -82,10 +85,11 @@ const PostsPage = () => {
         fetch(postCommentUrl)
         .then(resp => resp.json())
         .then(data => {
-            console.log("post page raw comment data: ", data)
-            const sortedData = data.sort((a, b) => a.createat > b.createat);
+            // console.log("post page raw comment data: ", data)
+            // setCommentData(data);
+            data.sort((a, b) => Date.parse(a.createdat) - Date.parse(b.createdat)); // ascending order
             console.log("post page sorted comment data: ", data)
-            setCommentData(sortedData);
+            setCommentData(data);
         })
         .catch(
             err => console.log(err)
