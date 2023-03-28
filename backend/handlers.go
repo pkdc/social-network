@@ -1547,7 +1547,22 @@ func GroupRequestHandler() http.HandlerFunc {
 
 			// ### CONNECT TO DATABASE ###
 
+			db := db.DbConnect()
+
+			query := crud.New(db)
+
 			// ### ADD GROUP REQUEST TO DATABASE ###
+
+			_, err = query.CreateGroupRequest(context.Background(), crud.CreateGroupRequestParams{
+				UserID:  int64(groupRequest.UserId),
+				GroupID: int64(groupRequest.GroupId),
+				Status:  groupRequest.Status,
+			})
+
+			if err != nil {
+				Resp.Success = false
+				fmt.Println("Unable to add new group request")
+			}
 
 			// Marshals the response struct to a json object
 			jsonResp, err := json.Marshal(Resp)
