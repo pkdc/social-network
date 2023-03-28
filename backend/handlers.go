@@ -1398,7 +1398,33 @@ func GroupMemberHandler() http.HandlerFunc {
 
 			// ### CONNECT TO DATABASE ###
 
+			db := db.DbConnect()
+
+			query := crud.New(db)
+
 			// ### UPDATE GROUP REQUEST TABLE AND ADD USER TO GROUP MEMBER TABLE ###
+
+			_, err = query.UpdateGroupRequest(context.Background(), crud.UpdateGroupRequestParams{
+				Status:  groupMember.Status,
+				GroupID: int64(groupMember.GroupId),
+				UserID:  int64(groupMember.UserId),
+			})
+
+			if err != nil {
+				Resp.Success = false
+				fmt.Println("Unable to update group request")
+			}
+
+			_, err = query.CreateGroupMember(context.Background(), crud.CreateGroupMemberParams{
+				UserID:  int64(groupMember.UserId),
+				GroupID: int64(groupMember.GroupId),
+				Status:  1,
+			})
+
+			if err != nil {
+				Resp.Success = false
+				fmt.Println("Unable to insert group member")
+			}
 
 			// Marshals the response struct to a json object
 			jsonResp, err := json.Marshal(Resp)
