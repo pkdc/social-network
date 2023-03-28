@@ -21,6 +21,11 @@ function AllPosts(props) {
     }
     console.log("eachPostComments", eachPostCommentsArr);
  
+    const createCommentSuccessHandler = (createCommentSuccessful) => {
+        // lift it up to PostPage
+        props.onCreateCommentSuccessful(createCommentSuccessful)
+    };
+
     return <div className={classes.container}>
         {props.posts.map((post, p) => (
             
@@ -38,6 +43,7 @@ function AllPosts(props) {
             // totalNumPost={props.posts.length}
             postNum={p}
             commentsForThisPost={eachPostCommentsArr[p]}
+            onCreateCommentSuccessful={createCommentSuccessHandler}
         />
         ))}
     </div>

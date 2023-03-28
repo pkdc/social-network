@@ -108,15 +108,47 @@ const PostsPage = () => {
         .then(resp => resp.json())
         .then(data => {
             console.log("post success", data.success);
-            // if (data) {
-            //     // render all posts
-                
-            // // navigate("/", {replace: true});
-            // }
+            if (data.success) {
+                // render all posts
+                fetch(postUrl)
+                .then(resp => {
+                    return resp.json();
+                })
+                .then(data => {
+                    // console.log("post data: ", data)
+                    // setPostData(data) // no need to sort
+                    // console.log("parsed 0", Date.parse(data[0].createdat));
+                    // console.log("parsed 1", Date.parse(data[1].createdat));
+                    data.sort((a, b) => Date.parse(b.createdat) - Date.parse(a.createdat)); // not working. convert to timestamp
+                    console.log("sorted post data: ", data);
+                    setPostData(data);
+                })
+                .catch(
+                    err => console.log(err)
+                );
+            }
         })
         .catch(err => {
             console.log(err);
         })
+    };
+
+    const createCommentSuccessHandler = (createCommentSuccessful) => {
+        // fetch comment
+        if (createCommentSuccessful) {
+            fetch(postCommentUrl)
+            .then(resp => resp.json())
+            .then(data => {
+                // console.log("post page raw comment data: ", data)
+                // setCommentData(data);
+                data.sort((a, b) => Date.parse(a.createdat) - Date.parse(b.createdat)); // ascending order
+                console.log("post page sorted comment data: ", data)
+                setCommentData(data);
+            })
+            .catch(
+                err => console.log(err)
+            );
+        }
     };
 
     return ( <div className={styles.container}>
@@ -126,7 +158,7 @@ const PostsPage = () => {
     
             <div className={styles.mid}>
                 <CreatePost onCreatePost={createPostHandler}/>
-                <AllPosts posts={postData} comments={commentData}/>
+                <AllPosts posts={postData} comments={commentData} onCreateCommentSuccessful={createCommentSuccessHandler}/>
             </div>
 
             <div className={styles.right}>

@@ -35,11 +35,11 @@ function Post(props) {
         .then(resp => resp.json())
         .then(data => {
             console.log("create comment success", data.success);
+            props.onCreateCommentSuccessful(data.success); // lift it up to PostPage
         })
         .catch(err => {
             console.log(err);
         })
-
     };
 
     return <Card className={classes.container} >
