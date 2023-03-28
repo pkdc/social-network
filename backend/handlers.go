@@ -1049,8 +1049,22 @@ func UserMessageHandler() http.HandlerFunc {
 				return
 			}
 
+			var messages UserMessagePayload
+
+			for _, message := range allMessages {
+				var newMessage UserMessageStruct
+
+				newMessage.Id = int(message.ID)
+				newMessage.TargetId = int(message.TargetID)
+				newMessage.SourceId = int(message.SourceID)
+				newMessage.Message = message.Message
+				newMessage.CreatedAt = message.CreatedAt.String()
+
+				messages.Data = append(messages.Data, newMessage)
+			}
+
 			// Marshals the response struct to a json object
-			jsonResp, err := json.Marshal(allMessages)
+			jsonResp, err := json.Marshal(messages)
 			if err != nil {
 				http.Error(w, "500 internal server error", http.StatusInternalServerError)
 				return
@@ -1130,6 +1144,8 @@ func Grouphandler() http.HandlerFunc {
 				fmt.Println("Unable to convert group ID")
 			}
 
+			var Resp GroupPayload
+
 			// ### CONNECT TO DATABASE ###
 
 			db := db.DbConnect()
@@ -1174,20 +1190,21 @@ func Grouphandler() http.HandlerFunc {
 						fmt.Println("Unable to get group id")
 					}
 
+					var newGroup GroupStruct
+
+					newGroup.Id = int(group.ID)
+					newGroup.Title = group.Title
+					newGroup.Creator = int(group.Creator)
+					newGroup.Description = group.Description
+					newGroup.CreatedAt = group.CreatedAt.String()
+
+					Resp.Data = append(Resp.Data, newGroup)
+
 				} else {
 					// ### ELSE, REQUEST TO JOIN ###
 					//empty response
 				}
 
-				// Marshals the response struct to a json object
-				jsonResp, err := json.Marshal(group)
-
-				if err != nil {
-					http.Error(w, "500 internal server error", http.StatusInternalServerError)
-					return
-				}
-
-				WriteHttpHeader(jsonResp, w)
 			} else {
 				// ### GET ALL GROUPS ###
 
@@ -1197,15 +1214,28 @@ func Grouphandler() http.HandlerFunc {
 					fmt.Println("Unable to get groups")
 				}
 
-				jsonResp, err := json.Marshal(groups)
+				for _, group := range groups {
+					var newGroup GroupStruct
 
-				if err != nil {
-					http.Error(w, "500 internal server error", http.StatusInternalServerError)
-					return
+					newGroup.Id = int(group.ID)
+					newGroup.Title = group.Title
+					newGroup.Creator = int(group.Creator)
+					newGroup.Description = group.Description
+					newGroup.CreatedAt = group.CreatedAt.String()
+
+					Resp.Data = append(Resp.Data, newGroup)
 				}
 
-				WriteHttpHeader(jsonResp, w)
 			}
+
+			jsonResp, err := json.Marshal(Resp)
+
+			if err != nil {
+				http.Error(w, "500 internal server error", http.StatusInternalServerError)
+				return
+			}
+
+			WriteHttpHeader(jsonResp, w)
 
 		case http.MethodPost:
 			// Declares the variables to store the group details and handler response
