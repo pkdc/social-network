@@ -20,17 +20,7 @@ function AllPosts(props) {
         eachPostCommentsArr.push(thisPostComments);        
     }
     console.log("eachPostComments", eachPostCommentsArr);
-
-    // useEffect(() => {
-        // for (let i = 0; i < props.posts.length; i++) {
-        //     console.log("loop", props.comments[i]);
-        //     // the comment is for post i
-        //     // props.comments[i].postid === i && thisPostComments.push(props.comments[i])
-        // }
-    // },[props.posts.length, props.comments]);
-    
-    
-
+ 
     return <div className={classes.container}>
         {props.posts.map((post, p) => (
             

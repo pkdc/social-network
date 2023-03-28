@@ -11,8 +11,6 @@ import Card from '../UI/Card';
 
 function Post(props) {
     const [showComments, setShowComments] = useState(false);
-    // const [commentData, setCommentData] = useState("");
-    const [postToCommentArray, setpostToCommentArray] = useState([]);
 
     // console.log("comment for post: ", props.postNum, " comments: ", props.commentsForThisPost)
 
@@ -44,39 +42,6 @@ function Post(props) {
 
     };
 
-    // useEffect(() => {
-    //     fetch(postCommentUrl)
-    //     .then(resp => resp.json())
-    //     .then(data => {
-    //         console.log("raw comment data: ", data)
-
-    //         // construct an array of objs
-    //         // the objs are postid-commentid(key) to comment(value)
-    //         let postToCommentTempArray = [];
-            
-    //         for (let p = 1; p <= props.totalNumPost; p++) {
-    //             console.log("post num: ", p)
-    //             for (let c = 0; c < data.length; c++) {
-    //                 if (data[c].postid === p) {
-    //                     let pToC = {};
-    //                     pToC[`p${data[c].postid}-c${data[c].id}`] = data[c];
-    //                     postToCommentTempArray.push(pToC);
-    //                 }
-    //             }
-    //         }
-    //         console.log("posts to comments arr: ", postToCommentTempArray)
-    //         // setCommentData(data);
-    //         setpostToCommentArray(postToCommentTempArray);
-    //     })
-    //     .catch(
-    //         err => console.log(err)
-    //     );
-    // }, []);
-
-    // showComments && console.log("comment data(outside): ", commentData)
-    // showComments && console.log("commentsForEachPostsArr (outside): ", postToCommentArray)
-
-
     return <Card className={classes.container} >
         <div className={classes["author"]}>
             <Link to={`/profile/${props.authorId}`}>
@@ -93,15 +58,11 @@ function Post(props) {
         <div className={classes.comments} onClick={showCommentsHandler}>{props.commentsForThisPost.length} Comments</div>
         {showComments && 
             <>
-            {/* <AllCommentsForEachPost postNum={props.postNum} postToCommentArr={postToCommentArray}/> */}
                 <AllComments comments={props.commentsForThisPost}/>
                 <CreateComment pid={props.id} onCreateComment={createCommentHandler}/> 
             </>
         }
     </Card>
-
-      
-    // </div>
 }
 
 export default Post
