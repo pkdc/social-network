@@ -1049,8 +1049,22 @@ func UserMessageHandler() http.HandlerFunc {
 				return
 			}
 
+			var messages UserMessagePayload
+
+			for _, message := range allMessages {
+				var newMessage UserMessageStruct
+
+				newMessage.Id = int(message.ID)
+				newMessage.TargetId = int(message.TargetID)
+				newMessage.SourceId = int(message.SourceID)
+				newMessage.Message = message.Message
+				newMessage.CreatedAt = message.CreatedAt.String()
+
+				messages.Data = append(messages.Data, newMessage)
+			}
+
 			// Marshals the response struct to a json object
-			jsonResp, err := json.Marshal(allMessages)
+			jsonResp, err := json.Marshal(messages)
 			if err != nil {
 				http.Error(w, "500 internal server error", http.StatusInternalServerError)
 				return
