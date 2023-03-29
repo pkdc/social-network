@@ -1,0 +1,24 @@
+.sidebar {
+    position: fixed;
+    top: 60px;
+    height: 100%;
+    width: 220px;
+    right: -205px;
+    background-color: var(--slate-blue);
+    opacity: 30%;
+    z-index: 998;
+    transition: background-color 0.3s ease;
+    transition: right 0.3s ease;
+}
+
+.sidebar:hover {
+    opacity: 60%;
+    right: -200px;
+}
+
+.show-chat-btn {
+    position: fixed;
+    background-color: var(--slate-blue);
+    top: 60%;
+    right: 5px;
+}
