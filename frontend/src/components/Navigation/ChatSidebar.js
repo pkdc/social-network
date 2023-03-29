@@ -1,16 +1,29 @@
 import styles from "./ChatSidebar.module.css";
 import classes from '../pages/layout.module.css';
+import { useState } from "react";
 
 const ChatSidebar = () => {
+    const [hovered, setHovered] = useState(false);
+
     const showChatSidebarHandler = () => {};
+
+    // const sidebarHoveredHandler = () => {};
     return (
         <>
-        <div className={styles["sidebar"]}>
-
+        <div 
+            className={`${styles["sidebar"]} ${hovered ? styles["hovered"] : ""}`} 
+            onMouseEnter={() => setHovered(true)} 
+            onMouseLeave={() => setHovered(false)}
+            >
         </div>
-        <div className={styles["show-sidebar-btn"]}>
+        <div>
         {/* <div className={classes.right}> */}
-        <button onClick={showChatSidebarHandler}></button>
+        <button 
+            className={`${styles["show-sidebar-btn"]} ${hovered ? styles["hovered"] : ""}`} 
+            onClick={showChatSidebarHandler} 
+            onMouseEnter={() => setHovered(true)}
+            onMouseLeave={() => setHovered(false)}
+            >&lt;&lt;</button>
         </div>
         
         </>
