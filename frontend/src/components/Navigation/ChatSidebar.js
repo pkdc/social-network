@@ -1,6 +1,8 @@
-import styles from "./ChatSidebar.module.css";
-import classes from '../pages/layout.module.css';
 import { useState } from "react";
+import SwitchChatTopBar from "../chat/SwitchChatTopBar";
+import ChatMainArea from "../chat/UserChat/UserChatMainArea";
+import styles from "./ChatSidebar.module.css";
+
 
 const ChatSidebar = () => {
     const [hovered, setHovered] = useState(false);
@@ -15,16 +17,17 @@ const ChatSidebar = () => {
             className={`${styles["sidebar"]} ${hovered ? styles["hovered"] : ""} ${showChat ? styles["show-chat"] : ""}`}
             onMouseEnter={() => setHovered(true)} 
             onMouseLeave={() => setHovered(false)}
-            onClick={clickHandler}
-            >
+            // onClick={clickHandler}
+        >
+            <SwitchChatTopBar />
+            <ChatMainArea />
         </div>
         <div>
-        {/* <div className={classes.right}> */}
-        <button 
-            className={`${styles["show-sidebar-btn"]} ${hovered ? styles["hovered"] : ""} ${showChat ? styles["show-chat"] : ""}`} 
-            onMouseEnter={() => setHovered(true)}
-            onMouseLeave={() => setHovered(false)}
-            onClick={clickHandler}
+            <button 
+                className={`${styles["show-sidebar-btn"]} ${hovered ? styles["hovered"] : ""} ${showChat ? styles["show-chat"] : ""}`} 
+                onMouseEnter={() => setHovered(true)}
+                onMouseLeave={() => setHovered(false)}
+                onClick={clickHandler}
             >{showChat ? ">" : "<"}</button>
         </div>
         
