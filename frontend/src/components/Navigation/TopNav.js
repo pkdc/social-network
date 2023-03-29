@@ -58,6 +58,8 @@ import NotificationBtn from "../UI/NotificationBtn";
 import styles from "./TopNav.module.css";
 import logout from "../assets/logout.svg";
 import profile from "../assets/profileSmall.svg";
+import notif from "../assets/notifications1.svg";
+import chatIcon from "../assets/chat1.svg";
 
 const TopMenu = () => {
     const navigate = useNavigate();
@@ -94,8 +96,20 @@ const TopMenu = () => {
                     </div> */}
 
                 {/* <NotificationBtn>&#128276;</NotificationBtn> */}
-
-                <LogoutButton ><img src={logout} alt=""/></LogoutButton>
+                <div className={styles.icons}>
+                    <div className={styles.notif}>
+                        <button className={styles.btn}>
+                            <img src={notif} alt=""></img>
+                        </button>
+                        <button className={styles.btn}>
+                            <img src={chatIcon} alt=""></img>
+                        </button>
+                    </div>
+                    <LogoutButton ><img src={logout} alt=""/></LogoutButton>
+                  
+                
+                </div>
+            
             </div>
         </nav>
         

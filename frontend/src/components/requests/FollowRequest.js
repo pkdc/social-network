@@ -7,7 +7,9 @@ function FollowRequest() {
     const navigate = useNavigate();
 
     function handleClick(e) {
-        const id = e.target.id  
+        let id = e.target.id  
+
+        console.log("follow id",id);
         navigate("/profile", {state: { id } })
     }
 

@@ -16,6 +16,7 @@ const PostsPage = () => {
     const postUrl = "http://localhost:8080/post";
 
     const [postData, setPostData] = useState([]);
+    console.log("postsData", postData);
 
     useEffect(() => {
         fetch(postUrl)

@@ -14,7 +14,7 @@ function ProfilePage() {
 
     const { state } = useLocation();
     const { id } = state;
-    console.log("id", id); 
+    console.log("id---", id); 
 
 
 

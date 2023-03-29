@@ -3,12 +3,13 @@ import Post from "./Post";
 import classes from './AllPosts.module.css'
 import useGet from "../fetch/useGet";
 
-function AllPosts(props) {
+function AllPosts() {
 
-    const userId = props.userId
-    console.log("user id posts", userId)
+    // const userId = props.userId
+    // console.log("user id posts", userId)
 
-    const { data } = useGet(`/post?id=${userId}`)
+    const { data } = useGet(`/post`)
+    console.log("allposts", typeof(data))
 
     return <div className={classes.container}>
         {data.map((post) => (

@@ -4,7 +4,7 @@ import GroupEvent from "./GroupEvent";
 function AllEvents() {
 
 const { data } = useGet("/group-event")
-console.log("event data", data)
+// console.log("event data", typeof(data))
 
     return <div>
         {data.map((event) => (

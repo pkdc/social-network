@@ -63,4 +63,18 @@ a:hover, a:active {
     margin-top: -3px;
 }
 
+.icons {
+    display: flex;
+    gap: 15px;
+}
 
+.btn {
+    border: none;
+    outline: none;
+    background: none;
+}
+
+.notif {
+    display: flex;
+    align-items: center;
+}
