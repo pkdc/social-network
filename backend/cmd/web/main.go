@@ -3,6 +3,7 @@ package main
 import (
 	"backend"
 	db "backend/pkg/db/sqlite"
+	"backend/pkg/websocket"
 	"fmt"
 	"net/http"
 )
@@ -14,6 +15,13 @@ func main() {
 	// db.RemoveMigration(m)
 	// db.InsertMockUserData()
 	// db.InsertMockPostData()
+
+	hub := websocket.NewHub()
+	go hub.Run()
+
+	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
+		websocket.ServeWs(hub, w, r)
+	})
 
 	// exec.Command("xdg-open", "https://localhost:8080").Start()
 

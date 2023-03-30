@@ -5,6 +5,8 @@ import styles from "./UserChatMainArea.module.css";
 const ChatMainArea = (props) => {
     // console.log("user chat followers in chatarea", props.followersList);
 
+    const [chatboxOpen, setChatboxOpen] = useState(false);
+
     return (
         <div 
         className={styles["user-list"]}
