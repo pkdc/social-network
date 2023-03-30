@@ -19,7 +19,7 @@ function AllPosts(props) {
         }
         eachPostCommentsArr.push(thisPostComments);        
     }
-    console.log("eachPostComments", eachPostCommentsArr);
+    // console.log("eachPostComments", eachPostCommentsArr);
  
     const createCommentSuccessHandler = (createCommentSuccessful) => {
         // lift it up to PostPage

@@ -1,14 +1,15 @@
-import { useState } from "react";
-import SwitchChatTopBar from "../chat/SwitchChatTopBar";
-import ChatMainArea from "../chat/UserChat/UserChatMainArea";
+import { useState, useEffect } from "react";
+import ChooseChat from "../chat/ChooseChat.js";
 import styles from "./ChatSidebar.module.css";
 
 
-const ChatSidebar = () => {
+const ChatSidebar = (props) => {
     const [hovered, setHovered] = useState(false);
     const [showChat, setShowChat] = useState(false);
 
     const clickHandler = () => !showChat ? setShowChat(true) : setShowChat(false);
+
+    // console.log("user chat followers (sidebar)", props.followersList);
 
     // const sidebarHoveredHandler = () => {};
     return (
@@ -19,8 +20,7 @@ const ChatSidebar = () => {
             onMouseLeave={() => setHovered(false)}
             // onClick={clickHandler}
         >
-            <SwitchChatTopBar />
-            <ChatMainArea />
+            <ChooseChat followersList={props.followersList}/>
         </div>
         <div>
             <button 

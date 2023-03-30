@@ -15,7 +15,7 @@ function Post(props) {
     // console.log("comment for post: ", props.postNum, " comments: ", props.commentsForThisPost)
 
     const defaultImagePath = "default_avatar.jpg";
-    const postCommentUrl = "http://localhost:8080/post-comment"; // temp
+    const postCommentUrl = "http://localhost:8080/post-comment";
 
     // return <div className={classes.container}>
     const showCommentsHandler = () => {
@@ -26,11 +26,11 @@ function Post(props) {
 
     const createCommentHandler = (createCommentPayloadObj) => {
         console.log("create comment for Post", createCommentPayloadObj)
+        
         const reqOptions = {
             method: "POST",
             body: JSON.stringify(createCommentPayloadObj),
         }
-
         fetch(postCommentUrl, reqOptions)
         .then(resp => resp.json())
         .then(data => {

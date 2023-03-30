@@ -1,8 +1,10 @@
 import { useState } from "react";
 import SmallButton from "../UI/SmallButton";
+import UserChatMainArea from "./UserChat/UserChatMainArea";
+import GroupChatMainArea from "./GroupChat/GroupChatMainArea";
+import styles from "./ChooseChat.module.css";
 
-import styles from "./SwitchChatTopBar.module.css";
-const SwitchChatTopBar = () => {
+const ChooseChat = (props) => {
     const [grpActive, setGrpActive] = useState(false);
 
     const showUserListHandler = () => {
@@ -17,6 +19,7 @@ const SwitchChatTopBar = () => {
     };
 
     return (
+        <>
         <div className={styles["switch-bar"]}>
             <SmallButton 
                 className={`${!grpActive && styles["active"]} ${styles["switch-bar-btn"]}`}
@@ -28,7 +31,10 @@ const SwitchChatTopBar = () => {
                 onClick={showGrpListHandler}
             >Groups</SmallButton>
         </div>
+        {!grpActive && <UserChatMainArea followersList={props.followersList}/>}
+        {grpActive && <GroupChatMainArea />}
+        </>
     );
 };
 
-export default SwitchChatTopBar;
+export default ChooseChat;

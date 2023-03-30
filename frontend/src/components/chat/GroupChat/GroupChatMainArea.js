@@ -1,11 +1,11 @@
 import ChatUserItem from "../UserChat/UserChatItem";
-import styles from "./ChatMainArea.module.css";
+import styles from "./GroupChatMainArea.module.css";
 
-const ChatMainArea = () => {
+const GroupChatMainArea = () => {
     
     return (
-        <div className={styles["user-list"]}></div>
+        <div className={styles["group-list"]}></div>
     );
 };
 
-export default ChatMainArea;
+export default GroupChatMainArea;

@@ -1,10 +1,15 @@
-import ChatUserItem from "./UserChatItem";
+import { useEffect, useState } from "react";
+import AllUserChatItems from "./AllUserChatItems";
 import styles from "./UserChatMainArea.module.css";
 
-const ChatMainArea = () => {
-    
+const ChatMainArea = (props) => {
+    // console.log("user chat followers in chatarea", props.followersList);
+
     return (
-        <div className={styles["user-list"]}></div>
+        <div className={styles["user-list"]}>
+
+            <AllUserChatItems />
+        </div>
     );
 };
 
