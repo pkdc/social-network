@@ -17,7 +17,8 @@ const Root = (props) => {
         .then(resp => resp.json())
         .then(data => {
             console.log("chatmainarea user: ", data)
-            setFollowersList(data);
+            let [followersArr] = Object.values(data); 
+            setFollowersList(followersArr);
         })
         .catch(
             err => console.log(err)

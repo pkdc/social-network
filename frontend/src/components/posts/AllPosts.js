@@ -28,7 +28,6 @@ function AllPosts(props) {
 
     return <div className={classes.container}>
         {props.posts.map((post, p) => (
-            
          <Post
             key={post.id}
             id={post.id}

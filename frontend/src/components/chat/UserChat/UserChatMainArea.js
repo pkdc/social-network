@@ -7,8 +7,7 @@ const ChatMainArea = (props) => {
 
     return (
         <div className={styles["user-list"]}>
-
-            <AllUserChatItems />
+            <AllUserChatItems followersList={props.followersList}/>
         </div>
     );
 };
