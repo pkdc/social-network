@@ -1,0 +1,14 @@
+.item {
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+    background-color: var(--antiflash-white);
+    color: var(--ultra-violet, purple);
+    height: 60px;
+    gap: 1rem;
+    border: 1px solid var(--ultra-violet, purple);
+    border-left: 15px solid var(--ultra-violet, purple);    
+    /* z-index: 1000; */
+}
+

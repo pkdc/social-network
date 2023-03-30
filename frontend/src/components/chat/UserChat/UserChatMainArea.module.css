@@ -1,3 +1,4 @@
 .user-list {
-    background-color: brown;
+    background-color: var(--ultra-violet, purple);
+    overflow-y: scroll;
 }

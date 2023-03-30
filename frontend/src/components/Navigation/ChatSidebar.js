@@ -14,6 +14,7 @@ const ChatSidebar = (props) => {
     // const sidebarHoveredHandler = () => {};
     return (
         <>
+        <div style={{height: "100%"}}>
         <div 
             className={`${styles["sidebar"]} ${hovered ? styles["hovered"] : ""} ${showChat ? styles["show-chat"] : ""}`}
             onMouseEnter={() => setHovered(true)} 
@@ -22,6 +23,8 @@ const ChatSidebar = (props) => {
         >
             <ChooseChat followersList={props.followersList}/>
         </div>
+        </div>
+        
         <div>
             <button 
                 className={`${styles["show-sidebar-btn"]} ${hovered ? styles["hovered"] : ""} ${showChat ? styles["show-chat"] : ""}`} 

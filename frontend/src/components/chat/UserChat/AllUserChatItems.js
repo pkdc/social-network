@@ -9,7 +9,7 @@ const AllUserChatItems = (props) => {
             {props.followersList.map((follower) => {
                 console.log("each follower", follower);
 
-                <UserChatItem 
+                return <UserChatItem 
                     key={follower.id}
                     id={follower.id}
                     avatar={follower.avatar}
