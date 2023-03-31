@@ -8,6 +8,7 @@ import PostsPage from './components/pages/PostsPage';
 import GroupPage from "./components/pages/GroupPage";
 import GroupProfilePage from "./components/pages/GroupProfilePage";
 import ProfilePage from "./components/pages/ProfilePage";
+import AuthContext from "./components/store/auth-context";
 
 
 function App() {
@@ -93,7 +94,7 @@ function App() {
       })
   };
 
-useEffect(() => {localStorage.getItem("user_id") && setLoggedIn(true)}, []);
+  useEffect(() => {localStorage.getItem("user_id") && setLoggedIn(true)}, []);
   
   console.log("reg success", regSuccess);
   
@@ -145,7 +146,14 @@ useEffect(() => {localStorage.getItem("user_id") && setLoggedIn(true)}, []);
 
   ]);
 
-  return <RouterProvider router={router}/>;
+  return (
+    <AuthContext.Provider value={{
+      isLoggedIn: loggedIn,
+      onLogout: logoutHandler
+    }}>
+      <RouterProvider router={router}/>
+    </AuthContext.Provider>
+  );
 }
 
 export default App;

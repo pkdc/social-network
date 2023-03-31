@@ -1,0 +1,3 @@
+const UserChatbox = () => {};
+
+export default UserChatbox;
