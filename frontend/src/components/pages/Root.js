@@ -28,7 +28,7 @@ const Root = (props) => {
     console.log("user chat followers (root)", followersList);
 
     return <>
-    <TopNav onLogout={props.onLogout}/>
+    <TopNav/>
     <ChatSidebar followersList={followersList}/>
     <Outlet/>
     </>

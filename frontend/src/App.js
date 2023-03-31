@@ -131,7 +131,7 @@ function App() {
  if (loggedIn) router = createBrowserRouter([
     {
       path: "/",
-      element: <Root onLogout={logoutHandler} />,
+      element: <Root />,
       children: [
           {path: "/", element: <PostsPage />},
           {path: "/profile", element: <ProfilePage />},

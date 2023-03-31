@@ -1,3 +1,4 @@
+import { useContext } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import LogoutButton from "../UI/LogoutButton";
 import NotificationBtn from "../UI/NotificationBtn";
@@ -5,6 +6,7 @@ import styles from "./TopNav.module.css";
 import logout from "../assets/logout.svg";
 import profile from "../assets/profileSmall.svg";
 import Avatar from "../UI/Avatar";
+import AuthContext from "../store/auth-context";
 
 const TopMenu = (props) => {
     let nickname;
@@ -19,8 +21,11 @@ const TopMenu = (props) => {
 
     const navigate = useNavigate();
 
+    const ctx = useContext(AuthContext);
+
     const onClickingLogout = () => {
-        props.onLogout();
+        // props.onLogout();
+        ctx.onLogout();
         navigate("/", {replace: true});
     };
     
