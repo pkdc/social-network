@@ -138,6 +138,7 @@ func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 
 	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256), userID: int(session.UserID)}
 	client.hub.register <- client
+	fmt.Printf("ServeWs created client %v", client)
 	// Allow collection of memory referenced by the caller by doing all work in
 	// new goroutines.
 	go client.writePump()
