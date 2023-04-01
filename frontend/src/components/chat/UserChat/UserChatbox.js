@@ -1,4 +1,4 @@
-import { useEffect, useContext } from "react";
+import { useEffect, useContext, useState, useRef } from "react";
 import UsersContext from "../../store/users-context";
 import WebSocketContext from "../../store/websocket-context";
 import Form from "../../UI/Form";
@@ -11,18 +11,20 @@ const UserChatbox = (props) => {
     console.log("chatbox: ", usersCtx.users);
 
     const wsCtx = useContext(WebSocketContext);
-    useEffect(() => {
-
-    },[]);
+    console.log("ws in UserChatbox: ",wsCtx.websocket);
+    // const [msg, setMsg] = useState("");
+    const msgRef = useRef();
 
     const sendMsgHandler = (e) => {
         e.preventDefault();
-        console.log("user sent msg: ");
+        console.log("user sent msg: ", msgRef.current.value);
+
+        wsCtx.websocket.send(msgRef.current.value);
     };
 
     return (
         <Form onSubmit={sendMsgHandler}>
-            <CreatePostTextarea/>
+            <CreatePostTextarea reference={msgRef}/>
             <button type="submit">
                 <img src={send} alt='' />
             </button>

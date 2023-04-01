@@ -12,28 +12,6 @@ const Root = (props) => {
     const [usersList, setUsersList] = useState([]);
     const [joinedGroupList, setJoinedGroupList] = useState([]);
 
-    const [socket, setSocket] = useState(null);
-
-    // websocket
-    useEffect(() => {
-        const newSocket = new WebSocket("ws://localhost:8080/ws");
-  
-        newSocket.onOpen = () => {
-            console.log("ws connected");
-            setSocket(newSocket);
-        };
-        
-        newSocket.onClose = () => {
-            console.log("bye ws");
-            setSocket(null);
-        };
-  
-        newSocket.onError = (err) => console.log("ws error");
-  
-        return () => {
-            newSocket.close();
-        };   
-  }, []);
 
     // get users
     useEffect(() => {
@@ -51,17 +29,45 @@ const Root = (props) => {
 
     console.log("user chat users (root)", usersList);
 
+
+    const [socket, setSocket] = useState(null);
+
+    // websocket
+    useEffect(() => {
+        // const newSocket = new WebSocket("ws://localhost:8080/ws");
+        const newSocket = new WebSocket("ws://localhost:8080/ws")
+  
+        newSocket.onopen = () => {
+            console.log("ws connected");
+            setSocket(newSocket);
+        };
+        
+        newSocket.onclose = () => {
+            console.log("bye ws");
+            setSocket(null);
+        };
+  
+        newSocket.onerror = (err) => console.log("ws error");
+  
+        return () => {
+            newSocket.close();
+        };   
+  }, []);
+
+  console.log("socket: ", socket);
+
     return <>
     <UsersContext.Provider value={{
         users: usersList
     }}>
+        <TopNav/>
         <WebSocketContext.Provider value={{
-            websocket: socket
+            websocket: socket,
+            setWebSocket: setSocket
         }}>
-            <TopNav/>
-            <ChatSidebar/>
-            <Outlet/>
+            {socket ? <ChatSidebar/> : <p>Connecting...</p>}
         </WebSocketContext.Provider>
+        <Outlet/>
     </UsersContext.Provider>
     </>
 };
