@@ -9,7 +9,7 @@ import GroupPage from "./components/pages/GroupPage";
 import GroupProfilePage from "./components/pages/GroupProfilePage";
 import ProfilePage from "./components/pages/ProfilePage";
 import AuthContext from "./components/store/auth-context";
-
+import WebSocketContext from "./components/store/websocket-context";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -146,12 +146,42 @@ function App() {
 
   ]);
 
+  // websocket
+  const [socket, setSocket] = useState(null);
+
+  useEffect(() => {
+    if (loggedIn) {
+      const newSocket = new WebSocket("ws://localhost:8080/ws");
+
+      newSocket.onOpen = () => {
+          console.log("ws connected");
+          setSocket(newSocket);
+      };
+      
+      newSocket.onClose = () => {
+          console.log("bye ws");
+          setSocket(null);
+      };
+
+      newSocket.onError = (err) => console.log("ws error");
+
+      return () => {
+          newSocket.close();
+      };
+    }
+    
+}, [loggedIn]);
+
   return (
     <AuthContext.Provider value={{
       isLoggedIn: loggedIn,
       onLogout: logoutHandler
     }}>
+      <WebSocketContext.Provider value={{
+        websocket: socket
+      }}>
       <RouterProvider router={router}/>
+      </WebSocketContext.Provider>
     </AuthContext.Provider>
   );
 }

@@ -7,6 +7,7 @@ const ChatUserItem = (props) => {
 
     const openChatboxHandler = () => {
         console.log("user chat item clicked");
+        props.onOpenChatbox(props.id);
     };
     
     return (

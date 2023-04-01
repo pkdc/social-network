@@ -6,7 +6,7 @@ const Websocket = () => {
         const [socket, setSocket] = useState(null);
         const [msg, setMsg] = useState("");
 
-        const newSocket = new Websocket("ws://localhost:8080");
+        const newSocket = new Websocket("ws://localhost:8080/ws");
 
         newSocket.onOpen = () => {
             console.log("ws connected");
@@ -14,7 +14,7 @@ const Websocket = () => {
         };
         
         newSocket.onClose = () => {
-            console.log("Bye ws");
+            console.log("bye ws");
             setSocket(null);
         };
 

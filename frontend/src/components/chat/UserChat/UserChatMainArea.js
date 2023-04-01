@@ -10,8 +10,8 @@ const ChatMainArea = (props) => {
 
     const ctx = useContext(AuthContext);
 
-    const chatboxOpenHandler = (chatboxId) => {
-        console.log("chatbox open");
+    const openUserChatboxHandler = (followerId) => {
+        console.log("chatbox open for ", followerId);
     };
 
     console.log("loggedIn at UserChatMainArea", ctx.isLoggedIn);
@@ -21,7 +21,7 @@ const ChatMainArea = (props) => {
         className={styles["user-list"]}
         style={{height: window.innerHeight}}
         >
-            <AllUserChatItems followersList={props.followersList}/>
+            <AllUserChatItems followersList={props.followersList} onOpenChatbox={openUserChatboxHandler}/>
         </div>
     );
 };
