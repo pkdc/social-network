@@ -31,7 +31,7 @@ const ChooseChat = (props) => {
                 onClick={showGrpListHandler}
             >Groups</SmallButton>
         </div>
-        {!grpActive && <UserChatMainArea followersList={props.followersList}/>}
+        {!grpActive && <UserChatMainArea/>}
         {grpActive && <GroupChatMainArea />}
         </>
     );

@@ -1,9 +1,0 @@
-import FormInput from "../../UI/FormInput";
-
-const UserChatbox = () => {
-    return (
-        <CreatePostTextarea />
-    );
-};
-
-export default UserChatbox;

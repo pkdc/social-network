@@ -1,16 +1,22 @@
 import UserChatItem from "./UserChatItem";
+import { useContext } from "react";
+import UsersContext from "../../store/users-context";
 
 const AllUserChatItems = (props) => {
 
     // console.log("user chat followers in AllUserChatItems", props.followersList);
     // console.log("isArray", Array.isArray(props.followersList));
 
+    const ctx = useContext(UsersContext);
+
+    const followersList = ctx.users; // temp
+
     const openUserChatboxHandler = (followerId) => props.onOpenChatbox(followerId);
 
     const curUserId = +localStorage.getItem("user_id");
     return (
         <div>
-            {props.followersList.map((follower) => {
+            {followersList.map((follower) => {
                 // console.log("each follower", follower);
                 // console.log("curUserId: ", curUserId);
                 // console.log("follower.id", follower.id);

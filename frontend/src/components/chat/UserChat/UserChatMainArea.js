@@ -2,16 +2,20 @@ import { useEffect, useState, useContext } from "react";
 import AllUserChatItems from "./AllUserChatItems";
 import styles from "./UserChatMainArea.module.css";
 import AuthContext from "../../store/auth-context";
+import UserChatbox from "./UserChatbox.js";
 
 const ChatMainArea = (props) => {
     // console.log("user chat followers in chatarea", props.followersList);
 
     const [chatboxOpen, setChatboxOpen] = useState(false);
+    const [followerId, setFollowerId] = useState(0);
 
     const ctx = useContext(AuthContext);
 
     const openUserChatboxHandler = (followerId) => {
         console.log("chatbox open for ", followerId);
+        setChatboxOpen(true);
+        setFollowerId(followerId);
     };
 
     console.log("loggedIn at UserChatMainArea", ctx.isLoggedIn);
@@ -21,7 +25,8 @@ const ChatMainArea = (props) => {
         className={styles["user-list"]}
         style={{height: window.innerHeight}}
         >
-            <AllUserChatItems followersList={props.followersList} onOpenChatbox={openUserChatboxHandler}/>
+            {!chatboxOpen && <AllUserChatItems onOpenChatbox={openUserChatboxHandler}/>}
+            {chatboxOpen && <UserChatbox chatboxId={followerId}/>}
         </div>
     );
 };

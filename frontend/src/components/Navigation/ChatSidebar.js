@@ -21,7 +21,7 @@ const ChatSidebar = (props) => {
             onMouseLeave={() => setHovered(false)}
             // onClick={clickHandler}
         >
-            <ChooseChat followersList={props.followersList}/>
+            <ChooseChat />
         </div>
         </div>
         
