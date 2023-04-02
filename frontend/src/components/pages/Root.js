@@ -63,7 +63,6 @@ const Root = (props) => {
         <TopNav/>
         <WebSocketContext.Provider value={{
             websocket: socket,
-            setWebSocket: setSocket
         }}>
             {socket ? <ChatSidebar/> : <p>Connecting...</p>}
         </WebSocketContext.Provider>

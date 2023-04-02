@@ -30,6 +30,7 @@ var (
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
+	CheckOrigin:     func(r *http.Request) bool { return true },
 }
 
 // Client is a middleman between the websocket connection and the hub.
@@ -121,6 +122,7 @@ func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 	}
 	cookie, err := r.Cookie("session")
 	if err != nil {
+		fmt.Println("cookie not found")
 		return
 	}
 	foundVal := cookie.Value
