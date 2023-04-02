@@ -37,11 +37,13 @@ func (h *Hub) Run() {
 		case client := <-h.register:
 			// Adds connected user to the client list
 			h.clients[client.userID] = client
+			fmt.Printf("client %v is connected \n", client)
 
 		case client := <-h.unregister:
 			// Removes client from client list when disconnected
 			if _, ok := h.clients[client.userID]; ok {
 				delete(h.clients, client.userID)
+				fmt.Printf("client %v left \n", client)
 				close(client.send)
 			}
 		case message := <-h.broadcast:
