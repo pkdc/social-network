@@ -120,7 +120,7 @@ func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		return
 	}
-	cookie, err := r.Cookie("session")
+	cookie, err := r.Cookie("session_token")
 	if err != nil {
 		fmt.Println("cookie not found")
 		return
