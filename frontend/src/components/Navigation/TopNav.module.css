@@ -68,6 +68,7 @@ a:hover, a:active {
     gap: 15px;
 }
 
+<<<<<<< HEAD
 .btn {
     border: none;
     outline: none;
@@ -78,3 +79,6 @@ a:hover, a:active {
     display: flex;
     align-items: center;
 }
+=======
+
+>>>>>>> main

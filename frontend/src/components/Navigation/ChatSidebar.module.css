@@ -1,0 +1,52 @@
+.sidebar {
+    position: fixed;
+    top: 60px;
+    height: 100%;
+    width: 280px;
+    right: -265px;
+    background-color: var(--ultra-violet);
+    opacity: 30%;
+    z-index: 997;
+    transition: background-color 0.3s ease;
+    transition: right 0.3s ease;
+    display: block;
+}
+
+.sidebar.hovered {
+    opacity: 70%;
+    right: -260px;
+}
+
+.show-sidebar-btn {
+    position: fixed;
+    top: 65%;
+    right: 15px;
+    height: 100px;
+    width: 20px;
+    /* padding: 1rem; */
+    text-align: center;
+    justify-content: center;
+    background-color: var(--ultra-violet);
+    color: var(--seasalt);
+    border-radius: 1.2rem 0 0 1.2rem;
+    opacity: 30%;
+    transition: background-color 0.3s ease;
+    transition: right 0.3s ease;
+    z-index: 998;
+}
+.show-sidebar-btn.hovered {
+    opacity: 70%;
+    right: 20px;
+    cursor: pointer;
+}
+
+.sidebar.show-chat {
+    opacity: 90%;
+    /* right +205px */
+    right: 0px;
+}
+
+.show-sidebar-btn.show-chat {
+    opacity: 90%;
+    right: 280px;
+}

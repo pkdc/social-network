@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Root from "./components/pages/Root";
 import Landingpage from './components/pages/Landingpage';
@@ -8,10 +8,12 @@ import PostsPage from './components/pages/PostsPage';
 import GroupPage from "./components/pages/GroupPage";
 import GroupProfilePage from "./components/pages/GroupProfilePage";
 import ProfilePage from "./components/pages/ProfilePage";
-
+import AuthContext from "./components/store/auth-context";
+// import WebSocketContext from "./components/store/websocket-context";
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
+  const [regSuccess, setRegSuccess] = useState(false);
   
   const loginURL = "http://localhost:8080/login";
   const regURL = "http://localhost:8080/reg";
@@ -44,8 +46,10 @@ function App() {
         localStorage.setItem("user_id", data.user_id);
         localStorage.setItem("fname", data.fname);
         localStorage.setItem("lname", data.lname);
+        localStorage.setItem("dob", data.dob);
         data.nname && localStorage.setItem("nname", data.nname);
         data.avatar && localStorage.setItem("avatar", data.avatar);
+        data.about && localStorage.setItem("about", data.about);
       }
     })
     .catch(err => {
@@ -69,37 +73,57 @@ function App() {
       .then(resp => resp.json())
       .then(data => {
           console.log(data);
+          // redirect to login
           if (data.success) {
-            setLoggedIn(true);
-            localStorage.setItem("user_id", data.user_id);
-            localStorage.setItem("fname", data.fname);
-            localStorage.setItem("lname", data.lname);
-            data.nname && localStorage.setItem("nname", data.nname);
-            data.avatar && localStorage.setItem("avatar", data.avatar);
+            console.log(data.success);
+            setRegSuccess(true);
+          //   setLoggedIn(true);
+          //   localStorage.setItem("user_id", data.user_id);
+          //   localStorage.setItem("fname", data.fname);
+          //   localStorage.setItem("lname", data.lname);
+          //   localStorage.setItem("dob", data.dob);
+          //   data.nname && localStorage.setItem("nname", data.nname);
+          //   data.avatar && localStorage.setItem("avatar", data.avatar);
+          //   data.about && localStorage.setItem("about", data.about);
+          } else {
+            setRegSuccess(false);
           }
       })
       .catch(err => {
         console.log(err);
       })
   };
+
+  useEffect(() => {localStorage.getItem("user_id") && setLoggedIn(true)}, []);
+  
+  console.log("reg success", regSuccess);
   
   const logoutHandler = () => {
     localStorage.clear();
-    // useEffect(() => {
-
-    // }, []);
-    fetch(logoutURL)
+ 
+    const reqOptions = {
+      method: "GET",
+      credentials: "include",
+      mode: "cors",
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    };
+    fetch(logoutURL, reqOptions)
     .then(resp => resp.json())
     .then(data => console.log(data))
     .catch(err => console.log(err))
     
     setLoggedIn(false);
+
+    // in case the next user wants to reg
+    setRegSuccess(false);
   };
 
   let router = createBrowserRouter([
     {path: "/", element: <Landingpage />},
     {path: "/login", element: <LoginForm onLogin={loginHandler}/>},
-    {path: "/reg", element: <RegForm onReg={regHandler}/>},
+    {path: "/reg", element: <RegForm onReg={regHandler} success={regSuccess} />},
     {path: "/groupprofile", element: <GroupProfilePage />},
     {path: "/groups", element: <GroupPage />},
   ]);
@@ -107,9 +131,8 @@ function App() {
  if (loggedIn) router = createBrowserRouter([
     {
       path: "/",
-      element: <Root onLogout={logoutHandler} />,
+      element: <Root />,
       children: [
-        {path: "/reg", element: <RegForm onReg={regHandler}/>}, // temp
           {path: "/", element: <PostsPage />},
           {path: "/profile", element: <ProfilePage />},
           {path: "/group", element: <GroupPage />},
@@ -123,7 +146,44 @@ function App() {
 
   ]);
 
-  return <RouterProvider router={router}/>;
+  // websocket
+//   const [socket, setSocket] = useState(null);
+
+//   useEffect(() => {
+//     if (loggedIn) {
+//       const newSocket = new WebSocket("ws://localhost:8080/ws");
+
+//       newSocket.onOpen = () => {
+//           console.log("ws connected");
+//           setSocket(newSocket);
+//       };
+      
+//       newSocket.onClose = () => {
+//           console.log("bye ws");
+//           setSocket(null);
+//       };
+
+//       newSocket.onError = (err) => console.log("ws error");
+
+//       return () => {
+//           newSocket.close();
+//       };
+//     }
+    
+// }, [loggedIn]);
+
+  return (
+    <AuthContext.Provider value={{
+      isLoggedIn: loggedIn,
+      onLogout: logoutHandler
+    }}>
+      {/* <WebSocketContext.Provider value={{
+        websocket: socket
+      }}> */}
+      <RouterProvider router={router}/>
+      {/* </WebSocketContext.Provider> */}
+    </AuthContext.Provider>
+  );
 }
 
 export default App;

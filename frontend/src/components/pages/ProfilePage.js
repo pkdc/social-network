@@ -11,7 +11,7 @@ import FollowRequest from "../requests/FollowRequest";
 import classes from './layout.module.css';
 
 function ProfilePage() {
-
+    const sessionUrl = "http://localhost:8080/session";
     const { state } = useLocation();
     const { id } = state;
     console.log("id---", id); 

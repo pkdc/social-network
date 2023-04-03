@@ -145,10 +145,10 @@ type GroupPayload struct {
 }
 
 type GroupRequestStruct struct {
-	Id      int `json:"id"`
-	UserId  int `json:"userid"`
-	GroupId int `json:"groupid"`
-	Status  int `json:"status"`
+	Id      int    `json:"id"`
+	UserId  int    `json:"userid"`
+	GroupId int    `json:"groupid"`
+	Status  string `json:"status"`
 }
 
 type GroupRequestPayload struct {
@@ -190,6 +190,7 @@ type GroupEventMemberPayload struct {
 type GroupPostStruct struct {
 	Id        int    `json:"id"`
 	Author    int    `json:"author"`
+	GroupId   int    `json:"groupid"`
 	Message   string `json:"message"`
 	Image     string `json:"image"`
 	CreatedAt string `json:"createdat"`
@@ -226,4 +227,9 @@ type GroupMessagePayload struct {
 type SessionStruct struct {
 	SessionToken string `json:"sessiontoken"`
 	UserId       int    `json:"userid"`
+}
+
+type NotifStruct struct {
+	Type   string `json:"type"`
+	UserId int    `json:"userid"`
 }

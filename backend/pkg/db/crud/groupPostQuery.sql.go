@@ -63,6 +63,25 @@ func (q *Queries) DeleteGroupPost(ctx context.Context, arg DeleteGroupPostParams
 	return err
 }
 
+const getGroupPostById = `-- name: GetGroupPostById :one
+SELECT id, author, group_id, message_, image_, created_at FROM group_post
+WHERE id = ?
+`
+
+func (q *Queries) GetGroupPostById(ctx context.Context, id int64) (GroupPost, error) {
+	row := q.db.QueryRowContext(ctx, getGroupPostById, id)
+	var i GroupPost
+	err := row.Scan(
+		&i.ID,
+		&i.Author,
+		&i.GroupID,
+		&i.Message,
+		&i.Image,
+		&i.CreatedAt,
+	)
+	return i, err
+}
+
 const getGroupPosts = `-- name: GetGroupPosts :many
 SELECT id, author, group_id, message_, image_, created_at FROM group_post
 WHERE group_id = ?

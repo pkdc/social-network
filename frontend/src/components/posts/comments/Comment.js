@@ -15,10 +15,10 @@ function Comment(props) {
             {props.avatar && <Avatar className={classes["comment-avatar"]} src={props.avatar} alt="" width={"50px"}/>}
         </Link>
         <Link to={`/profile/${props.authorId}`} >
-            <div><p className={classes["details"]}>{`${props.fname} ${props.lname} (${props.nname})`}</p></div>
+            <div><p className={classes["details"]}>{`${props.fname} ${props.lname} ${props.nname}`}</p></div>
         </Link>
         </div>
-        <div className={classes["create-at"]}>{props.createdAt}</div>
+        <div className={classes["create-at"]}>{props.createdAt.split(".")[0]}</div>
         <div className={classes.content}>{props.message}</div>
         {props.image && <div><img src={props.image} alt="" width={"100px"}/></div>}
     </>
