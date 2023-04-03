@@ -190,6 +190,7 @@ type GroupEventMemberPayload struct {
 type GroupPostStruct struct {
 	Id        int    `json:"id"`
 	Author    int    `json:"author"`
+	GroupId   int    `json:"groupid"`
 	Message   string `json:"message"`
 	Image     string `json:"image"`
 	CreatedAt string `json:"createdat"`
