@@ -1,0 +1,7 @@
+.chat-details {
+    background-color: var(--antiflash-white, white);
+    width: 73%;
+    display: flex;
+    margin: 0.8rem 1rem; 
+    height: 1.2rem;
+}

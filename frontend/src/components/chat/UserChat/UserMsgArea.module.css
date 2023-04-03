@@ -1,4 +1,8 @@
 .msg-area {
     background-color: var(--antiflash-white, white);
-    height: 80%;
+    width: 73%;
+    display: flex;
+    flex-direction: column;
+    justify-content: end;
+    margin: 0.8rem 1rem;
 }

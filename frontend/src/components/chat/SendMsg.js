@@ -1,9 +1,9 @@
 import { useRef } from "react";
-import Form from "../../UI/Form";
-import send from '../../assets/send.svg';
-import SendMsgForm from "../../UI/SendMsgForm";
-import CreateMsgTextarea from "../../UI/CreateMsgTextarea";
-import styles from "./UserSendMsg.module.css";
+import Form from "../UI/Form";
+import send from '../assets/send.svg';
+import SendMsgForm from "../UI/SendMsgForm";
+import CreateMsgTextarea from "../UI/CreateMsgTextarea";
+import styles from "./SendMsg.module.css";
 
 const UserSendMsg = (props) => {
     const msgRef = useRef();
@@ -15,7 +15,7 @@ const UserSendMsg = (props) => {
     }
     const windowHeight = window.innerHeight;
     return (
-        <SendMsgForm onSubmit={sendMsgHandler} className={styles["send-msg"]} style={{top: `${window.innerHeight-200}px`}}>
+        <SendMsgForm onSubmit={sendMsgHandler} className={styles["send-msg"]} style={{top: `${window.innerHeight-205}px`}}>
             <CreateMsgTextarea className={styles["send-msg-input"]} reference={msgRef}/>
             <button type="submit" className={styles["send"]}>
                 <img src={send} alt='' />

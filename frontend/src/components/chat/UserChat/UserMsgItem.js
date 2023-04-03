@@ -1,5 +1,5 @@
 
 
-const UserSendMsg = (props) => {};
+const UserMsgItem = (props) => {};
 
-export default UserSendMsg;
+export default UserMsgItem;

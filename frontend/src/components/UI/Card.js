@@ -4,7 +4,7 @@ const Card = (props) => {
     const classes = `${styles["card"]} ${props.className || ""}`;
     return (
         <>
-            <div className={classes}>{props.children}</div>
+            <div className={classes} style={props.style}>{props.children}</div>
         </>
     )
 };
