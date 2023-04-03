@@ -9,11 +9,10 @@ import { useEffect, useState } from "react";
 function Followers({userId}) {
     const navigate = useNavigate();
 
-    const { error, isLoading, data } = useGet(`/user-follower?id=${4}`);
+    const { error, isLoaded, data } = useGet(`/user-follower?id=${userId}`);
    
-    if (isLoading) return <div>Loading...</div>
+    if (!isLoaded) return <div>Loading...</div>
     if (error) return <div>Error: {error.message}</div>
-
 
     function handleClick(e) {
         const id = e.target.id
@@ -30,12 +29,13 @@ function Followers({userId}) {
     return <Card>
         Followers
 
-       {data && data.map((follower) => (
+       {data.data && data.data.map((follower) => (
      
         <>
+        {console.log(follower)}
          <div  className={classes.wrapper}>
          <img className={classes.img} src={profile}/>
-         <div key={follower[0].id} id={follower[0].id} onClick={handleClick} className={classes.user}>{follower[0].fname}</div>
+         <div key={follower.id} id={follower.id} onClick={handleClick} className={classes.user}>name{follower.fname}</div>
         </div>
         </>
         ))} 

@@ -9,9 +9,11 @@ function Following() {
 
     const navigate = useNavigate();
 
-    const { error , isLoading, data } = useGet(`/user-following?id=${51}`)
+    const currUserId = localStorage.getItem("user_id");
 
-    if (isLoading) return <div>Loading...</div>
+    const { error , isLoaded, data } = useGet(`/user-following?id=${currUserId}`)
+
+    if (!isLoaded) return <div>Loading...</div>
     if (error) return <div>Error: {error.message}</div>
 
     function handleClick(e) {
@@ -24,11 +26,11 @@ function Following() {
     return <Card>
 
     Following
-    {data && data.map((follower) => (
+    {data.data && data.data.map((follower) => (
          <>
          <div  className={classes.wrapper}>
          <img className={classes.img} src={profile}/>
-         <div key={follower[0].id} id={follower[0].id} onClick={handleClick} className={classes.user}>{follower[0].fname}</div>
+         <div key={follower.id} id={follower.id} onClick={handleClick} className={classes.user}>{follower.fname}</div>
         </div>
         </>
      ))} 
