@@ -1689,6 +1689,7 @@ func GroupPostHandler() http.HandlerFunc {
 					var onePost GroupPostStruct
 
 					onePost.Id = int(post.ID)
+					onePost.GroupId = int(post.GroupID)
 					onePost.Author = int(post.Author)
 					onePost.Message = post.Message
 					onePost.Image = post.Image
