@@ -15,7 +15,7 @@ const UserSendMsg = (props) => {
     }
     const windowHeight = window.innerHeight;
     return (
-        <SendMsgForm onSubmit={sendMsgHandler} className={styles["send-msg"]} style={{top: window.innerHeight*0.78}}>
+        <SendMsgForm onSubmit={sendMsgHandler} className={styles["send-msg"]} style={{top: `${window.innerHeight-200}px`}}>
             <CreateMsgTextarea className={styles["send-msg-input"]} reference={msgRef}/>
             <button type="submit" className={styles["send"]}>
                 <img src={send} alt='' />
