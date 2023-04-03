@@ -24,7 +24,7 @@ const UserChatbox = (props) => {
 
     return (
         <div className={styles["container"]}>
-            <button onClick={closeChatboxHandler}>&lt;-</button>
+            <button onClick={closeChatboxHandler} className={styles["close-btn"]}>X</button>
             <UserMsgArea />
             <UserSendMsg onSendMsg={sendMsgHandler}/>            
         </div>

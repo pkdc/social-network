@@ -1,0 +1,4 @@
+.msg-area {
+    background-color: var(--antiflash-white, white);
+    height: 80%;
+}

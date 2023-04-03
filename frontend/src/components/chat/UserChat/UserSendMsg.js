@@ -1,7 +1,8 @@
 import { useRef } from "react";
 import Form from "../../UI/Form";
 import send from '../../assets/send.svg';
-import CreatePostTextarea from "../../UI/CreatePostTextarea";
+import SendMsgForm from "../../UI/SendMsgForm";
+import CreateMsgTextarea from "../../UI/CreateMsgTextarea";
 import styles from "./UserSendMsg.module.css";
 
 const UserSendMsg = (props) => {
@@ -13,12 +14,12 @@ const UserSendMsg = (props) => {
         props.onSendMsg(msgRef.current.value);
     }
     return (
-        <Form onSubmit={sendMsgHandler} className={styles["send-msg"]}>
-            <CreatePostTextarea reference={msgRef}/>
+        <SendMsgForm onSubmit={sendMsgHandler} className={styles["send-msg"]}>
+            <CreateMsgTextarea className={styles["send-msg-input"]} reference={msgRef}/>
             <button type="submit">
                 <img src={send} alt='' />
             </button>
-        </Form>
+        </SendMsgForm>
     );
 };
 
