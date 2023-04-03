@@ -1,8 +1,18 @@
 .send-msg {
     display: flex;
-    width: 80%;
+    width: 78%;
+    position: absolute;
 }
 
 .send-msg-input {
 
+}
+
+.send {
+    border: none;
+    background: none;
+}
+
+.send:hover {
+    cursor: pointer;
 }

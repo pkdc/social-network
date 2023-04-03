@@ -13,10 +13,11 @@ const UserSendMsg = (props) => {
         console.log("user sent msg: ", msgRef.current.value);
         props.onSendMsg(msgRef.current.value);
     }
+    const windowHeight = window.innerHeight;
     return (
-        <SendMsgForm onSubmit={sendMsgHandler} className={styles["send-msg"]}>
+        <SendMsgForm onSubmit={sendMsgHandler} className={styles["send-msg"]} style={{top: window.innerHeight*0.78}}>
             <CreateMsgTextarea className={styles["send-msg-input"]} reference={msgRef}/>
-            <button type="submit">
+            <button type="submit" className={styles["send"]}>
                 <img src={send} alt='' />
             </button>
         </SendMsgForm>
