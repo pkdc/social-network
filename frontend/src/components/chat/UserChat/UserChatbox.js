@@ -4,6 +4,7 @@ import WebSocketContext from "../../store/websocket-context";
 import Form from "../../UI/Form";
 import send from '../../assets/send.svg';
 import CreatePostTextarea from "../../UI/CreatePostTextarea";
+import styles from "./UserChatbox.module.css";
 
 const UserChatbox = (props) => {
 
@@ -23,12 +24,19 @@ const UserChatbox = (props) => {
     };
 
     return (
-        <Form onSubmit={sendMsgHandler}>
-            <CreatePostTextarea reference={msgRef}/>
-            <button type="submit">
-                <img src={send} alt='' />
-            </button>
-        </Form>
+        <div className={styles["container"]}>
+            
+            <div className={styles["send-msg"]}>
+            <Form onSubmit={sendMsgHandler}>
+                <CreatePostTextarea reference={msgRef}/>
+                <button type="submit">
+                    <img src={send} alt='' />
+                </button>
+            </Form>
+            </div>
+            
+        </div>
+        
     );
 };
 
