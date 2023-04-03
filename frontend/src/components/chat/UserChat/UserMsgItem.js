@@ -1,3 +1,5 @@
-onst UserSendMsg = (props) => {};
+
+
+const UserSendMsg = (props) => {};
 
 export default UserSendMsg;

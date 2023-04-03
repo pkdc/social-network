@@ -1,9 +1,8 @@
-import { useEffect, useContext, useState, useRef } from "react";
+import { useEffect, useContext, useState } from "react";
 import UsersContext from "../../store/users-context";
 import WebSocketContext from "../../store/websocket-context";
-import Form from "../../UI/Form";
-import send from '../../assets/send.svg';
-import CreatePostTextarea from "../../UI/CreatePostTextarea";
+import UserMsgArea from "./UserMsgArea";
+import UserSendMsg from "./UserSendMsg";
 import styles from "./UserChatbox.module.css";
 
 const UserChatbox = (props) => {
@@ -14,27 +13,20 @@ const UserChatbox = (props) => {
     const wsCtx = useContext(WebSocketContext);
     console.log("ws in UserChatbox: ",wsCtx.websocket);
     // const [msg, setMsg] = useState("");
-    const msgRef = useRef();
 
-    const sendMsgHandler = (e) => {
-        e.preventDefault();
-        console.log("user sent msg: ", msgRef.current.value);
+    const sendMsgHandler = (msg) => {
+        wsCtx.websocket.send(msg);
+    };
 
-        wsCtx.websocket.send(msgRef.current.value);
+    const closeChatboxHandler = () => {
+        props.onCloseChatbox();
     };
 
     return (
         <div className={styles["container"]}>
-            
-            <div className={styles["send-msg"]}>
-            <Form onSubmit={sendMsgHandler}>
-                <CreatePostTextarea reference={msgRef}/>
-                <button type="submit">
-                    <img src={send} alt='' />
-                </button>
-            </Form>
-            </div>
-            
+            <button onClick={closeChatboxHandler}>&lt;-</button>
+            <UserMsgArea />
+            <UserSendMsg onSendMsg={sendMsgHandler}/>            
         </div>
         
     );

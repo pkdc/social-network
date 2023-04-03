@@ -18,6 +18,11 @@ const ChatMainArea = (props) => {
         setFollowerId(followerId);
     };
 
+    const closeUserChatboxHandler = () => {
+        console.log("chatbox open for ", followerId);
+        setChatboxOpen(false);
+    };
+
     console.log("loggedIn at UserChatMainArea", ctx.isLoggedIn);
     
     return (
@@ -26,7 +31,7 @@ const ChatMainArea = (props) => {
         style={{height: window.innerHeight}}
         >
             {!chatboxOpen && <AllUserChatItems onOpenChatbox={openUserChatboxHandler}/>}
-            {chatboxOpen && <UserChatbox chatboxId={followerId}/>}
+            {chatboxOpen && <UserChatbox chatboxId={followerId} onCloseChatbox={closeUserChatboxHandler}/>}
         </div>
     );
 };
