@@ -124,7 +124,7 @@ useEffect(() => {localStorage.getItem("user_id") && setLoggedIn(true)}, []);
     {path: "/login", element: <LoginForm onLogin={loginHandler}/>},
     {path: "/reg", element: <RegForm onReg={regHandler} success={regSuccess} />},
     {path: "/groupprofile", element: <GroupProfilePage />},
-    {path: "/groups", element: <GroupPage />},
+    {path: "/group", element: <GroupPage />},
   ]);
 
  if (loggedIn) router = createBrowserRouter([
@@ -136,7 +136,7 @@ useEffect(() => {localStorage.getItem("user_id") && setLoggedIn(true)}, []);
           {path: "/profile", element: <ProfilePage />},
           {path: "/group", element: <GroupPage />},
           {path: "/groupprofile", element: <GroupProfilePage />},
-          {path: "/groups", element: <GroupPage />},
+          // {path: "/groups", element: <GroupPage />},
           {path: "/profile/:userId"}
           // {path: "/user/:userId", element <UserProfilePage />},
       ],

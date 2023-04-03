@@ -11,7 +11,7 @@ function Group(props) {
                 <div>
                     <div className={classes.title}>{props.title}</div>
                     <div className={classes.members}>{props.members} members</div>
-                    <div className={classes.desc}>{props.desc}</div>
+                    <div className={classes.desc}>{props.description}</div>
                 </div>
              
             </div>

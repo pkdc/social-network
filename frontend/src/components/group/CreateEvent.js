@@ -4,7 +4,7 @@ import SmallButton from "../UI/SmallButton";
 
 import classes from './CreateEvent.module.css';
 
-function CreateEvent() {
+function CreateEvent( {groupid} ) {
 
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
@@ -13,25 +13,32 @@ function CreateEvent() {
     function SubmitHandler(event) {
         event.preventDefault();
 
-        setTitle('');
-        setDescription('');
-        setDate('');
+        const currUserId = localStorage.getItem("user_id");
+
+        const datenow =  Date.now()
+
+        const created = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: '2-digit' }).format(datenow);
 
         const data = {
-            // id: ?,
-            // groupid: ?,
-            // author: ?,
+            id: 0,
+            groupid: parseInt(groupid),
+            author: parseInt(currUserId),
             title: title,
-            descritption: description,
-            // createdat: ?,
+            description: description,
+            createdat: created,
             date: date
         };
 
-        console.log(data)
+        setTitle('');
+        setDescription('');
+        setDate('');
     
-        fetch('https://social-network-cffc1-default-rtdb.firebaseio.com/group-event.json', 
+        fetch('http://localhost:8080/group-event', 
         {
+            
             method: 'POST',
+            credentials: "include",
+            mode: 'cors',
             body: JSON.stringify(data),
             headers: { 
                 'Content-Type': 'application/json' 

@@ -6,10 +6,13 @@ import useGet from "../fetch/useGet";
 
 function AllGroupPosts(props) {
 
-    const { data } = useGet("/group-posts")
+    const { error, isLoaded, data } = useGet(`/group-post?groupid=${props.groupid}`)
+
+    if (!isLoaded) return <div>Loading...</div>
+    if (error) return <div>Error: {error.message}</div>
 
     return <div className={classes.container}>
-        {data.map((post) => (
+        {data.data && data.data.map((post) => (
          <GroupPost
         key={post.id}
         id={post.id}

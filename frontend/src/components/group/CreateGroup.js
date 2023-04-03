@@ -6,35 +6,42 @@ import classes from './CreateGroup.module.css';
 
 function CreateGroup() {
 
+    const currUserId = localStorage.getItem("user_id");
+    const currId = parseInt(currUserId);
+
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
 
     function submitHandler(event) {
         event.preventDefault();
 
-        setTitle('');
-        setDescription('');
+        const date =  Date.now()
+
+        const created = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: '2-digit' }).format(date);
 
         const data = {
-            // id: ?,
+            id: 0,
             title: title,
-            // creator: ?,
-            descritption: description,
-            // createdat: ?,
+            creator: currId,
+            description: description,
+            createdat: created,
         };
 
-        console.log(data)
+        setTitle('');
+        setDescription('');
     
-        fetch('https://social-network-cffc1-default-rtdb.firebaseio.com/group.json', 
+        fetch('http://localhost:8080/group', 
         {
             method: 'POST',
+            credentials: "include",
+            mode: "cors",
             body: JSON.stringify(data),
             headers: { 
                 'Content-Type': 'application/json' 
             }
         }).then(() => {
             // navigate.replace('/??')
-            console.log("event posted")
+            console.log("group posted")
         })
     }
 

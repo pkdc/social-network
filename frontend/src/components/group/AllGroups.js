@@ -3,12 +3,15 @@ import Group from "./Group";
 import classes from './AllGroups.module.css';
 import useGet from "../fetch/useGet";
 
-function AllGroups(props) {
+function AllGroups() {
 
-    const { data } = useGet("/group")
+    const { error , isLoaded, data } = useGet(`/group`)
+
+      if (!isLoaded) return <div>Loading...</div>
+      if (error) return <div>Error: {error.message}</div>
 
     return <div className={classes.container}>
-        {data.map((group) => (
+        {data.data.map((group) => (
          <Group
         key={group.id}
         id={group.id}

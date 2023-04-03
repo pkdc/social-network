@@ -1,6 +1,8 @@
 .card {
     margin-bottom: 20px;
     border: none;
+    position: relative;
+    z-index: -1;
 }
 
 .container {

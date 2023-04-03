@@ -6,31 +6,33 @@ import classes from './CreateGroupPost.module.css';
 import profile from '../assets/profile.svg';
 
 
-function CreateGroupPost() {
+function  CreateGroupPost() {
 
-const [ message, setMessage ] = useState('')
+    const currUserId = localStorage.getItem("user_id");
+
+    const [ message, setMessage ] = useState('')
 
     function SubmitHandler(event) {
         event.preventDefault();
         setMessage('');
 
         const date =  Date.now()
-        console.log('date', date);
 
         const created = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: '2-digit' }).format(date);
 
-
         const data = {
-            // id: ?,
-            author: "username",
+            id: 0,
+            author: parseInt(currUserId),
             message: message,
-            // image: ?,
+            image: '',
             createdat: created,
         };
 
-        fetch('https://social-network-cffc1-default-rtdb.firebaseio.com/group-posts.json', 
+        fetch('http://localhost:8080/group-post', 
         {
             method: 'POST',
+            credentials: "include",
+            mode: "cors",
             body: JSON.stringify(data),
             headers: { 
                 'Content-Type': 'application/json' 
@@ -39,7 +41,6 @@ const [ message, setMessage ] = useState('')
             // navigate.replace('/??')
             console.log("posted")
         })
-        console.log(data)
     }
 
 return <form className={classes.container} onSubmit={SubmitHandler}>

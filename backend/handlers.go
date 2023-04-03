@@ -10,6 +10,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 	"time"
 
 	uuid "github.com/satori/go.uuid"
@@ -209,9 +210,12 @@ func Loginhandler() http.HandlerFunc {
 				}
 
 				http.SetCookie(w, &http.Cookie{
-					Name:   "session_token",
-					Value:  cookie.SessionToken,
-					MaxAge: 34560000,
+					Name:     "session_token",
+					Value:    cookie.SessionToken,
+					MaxAge:   34560000,
+					Path:     "/",
+					Secure:   true,
+					SameSite: http.SameSiteNoneMode,
 				})
 
 			}
@@ -1136,7 +1140,10 @@ func Grouphandler() http.HandlerFunc {
 
 			if groupId != "" {
 				foundId = true
+
 			}
+
+			fmt.Println("-----", foundId)
 
 			gId, err := strconv.Atoi(groupId)
 
@@ -1158,8 +1165,14 @@ func Grouphandler() http.HandlerFunc {
 				// Declares the payload struct
 				var group crud.Group
 				// GET USER ID FROM SESSION
-				session, err := r.Cookie("SessionToken")
 
+				session, err := r.Cookie("session_token")
+				if err != nil {
+					fmt.Println(err)
+					return
+				}
+				foundVal := session.Value
+				fmt.Println("-----", foundVal)
 				sessionTable, err := query.GetUserId(context.Background(), session.Value)
 
 				if err != nil {
@@ -1175,6 +1188,8 @@ func Grouphandler() http.HandlerFunc {
 				member.UserID = sessionTable.UserID
 
 				groupData, err := query.CheckIfMember(context.Background(), member)
+
+				fmt.Println("-------", member)
 
 				if err != nil {
 					fmt.Println("Unable to get group data")
@@ -1225,7 +1240,7 @@ func Grouphandler() http.HandlerFunc {
 
 					Resp.Data = append(Resp.Data, newGroup)
 				}
-
+				fmt.Println(Resp)
 			}
 
 			jsonResp, err := json.Marshal(Resp)
@@ -1296,8 +1311,8 @@ func Grouphandler() http.HandlerFunc {
 			WriteHttpHeader(jsonResp, w)
 		default:
 			// Prevents all request types other than POST and GET
-			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
-			return
+			// http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
+			// return
 		}
 	}
 }
@@ -1750,8 +1765,8 @@ func GroupPostHandler() http.HandlerFunc {
 			WriteHttpHeader(jsonResp, w)
 		default:
 			// Prevents all request types other than POST and GET
-			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
-			return
+			// http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
+			// return
 		}
 	}
 }
@@ -1876,22 +1891,21 @@ func GroupEventHandler() http.HandlerFunc {
 
 		// ### CHECK USER ID AND GROUP ID MATCH IN GROUP MEMBER TABLE ###
 
-		groupId := r.URL.Query().Get("id")
-
-		gId, err := strconv.Atoi(groupId)
-
-		if err != nil {
-			fmt.Println("Unable to convert group ID")
-		}
-
-		if groupId == "" {
-			http.Error(w, "400 bad request", http.StatusBadRequest)
-			return
-		}
-
 		switch r.Method {
 		case http.MethodGet:
 			// Declares the payload struct
+			groupId := r.URL.Query().Get("id")
+
+			gId, err := strconv.Atoi(groupId)
+
+			if err != nil {
+				fmt.Println("Unable to convert group ID")
+			}
+
+			if groupId == "" {
+				http.Error(w, "400 bad request", http.StatusBadRequest)
+				return
+			}
 			var Resp GroupEventPayload
 
 			// ### CONNECT TO DATABASE ###
@@ -1938,9 +1952,12 @@ func GroupEventHandler() http.HandlerFunc {
 			if err != nil {
 				Resp.Success = false
 			}
-
-			date, err := time.Parse("“Monday, 02-Jan-06 15:04:05 MST”", groupEvent.Date)
-
+			fmt.Println(groupEvent.Date)
+			newdate := strings.Split(groupEvent.Date, "T")
+			dateNew := newdate[0] +" "+ newdate[1] + ":00"
+fmt.Println(dateNew)
+			date, err := time.Parse("2006-01-02 15:04:05", dateNew)
+			fmt.Println(date)
 			if err != nil {
 				Resp.Success = false
 				fmt.Println("Unable to convert date")
@@ -1979,8 +1996,8 @@ func GroupEventHandler() http.HandlerFunc {
 			WriteHttpHeader(jsonResp, w)
 		default:
 			// Prevents all request types other than POST and GET
-			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
-			return
+			// http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
+			// return
 		}
 	}
 }
@@ -1995,21 +2012,22 @@ func GroupEventMemberHandler() http.HandlerFunc {
 
 		// ### CHECK USER ID AND GROUP ID MATCH IN GROUP MEMBER TABLE ###
 
-		// Checks to find a post id in the url
-		eventId := r.URL.Query().Get("id")
-		if eventId == "" {
-			http.Error(w, "400 bad request", http.StatusBadRequest)
-			return
-		}
-
-		eId, err := strconv.Atoi(eventId)
-
-		if err != nil {
-			fmt.Println("Unable to convert event ID")
-		}
-
+		
 		switch r.Method {
 		case http.MethodGet:
+
+			// Checks to find a post id in the url
+			eventId := r.URL.Query().Get("id")
+			if eventId == "" {
+				http.Error(w, "400 bad request", http.StatusBadRequest)
+				return
+			}
+	
+			eId, err := strconv.Atoi(eventId)
+	
+			if err != nil {
+				fmt.Println("Unable to convert event ID")
+			}
 			// Declares the payload struct
 			var Resp GroupEventMemberPayload
 
@@ -2047,16 +2065,19 @@ func GroupEventMemberHandler() http.HandlerFunc {
 
 			// Sets the http headers and writes the response to the browser
 			WriteHttpHeader(jsonResp, w)
+		
 		case http.MethodPost:
 			// Declares the variables to store the group event member details and handler response
-			var groupPost GroupEventMemberStruct
+			var groupEventMember GroupEventMemberStruct
 			Resp := AuthResponse{Success: true}
 
 			// Decodes the json object to the struct, changing the response to false if it fails
-			err := json.NewDecoder(r.Body).Decode(&groupPost)
+			err := json.NewDecoder(r.Body).Decode(&groupEventMember)
 			if err != nil {
 				Resp.Success = false
 			}
+
+			fmt.Println("----- groyp", groupEventMember)
 
 			// ### CONNECT TO DATABASE ###
 
@@ -2067,8 +2088,8 @@ func GroupEventMemberHandler() http.HandlerFunc {
 			// ### ADD/UPDATE GROUP EVENT MEMBER TO DATABASE ###
 
 			exists, err := query.GetGroupEventMember(context.Background(), crud.GetGroupEventMemberParams{
-				EventID: int64(groupPost.EventId),
-				UserID:  int64(groupPost.UserId),
+				EventID: int64(groupEventMember.EventId),
+				UserID:  int64(groupEventMember.UserId),
 			})
 
 			if err != nil {
@@ -2079,9 +2100,9 @@ func GroupEventMemberHandler() http.HandlerFunc {
 			if exists > 0 {
 				// update
 				_, err = query.UpdateGroupEventMember(context.Background(), crud.UpdateGroupEventMemberParams{
-					Status:  int64(groupPost.Status),
-					EventID: int64(groupPost.EventId),
-					UserID:  int64(groupPost.UserId),
+					Status:  int64(groupEventMember.Status),
+					EventID: int64(groupEventMember.EventId),
+					UserID:  int64(groupEventMember.UserId),
 				})
 
 				if err != nil {
@@ -2092,9 +2113,9 @@ func GroupEventMemberHandler() http.HandlerFunc {
 			} else {
 				// add
 				_, err = query.CreateGroupEventMember(context.Background(), crud.CreateGroupEventMemberParams{
-					Status:  int64(groupPost.Status),
-					EventID: int64(groupPost.EventId),
-					UserID:  int64(groupPost.UserId),
+					Status:  int64(groupEventMember.Status),
+					EventID: int64(groupEventMember.EventId),
+					UserID:  int64(groupEventMember.UserId),
 				})
 
 				if err != nil {
@@ -2115,8 +2136,8 @@ func GroupEventMemberHandler() http.HandlerFunc {
 			WriteHttpHeader(jsonResp, w)
 		default:
 			// Prevents all request types other than POST and GET
-			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
-			return
+			// http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
+			// return
 		}
 	}
 }
