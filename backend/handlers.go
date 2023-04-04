@@ -863,10 +863,10 @@ func UserFollowerHandler() http.HandlerFunc {
 
 			// Sets the http headers and writes the response to the browser
 			WriteHttpHeader(jsonResp, w)
-		default:
-			// Prevents all request types other than POST and GET
-			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
-			return
+			// default:
+			// 	// Prevents all request types other than POST and GET
+			// 	http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
+			// 	return
 		}
 	}
 }
