@@ -9,7 +9,7 @@ function GroupEvent(props) {
     
     //get userid, eventid, status?
     function handleGoing() {
-        fetch('https://social-network-cffc1-default-rtdb.firebaseio.com/group-event-member.json', 
+        fetch('https://localhost:8080/group-event', 
         {
             method: 'POST',
             body: JSON.stringify(),
@@ -18,7 +18,7 @@ function GroupEvent(props) {
             }
         }).then(() => {
             // navigate.replace('/??')
-            // console.log("event created")
+            console.log("event created")
         })
       
     }

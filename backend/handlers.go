@@ -551,7 +551,7 @@ func PostCommentHandler() http.HandlerFunc {
 		// fmt.Fprintf(w, "Post")
 		EnableCors(&w)
 		if r.Method == http.MethodPost {
-			fmt.Printf("-----POST---(create-comment)--\n")
+			// fmt.Printf("-----POST---(create-comment)--\n")
 			var payload PostCommentStruct
 
 			err := json.NewDecoder(r.Body).Decode(&payload)
@@ -599,7 +599,7 @@ func PostCommentHandler() http.HandlerFunc {
 		}
 
 		if r.Method == http.MethodGet {
-			fmt.Printf("----post-comment-GET---(display)--\n")
+			// fmt.Printf("----post-comment-GET---(display)--\n")
 
 			var data []PostCommentResponse
 
@@ -830,6 +830,7 @@ func UserFollowerHandler() http.HandlerFunc {
 			if err != nil {
 				Resp.Success = false
 			}
+			fmt.Println("follow", follower)
 
 			// ### CONNECT TO DATABASE ###
 
@@ -855,16 +856,17 @@ func UserFollowerHandler() http.HandlerFunc {
 			// Marshals the response struct to a json object
 			jsonResp, err := json.Marshal(Resp)
 			if err != nil {
+				fmt.Println("marshal")
 				http.Error(w, "500 internal server error", http.StatusInternalServerError)
 				return
 			}
 
 			// Sets the http headers and writes the response to the browser
 			WriteHttpHeader(jsonResp, w)
-		default:
-			// Prevents all request types other than POST and GET
-			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
-			return
+			// default:
+			// 	// Prevents all request types other than POST and GET
+			// 	http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
+			// 	return
 		}
 	}
 }

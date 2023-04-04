@@ -31,7 +31,7 @@ function CreateComment(props) {
             image: uploadedCommentImg
         };
 
-        console.log("create comment: ", commentData)
+        // console.log("create comment: ", commentData)
 
         props.onCreateComment(commentData);
 
