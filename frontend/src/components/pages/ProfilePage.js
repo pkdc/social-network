@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import useGet from "../fetch/useGet";
 import AllPosts from "../posts/AllPosts"
@@ -5,26 +6,45 @@ import CreatePost from "../posts/CreatePost";
 import Followers from "../profile/followers";
 import Following from "../profile/following";
 import Profile from "../profile/Profile";
+import ProfilePosts from "../profile/profilePost";
 import FollowRequest from "../requests/FollowRequest";
 
 // import classes from './ProfilePage.module.css';
 import classes from './layout.module.css';
 
 function ProfilePage() {
+    const [commentData, setCommentData] = useState([]);
+
+    const { data } = useGet(`/post`)
+
     const sessionUrl = "http://localhost:8080/session";
     const { state } = useLocation();
     const { id } = state;
     console.log("id---", id); 
 
-
-
+    // get comments
+    useEffect(() => {
+        fetch("http://localhost:8080/post-comment")
+        .then(resp => resp.json())
+        .then(data => {
+            // console.log("post page raw comment data: ", data)
+            // setCommentData(data);
+            data.sort((a, b) => Date.parse(a.createdat) - Date.parse(b.createdat)); // ascending order
+            // console.log("post page sorted comment data: ", data)
+            setCommentData(data);
+        })
+        .catch(
+            err => console.log(err)
+        );
+    }, []);
 
     return <div className={classes.container}>
      <div className={classes.mid}>
         {/* <CreatePost></CreatePost> */}
         <Profile userId={id}></Profile>
-        <AllPosts userId={id}></AllPosts>
- 
+        {/* <ProfilePosts userId={id}></ProfilePosts> */}
+        <AllPosts userId={id} posts={data} comments={commentData}></AllPosts>
+
         </div>
         <div className={classes.right}>
             <Followers userId={id}></Followers>

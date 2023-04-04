@@ -9,9 +9,13 @@ import ToggleSwitch from "../UI/ToggleSwitch";
 
 import classes from './Profile.module.css';
 
-function Profile({userId}) {
+function Profile({}) {
 
     const currUserId = localStorage.getItem("user_id");
+
+    let params = useParams();   
+    let userId = params.productId 
+    console.log("params", userId)
 
     const { error , isLoaded, data } = useGet(`/user?id=${userId}`)
      console.log("user data", data.data)
@@ -46,7 +50,7 @@ function Profile({userId}) {
             .then(data => {
                 console.log(data);
                 if (data.success) {
-                    console.log("test")
+                    console.log("followrequest")
                 }
             })
             .catch(err => {

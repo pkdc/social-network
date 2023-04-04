@@ -16,7 +16,7 @@ const AllUserChatItems = (props) => {
     const curUserId = +localStorage.getItem("user_id");
     return (
         <div>
-            {followersList.map((follower) => {
+            {followersList && followersList.map((follower) => {
                 // console.log("each follower", follower);
                 // console.log("curUserId: ", curUserId);
                 // console.log("follower.id", follower.id);

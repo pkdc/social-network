@@ -5,13 +5,13 @@ import useGet from "../fetch/useGet";
 import { useNavigate } from "react-router-dom";
 
 
-function Following() {
+function Following({ userId }) {
 
     const navigate = useNavigate();
 
     const currUserId = localStorage.getItem("user_id");
 
-    const { error , isLoaded, data } = useGet(`/user-following?id=${currUserId}`)
+    const { error , isLoaded, data } = useGet(`/user-following?id=${userId}`)
 
     if (!isLoaded) return <div>Loading...</div>
     if (error) return <div>Error: {error.message}</div>

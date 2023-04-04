@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 // import { Link, NavLink, useNavigate } from "react-router-dom";
 // import LogoutButton from "../UI/LogoutButton";
 // import NotificationBtn from "../UI/NotificationBtn";
@@ -53,32 +52,23 @@
 
 
 
-import { Link, useNavigate } from "react-router-dom";
-=======
 import { useContext } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
->>>>>>> main
 import LogoutButton from "../UI/LogoutButton";
 import NotificationBtn from "../UI/NotificationBtn";
 import styles from "./TopNav.module.css";
 import logout from "../assets/logout.svg";
 import profile from "../assets/profileSmall.svg";
-<<<<<<< HEAD
-import notif from "../assets/notifications1.svg";
-import chatIcon from "../assets/chat1.svg";
-=======
+import notif from "../assets/notifications5.svg";
+import chatIcon from "../assets/chat5.svg";
 import Avatar from "../UI/Avatar";
 import AuthContext from "../store/auth-context";
->>>>>>> main
 
 const TopMenu = () => {
     const navigate = useNavigate();
 
-<<<<<<< HEAD
     const currUserId = localStorage.getItem("user_id");
     console.log("current user", currUserId);
-
-    // const testID = '4'
 
     function handleClick(e) {
         const id = e.target.id
@@ -87,7 +77,6 @@ const TopMenu = () => {
         navigate("/profile", { state: { id } })
     }
 
-=======
     const ctx = useContext(AuthContext);
 
     const onClickingLogout = () => {
@@ -96,29 +85,29 @@ const TopMenu = () => {
         navigate("/", {replace: true});
     };
     
->>>>>>> main
     return (
         <nav>
             <div className={styles["top-nav"]}>
-                <div className={styles.logo}>notFacebook</div>
+                <div className={styles.leftContainer}>
+                <Link to={"/"} className={styles.logo}>notFacebook</Link>
                 <div className={styles.menu}>
                     <Link className={styles.lnk} to="/">Home</Link>
                     <Link className={styles.lnk} to="/group">Groups</Link>
                     <Link className={styles.lnk} to="/messanger">Messenger</Link>
                     {/* <Link className={styles.lnk} to="/profile" id={currUserId} onClick={handleClick}>Profile</Link> */}
-                    <div id={currUserId} className={styles.profile} onClick={handleClick}>
+                    <div id={currUserId} className={styles.lnk} onClick={handleClick}>
                     {/* <img src={profile} alt=""/> */}
-<<<<<<< HEAD
                     Profile
-=======
-                    <Link className={styles.profile} to={`/profile/${userId}`}>
+                    {/* <Link className={styles.profile} to={`/profile/${userId}`}>
                     {!avatar && <img className={styles["avatar"]} src={require("../../images/"+`${defaultImagePath}`)} alt="" width={"35px"}/>}
                     {avatar && <Avatar src={avatar} alt="" width={"35px"}/>}
                     {nickname ? `${first} ${last} (${nickname})` : `${first} ${last}`}
-                    </Link>
->>>>>>> main
+                    </Link> */}
                     </div>
-            </div>
+                </div>
+
+                </div>
+          
                      {/* <div id={currUserId} className={styles.profile} onClick={handleClick}>
                     <img src={profile} alt=""/>
                     MaddieWesst
@@ -134,7 +123,7 @@ const TopMenu = () => {
                             <img src={chatIcon} alt=""></img>
                         </button>
                     </div>
-                    <LogoutButton ><img src={logout} alt=""/></LogoutButton>
+                    <div className={styles.logout} onClick={onClickingLogout}><img src={logout} alt=""/></div>
                   
                 
                 </div>

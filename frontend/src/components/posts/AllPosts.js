@@ -6,6 +6,8 @@ import { useEffect } from "react";
 
 function AllPosts(props) {
 
+    //props.userId
+
     // const { data } = useGet(`/posts`)
     // console.log("out", props.comments);
     let eachPostCommentsArr = [];

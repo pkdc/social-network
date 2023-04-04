@@ -12,13 +12,27 @@ import Card from "../UI/Card";
 import GroupRequest from "../requests/GroupRequests";
 import useGet from "../fetch/useGet";
 
+// const EVENTS = [
+//     {
+//         id: 1,
+//         title: 'title1',
+//         desc: 'this is the description',
+//         date: '2 MARCH'
+// },
+// {
+//     id: 2,
+//     title: 'title2',
+//     desc: 'this is the description2',
+//     date: '5 MAY'
+// }
+// ]
+
 const PostsPage = () => {
     const sessionUrl = "http://localhost:8080/session";
     const postUrl = "http://localhost:8080/post";
     const postCommentUrl = "http://localhost:8080/post-comment";
 
     const [postData, setPostData] = useState([]);
-
     const [commentData, setCommentData] = useState([]);
 
     // useGet(sessionUrl);

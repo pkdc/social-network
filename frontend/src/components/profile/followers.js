@@ -30,16 +30,14 @@ function Followers({userId}) {
         Followers
 
        {data.data && data.data.map((follower) => (
-     
         <>
         {console.log(follower)}
          <div  className={classes.wrapper}>
          <img className={classes.img} src={profile}/>
-         <div key={follower.id} id={follower.id} onClick={handleClick} className={classes.user}>name{follower.fname}</div>
+         <div key={follower.id} id={follower.id} onClick={handleClick} className={classes.user}>{follower.fname}</div>
         </div>
         </>
         ))} 
-     
     </Card>
 }
 
