@@ -36,7 +36,7 @@ function ProfilePage() {
      <div className={classes.mid}>
         {/* <CreatePost></CreatePost> */}
         <Profile userId={id}></Profile>
-        <AllPosts userId={id}></AllPosts>
+        {/* <AllPosts userId={id}></AllPosts> */}
  
         </div>
         <div className={classes.right}>

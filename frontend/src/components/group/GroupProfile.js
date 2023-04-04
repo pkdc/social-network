@@ -49,7 +49,7 @@ function GroupProfile( props ) {
     }
 
     return <Card className={classes.container}>
-           {data && data.data.map((group) => (
+           {data.data && data.data.map((group) => (
             <div className={classes.groupContainer} key={group.id} id={group.id}>
         <div className={classes.img}></div>
         <div className={classes.wrapper}>

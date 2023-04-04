@@ -17,6 +17,7 @@
 
 .modalContainer {
     background: white;
+    position: relative;
     width: 25%;
     height: 50%;
     overflow: scroll;

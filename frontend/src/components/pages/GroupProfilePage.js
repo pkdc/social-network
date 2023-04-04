@@ -30,7 +30,6 @@ function GroupProfilePage() {
         <CreateEvent groupid={id}></CreateEvent>
         <AllEvents groupid={id}></AllEvents>
         </div>
-
     </div>
   
 )}

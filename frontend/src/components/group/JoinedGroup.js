@@ -26,7 +26,7 @@ function JoinedGroups() {
         <div className={classes.label}>
         Groups you've joined
         </div>
-        {data && data.data.map((group) => (
+        {data.data && data.data.map((group) => (
         <div key={group.id} id={group.id}  className={classes.container} onClick={handleClick} >
         <div className={classes.img}></div>
         <div>
