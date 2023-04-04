@@ -12,6 +12,9 @@ const UserChatbox = (props) => {
 
     const [userMsgData, setUserMsgData] = useState([]);
 
+    const selfId = localStorage.getItem("user_id");
+    const buddyId = props.chatboxId;
+
     // const usersCtx = useContext(UsersContext);
     // console.log("chatbox: ", usersCtx.users);
 
@@ -19,8 +22,15 @@ const UserChatbox = (props) => {
     console.log("ws in UserChatbox: ",wsCtx.websocket);
     // const [msg, setMsg] = useState("");
 
+    // send msg to ws
     const sendMsgHandler = (msg) => {
-        wsCtx.websocket.send(msg);
+        let privateChatPayloadObj = {};
+        privateChatPayloadObj["label"] = "private-chat";
+        privateChatPayloadObj["targetid"] = selfId;
+        privateChatPayloadObj["sourceid"] = buddyId;
+        privateChatPayloadObj["message"] = msg;
+        wsCtx.websocket.send(JSON.stringify(privateChatPayloadObj));
+        // wsCtx.websocket.send(msg);
     };
 
     const closeChatboxHandler = () => {
@@ -29,10 +39,8 @@ const UserChatbox = (props) => {
 
     // get old msgs
     const AllMsgsToAndFrom = [];
-    const selfId = localStorage.getItem("user_id");
-
     useEffect(() => {
-        fetch(`${userMsgUrl}?targetid=${selfId}`)
+        fetch(`${userMsgUrl}?targetid=${selfId}&sourceid=${buddyId}`)
         .then(resp => resp.json())
         .then(data => {
             console.log(data);

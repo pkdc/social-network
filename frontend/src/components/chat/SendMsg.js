@@ -12,6 +12,7 @@ const UserSendMsg = (props) => {
         e.preventDefault();
         console.log("user sent msg: ", msgRef.current.value);
         props.onSendMsg(msgRef.current.value);
+        msgRef.current.value = "";
     }
     const windowHeight = window.innerHeight;
     return (

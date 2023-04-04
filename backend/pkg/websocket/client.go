@@ -1,6 +1,7 @@
 package websocket
 
 import (
+	"backend"
 	"backend/pkg/db/crud"
 	db "backend/pkg/db/sqlite"
 	"context"
@@ -57,7 +58,10 @@ func (c *Client) readPump() {
 	c.conn.SetReadDeadline(time.Now().Add(pongWait))
 	c.conn.SetPongHandler(func(string) error { c.conn.SetReadDeadline(time.Now().Add(pongWait)); return nil })
 	for {
-		_, message, err := c.conn.ReadMessage()
+		// _, message, err := c.conn.ReadMessage()
+		var userMsg backend.MessageStruct
+		err := c.conn.ReadJSON(&userMsg)
+		fmt.Println(userMsg.Message)
 		if err != nil {
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
 				log.Printf("error: %v", err)
@@ -65,7 +69,7 @@ func (c *Client) readPump() {
 			break
 		}
 
-		c.hub.broadcast <- message
+		c.hub.broadcast <- []byte(userMsg.Message)
 	}
 }
 
