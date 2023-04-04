@@ -5,6 +5,7 @@ import classes from './Post.module.css'
 import AllComments from "./comments/AllComments";
 import CreateComment from './comments/CreateComment';
 import Avatar from '../UI/Avatar';
+import AvatarForChatOnline from '../UI/AvatarForChatOnline';
 import Card from '../UI/Card';
 // import AllComments from './comments/AllComments';
 
@@ -45,8 +46,8 @@ function Post(props) {
     return <Card className={classes.container} >
         <div className={classes["author"]}>
             <Link to={`/profile/${props.authorId}`}>
-                {!props.avatar && <Avatar className={classes["post-avatar"]} src={require("../../images/"+`${defaultImagePath}`)} alt="" width={"50px"}/>}
-                {props.avatar && <Avatar className={classes["post-avatar"]} src={props.avatar} alt="" width={"50px"}/>}
+                {!props.avatar && <AvatarForChatOnline className={classes["post-avatar"]} src={require("../../images/"+`${defaultImagePath}`)} alt="" width={"50px"}/>}
+                {props.avatar && <AvatarForChatOnline className={classes["post-avatar"]} src={props.avatar} alt="" width={"50px"}/>}
             </Link>
             <Link to={`/profile/${props.authorId}`}>
                 <div><p className={classes["details"]}>{`${props.fname} ${props.lname} ${props.nname}`}</p></div>
