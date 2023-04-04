@@ -12,7 +12,7 @@ const UserChatbox = (props) => {
 
     const [userMsgData, setUserMsgData] = useState([]);
 
-    const selfId = localStorage.getItem("user_id");
+    const selfId = +localStorage.getItem("user_id");
     const buddyId = props.chatboxId;
 
     // const usersCtx = useContext(UsersContext);
@@ -25,9 +25,9 @@ const UserChatbox = (props) => {
     // send msg to ws
     const sendMsgHandler = (msg) => {
         let privateChatPayloadObj = {};
-        privateChatPayloadObj["label"] = "private-chat";
-        privateChatPayloadObj["targetid"] = selfId;
-        privateChatPayloadObj["sourceid"] = buddyId;
+        privateChatPayloadObj["label"] = "private";
+        privateChatPayloadObj["targetid"] = buddyId;
+        privateChatPayloadObj["sourceid"] = selfId;
         privateChatPayloadObj["message"] = msg;
         wsCtx.websocket.send(JSON.stringify(privateChatPayloadObj));
         // wsCtx.websocket.send(msg);

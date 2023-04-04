@@ -15,7 +15,7 @@ type Hub struct {
 	// Registered clients.
 	clients map[int]*Client
 	// Inbound messages from the clients.
-	broadcast chan []byte
+	broadcast chan backend.MessageStruct
 	// Register requests from the clients.
 	register chan *Client
 	// Unregister requests from clients.
@@ -24,7 +24,7 @@ type Hub struct {
 
 func NewHub() *Hub {
 	return &Hub{
-		broadcast:  make(chan []byte),
+		broadcast:  make(chan backend.MessageStruct),
 		register:   make(chan *Client),
 		unregister: make(chan *Client),
 		clients:    make(map[int]*Client),
@@ -53,28 +53,40 @@ func (h *Hub) Run() {
 	}
 }
 
-func (h *Hub) Notif(message []byte) {
+func (h *Hub) Notif(msgStruct backend.MessageStruct) {
 	// Initialises variables for the different messages going through websocket
+	fmt.Printf("msg reached hub: %v\n", msgStruct)
+
 	var not backend.NotifStruct
 	var userMsg backend.UserMessageStruct
 	var groupMsg backend.GroupMessageStruct
 	t := 0
 
 	// Checks whether the message is a notification, user message or group message
-	if err := json.Unmarshal(message, &not); err == nil {
+	// if err := json.Unmarshal(messageStruct, &not); err == nil {
+	// 	t = 1
+	// } else if err := json.Unmarshal(messageStruct, &userMsg); err == nil {
+	// 	t = 2
+	// } else if err := json.Unmarshal(messageStruct, &groupMsg); err == nil {
+	// 	t = 3
+	// } else {
+	// 	panic(err)
+	// }
+	fmt.Printf("msg Struct: %v\n", msgStruct)
+	if msgStruct.Label == "private" {
 		t = 1
-	} else if err := json.Unmarshal(message, &userMsg); err == nil {
+	} else if msgStruct.Label == "group" {
 		t = 2
-	} else if err := json.Unmarshal(message, &groupMsg); err == nil {
+	} else if msgStruct.Label == "noti" {
 		t = 3
 	} else {
-		panic(err)
+		// panic
 	}
 
 	switch t {
 	case 1:
 		// NOTIFICATION
-
+		fmt.Println("private")
 		// Marshals the struct to a json object
 		sendNoti, err := json.Marshal(not)
 		if err != nil {

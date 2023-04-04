@@ -59,17 +59,19 @@ func (c *Client) readPump() {
 	c.conn.SetPongHandler(func(string) error { c.conn.SetReadDeadline(time.Now().Add(pongWait)); return nil })
 	for {
 		// _, message, err := c.conn.ReadMessage()
-		var userMsg backend.MessageStruct
-		err := c.conn.ReadJSON(&userMsg)
-		fmt.Println(userMsg.Message)
+		var msgStruct backend.MessageStruct
+		err := c.conn.ReadJSON(&msgStruct)
+		fmt.Printf("msg in readPump: %s\n", msgStruct.Message)
 		if err != nil {
+			fmt.Printf("error: %v\n", err)
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
 				log.Printf("error: %v", err)
+				fmt.Printf("UnexpectedClose error: %v\n", err)
 			}
 			break
 		}
-
-		c.hub.broadcast <- []byte(userMsg.Message)
+		c.hub.broadcast <- msgStruct
+		// c.hub.broadcast <- []byte(userMsg.Message)
 	}
 }
 
