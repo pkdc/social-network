@@ -73,11 +73,11 @@ func (h *Hub) Notif(msgStruct backend.MessageStruct) {
 	// 	panic(err)
 	// }
 	fmt.Printf("msg Struct: %v\n", msgStruct)
-	if msgStruct.Label == "private" {
+	if msgStruct.Label == "noti" {
 		t = 1
-	} else if msgStruct.Label == "group" {
+	} else if msgStruct.Label == "private" {
 		t = 2
-	} else if msgStruct.Label == "noti" {
+	} else if msgStruct.Label == "group" {
 		t = 3
 	} else {
 		// panic
