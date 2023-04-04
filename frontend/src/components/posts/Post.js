@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import classes from './Post.module.css'
 // import profile from '../assets/profile.svg';
 import AllComments from "./comments/AllComments";
@@ -11,11 +11,12 @@ import Card from '../UI/Card';
 
 function Post(props) {
     const [showComments, setShowComments] = useState(false);
+    const navigate = useNavigate();
 
     // console.log("comment for post: ", props.postNum, " comments: ", props.commentsForThisPost)
 
     const defaultImagePath = "default_avatar.jpg";
-    const postCommentUrl = "http://localhost:8080/post-comment"; // temp
+    const postCommentUrl = "http://localhost:8080/post-comment";
 
     // return <div className={classes.container}>
     const showCommentsHandler = () => {
@@ -26,11 +27,11 @@ function Post(props) {
 
     const createCommentHandler = (createCommentPayloadObj) => {
         console.log("create comment for Post", createCommentPayloadObj)
+        
         const reqOptions = {
             method: "POST",
             body: JSON.stringify(createCommentPayloadObj),
         }
-
         fetch(postCommentUrl, reqOptions)
         .then(resp => resp.json())
         .then(data => {
@@ -42,14 +43,21 @@ function Post(props) {
         })
     };
 
+    function handleClick(e) {
+        const id = e.target.id
+
+        console.log("id: ", id)
+        navigate("/profile", { state: { id } })
+    }
+
     return <Card className={classes.container} >
         <div className={classes["author"]}>
-            <Link to={`/profile/${props.authorId}`}>
+            <Link to={`/profile/${props.authorId}`} id={props.authorId} onClick={handleClick}>
                 {!props.avatar && <Avatar className={classes["post-avatar"]} src={require("../../images/"+`${defaultImagePath}`)} alt="" width={"50px"}/>}
                 {props.avatar && <Avatar className={classes["post-avatar"]} src={props.avatar} alt="" width={"50px"}/>}
             </Link>
             <Link to={`/profile/${props.authorId}`}>
-                <div><p className={classes["details"]}>{`${props.fname} ${props.lname} (${props.nname})`}</p></div>
+                <div><p className={classes["details"]}>{`${props.fname} ${props.lname} ${props.nname}`}</p></div>
             </Link>
         </div>
         <div className={classes["create-at"]}>{props.createdat.split(".")[0]}</div>

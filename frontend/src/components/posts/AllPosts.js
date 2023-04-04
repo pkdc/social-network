@@ -19,7 +19,7 @@ function AllPosts(props) {
         }
         eachPostCommentsArr.push(thisPostComments);        
     }
-    console.log("eachPostComments", eachPostCommentsArr);
+    // console.log("eachPostComments", eachPostCommentsArr);
  
     const createCommentSuccessHandler = (createCommentSuccessful) => {
         // lift it up to PostPage
@@ -28,7 +28,6 @@ function AllPosts(props) {
 
     return <div className={classes.container}>
         {props.posts.map((post, p) => (
-            
          <Post
             key={post.id}
             id={post.id}

@@ -17,7 +17,7 @@ function AllJoinedGroups() {
         <div className={classes.label}>
         Groups you've joined
         </div>
-        {data.data.map((group) => (
+        {data.data && data.data.map((group) => (
          <JoinedGroup
         key={group.id}
         id={group.id}
@@ -26,7 +26,7 @@ function AllJoinedGroups() {
         description={group.description}  
         // img={group.img}
         />
-        ))}
+        ))} 
     </Card>
 }
 

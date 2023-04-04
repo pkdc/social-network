@@ -30,6 +30,7 @@ var (
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
+	CheckOrigin:     func(r *http.Request) bool { return true },
 }
 
 // Client is a middleman between the websocket connection and the hub.
@@ -113,6 +114,7 @@ func (c *Client) writePump() {
 
 // serveWs handles websocket requests from the peer.
 func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
+	fmt.Println("ServeWs reached")
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Println(err)
@@ -120,6 +122,7 @@ func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 	}
 	cookie, err := r.Cookie("session")
 	if err != nil {
+		fmt.Println("cookie not found")
 		return
 	}
 	foundVal := cookie.Value
@@ -137,6 +140,7 @@ func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 
 	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256), userID: int(session.UserID)}
 	client.hub.register <- client
+	fmt.Printf("ServeWs created client %v", client)
 	// Allow collection of memory referenced by the caller by doing all work in
 	// new goroutines.
 	go client.writePump()
