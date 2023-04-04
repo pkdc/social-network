@@ -2,8 +2,8 @@
     position: fixed;
     top: 60px;
     height: 100%;
-    width: 280px;
-    right: -265px;
+    width: 380px;
+    right: -365px;
     background-color: var(--ultra-violet);
     opacity: 30%;
     z-index: 997;
@@ -14,7 +14,7 @@
 
 .sidebar.hovered {
     opacity: 70%;
-    right: -260px;
+    right: -360px;
 }
 
 .show-sidebar-btn {
@@ -48,5 +48,5 @@
 
 .show-sidebar-btn.show-chat {
     opacity: 90%;
-    right: 280px;
+    right: 380px;
 }
