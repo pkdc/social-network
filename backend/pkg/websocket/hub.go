@@ -7,6 +7,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"time"
 )
 
 // Hub maintains the set of active clients and broadcasts messages to the
@@ -106,6 +107,32 @@ func (h *Hub) Notif(msgStruct backend.MessageStruct) {
 		}
 	case 2:
 		// USER MESSAGE
+
+		// ### CONNECT TO DATABASE ###
+
+		db := db.DbConnect()
+
+		query := crud.New(db)
+
+		// ### ADD USER MESSAGE TO DATABASE ###
+
+		// date, err := time.Parse("2006-01-02 15:04:05.999999999 -0700 MST", userMsg.CreatedAt)
+
+		// if err != nil {
+		// 	fmt.Println("Unable to convert to date")
+		// }
+
+		var message crud.CreateMessageParams
+		message.CreatedAt = time.Now()
+		message.Message = msgStruct.Message
+		message.SourceID = int64(msgStruct.SourceId)
+		message.TargetID = int64(msgStruct.TargetId)
+
+		_, err := query.CreateMessage(context.Background(), message)
+
+		if err != nil {
+			fmt.Println("Unable to store message to database")
+		}
 
 		// Marshals the struct to a json object
 		sendMsg, err := json.Marshal(userMsg)
