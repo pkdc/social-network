@@ -22,6 +22,8 @@ function ProfilePage() {
     const { id } = state;
     console.log("id---", id); 
 
+    const postData = data.filter(x => x.author == id)
+
     // get comments
     useEffect(() => {
         fetch("http://localhost:8080/post-comment")
@@ -43,7 +45,7 @@ function ProfilePage() {
         {/* <CreatePost></CreatePost> */}
         <Profile userId={id}></Profile>
         {/* <ProfilePosts userId={id}></ProfilePosts> */}
-        <AllPosts userId={id} posts={data} comments={commentData}></AllPosts>
+        <AllPosts userId={id} posts={postData} comments={commentData}></AllPosts>
 
         </div>
         <div className={classes.right}>

@@ -27,12 +27,12 @@ function Following({ userId }) {
 
     Following
     {data.data && data.data.map((follower) => (
-         <>
-         <div  className={classes.wrapper}>
+         
+         <div key={follower.id} className={classes.wrapper}>
          <img className={classes.img} src={profile}/>
          <div key={follower.id} id={follower.id} onClick={handleClick} className={classes.user}>{follower.fname}</div>
         </div>
-        </>
+     
      ))} 
     </Card>
 }

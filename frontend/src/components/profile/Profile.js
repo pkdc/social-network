@@ -9,13 +9,13 @@ import ToggleSwitch from "../UI/ToggleSwitch";
 
 import classes from './Profile.module.css';
 
-function Profile({}) {
+function Profile({ userId }) {
 
     const currUserId = localStorage.getItem("user_id");
 
-    let params = useParams();   
-    let userId = params.productId 
-    console.log("params", userId)
+    // let params = useParams();   
+    // let userId = params.productId 
+    // console.log("params", userId)
 
     const { error , isLoaded, data } = useGet(`/user?id=${userId}`)
      console.log("user data", data.data)
