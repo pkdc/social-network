@@ -10,7 +10,7 @@ import styles from "./SendMsg.module.css";
 const UserSendMsg = (props) => {
     // const msgRef = useRef();
     const [enteredMsg, setEnteredMsg] = useState("");
-    const [showEmojiPicker, setShowEmojiPicker] = useState(true);
+    const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
     const msgChangeHandler = (e) => {
         console.log("currently entered msg", e.target.value);
@@ -30,6 +30,7 @@ const UserSendMsg = (props) => {
     const showEmojiPickerHandler = (e) => {
         e.preventDefault();
         console.log("toggle emoji picker");
+        setShowEmojiPicker(val => !val);
     };
 
     const emojiClickHandler = (emojiObj) => {
@@ -39,19 +40,17 @@ const UserSendMsg = (props) => {
         });
     };
 
-    const windowHeight = window.innerHeight;
     return (
         <>
         {showEmojiPicker && <EmojiPicker onEmojiClick={emojiClickHandler} className={styles["emoji"]} />}
         <SendMsgForm onSubmit={sendMsgHandler} className={styles["send-msg"]} style={{top: `${window.innerHeight-205}px`}}>
             <CreateMsgTextarea className={styles["send-msg-input"]} value={enteredMsg} onChange={msgChangeHandler}/>
-            {/* <div className={styles["show-picker"]} onClick={showEmojiPickerHandler}>&#9786;</div> */}
+            <div className={styles["show-picker"]} onClick={showEmojiPickerHandler}>&#9786;</div>
             <button type="submit" className={styles["send"]}>
                 <img src={send} alt='' />
             </button>
         </SendMsgForm>
         </>
-        
     );
 };
 
