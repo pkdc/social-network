@@ -45,8 +45,8 @@ const UserChatbox = (props) => {
         .then(data => {
             console.log(data);
             if (data) {
-                data.sort((a, b) => Date.parse(b.createdat) - Date.parse(a.createdat));
-                setUserMsgData(data);
+                data.data.sort((b, a) => Date.parse(b.createdat) - Date.parse(a.createdat));
+                setUserMsgData(data.data);
             }
         })
         .catch(
