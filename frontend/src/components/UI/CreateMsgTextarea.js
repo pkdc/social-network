@@ -12,6 +12,7 @@ const CreateMsgTextarea = (props) => {
                 rows={props.rows} 
                 onChange={props.onChange} 
                 ref={props.reference}
+                value={props.value}
                 style={props.style}
                 >{props.children}</textarea>
         </div>
