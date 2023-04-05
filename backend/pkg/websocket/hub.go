@@ -16,7 +16,7 @@ type Hub struct {
 	// Registered clients.
 	clients map[int]*Client
 	// Inbound messages from the clients.
-	broadcast chan backend.MessageStruct
+	broadcast chan backend.NotiMessageStruct
 	// Register requests from the clients.
 	register chan *Client
 	// Unregister requests from clients.
@@ -25,7 +25,7 @@ type Hub struct {
 
 func NewHub() *Hub {
 	return &Hub{
-		broadcast:  make(chan backend.MessageStruct),
+		broadcast:  make(chan backend.NotiMessageStruct),
 		register:   make(chan *Client),
 		unregister: make(chan *Client),
 		clients:    make(map[int]*Client),
@@ -54,7 +54,7 @@ func (h *Hub) Run() {
 	}
 }
 
-func (h *Hub) Notif(msgStruct backend.MessageStruct) {
+func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 	// Initialises variables for the different messages going through websocket
 	fmt.Printf("msg reached hub: %v\n", msgStruct)
 
@@ -127,6 +127,8 @@ func (h *Hub) Notif(msgStruct backend.MessageStruct) {
 		message.Message = msgStruct.Message
 		message.SourceID = int64(msgStruct.SourceId)
 		message.TargetID = int64(msgStruct.TargetId)
+		fmt.Printf("message.SourceID %d\n", message.SourceID)
+		fmt.Printf("message.TargetID %d\n", message.TargetID)
 
 		_, err := query.CreateMessage(context.Background(), message)
 
@@ -135,6 +137,7 @@ func (h *Hub) Notif(msgStruct backend.MessageStruct) {
 		}
 
 		// Marshals the struct to a json object
+		fmt.Println("Marshals the struct to a json object")
 		sendMsg, err := json.Marshal(userMsg)
 		if err != nil {
 			panic(err)
@@ -142,7 +145,10 @@ func (h *Hub) Notif(msgStruct backend.MessageStruct) {
 
 		// Loops through the clients and sends to the target user
 		for _, c := range h.clients {
+			fmt.Printf("client %v\n", c)
+			fmt.Printf("target client id %v\n", userMsg.TargetId)
 			if c.userID == userMsg.TargetId {
+				fmt.Printf("matched %d = %d\n", c.userID, userMsg.TargetId)
 				select {
 				case c.send <- sendMsg:
 				default:

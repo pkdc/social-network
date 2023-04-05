@@ -15,13 +15,21 @@ const UserChatbox = (props) => {
 
     const selfId = +localStorage.getItem("user_id");
     const buddyId = props.chatboxId;
+    console.log("buddyId: ", buddyId);
 
     // const usersCtx = useContext(UsersContext);
     // console.log("chatbox: ", usersCtx.users);
 
     const wsCtx = useContext(WebSocketContext);
-    console.log("ws in UserChatbox: ",wsCtx.websocket);
+    // console.log("ws in UserChatbox: ",wsCtx.websocket);
     // const [msg, setMsg] = useState("");
+
+    wsCtx.onmessage = (resp) => {
+        console.log("ws resp: ", resp);
+        const msg = JSON.parse(resp.data);
+        console.log("ws receives msg: ", msg);
+
+    };
 
     // send msg to ws
     const sendMsgHandler = (msg) => {
@@ -51,7 +59,7 @@ const UserChatbox = (props) => {
         fetch(`${userMsgUrl}?targetid=${selfId}&sourceid=${buddyId}`)
         .then(resp => resp.json())
         .then(data => {
-            console.log(data);
+            console.log("old msg data: ", data);
             if (data) {
                 data.data.sort((b, a) => Date.parse(b.createdat) - Date.parse(a.createdat));
                 setUserMsgData(data.data);
