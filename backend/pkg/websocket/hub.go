@@ -76,10 +76,20 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 	fmt.Printf("msg Struct: %v\n", msgStruct)
 	if msgStruct.Label == "noti" {
 		t = 1
+		not.Type = msgStruct.Type
+		not.UserId = msgStruct.UserId
 	} else if msgStruct.Label == "private" {
 		t = 2
+		userMsg.SourceId = msgStruct.SourceId
+		userMsg.TargetId = msgStruct.TargetId
+		userMsg.Message = msgStruct.Message
+		userMsg.CreatedAt = time.Now().String()
 	} else if msgStruct.Label == "group" {
 		t = 3
+		groupMsg.Message = msgStruct.Message
+		groupMsg.SourceId = msgStruct.SourceId
+		groupMsg.GroupId = msgStruct.GroupId
+		groupMsg.CreatedAt = time.Now().String()
 	} else {
 		// panic
 	}
@@ -87,7 +97,7 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 	switch t {
 	case 1:
 		// NOTIFICATION
-		fmt.Println("private")
+		fmt.Println("noti")
 		// Marshals the struct to a json object
 		sendNoti, err := json.Marshal(not)
 		if err != nil {
@@ -107,7 +117,7 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 		}
 	case 2:
 		// USER MESSAGE
-
+		fmt.Println("private")
 		// ### CONNECT TO DATABASE ###
 
 		db := db.DbConnect()
@@ -124,9 +134,9 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 
 		var message crud.CreateMessageParams
 		message.CreatedAt = time.Now()
-		message.Message = msgStruct.Message
-		message.SourceID = int64(msgStruct.SourceId)
-		message.TargetID = int64(msgStruct.TargetId)
+		message.Message = userMsg.Message
+		message.SourceID = int64(userMsg.SourceId)
+		message.TargetID = int64(userMsg.TargetId)
 		fmt.Printf("message.SourceID %d\n", message.SourceID)
 		fmt.Printf("message.TargetID %d\n", message.TargetID)
 
@@ -159,7 +169,7 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 		}
 	case 3:
 		// GROUP MESSAGE
-
+		fmt.Println("group")
 		// Marshals the struct to a json object
 		sendMsg, err := json.Marshal(groupMsg)
 		if err != nil {
