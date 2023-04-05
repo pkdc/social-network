@@ -10,6 +10,11 @@ const UserMsgArea = (props) => {
                     {msg.message}
                 </div>
             ))}
+            {props.newMsgs.map((msg, m) => (
+                <div>
+                    {msg.message}
+                </div>
+            ))}
         </Card>
     );
 };

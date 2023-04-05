@@ -11,6 +11,7 @@ const UserChatbox = (props) => {
     const userMsgUrl = "http://localhost:8080/user-message";
 
     const [userMsgData, setUserMsgData] = useState([]);
+    const [newMsgsData, setNewMsgs] = useState([]);
 
     const selfId = +localStorage.getItem("user_id");
     const buddyId = props.chatboxId;
@@ -31,13 +32,20 @@ const UserChatbox = (props) => {
         privateChatPayloadObj["message"] = msg;
         wsCtx.websocket.send(JSON.stringify(privateChatPayloadObj));
         // wsCtx.websocket.send(msg);
+        const newObject = [{
+            targetid: buddyId,
+            sourceid: selfId,
+            message: msg
+        }
+        ]
+        setNewMsgs(newObject)
     };
 
     const closeChatboxHandler = () => {
         props.onCloseChatbox();
     };
 
-    // get old msgs
+    // get old msgsdata.data.push()
     const AllMsgsToAndFrom = [];
     useEffect(() => {
         fetch(`${userMsgUrl}?targetid=${selfId}&sourceid=${buddyId}`)
@@ -58,7 +66,7 @@ const UserChatbox = (props) => {
         <div className={styles["container"]}>
             <button onClick={closeChatboxHandler} className={styles["close-btn"]}>X</button>
             <ChatDetailTopBar />
-            <UserMsgArea msgItems={userMsgData}/>
+            <UserMsgArea msgItems={userMsgData} newMsgs={newMsgsData}/>
             <SendMsg onSendMsg={sendMsgHandler}/>            
         </div>
         
