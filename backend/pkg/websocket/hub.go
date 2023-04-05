@@ -61,6 +61,7 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 	var not backend.NotifStruct
 	var userMsg backend.UserMessageStruct
 	var groupMsg backend.GroupMessageStruct
+
 	t := 0
 
 	// Checks whether the message is a notification, user message or group message
@@ -161,6 +162,7 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 				fmt.Printf("matched %d = %d\n", c.userID, userMsg.TargetId)
 				select {
 				case c.send <- sendMsg:
+					fmt.Printf("sendMsg %v\n", sendMsg)
 				default:
 					close(c.send)
 					delete(h.clients, c.userID)

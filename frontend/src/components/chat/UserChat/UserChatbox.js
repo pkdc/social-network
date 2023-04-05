@@ -24,11 +24,11 @@ const UserChatbox = (props) => {
     // console.log("ws in UserChatbox: ",wsCtx.websocket);
     // const [msg, setMsg] = useState("");
 
-    wsCtx.onmessage = (resp) => {
-        console.log("ws resp: ", resp);
-        const msg = JSON.parse(resp.data);
-        console.log("ws receives msg: ", msg);
-
+    wsCtx.websocket.onmessage = (e) => {
+        console.log("msg event: ", e);
+        const msgObj = JSON.parse(e.data);
+        console.log("ws receives msgObj: ", msgObj);
+        console.log("ws receives msg: ", msgObj.message);
     };
 
     // send msg to ws

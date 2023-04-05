@@ -89,14 +89,17 @@ func (c *Client) writePump() {
 	for {
 		select {
 		case message, ok := <-c.send:
+			fmt.Printf("msg in writePump %v\n", message)
 			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if !ok {
 				// The hub closed the channel.
+				fmt.Printf("!ok \n")
 				c.conn.WriteMessage(websocket.CloseMessage, []byte{})
 				return
 			}
 			w, err := c.conn.NextWriter(websocket.TextMessage)
 			if err != nil {
+				fmt.Printf("err %v \n", err)
 				return
 			}
 			w.Write(message)
@@ -146,7 +149,7 @@ func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 
 	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256), userID: int(session.UserID)}
 	client.hub.register <- client
-	fmt.Printf("ServeWs created client %v", client)
+	fmt.Printf("ServeWs created client %v\n", client)
 	// Allow collection of memory referenced by the caller by doing all work in
 	// new goroutines.
 	go client.writePump()
