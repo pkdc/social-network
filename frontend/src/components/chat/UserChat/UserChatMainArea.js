@@ -2,7 +2,7 @@ import { useEffect, useState, useContext } from "react";
 import AllUserChatItems from "./AllUserChatItems";
 import styles from "./UserChatMainArea.module.css";
 import AuthContext from "../../store/auth-context";
-import UserChatbox from "./UserChatbox.js";
+import UserChatbox from "../Chatbox/Chatbox.js";
 
 const ChatMainArea = (props) => {
     // console.log("user chat followers in chatarea", props.followersList);

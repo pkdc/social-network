@@ -1,4 +1,4 @@
-import UserMsgItem from "./UserMsgItem";
+import UserMsgItem from "../UserChat/MsgItem";
 
 const AllUserMsgItems = () => {
    

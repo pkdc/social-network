@@ -2,7 +2,7 @@ import { useEffect, useContext, useState } from "react";
 import UsersContext from "../../store/users-context";
 import WebSocketContext from "../../store/websocket-context";
 import ChatDetailTopBar from "./ChatDetailTopBar";
-import UserMsgArea from "./UserMsgArea";
+import UserMsgArea from "../UserChat/ChatboxMsgArea";
 import SendMsg from "../SendMsg";
 import styles from "./UserChatbox.module.css";
 
@@ -14,8 +14,8 @@ const UserChatbox = (props) => {
     const [newMsgsData, setNewMsgs] = useState([]);
 
     const selfId = +localStorage.getItem("user_id");
-    const buddyId = props.chatboxId;
-    console.log("buddyId: ", buddyId);
+    const friendId = props.chatboxId;
+    console.log("friendId: ", friendId);
 
     // const usersCtx = useContext(UsersContext);
     // console.log("chatbox: ", usersCtx.users);
@@ -35,13 +35,13 @@ const UserChatbox = (props) => {
     const sendMsgHandler = (msg) => {
         let privateChatPayloadObj = {};
         privateChatPayloadObj["label"] = "private";
-        privateChatPayloadObj["targetid"] = buddyId;
+        privateChatPayloadObj["targetid"] = friendId;
         privateChatPayloadObj["sourceid"] = selfId;
         privateChatPayloadObj["message"] = msg;
         wsCtx.websocket.send(JSON.stringify(privateChatPayloadObj));
         // wsCtx.websocket.send(msg);
         const newObject = [{
-            targetid: buddyId,
+            targetid: friendId,
             sourceid: selfId,
             message: msg
         }
@@ -56,7 +56,7 @@ const UserChatbox = (props) => {
     // get old msgsdata.data.push()
     const AllMsgsToAndFrom = [];
     useEffect(() => {
-        fetch(`${userMsgUrl}?targetid=${selfId}&sourceid=${buddyId}`)
+        fetch(`${userMsgUrl}?targetid=${selfId}&sourceid=${friendId}`)
         .then(resp => resp.json())
         .then(data => {
             console.log("old msg data: ", data);
