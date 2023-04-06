@@ -1,6 +1,6 @@
 import Card from "../../UI/Card";
-import UserMsgItem from "./UserMsgItem";
-import styles from "./UserMsgArea.module.css";
+import UserMsgItem from "./MsgItem";
+import styles from "./ChatboxMsgArea.module.css";
 
 const UserMsgArea = (props) => {
 

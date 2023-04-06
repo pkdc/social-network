@@ -2,9 +2,9 @@ import { useEffect, useContext, useState } from "react";
 import UsersContext from "../../store/users-context";
 import WebSocketContext from "../../store/websocket-context";
 import ChatDetailTopBar from "./ChatDetailTopBar";
-import UserMsgArea from "../UserChat/ChatboxMsgArea";
+import UserMsgArea from "../Chatbox/ChatboxMsgArea";
 import SendMsg from "../SendMsg";
-import styles from "./UserChatbox.module.css";
+import styles from "./Chatbox.module.css";
 
 const UserChatbox = (props) => {
 
