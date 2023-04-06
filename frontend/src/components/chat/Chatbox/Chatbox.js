@@ -2,15 +2,15 @@ import { useEffect, useContext, useState } from "react";
 import UsersContext from "../../store/users-context";
 import WebSocketContext from "../../store/websocket-context";
 import ChatDetailTopBar from "./ChatDetailTopBar";
-import UserMsgArea from "../Chatbox/ChatboxMsgArea";
+import MsgArea from "../Chatbox/ChatboxMsgArea";
 import SendMsg from "../SendMsg";
 import styles from "./Chatbox.module.css";
 
-const UserChatbox = (props) => {
+const Chatbox = (props) => {
 
     const userMsgUrl = "http://localhost:8080/user-message";
 
-    const [userMsgData, setUserMsgData] = useState([]);
+    const [prevMsgData, setPrevMsgData] = useState([]);
     const [newMsgsData, setNewMsgs] = useState([]);
 
     const selfId = +localStorage.getItem("user_id");
@@ -21,7 +21,7 @@ const UserChatbox = (props) => {
     // console.log("chatbox: ", usersCtx.users);
 
     const wsCtx = useContext(WebSocketContext);
-    // console.log("ws in UserChatbox: ",wsCtx.websocket);
+    // console.log("ws in Chatbox: ",wsCtx.websocket);
     // const [msg, setMsg] = useState("");
 
     wsCtx.websocket.onmessage = (e) => {
@@ -44,8 +44,7 @@ const UserChatbox = (props) => {
             targetid: friendId,
             sourceid: selfId,
             message: msg
-        }
-        ]
+        }]
         setNewMsgs(newObject)
     };
 
@@ -62,7 +61,7 @@ const UserChatbox = (props) => {
             console.log("old msg data: ", data);
             if (data) {
                 data.data.sort((b, a) => Date.parse(b.createdat) - Date.parse(a.createdat));
-                setUserMsgData(data.data);
+                setPrevMsgData(data.data);
             }
         })
         .catch(
@@ -74,11 +73,11 @@ const UserChatbox = (props) => {
         <div className={styles["container"]}>
             <button onClick={closeChatboxHandler} className={styles["close-btn"]}>X</button>
             <ChatDetailTopBar />
-            <UserMsgArea msgItems={userMsgData} newMsgs={newMsgsData}/>
+            <MsgArea msgItems={prevMsgData} newMsgs={newMsgsData}/>
             <SendMsg onSendMsg={sendMsgHandler}/>            
         </div>
         
     );
 };
 
-export default UserChatbox;
+export default Chatbox;

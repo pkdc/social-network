@@ -2,7 +2,7 @@ import { useEffect, useState, useContext } from "react";
 import AllUserChatItems from "./AllUserChatItems";
 import styles from "./UserChatMainArea.module.css";
 import AuthContext from "../../store/auth-context";
-import UserChatbox from "../Chatbox/Chatbox.js";
+import Chatbox from "../Chatbox/Chatbox.js";
 
 const ChatMainArea = (props) => {
     // console.log("user chat followers in chatarea", props.followersList);
@@ -31,7 +31,7 @@ const ChatMainArea = (props) => {
         style={{height: window.innerHeight}}
         >
             {!chatboxOpen && <AllUserChatItems onOpenChatbox={openUserChatboxHandler}/>}
-            {chatboxOpen && <UserChatbox chatboxId={followerId} onCloseChatbox={closeUserChatboxHandler}/>}
+            {chatboxOpen && <Chatbox chatboxId={followerId} onCloseChatbox={closeUserChatboxHandler}/>}
         </div>
     );
 };

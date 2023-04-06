@@ -1,12 +1,12 @@
 import Card from "../../UI/Card";
-import UserMsgItem from "./MsgItem";
+import AllPrevMsgItems from "./AllPrevMsgItems";
 import styles from "./ChatboxMsgArea.module.css";
 
-const UserMsgArea = (props) => {
+const ChatboxMsgArea = (props) => {
 
     return (
         <Card className={styles["msg-area"]} style={{height: `${window.innerHeight-316}px`}}>
-            <UserMsgItem />
+            <AllPrevMsgItems />
 
             {props.msgItems.map((msg, m) => (
                 <div>
@@ -22,4 +22,4 @@ const UserMsgArea = (props) => {
     );
 };
 
-export default UserMsgArea;
+export default ChatboxMsgArea;
