@@ -1,0 +1,10 @@
+
+.self-msg {
+    align-items: end;
+    color: red;
+}
+
+.frd-msg {
+    align-items: start;
+    color: green;
+}

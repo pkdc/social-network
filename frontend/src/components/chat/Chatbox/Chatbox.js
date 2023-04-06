@@ -2,8 +2,8 @@ import { useEffect, useContext, useState } from "react";
 import UsersContext from "../../store/users-context";
 import WebSocketContext from "../../store/websocket-context";
 import ChatDetailTopBar from "./ChatDetailTopBar";
-import MsgArea from "../Chatbox/ChatboxMsgArea";
-import SendMsg from "../SendMsg";
+import ChatboxMsgArea from "../Chatbox/ChatboxMsgArea";
+import SendMsg from "./SendMsg";
 import styles from "./Chatbox.module.css";
 
 const Chatbox = (props) => {
@@ -45,6 +45,7 @@ const Chatbox = (props) => {
             sourceid: selfId,
             message: msg
         }]
+        console.log("new msg data", newObject);
         setNewMsgs(newObject)
     };
 
@@ -60,8 +61,10 @@ const Chatbox = (props) => {
         .then(data => {
             console.log("old msg data: ", data);
             if (data) {
-                data.data.sort((b, a) => Date.parse(b.createdat) - Date.parse(a.createdat));
-                setPrevMsgData(data.data);
+                const [prevMsgArr] = Object.values(data);
+                prevMsgArr.sort((b, a) => Date.parse(b.createdat) - Date.parse(a.createdat));
+                console.log("soreted prev msg data", prevMsgArr);
+                setPrevMsgData(prevMsgArr);
             }
         })
         .catch(
@@ -73,7 +76,7 @@ const Chatbox = (props) => {
         <div className={styles["container"]}>
             <button onClick={closeChatboxHandler} className={styles["close-btn"]}>X</button>
             <ChatDetailTopBar />
-            <MsgArea msgItems={prevMsgData} newMsgs={newMsgsData}/>
+            <ChatboxMsgArea prevMsgItems={prevMsgData} newMsgItems={newMsgsData}/>
             <SendMsg onSendMsg={sendMsgHandler}/>            
         </div>
         
