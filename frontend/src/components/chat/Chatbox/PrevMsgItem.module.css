@@ -1,10 +1,13 @@
 
 .self-msg {
-    align-items: end;
-    color: red;
+    display: flex;
+    justify-content: end;
+    color: var(--antiflash-white, white);
+    background-color: var(--ultra-violet, purple);
 }
 
 .frd-msg {
-    align-items: start;
-    color: green;
+    display: flex;
+    justify-content: start;
+    
 }
