@@ -29,6 +29,13 @@ const Chatbox = (props) => {
         const msgObj = JSON.parse(e.data);
         console.log("ws receives msgObj: ", msgObj);
         console.log("ws receives msg: ", msgObj.message);
+        const newReceivedMsgObj = [{
+            targetid: selfId,
+            sourceid: friendId,
+            message: msgObj.message
+        }];
+        console.log("new self msg data", newReceivedMsgObj);
+        setNewMsgs(newReceivedMsgObj);
     };
 
     // send msg to ws
@@ -40,13 +47,13 @@ const Chatbox = (props) => {
         privateChatPayloadObj["message"] = msg;
         wsCtx.websocket.send(JSON.stringify(privateChatPayloadObj));
         // wsCtx.websocket.send(msg);
-        const newObject = [{
+        const selfNewMsgObject = [{
             targetid: friendId,
             sourceid: selfId,
             message: msg
         }]
-        console.log("new msg data", newObject);
-        setNewMsgs(newObject)
+        console.log("new self msg data", selfNewMsgObject);
+        setNewMsgs(selfNewMsgObject)
     };
 
     const closeChatboxHandler = () => {

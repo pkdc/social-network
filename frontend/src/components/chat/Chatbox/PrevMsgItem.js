@@ -10,9 +10,8 @@ const PrevMsgItem = (props) => {
         classes = "frd-msg";
      }
     return (
-        
         // <div className={`${props.sourceid === selfId ? styles["self-msg"] : styles["frd-msg"]}`}>
-        <div className={styles[`${classes}`]}>    
+        <div className={`${props.sourceid === selfId ? styles["self-msg"] : styles["frd-msg"]}`}>    
         {props.msg}
         </div>
     );
