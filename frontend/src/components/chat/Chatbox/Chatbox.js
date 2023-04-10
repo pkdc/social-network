@@ -31,9 +31,11 @@ const Chatbox = (props) => {
         console.log("ws receives msgObj: ", msgObj);
         console.log("ws receives msg: ", msgObj.message);
         const newReceivedMsgObj = {
-            targetid: selfId,
-            sourceid: friendId,
-            message: msgObj.message
+            id: msgObj.id,
+            targetid: msgObj.targetid,
+            sourceid: msgObj.sourceid,
+            message: msgObj.message,
+            createdat: msgObj.createdat,
         };
         console.log("new Received msg data", newReceivedMsgObj);
         setNewMsgs((prevNewMsgs) => [...prevNewMsgs, newReceivedMsgObj]);
@@ -43,13 +45,14 @@ const Chatbox = (props) => {
     const sendMsgHandler = (msg) => {
         let privateChatPayloadObj = {};
         privateChatPayloadObj["label"] = "private";
+        privateChatPayloadObj["id"] = Date.now(); // temp?
         privateChatPayloadObj["targetid"] = friendId;
         privateChatPayloadObj["sourceid"] = selfId;
         privateChatPayloadObj["message"] = msg;
 
         const createdatObj = new Date();
         const selfNewMsgObject = {
-            id: Date.now(),
+            id: Date.now(), // temp?
             targetid: friendId,
             sourceid: selfId,
             message: msg,

@@ -81,12 +81,14 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 		not.UserId = msgStruct.UserId
 	} else if msgStruct.Label == "private" {
 		t = 2
+		userMsg.Id = msgStruct.Id
 		userMsg.SourceId = msgStruct.SourceId
 		userMsg.TargetId = msgStruct.TargetId
 		userMsg.Message = msgStruct.Message
 		userMsg.CreatedAt = time.Now().String()
 	} else if msgStruct.Label == "group" {
 		t = 3
+		userMsg.Id = msgStruct.Id
 		groupMsg.Message = msgStruct.Message
 		groupMsg.SourceId = msgStruct.SourceId
 		groupMsg.GroupId = msgStruct.GroupId
