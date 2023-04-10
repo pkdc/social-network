@@ -9,7 +9,7 @@
     top: 0;
     left:0;
     background-color: transparent;
-    color: var(--antiflash-white, white);
+    color: var(--seasalt, white);
     font-size: 1.5rem;
     font-weight: 700;
     border: none;

@@ -1,9 +1,10 @@
 .chat-details {
-    background-color: var(--antiflash-white, white);
-    width: 73%;
+    background-color: var(--seasalt, white);
+    width: 80%;
     display: flex;
     flex-direction: row;
     justify-content: center;
     margin: 0.8rem 1rem; 
     height: 1.2rem;
+    opacity: 1;
 }

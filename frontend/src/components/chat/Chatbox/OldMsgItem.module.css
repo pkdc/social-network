@@ -3,10 +3,25 @@
     display: flex;
     justify-content: end;
     color: var(--antiflash-white, white);
-    background-color: var(--ultra-violet, purple);
+    margin: 0.2rem 0;
 }
 
 .frd-msg {
     display: flex;
     justify-content: start;
+    margin: 0.2rem 0;
+}
+
+.chat-bubble-self {
+    background-color: var(--ultra-violet, purple);
+    opacity: 50%;
+    border-radius: 0.6rem;
+    padding: 0.5rem;
+}
+
+.chat-bubble-frd {
+    background-color: transparent;
+    opacity: 50%;
+    border-radius: 0.6rem;
+    padding: 0.5rem;
 }

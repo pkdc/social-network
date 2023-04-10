@@ -2,13 +2,15 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 78%;
+    width: 85%;
     position: absolute;
+    background-color: var(--seasalt, white);
+    border-radius: 1.5rem;
     /* opacity: 80%; */
 }
 
 .send-msg-input {
-
+    /* background-color: var(--seasalt, white); */
 }
 
 .send {
@@ -29,8 +31,12 @@
 
 .show-picker {
     font-size: 2rem;
-    background-color: transparent;
     border: none;
+    position: absolute;
+    top: 5%;
+    right: 12%;
+    /* margin: -0.5rem; */
+    background-color: var(--seasalt, white);
 }
 
 .show-picker:hover {
