@@ -1,8 +1,8 @@
-import styles from "./NewMsgItem.module.css";
+import styles from "./OldMsgItem.module.css";
 
-const NewMsgItem = (props) => {
+const OldMsgItem = (props) => {
     const selfId = +localStorage.getItem("user_id");
-    console.log("selfId new msg", selfId);
+    console.log("selfId old msg", selfId);
     return (
         <div className={`${props.sourceid === selfId ? styles["self-msg"] : styles["frd-msg"]}`}>    
         {props.msg}
@@ -10,4 +10,4 @@ const NewMsgItem = (props) => {
     );
 };
 
-export default NewMsgItem;
+export default OldMsgItem;

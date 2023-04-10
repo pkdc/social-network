@@ -1,0 +1,12 @@
+
+.self-msg {
+    display: flex;
+    justify-content: end;
+    color: var(--antiflash-white, white);
+    background-color: var(--ultra-violet, purple);
+}
+
+.frd-msg {
+    display: flex;
+    justify-content: start;
+}

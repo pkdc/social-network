@@ -10,8 +10,9 @@ const Chatbox = (props) => {
 
     const userMsgUrl = "http://localhost:8080/user-message";
 
-    const [prevMsgData, setPrevMsgData] = useState([]);
+    const [oldMsgData, setOldMsgData] = useState([]);
     const [newMsgsData, setNewMsgs] = useState([]);
+    const [nextMsgId, setNextMsgId] = useState(0);
 
     const selfId = +localStorage.getItem("user_id");
     const friendId = props.chatboxId;
@@ -29,13 +30,13 @@ const Chatbox = (props) => {
         const msgObj = JSON.parse(e.data);
         console.log("ws receives msgObj: ", msgObj);
         console.log("ws receives msg: ", msgObj.message);
-        const newReceivedMsgObj = [{
+        const newReceivedMsgObj = {
             targetid: selfId,
             sourceid: friendId,
             message: msgObj.message
-        }];
-        console.log("new self msg data", newReceivedMsgObj);
-        setNewMsgs(newReceivedMsgObj);
+        };
+        console.log("new Received msg data", newReceivedMsgObj);
+        setNewMsgs((prevNewMsgs) => [...prevNewMsgs, newReceivedMsgObj]);
     };
 
     // send msg to ws
@@ -45,16 +46,24 @@ const Chatbox = (props) => {
         privateChatPayloadObj["targetid"] = friendId;
         privateChatPayloadObj["sourceid"] = selfId;
         privateChatPayloadObj["message"] = msg;
-        wsCtx.websocket.send(JSON.stringify(privateChatPayloadObj));
-        // wsCtx.websocket.send(msg);
-        const selfNewMsgObject = [{
+
+        const createdatObj = new Date();
+        const selfNewMsgObject = {
+            id: Date.now(),
             targetid: friendId,
             sourceid: selfId,
-            message: msg
-        }]
+            message: msg,
+            createdat: createdatObj.toString(),
+        }
+
         console.log("new self msg data", selfNewMsgObject);
-        setNewMsgs(selfNewMsgObject)
+        setNewMsgs((prevNewMsgs) => [...prevNewMsgs, selfNewMsgObject]);
+
+        wsCtx.websocket.send(JSON.stringify(privateChatPayloadObj));
+        // wsCtx.websocket.send(msg);
     };
+
+    console.log("new msg data (outside)", newMsgsData);
 
     const closeChatboxHandler = () => {
         props.onCloseChatbox();
@@ -68,10 +77,10 @@ const Chatbox = (props) => {
         .then(data => {
             console.log("old msg data: ", data);
             if (data) {
-                const [prevMsgArr] = Object.values(data);
-                prevMsgArr.sort((b, a) => Date.parse(b.createdat) - Date.parse(a.createdat));
-                console.log("soreted prev msg data", prevMsgArr);
-                setPrevMsgData(prevMsgArr);
+                const [oldMsgArr] = Object.values(data);
+                oldMsgArr.sort((b, a) => Date.parse(b.createdat) - Date.parse(a.createdat));
+                console.log("soreted old msg data", oldMsgArr);
+                setOldMsgData(oldMsgArr);
             }
         })
         .catch(
@@ -83,7 +92,7 @@ const Chatbox = (props) => {
         <div className={styles["container"]}>
             <button onClick={closeChatboxHandler} className={styles["close-btn"]}>X</button>
             <ChatDetailTopBar />
-            <ChatboxMsgArea prevMsgItems={prevMsgData} newMsgItems={newMsgsData}/>
+            <ChatboxMsgArea oldMsgItems={oldMsgData} newMsgItems={newMsgsData}/>
             <SendMsg onSendMsg={sendMsgHandler}/>            
         </div>
         
