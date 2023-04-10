@@ -14,14 +14,12 @@
 
 .chat-bubble-self {
     background-color: var(--ultra-violet, purple);
-    opacity: 50%;
-    border-radius: 0.6rem;
-    padding: 0.5rem;
+    border-radius: 1.5rem;
+    padding: 0.5rem 0.8rem;
 }
 
 .chat-bubble-frd {
-    background-color: transparent;
-    opacity: 50%;
+    background-color: var(--antiflash-white, white);
     border-radius: 0.6rem;
     padding: 0.5rem;
 }

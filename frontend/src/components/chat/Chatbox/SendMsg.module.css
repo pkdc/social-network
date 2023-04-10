@@ -10,7 +10,8 @@
 }
 
 .send-msg-input {
-    /* background-color: var(--seasalt, white); */
+    background-color: var(--seasalt, white);
+    width: 136%;
 }
 
 .send {
