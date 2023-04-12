@@ -7,19 +7,12 @@ import styles from "./Landingpage.module.css";
 
 const Homepage = () => {
     return (
-        <div>
+        <div className={styles["container"]}>
             <h1 className={styles["title"]}>Welcome</h1>
-            <>
-                <div className={styles["link-container"]}>
-                <Link className={styles["nav-link"]} to="/login"><LgButton className={styles["nav-link-btn"]}>Login</LgButton></Link>
-                </div>               
-                <div className={styles["link-container"]}>
-                <Link className={styles["nav-link"]} to="/reg"><LgButton className={styles["nav-link-btn"]}>Register</LgButton></Link>
-                </div>                
-            </>
+            <Link className={styles["nav-link"]} to="/login"><LgButton className={styles["nav-link-btn"]}>Login</LgButton></Link>
+            <Link className={styles["nav-link"]} to="/reg"><LgButton className={styles["nav-link-btn"]}>Register</LgButton></Link>
         </div>
-    
-    )
+    );
 };
 
 export default Homepage;
