@@ -12,14 +12,13 @@ const ChatboxMsgArea = (props) => {
     //     console.log("scrollHandler called");
     //     console.log("scrollTop", msgAreaRef.current.scrollTop);
     // };
-   
-    // useEffect(() => {
-    //     console.log("msgAreaRef scroll", msgAreaRef.current);
-    //     console.log("scrollHeight: ", msgAreaRef.current.scrollHeight);
-        // if (msgAreaRef.current) msgAreaRef.current.scrollTop = msgAreaRef.current.scrollHeight - msgAreaRef.current.clientHeight;
-    // }, [])
     
-    setTimeout(() => {if (msgAreaRef.current) msgAreaRef.current.scrollTop = msgAreaRef.current.scrollHeight - msgAreaRef.current.clientHeight}, 300)
+    setTimeout(() => {
+            if (msgAreaRef.current) {
+                msgAreaRef.current.scrollTop = msgAreaRef.current.scrollHeight - msgAreaRef.current.clientHeight;
+            }
+        }, 50);
+    
     return (
         <div 
             className={styles["msg-area"]} 
