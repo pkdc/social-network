@@ -62,7 +62,7 @@ import profile from "../assets/profileSmall.svg";
 import notif from "../assets/notifications5.svg";
 import chatIcon from "../assets/chat5.svg";
 import Avatar from "../UI/Avatar";
-import AuthContext from "../store/auth-context";
+import { AuthContext } from "../store/auth-context";
 
 const TopMenu = () => {
     const navigate = useNavigate();

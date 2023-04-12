@@ -1,7 +1,7 @@
 import { useEffect, useState, useContext } from "react";
 import AllUserChatItems from "./AllUserChatItems";
 import styles from "./UserChatMainArea.module.css";
-import AuthContext from "../../store/auth-context";
+import { AuthContext } from "../../store/auth-context";
 import Chatbox from "../Chatbox/Chatbox.js";
 
 const ChatMainArea = (props) => {

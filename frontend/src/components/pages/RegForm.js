@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Form from '../UI/Form';
 import FormInput from "../UI/FormInput";
@@ -6,12 +6,14 @@ import FormLabel from "../UI/FormLabel";
 import FormTextarea from "../UI/FormTextarea";
 import LgButton from "../UI/LgButton";
 import ImgUpload from "../UI/ImgUpload";
-import EmojiPicker from 'emoji-picker-react';
+import { AuthContext } from "../store/auth-context";
 import styles from "./RegForm.module.css";
 
-const RegForm = (props) => {    
+const RegForm = () => {    
     const imageSrc = "../../images/";
     let defaultImagePath = "default_avatar.jpg";
+
+    const ctx = useContext(AuthContext);
 
     const [enteredEmail, setEnteredEmail] = useState("");
     const [enteredPw, setEnteredPw] = useState("");
@@ -25,8 +27,8 @@ const RegForm = (props) => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        props.success && navigate("/login", {replace: true})
-    }, [props.success]);
+        ctx.regSuccess && navigate("/login", {replace: true})
+    }, [ctx.regSuccess]);
     
     const emailChangeHandler = (e) => {
         setEnteredEmail(e.target.value);
@@ -83,7 +85,7 @@ const RegForm = (props) => {
         };
         console.log(regPayloadObj);
 
-        props.onReg(regPayloadObj);
+        ctx.onReg(regPayloadObj);
         
         setEnteredEmail("");
         setEnteredPw("");

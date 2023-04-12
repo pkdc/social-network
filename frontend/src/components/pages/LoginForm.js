@@ -1,15 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Form from '../UI/Form';
 import FormInput from "../UI/FormInput";
 import FormLabel from "../UI/FormLabel";
 import LgButton from "../UI/LgButton";
+import { AuthContext } from "../store/auth-context";
 import styles from "./LoginForm.module.css";
 
-const LoginForm = (props) => {  
+const LoginForm = () => {  
     const [enteredEmail, setEnteredEmail] = useState("");
     const [enteredPw, setEnteredPw] = useState("");
     const navigate = useNavigate();
+    const ctx = useContext(AuthContext);
 
     const emailChangeHandler = (e) => {
         setEnteredEmail(e.target.value);
@@ -28,7 +30,7 @@ const LoginForm = (props) => {
         };
         console.log(loginPayloadObj);
 
-        props.onLogin(loginPayloadObj);
+        ctx.onLogin(loginPayloadObj);
         
         setEnteredEmail("");
         setEnteredPw("");
