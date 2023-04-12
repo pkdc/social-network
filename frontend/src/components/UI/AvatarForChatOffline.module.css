@@ -1,0 +1,19 @@
+@import "../var.css";
+
+.wrapper {
+    position: relative;
+}
+.avatar {
+    z-index: 1;
+}
+
+.offline-status-dot {
+    position: absolute;
+    top: 60%;
+    left: 60%;
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+    background-color: grey;
+    z-index: 10;
+}

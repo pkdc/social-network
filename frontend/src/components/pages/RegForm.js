@@ -6,6 +6,7 @@ import FormLabel from "../UI/FormLabel";
 import FormTextarea from "../UI/FormTextarea";
 import LgButton from "../UI/LgButton";
 import ImgUpload from "../UI/ImgUpload";
+import EmojiPicker from 'emoji-picker-react';
 import styles from "./RegForm.module.css";
 
 const RegForm = (props) => {    
@@ -118,6 +119,7 @@ const RegForm = (props) => {
                 <FormLabel className={styles["reg-label"]} htmlFor="nname">Nickname (Optional)</FormLabel>
                 <FormInput className={styles["reg-input"]} type="text" name="nname" id="nname" placeholder="Pikachu" value={enteredNickname} onChange={nicknameChangeHandler}/>
                 <FormLabel className={styles["reg-label"]} htmlFor="about">About Me (Optional)</FormLabel>
+                {/* <EmojiPicker /> */}
                 <FormTextarea className={styles["reg-input"]} name="about" id="about" placeholder="About me..." rows={5} value={enteredAbout} onChange={aboutChangeHandler}/>
                 <LgButton className={styles["sub-btn"]} type="submit">Register</LgButton>
                 <p>Already have an account? <Link to="/login">Login</Link></p>

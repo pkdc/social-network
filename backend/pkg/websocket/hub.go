@@ -7,6 +7,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"time"
 )
 
 // Hub maintains the set of active clients and broadcasts messages to the
@@ -15,7 +16,7 @@ type Hub struct {
 	// Registered clients.
 	clients map[int]*Client
 	// Inbound messages from the clients.
-	broadcast chan []byte
+	broadcast chan backend.NotiMessageStruct
 	// Register requests from the clients.
 	register chan *Client
 	// Unregister requests from clients.
@@ -24,7 +25,7 @@ type Hub struct {
 
 func NewHub() *Hub {
 	return &Hub{
-		broadcast:  make(chan []byte),
+		broadcast:  make(chan backend.NotiMessageStruct),
 		register:   make(chan *Client),
 		unregister: make(chan *Client),
 		clients:    make(map[int]*Client),
@@ -53,28 +54,53 @@ func (h *Hub) Run() {
 	}
 }
 
-func (h *Hub) Notif(message []byte) {
+func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 	// Initialises variables for the different messages going through websocket
+	fmt.Printf("msg reached hub: %v\n", msgStruct)
+
 	var not backend.NotifStruct
 	var userMsg backend.UserMessageStruct
 	var groupMsg backend.GroupMessageStruct
+
 	t := 0
 
 	// Checks whether the message is a notification, user message or group message
-	if err := json.Unmarshal(message, &not); err == nil {
+	// if err := json.Unmarshal(messageStruct, &not); err == nil {
+	// 	t = 1
+	// } else if err := json.Unmarshal(messageStruct, &userMsg); err == nil {
+	// 	t = 2
+	// } else if err := json.Unmarshal(messageStruct, &groupMsg); err == nil {
+	// 	t = 3
+	// } else {
+	// 	panic(err)
+	// }
+	fmt.Printf("msg Struct: %v\n", msgStruct)
+	if msgStruct.Label == "noti" {
 		t = 1
-	} else if err := json.Unmarshal(message, &userMsg); err == nil {
+		not.Type = msgStruct.Type
+		not.UserId = msgStruct.UserId
+	} else if msgStruct.Label == "private" {
 		t = 2
-	} else if err := json.Unmarshal(message, &groupMsg); err == nil {
+		userMsg.Id = msgStruct.Id
+		userMsg.SourceId = msgStruct.SourceId
+		userMsg.TargetId = msgStruct.TargetId
+		userMsg.Message = msgStruct.Message
+		userMsg.CreatedAt = time.Now().String()
+	} else if msgStruct.Label == "group" {
 		t = 3
+		userMsg.Id = msgStruct.Id
+		groupMsg.Message = msgStruct.Message
+		groupMsg.SourceId = msgStruct.SourceId
+		groupMsg.GroupId = msgStruct.GroupId
+		groupMsg.CreatedAt = time.Now().String()
 	} else {
-		panic(err)
+		// panic
 	}
 
 	switch t {
 	case 1:
 		// NOTIFICATION
-
+		fmt.Println("noti")
 		// Marshals the struct to a json object
 		sendNoti, err := json.Marshal(not)
 		if err != nil {
@@ -94,8 +120,37 @@ func (h *Hub) Notif(message []byte) {
 		}
 	case 2:
 		// USER MESSAGE
+		fmt.Println("private")
+		// ### CONNECT TO DATABASE ###
+
+		db := db.DbConnect()
+
+		query := crud.New(db)
+
+		// ### ADD USER MESSAGE TO DATABASE ###
+
+		// date, err := time.Parse("2006-01-02 15:04:05.999999999 -0700 MST", userMsg.CreatedAt)
+
+		// if err != nil {
+		// 	fmt.Println("Unable to convert to date")
+		// }
+
+		var message crud.CreateMessageParams
+		message.CreatedAt = time.Now()
+		message.Message = userMsg.Message
+		message.SourceID = int64(userMsg.SourceId)
+		message.TargetID = int64(userMsg.TargetId)
+		fmt.Printf("message.SourceID %d\n", message.SourceID)
+		fmt.Printf("message.TargetID %d\n", message.TargetID)
+
+		_, err := query.CreateMessage(context.Background(), message)
+
+		if err != nil {
+			fmt.Println("Unable to store message to database")
+		}
 
 		// Marshals the struct to a json object
+		fmt.Println("Marshals the struct to a json object")
 		sendMsg, err := json.Marshal(userMsg)
 		if err != nil {
 			panic(err)
@@ -103,9 +158,13 @@ func (h *Hub) Notif(message []byte) {
 
 		// Loops through the clients and sends to the target user
 		for _, c := range h.clients {
+			fmt.Printf("client %v\n", c)
+			fmt.Printf("target client id %v\n", userMsg.TargetId)
 			if c.userID == userMsg.TargetId {
+				fmt.Printf("matched %d = %d\n", c.userID, userMsg.TargetId)
 				select {
 				case c.send <- sendMsg:
+					fmt.Printf("sendMsg %v\n", sendMsg)
 				default:
 					close(c.send)
 					delete(h.clients, c.userID)
@@ -114,7 +173,7 @@ func (h *Hub) Notif(message []byte) {
 		}
 	case 3:
 		// GROUP MESSAGE
-
+		fmt.Println("group")
 		// Marshals the struct to a json object
 		sendMsg, err := json.Marshal(groupMsg)
 		if err != nil {

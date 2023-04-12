@@ -3,6 +3,8 @@ import { Outlet } from "react-router-dom";
 import TopNav from "../Navigation/TopNav";
 import ChatSidebar from "../Navigation/ChatSidebar";
 import UsersContext from "../store/users-context";
+import FollowersContext from "../store/followers-context";
+import FollowingContext from "../store/following-context";
 import WebSocketContext from "../store/websocket-context";
 
 const Root = (props) => {
@@ -27,8 +29,7 @@ const Root = (props) => {
         );
     }, []);
 
-    console.log("user chat users (root)", usersList);
-
+    // console.log("user chat users (root)", usersList);
 
     const [socket, setSocket] = useState(null);
 
@@ -54,9 +55,10 @@ const Root = (props) => {
         };   
   }, []);
 
-  console.log("socket: ", socket);
+//   console.log("socket: ", socket);
 
     return <>
+
     <UsersContext.Provider value={{
         users: usersList
     }}>

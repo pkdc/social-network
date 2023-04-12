@@ -1,6 +1,7 @@
 package websocket
 
 import (
+	"backend"
 	"backend/pkg/db/crud"
 	db "backend/pkg/db/sqlite"
 	"context"
@@ -57,15 +58,20 @@ func (c *Client) readPump() {
 	c.conn.SetReadDeadline(time.Now().Add(pongWait))
 	c.conn.SetPongHandler(func(string) error { c.conn.SetReadDeadline(time.Now().Add(pongWait)); return nil })
 	for {
-		_, message, err := c.conn.ReadMessage()
+		// _, message, err := c.conn.ReadMessage()
+		var msgStruct backend.NotiMessageStruct
+		err := c.conn.ReadJSON(&msgStruct)
+		fmt.Printf("msg in readPump: %s\n", msgStruct.Message)
 		if err != nil {
+			fmt.Printf("error: %v\n", err)
 			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {
-				log.Printf("error: %v", err)
+				log.Printf("error: %v\n", err)
+				fmt.Printf("UnexpectedClose error: %v\n", err)
 			}
 			break
 		}
-
-		c.hub.broadcast <- message
+		c.hub.broadcast <- msgStruct
+		// c.hub.broadcast <- []byte(userMsg.Message)
 	}
 }
 
@@ -83,14 +89,17 @@ func (c *Client) writePump() {
 	for {
 		select {
 		case message, ok := <-c.send:
+			fmt.Printf("msg in writePump %v\n", message)
 			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if !ok {
 				// The hub closed the channel.
+				fmt.Printf("!ok \n")
 				c.conn.WriteMessage(websocket.CloseMessage, []byte{})
 				return
 			}
 			w, err := c.conn.NextWriter(websocket.TextMessage)
 			if err != nil {
+				fmt.Printf("err %v \n", err)
 				return
 			}
 			w.Write(message)
@@ -120,7 +129,7 @@ func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		return
 	}
-	cookie, err := r.Cookie("session")
+	cookie, err := r.Cookie("session_token")
 	if err != nil {
 		fmt.Println("cookie not found")
 		return
@@ -140,7 +149,7 @@ func ServeWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 
 	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256), userID: int(session.UserID)}
 	client.hub.register <- client
-	fmt.Printf("ServeWs created client %v", client)
+	fmt.Printf("ServeWs created client %v\n", client)
 	// Allow collection of memory referenced by the caller by doing all work in
 	// new goroutines.
 	go client.writePump()

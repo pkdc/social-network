@@ -233,3 +233,15 @@ type NotifStruct struct {
 	Type   string `json:"type"`
 	UserId int    `json:"userid"`
 }
+
+type NotiMessageStruct struct {
+	Label     string `json:"label"`
+	Id        int    `json:"id"`
+	TargetId  int    `json:"targetid"`
+	SourceId  int    `json:"sourceid"`
+	Message   string `json:"message"`
+	GroupId   int    `json:"groupid"`
+	CreatedAt string `json:"createdat"`
+	Type      string `json:"type"`
+	UserId    int    `json:"userid"`
+}
