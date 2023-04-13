@@ -7,7 +7,7 @@ import CreateMsgTextarea from "../../UI/CreateMsgTextarea";
 import SmallButton from "../../UI/SmallButton";
 import styles from "./SendMsg.module.css";
 
-const UserSendMsg = (props) => {
+const SendMsg = (props) => {
     // const msgRef = useRef();
     const [enteredMsg, setEnteredMsg] = useState("");
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -54,4 +54,4 @@ const UserSendMsg = (props) => {
     );
 };
 
-export default UserSendMsg;
+export default SendMsg;

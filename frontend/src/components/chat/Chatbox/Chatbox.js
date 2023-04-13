@@ -45,14 +45,14 @@ const Chatbox = (props) => {
     const sendMsgHandler = (msg) => {
         let privateChatPayloadObj = {};
         privateChatPayloadObj["label"] = "private";
-        privateChatPayloadObj["id"] = Date.now(); // temp?
+        privateChatPayloadObj["id"] = Date.now(); // temp
         privateChatPayloadObj["targetid"] = friendId;
         privateChatPayloadObj["sourceid"] = selfId;
         privateChatPayloadObj["message"] = msg;
 
         const createdatObj = new Date();
         const selfNewMsgObject = {
-            id: Date.now(), // temp?
+            // id: Date.now(), // id is assigned by autoincrement
             targetid: friendId,
             sourceid: selfId,
             message: msg,
@@ -98,7 +98,6 @@ const Chatbox = (props) => {
             <ChatboxMsgArea oldMsgItems={oldMsgData} newMsgItems={newMsgsData}/>
             <SendMsg onSendMsg={sendMsgHandler}/>            
         </div>
-        
     );
 };
 

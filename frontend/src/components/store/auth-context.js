@@ -1,12 +1,4 @@
 import React, { useState, useEffect } from "react";
-// import Root from "../../components/pages/Root";
-// import Landingpage from '../../components/pages/Landingpage';
-// import LoginForm from '../../components/pages/LoginForm';
-// import RegForm from '../../components/pages/RegForm';
-// import PostsPage from '../../components/pages/PostsPage';
-// import GroupPage from "../../components/pages/GroupPage";
-// import GroupProfilePage from "../../components/pages/GroupProfilePage";
-// import ProfilePage from "../../components/pages/ProfilePage";
 
 export const AuthContext = React.createContext({
     isLoggedIn: false,

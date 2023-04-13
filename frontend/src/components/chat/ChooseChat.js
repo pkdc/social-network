@@ -1,6 +1,6 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import SmallButton from "../UI/SmallButton";
-import UserChatMainArea from "./UserChat/UserChatMainArea";
+import ChatMainArea from "./ChatMainArea";
 import GroupChatMainArea from "./GroupChat/GroupChatMainArea";
 import styles from "./ChooseChat.module.css";
 
@@ -31,10 +31,9 @@ const ChooseChat = (props) => {
                 onClick={showGrpListHandler}
             >Groups</SmallButton>
         </div>
-        {!grpActive && <UserChatMainArea/>}
-        {grpActive && <GroupChatMainArea />}
+            <ChatMainArea grpChat={grpActive}/>
         </>
     );
 };
 
-export default ChooseChat;
+export default React.memo(ChooseChat);
