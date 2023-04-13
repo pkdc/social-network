@@ -10,19 +10,18 @@ import ToggleSwitch from "../UI/ToggleSwitch";
 import classes from './Profile.module.css';
 
 function Profile({ userId }) {
+    const [publicity, setPublicity] = useState(false); // false is public, true is private
 
     const currUserId = localStorage.getItem("user_id");
 
-    // let params = useParams();   
-    // let userId = params.productId 
-    // console.log("params", userId)
-
+    // get userId data
     const { error , isLoaded, data } = useGet(`/user?id=${userId}`)
      console.log("user data", data.data)
 
       if (!isLoaded) return <div>Loading...</div>
       if (error) return <div>Error: {error.message}</div>
 
+    // follow
     function handleClick(e) {
         const targetId = e.target.id
         console.log("targetid", targetId)
@@ -58,10 +57,17 @@ function Profile({ userId }) {
             })
     }
     
+    
     let toggleSwitch;
+    // self
     if (currUserId === userId) {
-        toggleSwitch = <ToggleSwitch label="Private"></ToggleSwitch>;
+        if (publicity) {
+            toggleSwitch = <ToggleSwitch label="Public"></ToggleSwitch>;         
+        } else {
+            toggleSwitch = <ToggleSwitch label="Private"></ToggleSwitch>;
+        }
     }
+    
     let followButton;
     let messageButton;
     if (currUserId !== userId) {

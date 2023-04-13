@@ -1,4 +1,4 @@
-.user-list {
+.list {
     background-color: var(--ultra-violet, purple);
     overflow-y: scroll;
 }

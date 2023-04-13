@@ -113,7 +113,6 @@ const TopMenu = () => {
                     MaddieWesst
                     </div> */}
 
-                {/* <NotificationBtn>&#128276;</NotificationBtn> */}
                 <div className={styles.icons}>
                     <div className={styles.notif}>
                         <button className={styles.btn}>

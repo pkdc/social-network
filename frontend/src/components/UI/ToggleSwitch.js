@@ -7,7 +7,7 @@ const ToggleSwitch = ({ label }) => {
         {label}{""}
     
       <div className={classes.toggleSwitch}>
-        <input type="checkbox" className={classes.checkbox} name={label} id={label} />
+        <input type="checkbox" className={classes.checkbox} name={label} id={label} value={label}/>
         <label className={classes.label} htmlFor={label}>
           <span className={classes.inner} />
           <span className={classes.switch} />

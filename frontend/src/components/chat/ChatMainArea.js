@@ -32,7 +32,7 @@ const ChatMainArea = (props) => {
     
     return (
         <div 
-        className={styles["user-list"]}
+        className={styles["list"]}
         style={{height: window.innerHeight -110}}
         >
             {!props.grpChat && !chatboxOpen && <AllUserChatItems onOpenChatbox={openUserChatboxHandler}/>}
