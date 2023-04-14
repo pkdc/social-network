@@ -57,52 +57,55 @@ function Profile({ userId }) {
             })
     }
     
-    
-    let toggleSwitch;
-    // self
-    if (currUserId === userId) {
-        if (publicity) {
-            toggleSwitch = <ToggleSwitch label="Public"></ToggleSwitch>;         
-        } else {
-            toggleSwitch = <ToggleSwitch label="Private"></ToggleSwitch>;
-        }
-    }
-    
     let followButton;
     let messageButton;
     if (currUserId !== userId) {
         followButton =  <div className={classes.followbtn} id={userId} onClick={handleClick}>+ Follow</div>
         messageButton = <GreyButton>Message</GreyButton> 
-}
+    }
 
-    return     <div className={classes.container}>
+    const publicityChangeHandler = (e) => {
+        // post
+        console.log("toggle",e);
+    };
+
+    return <div className={classes.container}>
    
     <div className={classes.private}>
         {/* label?? friends only/public/private?? */}
-    {toggleSwitch}
-</div>
+        {currUserId === userId && publicity && 
+            <ToggleSwitch 
+                label="Public" 
+                onChange={publicityChangeHandler}
+            ></ToggleSwitch>}
+        {currUserId === userId && !publicity && 
+            <ToggleSwitch 
+                label="Private" 
+                onChange={publicityChangeHandler}
+            ></ToggleSwitch>}
+    </div>
     <Card> 
-           <div className={classes.wrapper}>
-           <div className={classes.img}></div>
-            <div className={classes.column}>
-               <div className={classes.row}>
-                   <div className={classes.name}>{data.data[0].fname} {data.data[0].lname}</div>
-                   <div className={classes.btn}>
-                     {followButton}
-                     {messageButton}
-                   </div>
-               </div>
-           
-               <div className={classes.username}>{data.data[0].nname}</div> 
-               <div className={classes.followers}>
-                   {/* <div><span className={classes.count}>10k</span> followers</div>
-                   <div><span className={classes.count}>200</span> following</div> */}
-               </div>
-               <div>{data.data[0].about}</div>
-           </div>
-           <div>
-           </div>
-       </div>
+        <div className={classes.wrapper}>
+        <div className={classes.img}></div>
+        <div className={classes.column}>
+            <div className={classes.row}>
+                <div className={classes.name}>{data.data[0].fname} {data.data[0].lname}</div>
+                <div className={classes.btn}>
+                    {followButton}
+                    {messageButton}
+                </div>
+            </div>
+        
+            <div className={classes.username}>{data.data[0].nname}</div> 
+            <div className={classes.followers}>
+                {/* <div><span className={classes.count}>10k</span> followers</div>
+                <div><span className={classes.count}>200</span> following</div> */}
+            </div>
+            <div>{data.data[0].about}</div>
+        </div>
+        <div>
+        </div>
+    </div>
 
 
 

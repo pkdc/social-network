@@ -10,6 +10,7 @@ import ProfilePosts from "../profile/profilePost";
 import FollowRequest from "../requests/FollowRequest";
 
 // import classes from './ProfilePage.module.css';
+import { useParams } from "react-router-dom";
 import classes from './layout.module.css';
 
 function ProfilePage() {
@@ -18,8 +19,10 @@ function ProfilePage() {
     const { data } = useGet(`/post`)
 
     const sessionUrl = "http://localhost:8080/session";
-    const { state } = useLocation();
-    const { id } = state;
+    // const { state } = useLocation();
+    // const { id } = state;
+    const params = useParams();
+    const id = params.userId;
     console.log("id---", id); 
 
     const postData = data.filter(x => x.author == id)

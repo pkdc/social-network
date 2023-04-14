@@ -95,15 +95,16 @@ const TopMenu = () => {
                     <Link className={styles.lnk} to="/group">Groups</Link>
                     <Link className={styles.lnk} to="/messanger">Messenger</Link>
                     {/* <Link className={styles.lnk} to="/profile" id={currUserId} onClick={handleClick}>Profile</Link> */}
-                    <div id={currUserId} className={styles.lnk} onClick={handleClick}>
+                    {/* <div id={currUserId} className={styles.lnk} onClick={handleClick}> */}
                     {/* <img src={profile} alt=""/> */}
-                    Profile
+                    {/* Profile */}
                     {/* <Link className={styles.profile} to={`/profile/${userId}`}>
                     {!avatar && <img className={styles["avatar"]} src={require("../../images/"+`${defaultImagePath}`)} alt="" width={"35px"}/>}
                     {avatar && <Avatar src={avatar} alt="" width={"35px"}/>}
                     {nickname ? `${first} ${last} (${nickname})` : `${first} ${last}`}
                     </Link> */}
-                    </div>
+                    {/* </div> */}
+                    <Link className={styles.lnk} to={`/profile/${currUserId}`}>Profile</Link>
                 </div>
 
                 </div>
