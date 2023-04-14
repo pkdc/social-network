@@ -167,6 +167,7 @@ func Loginhandler() http.HandlerFunc {
 			Resp.Email = curUser.Email
 			Resp.About = curUser.About
 			Resp.Dob = curUser.Dob.String()
+			Resp.Public = int(curUser.Public)
 
 			if email == "f" {
 				Resp.Success = false

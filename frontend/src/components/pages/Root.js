@@ -20,7 +20,7 @@ const Root = (props) => {
         fetch(userUrl)
         .then(resp => resp.json())
         .then(data => {
-            console.log("chatmainarea user: ", data)
+            console.log("user (Root): ", data)
             let [usersArr] = Object.values(data); 
             setUsersList(usersArr);
         })

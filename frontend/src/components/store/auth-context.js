@@ -67,7 +67,7 @@ export const AuthContextProvider = (props) => {
         fetch(loginURL, reqOptions)
         .then(resp => resp.json())
         .then(data => {
-          console.log(data);
+          console.log("login", data);
           if (data.success) {
             setLoggedIn(true);
             localStorage.setItem("user_id", data.user_id);
@@ -77,6 +77,7 @@ export const AuthContextProvider = (props) => {
             data.nname && localStorage.setItem("nname", data.nname);
             data.avatar && localStorage.setItem("avatar", data.avatar);
             data.about && localStorage.setItem("about", data.about);
+            localStorage.setItem("public", data.public);
           }
         })
         .catch(err => {

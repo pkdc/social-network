@@ -10,7 +10,11 @@ import ToggleSwitch from "../UI/ToggleSwitch";
 import classes from './Profile.module.css';
 
 function Profile({ userId }) {
-    const [publicity, setPublicity] = useState(false); // false is private, true is public
+    // get stored publicity from localStorage
+    const selfPublicNum = +localStorage.getItem("public");
+    let selfPublicStatus;
+    selfPublicNum === 0 ? selfPublicStatus = false : selfPublicStatus = true;
+    const [publicity, setPublicity] = useState(selfPublicStatus); // 0, false is private, 1, true is public
 
     const currUserId = localStorage.getItem("user_id");
 
@@ -23,6 +27,7 @@ function Profile({ userId }) {
 
     // follow
     function handleClick(e) {
+        console.log("follow user", e.target.id);
         const targetId = e.target.id
         console.log("targetid", targetId)
         console.log("current user", currUserId)
@@ -72,23 +77,13 @@ function Profile({ userId }) {
         // e.target.checked && setPublicity(true); // wrong but css working
         setPublicity((prev) => (prev = !prev)); // right but css not working
 
-        // post
-        
+        let publicityNum;
+        publicity ? publicityNum = 1 : publicityNum = 0;
+        localStorage.setItem("public", publicityNum);
+
+        // post to store publicity to db
+
     };
-
-    // const setPublicChangeHandler = (e) => {
-    //     // post
-    //     console.log("toggle public", e);
-    //     console.log("(Public handler )toggle checkbox", e.target.checked);
-    //     setPublicity(true);
-    // };
-
-    // const setPrivateChangeHandler = (e) => {
-    //     // post
-    //     console.log("toggle private", e);
-    //     console.log("(Private handler) toggle checkbox", e.target.checked);
-    //     setPublicity(false);
-    // };
 
     return <div className={classes.container}>
    

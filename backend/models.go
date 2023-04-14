@@ -12,6 +12,7 @@ type AuthResponse struct {
 	Email   string `json:"email"`
 	Dob     string `json:"dob"`
 	Success bool   `json:"success"`
+	Public  int    `json:"public"`
 }
 
 type loginPayload struct {
