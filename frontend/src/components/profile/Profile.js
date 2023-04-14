@@ -10,7 +10,7 @@ import ToggleSwitch from "../UI/ToggleSwitch";
 import classes from './Profile.module.css';
 
 function Profile({ userId }) {
-    const [publicity, setPublicity] = useState(false); // false is public, true is private
+    const [publicity, setPublicity] = useState(false); // false is private, true is public
 
     const currUserId = localStorage.getItem("user_id");
 
@@ -57,6 +57,7 @@ function Profile({ userId }) {
             })
     }
     
+    // frd
     let followButton;
     let messageButton;
     if (currUserId !== userId) {
@@ -64,25 +65,51 @@ function Profile({ userId }) {
         messageButton = <GreyButton>Message</GreyButton> 
     }
 
-    const publicityChangeHandler = (e) => {
+    const setPublicityHandler = (e) => {
+        console.log("publicity", publicity);
+        console.log("toggle event", e);
+        // e.target.defaultChecked && setPublicity(false); // wrong but css working
+        // e.target.checked && setPublicity(true); // wrong but css working
+        setPublicity((prev) => (prev = !prev)); // right but css not working
+
         // post
-        console.log("toggle",e);
+        
     };
+
+    // const setPublicChangeHandler = (e) => {
+    //     // post
+    //     console.log("toggle public", e);
+    //     console.log("(Public handler )toggle checkbox", e.target.checked);
+    //     setPublicity(true);
+    // };
+
+    // const setPrivateChangeHandler = (e) => {
+    //     // post
+    //     console.log("toggle private", e);
+    //     console.log("(Private handler) toggle checkbox", e.target.checked);
+    //     setPublicity(false);
+    // };
 
     return <div className={classes.container}>
    
     <div className={classes.private}>
         {/* label?? friends only/public/private?? */}
+        {currUserId === userId && !publicity && 
+            <ToggleSwitch
+                label={"Private"}
+                value={"Private"}
+                // onClick={setPublicChangeHandler}
+                // onChange={setPublicChangeHandler}
+                onChange={setPublicityHandler}
+            ></ToggleSwitch>}
         {currUserId === userId && publicity && 
             <ToggleSwitch 
-                label="Public" 
-                onChange={publicityChangeHandler}
-            ></ToggleSwitch>}
-        {currUserId === userId && !publicity && 
-            <ToggleSwitch 
-                label="Private" 
-                onChange={publicityChangeHandler}
-            ></ToggleSwitch>}
+                label={"Public"}
+                value={"Public"}
+                // onClick={setPrivateChangeHandler}
+                // onChange={setPrivateChangeHandler}
+                onChange={setPublicityHandler}
+            ></ToggleSwitch>}            
     </div>
     <Card> 
         <div className={classes.wrapper}>
@@ -106,14 +133,8 @@ function Profile({ userId }) {
         <div>
         </div>
     </div>
-
-
-
-    </Card>
-    {/* })} */}
-    
+    </Card>    
     </div>
-
 }
 
 
