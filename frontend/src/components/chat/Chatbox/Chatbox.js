@@ -79,7 +79,7 @@ const Chatbox = (props) => {
         .then(resp => resp.json())
         .then(data => {
             console.log("old msg data: ", data);
-            if (data) {
+            if (data.data) {
                 const [oldMsgArr] = Object.values(data);
                 oldMsgArr.sort((b, a) => Date.parse(b.createdat) - Date.parse(a.createdat));
                 console.log("soreted old msg data", oldMsgArr);

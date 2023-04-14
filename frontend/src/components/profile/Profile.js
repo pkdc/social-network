@@ -20,7 +20,7 @@ function Profile({ userId }) {
 
     // get userId data
     const { error , isLoaded, data } = useGet(`/user?id=${userId}`)
-     console.log("user data", data.data)
+     console.log("user data (profile)", data.data)
 
       if (!isLoaded) return <div>Loading...</div>
       if (error) return <div>Error: {error.message}</div>
@@ -75,7 +75,11 @@ function Profile({ userId }) {
         console.log("toggle event", e);
         // e.target.defaultChecked && setPublicity(false); // wrong but css working
         // e.target.checked && setPublicity(true); // wrong but css working
-        setPublicity((prev) => (prev = !prev)); // right but css not working
+        // setPublicity((prev) => (
+        //     prev = !prev
+        //     // !prev ? setPublicity(true) : setPublicity(false) // also doesn't work correctly
+        // ));
+        setPublicity(prev => !prev); // right but css not working
 
         let publicityNum;
         publicity ? publicityNum = 1 : publicityNum = 0;
