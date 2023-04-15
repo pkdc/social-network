@@ -73,6 +73,8 @@ function Profile({ userId }) {
     const setPublicityHandler = (e) => {
         console.log("publicity", publicity);
         console.log("toggle event", e);
+        console.log("toggle prev checkbox status", e.target.defaultChecked);
+        console.log("toggle cur checkbox status", e.target.checked);
         // e.target.defaultChecked && setPublicity(false); // wrong but css working
         // e.target.checked && setPublicity(true); // wrong but css working
         // setPublicity((prev) => (

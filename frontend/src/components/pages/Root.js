@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 import TopNav from "../Navigation/TopNav";
 import ChatSidebar from "../Navigation/ChatSidebar";
 import UsersContext from "../store/users-context";
-import FollowersContext from "../store/followers-context";
+import FollowersContext from "../store/followers-context.js";
 import FollowingContext from "../store/following-context";
 import WebSocketContext from "../store/websocket-context";
 import { UsersContextProvider } from "../store/users-context";
@@ -14,7 +14,6 @@ const Root = (props) => {
 
     // const [usersList, setUsersList] = useState([]);
     const [joinedGroupList, setJoinedGroupList] = useState([]);
-
 
     // // get users
     // useEffect(() => {

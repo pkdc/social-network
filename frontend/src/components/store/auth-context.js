@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { UsersContext } from "./users-context";
 
 export const AuthContext = React.createContext({
     isLoggedIn: false,
@@ -16,6 +17,8 @@ export const AuthContextProvider = (props) => {
     const regURL = "http://localhost:8080/reg";
     const logoutURL = "http://localhost:8080/logout";
   
+  const usersCtx = useContext(UsersContext);
+
     const regHandler = (regPayloadObj) => {
         console.log("app.js", regPayloadObj);
         const reqOptions = {
@@ -36,6 +39,7 @@ export const AuthContextProvider = (props) => {
               if (data.success) {
                 console.log(data.success);
                 setRegSuccess(true);
+                usersCtx.onUsersChange();
               //   setLoggedIn(true);
               //   localStorage.setItem("user_id", data.user_id);
               //   localStorage.setItem("fname", data.fname);

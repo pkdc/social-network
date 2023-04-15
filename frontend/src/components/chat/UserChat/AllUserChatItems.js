@@ -1,11 +1,12 @@
 import UserChatItem from "./UserChatItem";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { UsersContext } from "../../store/users-context";
 
 const AllUserChatItems = (props) => {
 
     const ctx = useContext(UsersContext);
 
+    useEffect(() => ctx.onUsersChange(), []);
     const followersList = ctx.users; // temp
     console.log("user chat followers in AllUserChatItems", followersList);
     
