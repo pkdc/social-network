@@ -18,7 +18,7 @@ export const UsersContextProvider = (props) => {
         fetch(userUrl)
         .then(resp => resp.json())
         .then(data => {
-            console.log("user (context): ", data)
+            // console.log("user (context): ", data);
             let [usersArr] = Object.values(data); 
             setUsersList(usersArr);
         })
@@ -41,12 +41,12 @@ export const UsersContextProvider = (props) => {
     //     console.log("after logout", onlineUsersList);
     // };
 
-    console.log("onlineUsersList outside",onlineUsersList);
+    // console.log("onlineUsersList outside",onlineUsersList);
 
     return (
         <UsersContext.Provider value={{
             users: usersList,
-            onlineUsers: onlineUsersList,
+            // onlineUsers: onlineUsersList,
             onNewUserReg: getUsersHandler,
             // onOnline: userOnlineHandler,
             // onOffline: userOfflineHandler,

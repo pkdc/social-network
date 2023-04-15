@@ -913,8 +913,8 @@ func UserFollowingHandler() http.HandlerFunc {
 					fmt.Println("Unable to find followers")
 				}
 
-				for _, follower := range followings {
-					user, err := query.GetUserById(context.Background(), follower.SourceID)
+				for _, following := range followings {
+					user, err := query.GetUserById(context.Background(), following.TargetID)
 
 					if err != nil {
 						fmt.Println("Unable to find user")
