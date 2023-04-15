@@ -6,7 +6,7 @@ const AllUserChatItems = (props) => {
 
     const ctx = useContext(UsersContext);
 
-    useEffect(() => ctx.onUsersChange(), []);
+    useEffect(() => ctx.onNewUserReg(), []);
     const followersList = ctx.users; // temp
     console.log("user chat followers in AllUserChatItems", followersList);
     

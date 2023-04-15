@@ -1,9 +1,9 @@
 import React from "react";
 
 const FollowingContext = React.createContext({
-    following: []
+    following: [],
+    setFollowing: () => {},
 });
-
 
 
 export default FollowingContext;

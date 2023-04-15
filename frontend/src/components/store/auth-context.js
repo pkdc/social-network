@@ -39,7 +39,7 @@ export const AuthContextProvider = (props) => {
               if (data.success) {
                 console.log(data.success);
                 setRegSuccess(true);
-                usersCtx.onUsersChange();
+                usersCtx.onNewUserReg();
               //   setLoggedIn(true);
               //   localStorage.setItem("user_id", data.user_id);
               //   localStorage.setItem("fname", data.fname);
