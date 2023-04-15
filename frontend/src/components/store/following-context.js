@@ -1,19 +1,18 @@
 import React, { useState } from "react";
 
-const FollowingContext = React.createContext({
+export const FollowingContext = React.createContext({
     following: [],
     follow: () => {},
     unfollow: () => {},
 });
 
-const FollowingContextProvider = (props) => {
+export const FollowingContextProvider = (props) => {
     const [following, setFollowing] = useState([]);
-
-    
 
     const followHandler = (followUserId) => {
         setFollowing(prevFollowing => [...prevFollowing, followUserId]);
     };
+
     const unfollowHandler = (unfollowUserId) => {
         setFollowing(prevFollowing => {
             prevFollowing.filter(() => unfollowUserId);
@@ -30,5 +29,3 @@ const FollowingContextProvider = (props) => {
         </FollowingContext.Provider>
     );
 };
-
-export default FollowingContext;

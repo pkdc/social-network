@@ -7,6 +7,7 @@ import FollowersContext from "../store/followers-context.js";
 import FollowingContext from "../store/following-context";
 import WebSocketContext from "../store/websocket-context";
 import { UsersContextProvider } from "../store/users-context";
+import { FollowingContextProvider } from "../store/following-context";
 
 const Root = (props) => {
     // const userFollowersUrl = "http://localhost:8080/user-follower";
@@ -59,13 +60,15 @@ const Root = (props) => {
 
     return <>
     <UsersContextProvider>
-        <TopNav/>
-        <WebSocketContext.Provider value={{
-            websocket: socket,
-        }}>
-            {socket ? <ChatSidebar/> : <p>Websocket trying to connect...</p>}
-        </WebSocketContext.Provider>
-        <Outlet/>
+        <FollowingContextProvider>
+            <TopNav/>
+            <WebSocketContext.Provider value={{
+                websocket: socket,
+            }}>
+                {socket ? <ChatSidebar/> : <p>Websocket trying to connect...</p>}
+            </WebSocketContext.Provider>
+            <Outlet/>
+        </FollowingContextProvider>
     </UsersContextProvider>
     </>
 };
