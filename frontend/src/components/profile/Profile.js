@@ -66,11 +66,24 @@ function Profile({ userId }) {
             })
     }
     
+    const unfollowHandler = (e) => {
+        console.log("unfollow user", e.target.id);
+
+        // followingCtx.unfollow(e.target.id);
+        // post
+    };
+
     // frd
     let followButton;
     let messageButton;
     if (currUserId !== userId) {
-        followButton =  <div className={classes.followbtn} id={userId} onClick={handleClick}>+ Follow</div>
+        let currentlyFollowing = followingCtx.following.some(followingUser => followingUser.id === +userId);
+        console.log("currentlyFollowing", currentlyFollowing);
+        if (currentlyFollowing) {
+            followButton = <div className={classes.followbtn} id={userId} onClick={unfollowHandler}>- UnFollow</div>
+        } else {
+            followButton = <div className={classes.followbtn} id={userId} onClick={handleClick}>+ Follow</div>
+        }       
         messageButton = <GreyButton>Message</GreyButton> 
     }
 

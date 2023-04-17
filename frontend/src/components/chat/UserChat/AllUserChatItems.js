@@ -18,7 +18,7 @@ const AllUserChatItems = (props) => {
         return followingCtx.following.some((followingUser) => {
             // console.log("fid", followingUser.id);
             // console.log("uid", user.id);
-            return followingUser.id === user.id;
+            if (followingUser && user) return followingUser.id === user.id;
         });
     });
     console.log("followingList in AllUserChatItems", followingList);
