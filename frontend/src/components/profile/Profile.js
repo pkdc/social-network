@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import useGet from "../fetch/useGet";
 import Post from "../posts/Post";
@@ -6,7 +6,7 @@ import Card from "../UI/Card";
 import GreyButton from "../UI/GreyButton";
 import SmallButton from "../UI/SmallButton";
 import ToggleSwitch from "../UI/ToggleSwitch";
-
+import { FollowingContext } from "../store/following-context";
 import classes from './Profile.module.css';
 
 function Profile({ userId }) {
@@ -16,9 +16,11 @@ function Profile({ userId }) {
     selfPublicNum === 0 ? selfPublicStatus = false : selfPublicStatus = true;
     const [publicity, setPublicity] = useState(selfPublicStatus); // 0, false is private, 1, true is public
 
+    const followingCtx = useContext(FollowingContext);
+
     const currUserId = localStorage.getItem("user_id");
 
-    // get userId data
+    // get userId (self) data
     const { error , isLoaded, data } = useGet(`/user?id=${userId}`)
      console.log("user data (profile)", data.data)
 
@@ -27,7 +29,9 @@ function Profile({ userId }) {
 
     // follow
     function handleClick(e) {
+        followingCtx.follow(e.target.id);
         console.log("follow user", e.target.id);
+        console.log("cur user is following (profile)", followingCtx.following);
         const targetId = e.target.id
         console.log("targetid", targetId)
         console.log("current user", currUserId)

@@ -1,32 +1,45 @@
 import UserChatItem from "./UserChatItem";
 import { useContext, useEffect } from "react";
 import { UsersContext } from "../../store/users-context";
+import { FollowingContext } from "../../store/following-context";
 
 const AllUserChatItems = (props) => {
 
-    const ctx = useContext(UsersContext);
+    const usersCtx = useContext(UsersContext);
+    const followingCtx = useContext(FollowingContext);
 
-    useEffect(() => ctx.onNewUserReg(), []);
-    const followersList = ctx.users; // temp
-    console.log("user chat followers in AllUserChatItems", followersList);
+    useEffect(() => followingCtx.getFollowing(), []);
+    console.log("cur user is following (AllUserChatItems)", followingCtx.following);
+
+    useEffect(() => usersCtx.onNewUserReg(), []);
+    console.log("users in AllUserChatItems", usersCtx.users);
     
-    const openUserChatboxHandler = (followerId) => props.onOpenChatbox(followerId);
+    const followingList = usersCtx.users.filter((user) => {
+        return followingCtx.following.some((followingUser) => {
+            // console.log("fid", followingUser.id);
+            // console.log("uid", user.id);
+            return followingUser.id === user.id;
+        });
+    });
+    console.log("followingList in AllUserChatItems", followingList);
+
+    const openUserChatboxHandler = (followingId) => props.onOpenChatbox(followingId);
 
     const curUserId = +localStorage.getItem("user_id");
     return (
         <div>
-            {followersList && followersList.map((follower) => {
+            {followingList && followingList.map((following) => {
                 // console.log("each follower", follower);
                 // console.log("curUserId: ", curUserId);
                 // console.log("follower.id", follower.id);
-                {if (curUserId !== follower.id) {
+                {if (curUserId !== following.id) {
                     return <UserChatItem 
-                    key={follower.id}
-                    id={follower.id}
-                    avatar={follower.avatar}
-                    fname={follower.fname}
-                    lname={follower.lname}
-                    nname={follower.nname}
+                    key={following.id}
+                    id={following.id}
+                    avatar={following.avatar}
+                    fname={following.fname}
+                    lname={following.lname}
+                    nname={following.nname}
                     onOpenChatbox={openUserChatboxHandler}
                 />}
                 }
