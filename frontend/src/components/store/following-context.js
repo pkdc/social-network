@@ -30,13 +30,9 @@ export const FollowingContextProvider = (props) => {
         console.log("following (ctx)", following)
     };
 
-    const followHandler = (followUserId) => {
-        // console.log("cur user is gonna follow (ctx) ", followUserId);
-        const followUser = usersCtx.users.find(user => user.id === followUserId);
+    const followHandler = (followUser) => {
         setFollowing(prevFollowing => [...prevFollowing, followUser]);
-        // console.log("cur user is following (ctx) ", following);
     };
-    // console.log("cur user is following (ctx) (outsid e)", following);
 
     const unfollowHandler = (unfollowUserId) => {
         const unfollowUser = usersCtx.users.find(user => user.id === unfollowUserId);

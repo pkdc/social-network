@@ -7,6 +7,7 @@ import GreyButton from "../UI/GreyButton";
 import SmallButton from "../UI/SmallButton";
 import ToggleSwitch from "../UI/ToggleSwitch";
 import { FollowingContext } from "../store/following-context";
+import { UsersContext } from "../store/users-context";
 import classes from './Profile.module.css';
 
 function Profile({ userId }) {
@@ -17,6 +18,7 @@ function Profile({ userId }) {
     const [publicity, setPublicity] = useState(selfPublicStatus); // 0, false is private, 1, true is public
 
     const followingCtx = useContext(FollowingContext);
+    const usersCtx = useContext(UsersContext);
 
     const currUserId = localStorage.getItem("user_id");
 
@@ -29,7 +31,9 @@ function Profile({ userId }) {
 
     // follow
     function handleClick(e) {
-        followingCtx.follow(e.target.id);
+        const followUser = usersCtx.users.find(user => user.id === e.target.id);
+        followUser && followingCtx.follow(followUser);
+        
         console.log("follow user", e.target.id);
         console.log("cur user is following (profile)", followingCtx.following);
         const targetId = e.target.id
