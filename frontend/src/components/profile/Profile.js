@@ -34,8 +34,12 @@ function Profile({ userId }) {
 
     // follow
     function handleClick(e) {
-        const followUser = usersCtx.users.find(user => user.id === e.target.id);
+        const followUser = usersCtx.users.find(user => user.id === +e.target.id);
+        console.log("found user (profile)", followUser);
         followUser && followingCtx.follow(followUser);
+        // if (followUser) {
+        //     followingCtx.following = [...followingCtx.following, followUser];
+        // }
         setCurrentlyFollowing(true);
 
         console.log("follow user", e.target.id);

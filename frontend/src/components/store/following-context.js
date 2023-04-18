@@ -32,12 +32,14 @@ export const FollowingContextProvider = (props) => {
 
     const followHandler = (followUser) => {
         setFollowing(prevFollowing => [...prevFollowing, followUser]);
+        console.log("following (follow) (ctx)", following);
     };
 
     const unfollowHandler = (unfollowUser) => {
         setFollowing(prevFollowing => {
             prevFollowing.filter(() => unfollowUser);
         });
+        console.log("following (unfollow) (ctx)", following);
     };
 
     useEffect(() => getFollowingHandler, []);

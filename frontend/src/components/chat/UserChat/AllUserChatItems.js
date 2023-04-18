@@ -1,5 +1,5 @@
 import UserChatItem from "./UserChatItem";
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UsersContext } from "../../store/users-context";
 import { FollowingContext } from "../../store/following-context";
 
@@ -8,9 +8,7 @@ const AllUserChatItems = (props) => {
     const usersCtx = useContext(UsersContext);
     const followingCtx = useContext(FollowingContext);
 
-    // useEffect(() => followingCtx.getFollowing(), []);
     console.log("cur user is following (AllUserChatItems)", followingCtx.following);
-    // console.log("cur user is following props (AllUserChatItems)", props.following);
     useEffect(() => usersCtx.onNewUserReg(), []);
     console.log("users in AllUserChatItems", usersCtx.users);
     
@@ -21,7 +19,7 @@ const AllUserChatItems = (props) => {
             if (followingUser && user) return followingUser.id === user.id;
         });
     });
-    console.log("followingList in AllUserChatItems", followingList);
+    console.log("followingList in AllUserChatItems", followingList); // not accurate
 
     const openUserChatboxHandler = (followingId) => props.onOpenChatbox(followingId);
 
