@@ -40,7 +40,7 @@ export const FollowingContextProvider = (props) => {
         });
     };
 
-    // useEffect(() => getFollowingHandler, []);
+    useEffect(() => getFollowingHandler, []);
 
     return (
         <FollowingContext.Provider value={{

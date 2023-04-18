@@ -21,6 +21,7 @@ function Profile({ userId }) {
     const usersCtx = useContext(UsersContext);
 
     const currUserId = localStorage.getItem("user_id");
+    const [currentlyFollowing, setCurrentlyFollowing] = useState(followingCtx.following.some(followingUser => followingUser.id === +userId));
 
     // get userId (self) data
     const { error , isLoaded, data } = useGet(`/user?id=${userId}`)
@@ -33,7 +34,8 @@ function Profile({ userId }) {
     function handleClick(e) {
         const followUser = usersCtx.users.find(user => user.id === e.target.id);
         followUser && followingCtx.follow(followUser);
-        
+        setCurrentlyFollowing(true);
+
         console.log("follow user", e.target.id);
         console.log("cur user is following (profile)", followingCtx.following);
         const targetId = e.target.id
@@ -74,15 +76,15 @@ function Profile({ userId }) {
         console.log("unfollow user", e.target.id);
         const unfollowUser = usersCtx.users.find(user => user.id === e.target.id);
         unfollowUser && followingCtx.unfollow(unfollowUser);
-        
+        setCurrentlyFollowing(false);
         // delete from db
     };
 
     // frd
     let followButton;
     let messageButton;
+    
     if (currUserId !== userId) {
-        let currentlyFollowing = followingCtx.following.some(followingUser => followingUser.id === +userId);
         console.log("currentlyFollowing", currentlyFollowing);
         if (currentlyFollowing) {
             followButton = <div className={classes.followbtn} id={userId} onClick={unfollowHandler}>- UnFollow</div>
