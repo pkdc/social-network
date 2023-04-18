@@ -72,9 +72,10 @@ function Profile({ userId }) {
     
     const unfollowHandler = (e) => {
         console.log("unfollow user", e.target.id);
-
-        // followingCtx.unfollow(e.target.id);
-        // post
+        const unfollowUser = usersCtx.users.find(user => user.id === e.target.id);
+        unfollowUser && followingCtx.unfollow(unfollowUser);
+        
+        // delete from db
     };
 
     // frd

@@ -14,7 +14,7 @@ const Root = (props) => {
     // const userUrl = "http://localhost:8080/user";
 
     // const [usersList, setUsersList] = useState([]);
-    const [joinedGroupList, setJoinedGroupList] = useState([]);
+    // const [joinedGroupList, setJoinedGroupList] = useState([]);
 
     // // get users
     // useEffect(() => {

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import useGet from "../fetch/useGet";
 import { UsersContext } from "./users-context";
 
@@ -34,12 +34,13 @@ export const FollowingContextProvider = (props) => {
         setFollowing(prevFollowing => [...prevFollowing, followUser]);
     };
 
-    const unfollowHandler = (unfollowUserId) => {
-        const unfollowUser = usersCtx.users.find(user => user.id === unfollowUserId);
+    const unfollowHandler = (unfollowUser) => {
         setFollowing(prevFollowing => {
-            prevFollowing.filter(() => unfollowUserId);
+            prevFollowing.filter(() => unfollowUser);
         });
     };
+
+    // useEffect(() => getFollowingHandler, []);
 
     return (
         <FollowingContext.Provider value={{
