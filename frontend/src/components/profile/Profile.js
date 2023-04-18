@@ -21,8 +21,10 @@ function Profile({ userId }) {
     const usersCtx = useContext(UsersContext);
 
     const currUserId = localStorage.getItem("user_id");
-    const [currentlyFollowing, setCurrentlyFollowing] = useState(followingCtx.following.some(followingUser => followingUser.id === +userId));
+    const [currentlyFollowing, setCurrentlyFollowing] = useState(false);
 
+    useEffect(() => setCurrentlyFollowing(followingCtx.following.some(followingUser => followingUser.id === +userId)), []);
+    
     // get userId (self) data
     const { error , isLoaded, data } = useGet(`/user?id=${userId}`)
      console.log("user data (profile)", data.data)

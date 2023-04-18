@@ -10,7 +10,7 @@ const AllUserChatItems = (props) => {
 
     // useEffect(() => followingCtx.getFollowing(), []);
     console.log("cur user is following (AllUserChatItems)", followingCtx.following);
-
+    // console.log("cur user is following props (AllUserChatItems)", props.following);
     useEffect(() => usersCtx.onNewUserReg(), []);
     console.log("users in AllUserChatItems", usersCtx.users);
     
