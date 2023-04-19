@@ -91,6 +91,7 @@ export const AuthContextProvider = (props) => {
 
       const logoutHandler = () => {
         localStorage.clear();
+        localStorage.removeItem("following");
      
         const reqOptions = {
           method: "GET",

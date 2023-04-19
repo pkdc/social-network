@@ -13,6 +13,7 @@ const AllUserChatItems = (props) => {
     console.log("users in AllUserChatItems", usersCtx.users);
     
     const followingList = usersCtx.users.filter((user) => {
+        if (followingCtx.following)
         return followingCtx.following.some((followingUser) => {
             // console.log("fid", followingUser.id);
             // console.log("uid", user.id);
