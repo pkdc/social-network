@@ -43,7 +43,7 @@ export const FollowingContextProvider = (props) => {
             setFollowing([followUser]);
             localStorage.setItem("following", JSON.stringify([followUser]));
         }
-        console.log("stored fol", JSON.parse(localStorage.getItem("following")));
+        console.log("locally stored following", JSON.parse(localStorage.getItem("following")));
     };
 
     const unfollowHandler = (unfollowUser) => {

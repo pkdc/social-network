@@ -23,10 +23,9 @@ function Profile({ userId }) {
     const currUserId = localStorage.getItem("user_id");
     const [currentlyFollowing, setCurrentlyFollowing] = useState(false);
 
-
     useEffect(() => {
         const storedFollowing = JSON.parse(localStorage.getItem("following"));
-        console.log("stored fol", storedFollowing);
+        console.log("stored following (profile)", storedFollowing);
         followingCtx.following && setCurrentlyFollowing(followingCtx.following.some(followingUser => followingUser.id === +userId))
     }, []);
     
