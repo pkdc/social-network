@@ -4,6 +4,7 @@ import { UsersContext } from "./users-context";
 
 export const FollowingContext = React.createContext({
     following: [],
+    setFollowing: () => {},
     getFollowing: () => {},
     follow: (followUser) => {},
     unfollow: (unfollowUser) => {},
@@ -31,17 +32,28 @@ export const FollowingContextProvider = (props) => {
     };
 
     const followHandler = (followUser) => {
-        following && setFollowing(prevFollowing => [...prevFollowing, followUser]);
-        localStorage.setItem("following", JSON.stringify(following));
-        // console.log("following (follow) (ctx)", following); // not accurate
+        setFollowing([followUser])
+        if (following) {
+            setFollowing(prevFollowing => [...prevFollowing, followUser]);
+
+            const storedFollowing = JSON.parse(localStorage.getItem("following"));
+            const curFollowing = [...storedFollowing, followUser];
+            localStorage.setItem("following", JSON.stringify(curFollowing));
+        } else {
+            setFollowing([followUser]);
+            localStorage.setItem("following", JSON.stringify([followUser]));
+        }
+        console.log("stored fol", JSON.parse(localStorage.getItem("following")));
     };
 
     const unfollowHandler = (unfollowUser) => {
         setFollowing(prevFollowing => {
             prevFollowing.filter(() => unfollowUser);
         });
-        localStorage.setItem("following unfollow", JSON.stringify(following));
+        localStorage.setItem("following", JSON.stringify(following));
         // console.log("following (unfollow) (ctx)", following); // not accurate
+        const storedFollowing = JSON.parse(localStorage.getItem("following"));
+        console.log("stored fol", storedFollowing);
     };
 
     // useEffect(() => getFollowingHandler, []);
@@ -52,6 +64,7 @@ export const FollowingContextProvider = (props) => {
     return (
         <FollowingContext.Provider value={{
             following: following,
+            setFollowing: setFollowing,
             getFollowing: getFollowingHandler,
             follow: followHandler,
             unfollow: unfollowHandler,
