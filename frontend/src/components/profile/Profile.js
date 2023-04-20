@@ -1,5 +1,4 @@
 import { useEffect, useState, useContext } from "react";
-import { useParams } from "react-router-dom";
 import useGet from "../fetch/useGet";
 import Post from "../posts/Post";
 import Card from "../UI/Card";
@@ -12,10 +11,14 @@ import classes from './Profile.module.css';
 
 function Profile({ userId }) {
     // get stored publicity from localStorage
+    // let selfPublicStatus;
+    // selfPublicNum === 0 ? selfPublicStatus = false : selfPublicStatus = true;
+    const [publicity, setPublicity] = useState(false); // 0, false is private, 1, true is public
     const selfPublicNum = +localStorage.getItem("public");
-    let selfPublicStatus;
-    selfPublicNum === 0 ? selfPublicStatus = false : selfPublicStatus = true;
-    const [publicity, setPublicity] = useState(selfPublicStatus); // 0, false is private, 1, true is public
+    console.log("stored publicity (profile)", selfPublicNum);
+    useEffect(() => {
+        selfPublicNum ? setPublicity(true) : setPublicity(false);
+    }, [selfPublicNum]);
 
     const followingCtx = useContext(FollowingContext);
     const usersCtx = useContext(UsersContext);
@@ -27,7 +30,7 @@ function Profile({ userId }) {
         const storedFollowing = JSON.parse(localStorage.getItem("following"));
         console.log("stored following (profile)", storedFollowing);
         followingCtx.following && setCurrentlyFollowing(followingCtx.following.some(followingUser => followingUser.id === +userId))
-    }, [followingCtx.following]);
+    }, [followingCtx.following, userId]);
     
     // get userId (self) data
     const { error , isLoaded, data } = useGet(`/user?id=${userId}`)

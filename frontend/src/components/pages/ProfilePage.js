@@ -17,7 +17,7 @@ import classes from './layout.module.css';
 function ProfilePage() {
     const [commentData, setCommentData] = useState([]);
 
-    const followingCtx = useContext(FollowingContext);
+    // const followingCtx = useContext(FollowingContext);
 
     const { data } = useGet(`/post`)
 
@@ -28,7 +28,7 @@ function ProfilePage() {
     const id = params.userId;
     console.log("id---", id); 
 
-    const postData = data.filter(x => x.author == id)
+    const postData = data.filter(x => x.author === +id)
 
     // get comments
     useEffect(() => {
