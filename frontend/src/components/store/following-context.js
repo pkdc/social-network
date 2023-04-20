@@ -32,7 +32,6 @@ export const FollowingContextProvider = (props) => {
     };
 
     const followHandler = (followUser) => {
-        setFollowing([followUser])
         if (following) {
             setFollowing(prevFollowing => [...prevFollowing, followUser]);
 
