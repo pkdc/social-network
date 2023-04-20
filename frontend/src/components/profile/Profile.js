@@ -27,7 +27,7 @@ function Profile({ userId }) {
         const storedFollowing = JSON.parse(localStorage.getItem("following"));
         console.log("stored following (profile)", storedFollowing);
         followingCtx.following && setCurrentlyFollowing(followingCtx.following.some(followingUser => followingUser.id === +userId))
-    }, []);
+    }, [followingCtx.following]);
     
     // get userId (self) data
     const { error , isLoaded, data } = useGet(`/user?id=${userId}`)

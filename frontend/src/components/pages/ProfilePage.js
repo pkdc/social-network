@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import useGet from "../fetch/useGet";
 import AllPosts from "../posts/AllPosts"
@@ -8,6 +8,7 @@ import Following from "../profile/following";
 import Profile from "../profile/Profile";
 import ProfilePosts from "../profile/profilePost";
 import FollowRequest from "../requests/FollowRequest";
+import { FollowingContext } from "../store/following-context";
 
 // import classes from './ProfilePage.module.css';
 import { useParams } from "react-router-dom";
@@ -15,6 +16,8 @@ import classes from './layout.module.css';
 
 function ProfilePage() {
     const [commentData, setCommentData] = useState([]);
+
+    const followingCtx = useContext(FollowingContext);
 
     const { data } = useGet(`/post`)
 
@@ -43,10 +46,21 @@ function ProfilePage() {
         );
     }, []);
 
+    // let curFollowing;
+    // const [curFollowing, setCurFollowing] = useState(false);
+    // const checkCurFollowing = () => {
+    //     const storedFollowing = JSON.parse(localStorage.getItem("following"));
+    //     console.log("stored following (profile)", storedFollowing);
+    //     if (followingCtx.following) setCurFollowing(followingCtx.following.some(followingUser => followingUser.id === +id))
+    // };
+
+    // useEffect(() => checkCurFollowing(), [followingCtx.following]);
+    
+
     return <div className={classes.container}>
      <div className={classes.mid}>
         {/* <CreatePost></CreatePost> */}
-        <Profile userId={id}></Profile>
+        <Profile userId={id} ></Profile>
         {/* <ProfilePosts userId={id}></ProfilePosts> */}
         <AllPosts userId={id} posts={postData} comments={commentData}></AllPosts>
 
