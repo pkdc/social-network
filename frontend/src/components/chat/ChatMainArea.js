@@ -10,6 +10,7 @@ const ChatMainArea = (props) => {
     const [chatboxOpen, setChatboxOpen] = useState(false);
     const [followerId, setFollowerId] = useState(0);
     const [grpId, setGrpId] = useState(0);
+    const [chatboxReceivesMsg, setChatboxReceivesMsg] = useState(0);
 
     const ctx = useContext(AuthContext);
 
@@ -25,7 +26,8 @@ const ChatMainArea = (props) => {
     };
 
     const receiveNewMsgHandler = (chatboxId) => {
-        console.log();
+        console.log("receiving msg from/in chatbox : ", chatboxId);
+        setChatboxReceivesMsg(chatboxId);
     };
 
     console.log("loggedIn at UserChatMainArea", ctx.isLoggedIn);
@@ -35,7 +37,11 @@ const ChatMainArea = (props) => {
         className={styles["list"]}
         style={{height: window.innerHeight -110}}
         >
-            {!props.grpChat && !chatboxOpen && <AllUserChatItems onOpenChatbox={openUserChatboxHandler}/>}
+            {!props.grpChat && !chatboxOpen &&
+                <AllUserChatItems 
+                    onOpenChatbox={openUserChatboxHandler}
+                    whichItem={chatboxReceivesMsg}
+                />}
             {!props.grpChat && chatboxOpen &&
                 <Chatbox 
                     chatboxId={followerId} 

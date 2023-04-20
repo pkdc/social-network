@@ -8,6 +8,7 @@ import FollowingContext from "../store/following-context";
 import WebSocketContext from "../store/websocket-context";
 import { UsersContextProvider } from "../store/users-context";
 import { FollowingContextProvider } from "../store/following-context";
+import { WebSocketContextProvider } from "../store/websocket-context";
 
 const Root = (props) => {
     // const userFollowersUrl = "http://localhost:8080/user-follower";
@@ -32,29 +33,29 @@ const Root = (props) => {
 
     // console.log("user chat users (root)", usersList);
 
-    const [socket, setSocket] = useState(null);
+    // const [socket, setSocket] = useState(null);
 
     // websocket
-    useEffect(() => {
-        // const newSocket = new WebSocket("ws://localhost:8080/ws");
-        const newSocket = new WebSocket("ws://localhost:8080/ws")
+//     useEffect(() => {
+//         // const newSocket = new WebSocket("ws://localhost:8080/ws");
+//         const newSocket = new WebSocket("ws://localhost:8080/ws")
   
-        newSocket.onopen = () => {
-            console.log("ws connected");
-            setSocket(newSocket);
-        };
+//         newSocket.onopen = () => {
+//             console.log("ws connected");
+//             setSocket(newSocket);
+//         };
         
-        newSocket.onclose = () => {
-            console.log("bye ws");
-            setSocket(null);
-        };
+//         newSocket.onclose = () => {
+//             console.log("bye ws");
+//             setSocket(null);
+//         };
   
-        newSocket.onerror = (err) => console.log("ws error");
+//         newSocket.onerror = (err) => console.log("ws error");
   
-        return () => {
-            newSocket.close();
-        };   
-  }, []);
+//         return () => {
+//             newSocket.close();
+//         };   
+//   }, []);
 
 //   console.log("socket: ", socket);
 
@@ -62,11 +63,9 @@ const Root = (props) => {
     <UsersContextProvider>
         <FollowingContextProvider>
             <TopNav/>
-            <WebSocketContext.Provider value={{
-                websocket: socket,
-            }}>
-                {socket ? <ChatSidebar/> : <p>Websocket trying to connect...</p>}
-            </WebSocketContext.Provider>
+                <WebSocketContextProvider>
+                    <ChatSidebar/>
+                </WebSocketContextProvider>
             <Outlet/>
         </FollowingContextProvider>
     </UsersContextProvider>

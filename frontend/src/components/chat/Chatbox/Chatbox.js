@@ -1,6 +1,6 @@
 import { useEffect, useContext, useState } from "react";
 import UsersContext from "../../store/users-context";
-import WebSocketContext from "../../store/websocket-context";
+import { WebSocketContext } from "../../store/websocket-context";
 import ChatDetailTopBar from "./ChatDetailTopBar";
 import ChatboxMsgArea from "../Chatbox/ChatboxMsgArea";
 import SendMsg from "./SendMsg";
@@ -39,13 +39,16 @@ const Chatbox = (props) => {
         };
         console.log("new Received msg data", newReceivedMsgObj);
         setNewMsgs((prevNewMsgs) => [...prevNewMsgs, newReceivedMsgObj]);
+    
+        console.log("ws receives msg from : ", msgObj.sourceid);
+        props.onReceiveNewMsg(msgObj.sourceid);
     };
 
     // send msg to ws
     const sendMsgHandler = (msg) => {
         let privateChatPayloadObj = {};
         privateChatPayloadObj["label"] = "private";
-        // privateChatPayloadObj["id"] = Date.now(); // temp
+        privateChatPayloadObj["id"] = Date.now();
         privateChatPayloadObj["targetid"] = friendId;
         privateChatPayloadObj["sourceid"] = selfId;
         privateChatPayloadObj["message"] = msg;
@@ -66,7 +69,7 @@ const Chatbox = (props) => {
         // wsCtx.websocket.send(msg);
     };
 
-    console.log("new msg data (outside)", newMsgsData);
+    // console.log("new msg data (outside)", newMsgsData);
 
     const closeChatboxHandler = () => {
         props.onCloseChatbox();

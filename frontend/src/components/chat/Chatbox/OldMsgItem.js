@@ -2,7 +2,7 @@ import styles from "./OldMsgItem.module.css";
 
 const OldMsgItem = (props) => {
     const selfId = +localStorage.getItem("user_id");
-    console.log("selfId old msg", selfId);
+    // console.log("selfId old msg", selfId);
     const self = props.sourceid === selfId;
     return (
         <div className={`${self ? styles["self-msg"] : styles["frd-msg"]}`}>

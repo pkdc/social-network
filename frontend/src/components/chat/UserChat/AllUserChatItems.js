@@ -24,6 +24,13 @@ const AllUserChatItems = (props) => {
 
     const openUserChatboxHandler = (followingId) => props.onOpenChatbox(followingId);
 
+    // useEffect(() => {
+    //     console.log("Item (eff)", props.whichItem, "receives a new msg");
+    // }, [props.whichItem]);
+    if (props.whichItem) {
+        console.log("Item", props.whichItem, "receives a new msg");
+    }
+
     const curUserId = +localStorage.getItem("user_id");
     return (
         <div>
