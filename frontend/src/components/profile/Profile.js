@@ -22,7 +22,7 @@ function Profile({ userId }) {
 
     const followingCtx = useContext(FollowingContext);
     const usersCtx = useContext(UsersContext);
-
+    console.log("all users (profile)", usersCtx.users);
     const currUserId = localStorage.getItem("user_id");
     const [currentlyFollowing, setCurrentlyFollowing] = useState(false);
 

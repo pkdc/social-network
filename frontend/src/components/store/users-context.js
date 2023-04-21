@@ -27,6 +27,7 @@ export const UsersContextProvider = (props) => {
         );
     };
 
+    useEffect(getUsersHandler, []);
     // const userOnlineHandler = (onlineUser) => {
     //     console.log("before login",onlineUsersList);
     //     setOnlineUsersList(prevOnlineUsersList => [...prevOnlineUsersList, onlineUser]);

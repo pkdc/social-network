@@ -13,7 +13,6 @@ const Chatbox = (props) => {
 
     const [oldMsgData, setOldMsgData] = useState([]);
     const [newMsgsData, setNewMsgs] = useState([]);
-    const [nextMsgId, setNextMsgId] = useState(0);
 
     const selfId = +localStorage.getItem("user_id");
     const friendId = props.chatboxId;
@@ -43,7 +42,7 @@ const Chatbox = (props) => {
     
         console.log("ws receives msg from : ", msgObj.sourceid);
         // props.onReceiveNewMsg(msgObj.sourceid);
-        followingCtx.receiveMsgHandler(friendId, props.open);
+        followingCtx.receiveMsgFollowing(friendId, null);
         
     };
 
