@@ -4,6 +4,7 @@ import { WebSocketContext } from "../../store/websocket-context";
 import ChatDetailTopBar from "./ChatDetailTopBar";
 import ChatboxMsgArea from "../Chatbox/ChatboxMsgArea";
 import SendMsg from "./SendMsg";
+import { FollowingContext } from "../../store/following-context";
 import styles from "./Chatbox.module.css";
 
 const Chatbox = (props) => {
@@ -20,7 +21,7 @@ const Chatbox = (props) => {
 
     // const usersCtx = useContext(UsersContext);
     // console.log("chatbox: ", usersCtx.users);
-
+    const followingCtx = useContext(FollowingContext);
     const wsCtx = useContext(WebSocketContext);
     // console.log("ws in Chatbox: ",wsCtx.websocket);
     // const [msg, setMsg] = useState("");
@@ -41,31 +42,43 @@ const Chatbox = (props) => {
         setNewMsgs((prevNewMsgs) => [...prevNewMsgs, newReceivedMsgObj]);
     
         console.log("ws receives msg from : ", msgObj.sourceid);
-        props.onReceiveNewMsg(msgObj.sourceid);
+        // props.onReceiveNewMsg(msgObj.sourceid);
+        followingCtx.receiveMsgHandler(friendId, props.open);
+        
     };
 
     // send msg to ws
     const sendMsgHandler = (msg) => {
-        let privateChatPayloadObj = {};
-        privateChatPayloadObj["label"] = "private";
-        privateChatPayloadObj["id"] = Date.now();
-        privateChatPayloadObj["targetid"] = friendId;
-        privateChatPayloadObj["sourceid"] = selfId;
-        privateChatPayloadObj["message"] = msg;
+        let chatPayloadObj = {};
+        if (!props.grp) {
+            chatPayloadObj["label"] = "private";
+            chatPayloadObj["targetid"] = friendId;
+        } else {
+            chatPayloadObj["label"] = "group" ;
+            // privateChatPayloadObj["groupid"] = grpid;
+        }      
+        chatPayloadObj["id"] = Date.now();
+        chatPayloadObj["sourceid"] = selfId;
+        chatPayloadObj["message"] = msg;
 
         const createdatObj = new Date();
-        const selfNewMsgObject = {
-            id: Date.now(), // id is assigned by autoincrement
-            targetid: friendId,
-            sourceid: selfId,
-            message: msg,
-            createdat: createdatObj.toString(),
-        }
 
+        const selfNewMsgObject = {};
+        if (!props.grp) {
+            selfNewMsgObject["targetid"] = friendId;
+            
+        } else {
+            // selfNewMsgObject["groupid"] = grpid;
+        }  
+        selfNewMsgObject["id"] = Date.now();
+        selfNewMsgObject["sourceid"] = selfId;
+        selfNewMsgObject["message"] = msg;
+        selfNewMsgObject["createdat"] = createdatObj.toString();
+        
         console.log("new self msg data", selfNewMsgObject);
         setNewMsgs((prevNewMsgs) => [...prevNewMsgs, selfNewMsgObject]);
 
-        wsCtx.websocket.send(JSON.stringify(privateChatPayloadObj));
+        wsCtx.websocket.send(JSON.stringify(chatPayloadObj));
         // wsCtx.websocket.send(msg);
     };
 

@@ -8,6 +8,7 @@ export const FollowingContext = React.createContext({
     getFollowing: () => {},
     follow: (followUser) => {},
     unfollow: (unfollowUser) => {},
+    receiveMsgFollowing: (friendId, open) => {},
 });
 
 export const FollowingContextProvider = (props) => {
@@ -55,10 +56,18 @@ export const FollowingContextProvider = (props) => {
         console.log("stored fol", storedFollowing);
     };
 
-    // useEffect(() => getFollowingHandler, []);
+    const receiveMsgHandler = (friendId, open) => {
+        const targetUser = following.find(followingUser => followingUser.id === +friendId);
+        console.log("target user", targetUser);
+        // const tempFollowing = following.filter(followingUser => followingUser.id !== +friendId);
+        // console.log("temp fol (removed)", tempFollowing);
+        // add userId chat item to the top
+        setFollowing(prevFollowing => [targetUser, ...(prevFollowing.filter(followingUser => followingUser.id !== +friendId))]);
+        // noti if not open
+        
+    };
+
     useEffect(() => getFollowingHandler(), []);
-    // getFollowingHandler();
-    // useEffect(() => console.log("following (ctx)", following),[])
 
     return (
         <FollowingContext.Provider value={{
@@ -67,6 +76,7 @@ export const FollowingContextProvider = (props) => {
             getFollowing: getFollowingHandler,
             follow: followHandler,
             unfollow: unfollowHandler,
+            receiveMsgFollowing: receiveMsgHandler,
         }}>
             {props.children}
         </FollowingContext.Provider>

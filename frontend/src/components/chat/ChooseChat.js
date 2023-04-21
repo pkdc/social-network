@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import SmallButton from "../UI/SmallButton";
 import ChatMainArea from "./ChatMainArea";
-import GroupChatMainArea from "./GroupChat/GroupChatMainArea";
 import styles from "./ChooseChat.module.css";
 
 const ChooseChat = (props) => {

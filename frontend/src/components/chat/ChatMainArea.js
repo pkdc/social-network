@@ -4,10 +4,11 @@ import styles from "./ChatMainArea.module.css";
 import { AuthContext } from "../store/auth-context";
 import Chatbox from "./Chatbox/Chatbox.js";
 
-const ChatMainArea = (props) => {
-    // console.log("user chat followers in chatarea", props.followersList);
+const ChatMainArea = ({grpChat}) => {
+    // console.log("user chat followers in chatarea", followersList);
 
-    const [chatboxOpen, setChatboxOpen] = useState(false);
+    const [privChatboxOpen, setPrivChatboxOpen] = useState(false);
+    const [grpChatboxOpen, setGrpChatboxOpen] = useState(false);
     const [followerId, setFollowerId] = useState(0);
     const [grpId, setGrpId] = useState(0);
     const [chatboxReceivesMsg, setChatboxReceivesMsg] = useState(0);
@@ -16,13 +17,13 @@ const ChatMainArea = (props) => {
 
     const openUserChatboxHandler = (followerId) => {
         console.log("chatbox open for ", followerId);
-        setChatboxOpen(true);
+        setPrivChatboxOpen(true);
         setFollowerId(followerId);
     };
 
     const closeUserChatboxHandler = () => {
         console.log("chatbox open for ", followerId);
-        setChatboxOpen(false);
+        setPrivChatboxOpen(false);
     };
 
     const receiveNewMsgHandler = (chatboxId) => {
@@ -37,24 +38,29 @@ const ChatMainArea = (props) => {
         className={styles["list"]}
         style={{height: window.innerHeight -110}}
         >
-            {!props.grpChat && !chatboxOpen &&
+            {!grpChat && !privChatboxOpen &&
                 <AllUserChatItems 
                     onOpenChatbox={openUserChatboxHandler}
                     whichItem={chatboxReceivesMsg}
+                    open={privChatboxOpen}
+                    grp={grpChat}
                 />}
-            {!props.grpChat && chatboxOpen &&
+            {!grpChat && privChatboxOpen &&
                 <Chatbox 
                     chatboxId={followerId} 
                     onCloseChatbox={closeUserChatboxHandler}
                     onReceiveNewMsg={receiveNewMsgHandler}
+                    open={privChatboxOpen}
+                    grp={grpChat}
                 />
             }
-            {props.grpChat && !chatboxOpen}
-            {props.grpChat && chatboxOpen && 
+            {grpChat && !grpChatboxOpen}
+            {grpChat && grpChatboxOpen && 
                 <Chatbox 
                     chatboxId={grpId} 
                     onCloseChatbox={closeUserChatboxHandler}
                     onReceiveNewMsg={receiveNewMsgHandler}
+                    grp={grpChat}
                 />}
         </div>
     );
