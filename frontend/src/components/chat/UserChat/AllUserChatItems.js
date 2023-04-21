@@ -1,27 +1,27 @@
 import UserChatItem from "./UserChatItem";
 import { useContext, useEffect, useState } from "react";
-import { UsersContext } from "../../store/users-context";
 import { FollowingContext } from "../../store/following-context";
 
 const AllUserChatItems = (props) => {
 
-    const usersCtx = useContext(UsersContext);
     const followingCtx = useContext(FollowingContext);
 
     console.log("cur user is following (AllUserChatItems)", followingCtx.following);
-    useEffect(() => usersCtx.onNewUserReg(), []);
-    console.log("users in AllUserChatItems", usersCtx.users);
+    // useEffect(() => usersCtx.onNewUserReg(), []);
+    // console.log("users in AllUserChatItems", usersCtx.users);
     
-    const followingList = usersCtx.users.filter((user) => {
-        if (followingCtx.following)
-        return followingCtx.following.some((followingUser) => {
-            // console.log("fid", followingUser.id);
-            // console.log("uid", user.id);
-            if (followingUser && user) return followingUser.id === user.id;
-        });
-    });
-    console.log("followingList in AllUserChatItems", followingList); // not accurate
+    // const followingList = usersCtx.users.filter((user) => {
+    //     if (followingCtx.following)
+    //     return followingCtx.following.some((followingUser) => {
+    //         // console.log("fid", followingUser.id);
+    //         // console.log("uid", user.id);
+    //         if (followingUser && user) return followingUser.id === user.id;
+    //     });
+    // });
 
+    const followingList = followingCtx.following;
+    console.log(" following List (AllUserChatItems)", followingList);
+ 
     const openUserChatboxHandler = (followingId) => props.onOpenChatbox(followingId);
 
     // useEffect(() => {
@@ -35,7 +35,7 @@ const AllUserChatItems = (props) => {
     return (
         <div>
             {followingList && followingList.map((following) => {
-                // console.log("each follower", follower);
+                // console.log("each following", following);
                 // console.log("curUserId: ", curUserId);
                 // console.log("follower.id", follower.id);
                 {if (curUserId !== following.id) {
