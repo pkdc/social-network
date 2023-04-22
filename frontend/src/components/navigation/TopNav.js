@@ -52,7 +52,7 @@
 
 
 
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import LogoutButton from "../UI/LogoutButton";
 import NotificationBtn from "../UI/NotificationBtn";
@@ -63,8 +63,10 @@ import notif from "../assets/notifications5.svg";
 import chatIcon from "../assets/chat5.svg";
 import Avatar from "../UI/Avatar";
 import { AuthContext } from "../store/auth-context";
+import Notification from "../notification/Notification";
 
 const TopMenu = () => {
+    const [showNoti, setSowNoti] = useState(false);
     const navigate = useNavigate();
 
     const currUserId = localStorage.getItem("user_id");
@@ -83,6 +85,11 @@ const TopMenu = () => {
         // props.onLogout();
         ctx.onLogout();
         navigate("/", {replace: true});
+    };
+
+    const onShowNoti = () => {
+        console.log("noti");
+        setSowNoti(prev => !prev);
     };
     
     return (
@@ -116,18 +123,16 @@ const TopMenu = () => {
 
                 <div className={styles.icons}>
                     <div className={styles.notif}>
-                        <button className={styles.btn}>
+                        <button className={styles.btn} onClick={onShowNoti}>
                             <img src={notif} alt=""></img>
+                            {showNoti && <Notification/>}
                         </button>
                         <button className={styles.btn}>
                             <img src={chatIcon} alt=""></img>
                         </button>
                     </div>
                     <div className={styles.logout} onClick={onClickingLogout}><img src={logout} alt=""/></div>
-                  
-                
                 </div>
-            
             </div>
         </nav>
         

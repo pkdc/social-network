@@ -13,6 +13,8 @@ function Profile({ userId }) {
     // get stored publicity from localStorage
     // let selfPublicStatus;
     // selfPublicNum === 0 ? selfPublicStatus = false : selfPublicStatus = true;
+
+    // self
     const [publicity, setPublicity] = useState(false); // 0, false is private, 1, true is public
     const selfPublicNum = +localStorage.getItem("public");
     console.log("stored publicity (profile)", selfPublicNum);
@@ -20,11 +22,13 @@ function Profile({ userId }) {
         selfPublicNum ? setPublicity(true) : setPublicity(false);
     }, [selfPublicNum]);
 
+    // friend
     const followingCtx = useContext(FollowingContext);
     const usersCtx = useContext(UsersContext);
     console.log("all users (profile)", usersCtx.users);
     const currUserId = localStorage.getItem("user_id");
     const [currentlyFollowing, setCurrentlyFollowing] = useState(false);
+    const [requestedToFollow, setRequestedToFollow] = useState(false);
 
     useEffect(() => {
         const storedFollowing = JSON.parse(localStorage.getItem("following"));
@@ -39,16 +43,8 @@ function Profile({ userId }) {
       if (!isLoaded) return <div>Loading...</div>
       if (error) return <div>Error: {error.message}</div>
 
-    // follow
-    function handleClick(e) {
-        const followUser = usersCtx.users.find(user => user.id === +e.target.id);
-        console.log("found user (profile)", followUser);
-        followUser && followingCtx.follow(followUser);
-        // if (followUser) {
-        //     followingCtx.following = [...followingCtx.following, followUser];
-        // }
-        setCurrentlyFollowing(true);
-
+    // store in db
+    const storeFollow = (e) => {
         console.log("follow user", e.target.id);
         console.log("cur user is following (profile)", followingCtx.following);
         const targetId = e.target.id
@@ -83,6 +79,63 @@ function Profile({ userId }) {
             .catch(err => {
               console.log(err);
             })
+    };
+
+    // follow
+    function clickedFollowHandler(e) {
+        const followUser = usersCtx.users.find(user => user.id === +e.target.id);
+        console.log("found user frd (profile)", followUser);
+        console.log("frd publicity", publicity);
+        if (followUser) {
+            if (followUser.public) {
+                console.log(" user frd (public)");
+                followingCtx.follow(followUser);
+                setCurrentlyFollowing(true);
+                storeFollow(e);
+            } else if (!followUser.public) { //if frd private
+                console.log(" user frd (private)");
+                followingCtx.requestToFollow(followUser);
+                setRequestedToFollow(true);
+            }   
+        }
+        
+        // // if accepted
+        // setCurrentlyFollowing(true);
+
+        // console.log("follow user", e.target.id);
+        // console.log("cur user is following (profile)", followingCtx.following);
+        // const targetId = e.target.id
+        // console.log("targetid", targetId)
+        // console.log("current user", currUserId)
+
+        // const data = {
+        //     id: 0,
+        //     sourceid: parseInt(currUserId),
+        //     targetid: parseInt(targetId),
+        //     status: 1
+        // };
+
+        // const test = {
+        //     method: "POST",
+        //     credentials: "include",
+        //     mode: "cors",
+        //     headers: {
+        //       'Content-Type': 'application/json'
+        //   },
+        //     body: JSON.stringify(data)
+        //   };
+        
+        //   fetch('http://localhost:8080/user-follower', test)
+        //     .then(resp => resp.json())
+        //     .then(data => {
+        //         console.log(data);
+        //         if (data.success) {
+        //             console.log("followrequest")
+        //         }
+        //     })
+        //     .catch(err => {
+        //       console.log(err);
+        //     })
     }
     
     const unfollowHandler = (e) => {
@@ -102,7 +155,7 @@ function Profile({ userId }) {
         if (currentlyFollowing) {
             followButton = <div className={classes.followbtn} id={userId} onClick={unfollowHandler}>- UnFollow</div>
         } else {
-            followButton = <div className={classes.followbtn} id={userId} onClick={handleClick}>+ Follow</div>
+            followButton = <div className={classes.followbtn} id={userId} onClick={clickedFollowHandler}>+ Follow</div>
         }       
         messageButton = <GreyButton>Message</GreyButton> 
     }

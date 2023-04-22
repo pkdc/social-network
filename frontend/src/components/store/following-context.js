@@ -1,11 +1,13 @@
 import React, { useContext, useEffect, useState } from "react";
 import useGet from "../fetch/useGet";
 import { UsersContext } from "./users-context";
+import { WebSocketContext } from "./websocket-context";
 
 export const FollowingContext = React.createContext({
     following: [],
     setFollowing: () => {},
     getFollowing: () => {},
+    requestToFollow: (followUser) => {},
     follow: (followUser) => {},
     unfollow: (unfollowUser) => {},
     receiveMsgFollowing: (friendId, open) => {},
@@ -15,7 +17,7 @@ export const FollowingContextProvider = (props) => {
     const selfId = localStorage.getItem("user_id");
     const followingUrl = `http://localhost:8080/user-following?id=${selfId}`;
     const [following, setFollowing] = useState([]);
-    const usersCtx = useContext(UsersContext);
+    const wsCtx = useContext(WebSocketContext);
 
     // get from db
     const getFollowingHandler = () => {
@@ -30,6 +32,16 @@ export const FollowingContextProvider = (props) => {
         .catch(
             err => console.log(err)
         );
+    };
+
+    const requestToFollowHandler = (followUser) => {
+        console.log("request to follow (context): ", followUser.id);
+
+        const followPayloadObj = {};
+        followPayloadObj["type"] = "follow-req";
+        followPayloadObj["userid"] = followUser.id;
+
+        if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(followPayloadObj));
     };
 
     const followHandler = (followUser) => {
@@ -75,6 +87,7 @@ export const FollowingContextProvider = (props) => {
             following: following,
             setFollowing: setFollowing,
             getFollowing: getFollowingHandler,
+            requestToFollow: requestToFollowHandler,
             follow: followHandler,
             unfollow: unfollowHandler,
             receiveMsgFollowing: receiveMsgHandler,

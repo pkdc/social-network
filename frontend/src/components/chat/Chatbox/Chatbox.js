@@ -79,7 +79,7 @@ const Chatbox = (props) => {
         console.log("new self msg data", selfNewMsgObject);
         setNewMsgs((prevNewMsgs) => [...prevNewMsgs, selfNewMsgObject]);
 
-        wsCtx.websocket.send(JSON.stringify(chatPayloadObj));
+        if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(chatPayloadObj));
 
         // move friendId chat item to top
         followingCtx.receiveMsgFollowing(friendId, true);

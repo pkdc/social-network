@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import { Outlet } from "react-router-dom";
-import TopNav from "../Navigation/TopNav";
-import ChatSidebar from "../Navigation/ChatSidebar";
+import TopNav from "../navigation/TopNav";
+import ChatSidebar from "../navigation/ChatSidebar";
 import UsersContext from "../store/users-context";
 import FollowersContext from "../store/followers-context.js";
 import FollowingContext from "../store/following-context";
@@ -60,15 +60,15 @@ const Root = (props) => {
 //   console.log("socket: ", socket);
 
     return <>
-    <UsersContextProvider>
-        <FollowingContextProvider>
-            <TopNav/>
-                <WebSocketContextProvider>
+    <WebSocketContextProvider>
+        <UsersContextProvider>
+            <FollowingContextProvider>
+                <TopNav/>
                     <ChatSidebar/>
-                </WebSocketContextProvider>
-            <Outlet/>
-        </FollowingContextProvider>
-    </UsersContextProvider>
+                <Outlet/>
+            </FollowingContextProvider>
+        </UsersContextProvider>
+    </WebSocketContextProvider>
     </>
 };
 
