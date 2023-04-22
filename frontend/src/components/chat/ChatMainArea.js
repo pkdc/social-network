@@ -41,7 +41,6 @@ const ChatMainArea = ({grpChat}) => {
             {!grpChat && !privChatboxOpen &&
                 <AllUserChatItems 
                     onOpenChatbox={openUserChatboxHandler}
-                    whichItem={chatboxReceivesMsg}
                     open={privChatboxOpen}
                     grp={grpChat}
                 />}

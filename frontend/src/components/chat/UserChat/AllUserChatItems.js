@@ -31,13 +31,7 @@ const AllUserChatItems = (props) => {
         const msgObj = JSON.parse(e.data);
         console.log("ws receives msgObj when chatbox is closed:: ", msgObj);
         console.log("ws receives msg when chatbox is closed:: ", msgObj.message);
-        followingCtx.receiveMsgFollowing(msgObj.sourceid, null);
-    }
-    // useEffect(() => {
-    //     console.log("Item (eff)", props.whichItem, "receives a new msg");
-    // }, [props.whichItem]);
-    if (props.whichItem) {
-        console.log("Item", props.whichItem, "receives a new msg");
+        followingCtx.receiveMsgFollowing(msgObj.sourceid, false);
     }
 
     const curUserId = +localStorage.getItem("user_id");

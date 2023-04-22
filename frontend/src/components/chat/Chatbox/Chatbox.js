@@ -13,6 +13,7 @@ const Chatbox = (props) => {
 
     const [oldMsgData, setOldMsgData] = useState([]);
     const [newMsgsData, setNewMsgs] = useState([]);
+    // const [justSent, setJustSent] = useState(false);
 
     const selfId = +localStorage.getItem("user_id");
     const friendId = props.chatboxId;
@@ -25,7 +26,7 @@ const Chatbox = (props) => {
     // console.log("ws in Chatbox: ",wsCtx.websocket);
     // const [msg, setMsg] = useState("");
 
-    wsCtx.websocket.onmessage = (e) => {
+    if (wsCtx.websocket !== null) wsCtx.websocket.onmessage = (e) => {
         console.log("msg event: ", e);
         const msgObj = JSON.parse(e.data);
         console.log("ws receives msgObj: ", msgObj);
@@ -42,8 +43,9 @@ const Chatbox = (props) => {
     
         console.log("ws receives msg from : ", msgObj.sourceid);
         // props.onReceiveNewMsg(msgObj.sourceid);
-        followingCtx.receiveMsgFollowing(friendId, null);
+        followingCtx.receiveMsgFollowing(friendId, true);
         
+        // setJustSent(true);
     };
 
     // send msg to ws
@@ -78,9 +80,16 @@ const Chatbox = (props) => {
         setNewMsgs((prevNewMsgs) => [...prevNewMsgs, selfNewMsgObject]);
 
         wsCtx.websocket.send(JSON.stringify(chatPayloadObj));
-        // wsCtx.websocket.send(msg);
+
+        // move friendId chat item to top
+        followingCtx.receiveMsgFollowing(friendId, true);
+
+        // setJustSent(true);
     };
 
+    // const scrolledBottom = (scrolled) => {
+    //     scrolled && setJustSent(false);
+    // };
     // console.log("new msg data (outside)", newMsgsData);
 
     const closeChatboxHandler = () => {
@@ -111,6 +120,7 @@ const Chatbox = (props) => {
             <button onClick={closeChatboxHandler} className={styles["close-btn"]}>X</button>
             <ChatDetailTopBar />
             <ChatboxMsgArea oldMsgItems={oldMsgData} newMsgItems={newMsgsData}/>
+            {/* <ChatboxMsgArea oldMsgItems={oldMsgData} newMsgItems={newMsgsData} justSent={justSent}/> */}
             <SendMsg onSendMsg={sendMsgHandler}/>            
         </div>
     );

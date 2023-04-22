@@ -12,6 +12,8 @@ const ChatboxMsgArea = (props) => {
 
     useEffect(() => {msgAreaRef.current && scrollBottom();}, [msgAreaRef.current]);
     
+    props.justSent && msgAreaRef.current && scrollBottom();
+
     return (
         <div 
             className={styles["msg-area"]} 

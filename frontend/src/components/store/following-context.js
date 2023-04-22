@@ -62,9 +62,10 @@ export const FollowingContextProvider = (props) => {
         // const tempFollowing = following.filter(followingUser => followingUser.id !== +friendId);
         // console.log("temp fol (removed)", tempFollowing);
         // add userId chat item to the top
-        setFollowing(prevFollowing => [targetUser, ...(prevFollowing.filter(followingUser => followingUser.id !== +friendId))]);
+        setFollowing(prevFollowing => [targetUser, ...prevFollowing.filter(followingUser => followingUser.id !== +friendId)]);
         // noti if not open
-        
+        const chatNoti = [];
+        // !open && chatNoti.push(friendId);
     };
 
     useEffect(() => getFollowingHandler(), []);
