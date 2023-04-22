@@ -79,6 +79,7 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 		t = 1
 		not.Type = msgStruct.Type
 		not.UserId = msgStruct.UserId
+		// fmt.Printf("not Struct: %v\n", not)
 	} else if msgStruct.Label == "private" {
 		t = 2
 		userMsg.Id = msgStruct.Id
@@ -106,7 +107,7 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 		if err != nil {
 			panic(err)
 		}
-
+		fmt.Printf("sendNoti: %v\n", sendNoti)
 		// Loops through the clients and sends to all users other than the sender
 		for _, c := range h.clients {
 			if c.userID != not.UserId {

@@ -96,7 +96,9 @@ function Profile({ userId }) {
                 console.log(" user frd (private)");
                 followingCtx.requestToFollow(followUser);
                 setRequestedToFollow(true);
-            }   
+            }
+        } else {
+            console.log("user frd not found (profile)");
         }
         
         // // if accepted

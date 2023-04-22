@@ -1,5 +1,6 @@
 import { useContext } from "react";
 import { WebSocketContext } from "../store/websocket-context";
+import NotificationItem from "./NotificationItem";
 import styles from "./Notification.module.css";
 
 const Notification = (props) => {
@@ -13,9 +14,22 @@ const Notification = (props) => {
         console.log("ws receives msg: ", msgObj.message);
     }
 
+    const acceptHandler = () => {
+        console.log("request accepted: ");
+    };
+
+    const declineHandler = () => {
+        console.log("request declined: ");
+    };
+
+    let description = "follow request";
     return (
         <div className={styles["container"]}>
-
+            <NotificationItem 
+            description={description}
+            onAccept={acceptHandler}
+            onDecline={declineHandler}
+            />
         </div>
     );
 };

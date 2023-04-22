@@ -93,15 +93,17 @@ func (c *Client) writePump() {
 			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if !ok {
 				// The hub closed the channel.
-				fmt.Printf("!ok \n")
+				fmt.Printf("!ok in writePump \n")
 				c.conn.WriteMessage(websocket.CloseMessage, []byte{})
 				return
 			}
+			fmt.Printf("msg in writePump 2 %v\n", message)
 			w, err := c.conn.NextWriter(websocket.TextMessage)
 			if err != nil {
 				fmt.Printf("err %v \n", err)
 				return
 			}
+			fmt.Printf("msg in writePump gonna write msg %v\n", message)
 			w.Write(message)
 			// Add queued chat messages to the current websocket message.
 			n := len(c.send)
