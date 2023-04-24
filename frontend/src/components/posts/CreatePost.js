@@ -16,8 +16,6 @@ function CreatePost(props) {
     const nickname = localStorage.getItem("nname");
     const avatar = localStorage.getItem("avatar");
 
-    const onlineStatus = false;
-
     const [uploadedImg, setUploadedImg] = useState("");
     // const titleInput = useRef();
     const contentInput = useRef();
@@ -69,8 +67,8 @@ function CreatePost(props) {
         <Card className={classes.container}>
             <div className={classes["author"]}>
             <Link to={`/profile/${userId}`} >
-                {!avatar && <Avatar className={classes["avatar"]} online={onlineStatus} src={require("../../images/"+`${defaultImagePath}`)} alt="" width={"50px"}/>}
-                {avatar && <Avatar className={classes["avatar"]} online={onlineStatus} src={avatar} alt="" width={"50px"}/>}
+                {!avatar && <Avatar className={classes["avatar"]} src={require("../../images/"+`${defaultImagePath}`)} alt="" width={"50px"}/>}
+                {avatar && <Avatar className={classes["avatar"]} src={avatar} alt="" width={"50px"}/>}
             </Link> 
             <Link to={`/profile/${userId}`} className={classes["author"]}>
                 <div><p className={classes["details"]}>{`${first} ${last} (${nickname})`}</p></div>

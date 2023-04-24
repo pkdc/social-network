@@ -9,7 +9,7 @@ import Avatar from '../../UI/Avatar'
 
 function CreateComment(props) {
     const defaultImagePath = "default_avatar.jpg";
-    const onlineStatus = false;
+
     const userId = +localStorage.getItem("user_id");
     // const first = localStorage.getItem("fname");
     // const last = localStorage.getItem("lname");
@@ -52,8 +52,8 @@ function CreateComment(props) {
 
     return <form className={classes.inputWrapper} onSubmit={SubmitHandler}>
         <Link to={`/profile/${userId}`} className={classes["author"]}>
-            {!avatar && <Avatar className={classes["avatar"]} online={onlineStatus} src={require("../../../images/"+`${defaultImagePath}`)} alt="" width={"50px"}/>}
-            {avatar && <Avatar className={classes["avatar"]} online={onlineStatus} src={avatar} alt="" width={"50px"}/>}
+            {!avatar && <Avatar className={classes["avatar"]} src={require("../../../images/"+`${defaultImagePath}`)} alt="" width={"50px"}/>}
+            {avatar && <Avatar className={classes["avatar"]} src={avatar} alt="" width={"50px"}/>}
         </Link>
         <textarea className={classes.input} placeholder="Write a comment" ref={commentInput}/>      
         <div className={classes["functions"]}>

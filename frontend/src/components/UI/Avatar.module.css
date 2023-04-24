@@ -27,6 +27,6 @@
     height: 15px;
     width: 15px;
     border-radius: 50%;
-    background-color: var(--asparagus, green);
+    background-color: var(--emerald-green, rgb(2, 225, 2));
     z-index: 10;
 }
