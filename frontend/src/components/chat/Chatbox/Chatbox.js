@@ -13,7 +13,7 @@ const Chatbox = (props) => {
 
     const [oldMsgData, setOldMsgData] = useState([]);
     const [newMsgsData, setNewMsgs] = useState([]);
-    // const [justSent, setJustSent] = useState(false);
+    const [justSent, setJustSent] = useState(false);
 
     const selfId = +localStorage.getItem("user_id");
     const friendId = props.chatboxId;
@@ -45,7 +45,7 @@ const Chatbox = (props) => {
         // props.onReceiveNewMsg(msgObj.sourceid);
         followingCtx.receiveMsgFollowing(friendId, true);
         
-        // setJustSent(true);
+        setJustSent(prev => !prev);
     };
 
     // send msg to ws
@@ -84,7 +84,7 @@ const Chatbox = (props) => {
         // move friendId chat item to top
         followingCtx.receiveMsgFollowing(friendId, true);
 
-        // setJustSent(true);
+        setJustSent(prev => !prev);
     };
 
     // const scrolledBottom = (scrolled) => {
@@ -119,8 +119,8 @@ const Chatbox = (props) => {
         <div className={styles["container"]}>
             <button onClick={closeChatboxHandler} className={styles["close-btn"]}>X</button>
             <ChatDetailTopBar />
-            <ChatboxMsgArea oldMsgItems={oldMsgData} newMsgItems={newMsgsData}/>
-            {/* <ChatboxMsgArea oldMsgItems={oldMsgData} newMsgItems={newMsgsData} justSent={justSent}/> */}
+            {/* <ChatboxMsgArea oldMsgItems={oldMsgData} newMsgItems={newMsgsData}/> */}
+            <ChatboxMsgArea oldMsgItems={oldMsgData} newMsgItems={newMsgsData} justSent={justSent}/>
             <SendMsg onSendMsg={sendMsgHandler}/>            
         </div>
     );

@@ -1,4 +1,5 @@
 import styles from "./Avatar.module.css";
+import profile from '../assets/profile.svg'
 
 const Avatar = (props) => {
     const onlineStatus = false; // change this
