@@ -5,6 +5,7 @@ import CreatePostTextarea from "../UI/CreatePostTextarea";
 import SmallButton from "../UI/SmallButton";
 import FormPostSelect from "../UI/FormPostSelect";
 import ImgUpload from "../UI/ImgUpload";
+import Avatar from "../UI/Avatar";
 import classes from './CreatePost.module.css';
 
 function CreatePost(props) {
@@ -14,6 +15,8 @@ function CreatePost(props) {
     const last = localStorage.getItem("lname");
     const nickname = localStorage.getItem("nname");
     const avatar = localStorage.getItem("avatar");
+
+    const onlineStatus = false;
 
     const [uploadedImg, setUploadedImg] = useState("");
     // const titleInput = useRef();
@@ -66,8 +69,8 @@ function CreatePost(props) {
         <Card className={classes.container}>
             <div className={classes["author"]}>
             <Link to={`/profile/${userId}`} >
-                {!avatar && <img className={classes["avatar"]} src={require("../../images/"+`${defaultImagePath}`)} alt="" width={"50px"}/>}
-                {avatar && <img className={classes["avatar"]} src={avatar} alt="" width={"50px"}/>}
+                {!avatar && <Avatar className={classes["avatar"]} online={onlineStatus} src={require("../../images/"+`${defaultImagePath}`)} alt="" width={"50px"}/>}
+                {avatar && <Avatar className={classes["avatar"]} online={onlineStatus} src={avatar} alt="" width={"50px"}/>}
             </Link> 
             <Link to={`/profile/${userId}`} className={classes["author"]}>
                 <div><p className={classes["details"]}>{`${first} ${last} (${nickname})`}</p></div>
