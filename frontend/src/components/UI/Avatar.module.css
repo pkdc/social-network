@@ -2,4 +2,31 @@
 
 .avatar {
     border-radius: 50%;
+    z-index: 1;
+}
+
+.wrapper {
+    position: relative;
+}
+
+.offline-status-dot {
+    position: absolute;
+    top: 60%;
+    left: 60%;
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+    background-color: grey;
+    z-index: 10;
+}
+
+.online-status-dot {
+    position: absolute;
+    top: 60%;
+    left: 60%;
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+    background-color: var(--asparagus, green);
+    z-index: 10;
 }
