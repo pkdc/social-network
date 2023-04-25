@@ -39,8 +39,10 @@ export const FollowingContextProvider = (props) => {
 
         const followPayloadObj = {};
         followPayloadObj["label"] = "noti";
+        followPayloadObj["id"] = Date.now();
         followPayloadObj["type"] = "follow-req";
         followPayloadObj["userid"] = followUser.id;
+        console.log("gonna send fol req : ", followPayloadObj);
         if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(followPayloadObj));
     };
 

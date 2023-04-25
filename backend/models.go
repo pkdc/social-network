@@ -234,6 +234,7 @@ type SessionStruct struct {
 
 type NotifStruct struct {
 	Label  string `json:"label"`
+	Id     int    `json:"id"`
 	Type   string `json:"type"`
 	UserId int    `json:"userid"`
 }

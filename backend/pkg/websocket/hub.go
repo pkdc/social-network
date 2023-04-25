@@ -77,13 +77,14 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 	fmt.Printf("msg Struct: %v\n", msgStruct)
 	if msgStruct.Label == "noti" {
 		t = 1
-		not.Label = "notification"
+		not.Label = "noti"
+		not.Id = msgStruct.Id
 		not.Type = msgStruct.Type
 		not.UserId = msgStruct.UserId
 		// fmt.Printf("not Struct: %v\n", not)
 	} else if msgStruct.Label == "private" {
 		t = 2
-		userMsg.Label = "chat"
+		userMsg.Label = "p-chat"
 		userMsg.Id = msgStruct.Id
 		userMsg.SourceId = msgStruct.SourceId
 		userMsg.TargetId = msgStruct.TargetId
@@ -91,7 +92,7 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 		userMsg.CreatedAt = time.Now().String()
 	} else if msgStruct.Label == "group" {
 		t = 3
-		userMsg.Label = "chat"
+		userMsg.Label = "g-chat"
 		userMsg.Id = msgStruct.Id
 		groupMsg.Message = msgStruct.Message
 		groupMsg.SourceId = msgStruct.SourceId
