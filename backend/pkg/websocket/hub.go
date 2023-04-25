@@ -114,7 +114,8 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 		fmt.Printf("sendNoti: %v\n", sendNoti)
 		// Loops through the clients and sends to all users other than the sender
 		for _, c := range h.clients {
-			if c.userID != not.UserId {
+			if c.userID == not.UserId {
+				fmt.Printf("matched %d = %d\n", c.userID, not.UserId)
 				select {
 				case c.send <- sendNoti:
 				default:
