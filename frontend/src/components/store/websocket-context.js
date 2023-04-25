@@ -62,6 +62,7 @@ export const WebSocketContextProvider = (props) => {
                     type: msgObj.type,
                     userid: msgObj.userid,
                 };
+                setNewNotiObj(newReceivedNotiObj);
             }
         };
 

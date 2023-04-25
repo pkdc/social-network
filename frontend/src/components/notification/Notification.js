@@ -1,19 +1,20 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { WebSocketContext } from "../store/websocket-context";
 import NotificationItem from "./NotificationItem";
 import styles from "./Notification.module.css";
 
 const Notification = (props) => {
+    const [noti, setNoti] = useState([]);
 
     const wsCtx = useContext(WebSocketContext);
 
-    if (wsCtx.websocket !== null) wsCtx.websocket.onmessage = (e) => {
-        console.log("msg event: ", e);
-        const msgObj = JSON.parse(e.data);
-        console.log("ws receives msgObj: ", msgObj);
-        console.log("ws receives msg: ", msgObj.message);
-    }
-
+    useEffect(() => {
+        if (wsCtx.websocket !== null && wsCtx.newNotiObj) {
+            console.log("ws receives notiObj: ", wsCtx.newNotiObj);
+            console.log("ws receives noti type: ", wsCtx.newNotiObj.type);
+        }
+    } ,[wsCtx.newNotiObj]);
+    
     const acceptHandler = () => {
         console.log("request accepted: ");
     };
