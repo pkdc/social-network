@@ -26,13 +26,13 @@ const AllUserChatItems = (props) => {
  
     const openUserChatboxHandler = (followingId) => props.onOpenChatbox(followingId);
 
-    if (wsCtx.websocket !== null) wsCtx.websocket.onmessage = (e) => {
-        console.log("msg event when chatbox is closed: ", e);
-        const msgObj = JSON.parse(e.data);
-        console.log("ws receives msgObj when chatbox is closed:: ", msgObj);
-        console.log("ws receives msg when chatbox is closed:: ", msgObj.message);
-        followingCtx.receiveMsgFollowing(msgObj.sourceid, false);
-    }
+    // if (wsCtx.websocket !== null) wsCtx.websocket.onmessage = (e) => {
+    //     console.log("msg event when chatbox is closed: ", e);
+    //     const msgObj = JSON.parse(e.data);
+    //     console.log("ws receives msgObj when chatbox is closed:: ", msgObj);
+    //     console.log("ws receives msg when chatbox is closed:: ", msgObj.message);
+    //     followingCtx.receiveMsgFollowing(msgObj.sourceid, false);
+    // }
 
     const curUserId = +localStorage.getItem("user_id");
     return (

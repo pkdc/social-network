@@ -2,10 +2,12 @@ import React, {useState, useEffect} from "react";
 
 export const WebSocketContext = React.createContext({
     websocket: null,
+    newMsgsObj: {},
 });
 
 export const WebSocketContextProvider = (props) => {
     const [socket, setSocket] = useState(null);
+    const [newMsgsObj, setNewMsgsObj] = useState({});
     useEffect(() => {
         const newSocket = new WebSocket("ws://localhost:8080/ws")
 
@@ -21,6 +23,22 @@ export const WebSocketContextProvider = (props) => {
 
         newSocket.onerror = (err) => console.log("ws error");
 
+        newSocket.onmessage = (e) => {
+            
+            console.log("msg event: ", e);
+            const msgObj = JSON.parse(e.data);
+            console.log("ws receives msgObj: ", msgObj);
+            console.log("ws receives msg: ", msgObj.message);
+            const newReceivedMsgObj = {
+                id: msgObj.id,
+                targetid: msgObj.targetid,
+                sourceid: msgObj.sourceid,
+                message: msgObj.message,
+                createdat: msgObj.createdat,
+            };
+            setNewMsgsObj(newReceivedMsgObj);
+        };
+
         return () => {
             newSocket.close();
         };  
@@ -29,6 +47,7 @@ export const WebSocketContextProvider = (props) => {
     return (
         <WebSocketContext.Provider value={{
             websocket: socket,
+            newMsgsObj: newMsgsObj,
         }}>
             {props.children}
         </WebSocketContext.Provider>

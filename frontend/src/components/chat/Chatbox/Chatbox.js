@@ -26,27 +26,31 @@ const Chatbox = (props) => {
     // console.log("ws in Chatbox: ",wsCtx.websocket);
     // const [msg, setMsg] = useState("");
 
-    if (wsCtx.websocket !== null) wsCtx.websocket.onmessage = (e) => {
-        console.log("msg event: ", e);
-        const msgObj = JSON.parse(e.data);
-        console.log("ws receives msgObj: ", msgObj);
-        console.log("ws receives msg: ", msgObj.message);
-        const newReceivedMsgObj = {
-            id: msgObj.id,
-            targetid: msgObj.targetid,
-            sourceid: msgObj.sourceid,
-            message: msgObj.message,
-            createdat: msgObj.createdat,
-        };
-        console.log("new Received msg data", newReceivedMsgObj);
-        setNewMsgs((prevNewMsgs) => [...prevNewMsgs, newReceivedMsgObj]);
-    
-        console.log("ws receives msg from : ", msgObj.sourceid);
-        // props.onReceiveNewMsg(msgObj.sourceid);
-        followingCtx.receiveMsgFollowing(friendId, true);
+    // if (wsCtx.websocket !== null) wsCtx.websocket.onmessage = (e) => {
+    //     console.log("msg event: ", e);
+    //     const msgObj = JSON.parse(e.data);
+    //     console.log("ws receives msgObj: ", msgObj);
+    //     console.log("ws receives msg: ", msgObj.message);
+    //     const newReceivedMsgObj = {
+    //         id: msgObj.id,
+    //         targetid: msgObj.targetid,
+    //         sourceid: msgObj.sourceid,
+    //         message: msgObj.message,
+    //         createdat: msgObj.createdat,
+    //     };
+    useEffect(() => {
+        if (wsCtx.websocket !== null) {
+            console.log("new Received msg data", wsCtx.newMsgsObj);
+            setNewMsgs((prevNewMsgs) => [...prevNewMsgs, wsCtx.newMsgsObj]);
         
-        setJustSent(prev => !prev);
-    };
+            console.log("ws receives msg from : ", wsCtx.newMsgsObj.sourceid);
+
+            followingCtx.receiveMsgFollowing(friendId, true);
+            
+            setJustSent(prev => !prev);
+        }
+    }, [wsCtx.newMsgsObj])
+    
 
     // send msg to ws
     const sendMsgHandler = (msg) => {

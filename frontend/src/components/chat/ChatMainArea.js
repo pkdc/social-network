@@ -26,10 +26,10 @@ const ChatMainArea = ({grpChat}) => {
         setPrivChatboxOpen(false);
     };
 
-    const receiveNewMsgHandler = (chatboxId) => {
-        console.log("receiving msg from/in chatbox : ", chatboxId);
-        setChatboxReceivesMsg(chatboxId);
-    };
+    // const receiveNewMsgHandler = (chatboxId) => {
+    //     console.log("receiving msg from/in chatbox : ", chatboxId);
+    //     setChatboxReceivesMsg(chatboxId);
+    // };
 
     console.log("loggedIn at UserChatMainArea", ctx.isLoggedIn);
     
@@ -48,7 +48,7 @@ const ChatMainArea = ({grpChat}) => {
                 <Chatbox 
                     chatboxId={followerId} 
                     onCloseChatbox={closeUserChatboxHandler}
-                    onReceiveNewMsg={receiveNewMsgHandler}
+                    // onReceiveNewMsg={receiveNewMsgHandler}
                     open={privChatboxOpen}
                     grp={grpChat}
                 />
@@ -58,7 +58,7 @@ const ChatMainArea = ({grpChat}) => {
                 <Chatbox 
                     chatboxId={grpId} 
                     onCloseChatbox={closeUserChatboxHandler}
-                    onReceiveNewMsg={receiveNewMsgHandler}
+                    // onReceiveNewMsg={receiveNewMsgHandler}
                     grp={grpChat}
                 />}
         </div>
