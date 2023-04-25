@@ -34,6 +34,15 @@ const AllUserChatItems = (props) => {
     //     followingCtx.receiveMsgFollowing(msgObj.sourceid, false);
     // }
 
+    useEffect(() => {
+        if (wsCtx.websocket !== null && wsCtx.newMsgsObj) {
+            console.log("new Received msg data when chatbox is closed", wsCtx.newMsgsObj);
+            console.log("ws receives msg from when chatbox is closed: ", wsCtx.newMsgsObj.sourceid);
+            if (wsCtx.newMsgsObj !== null) wsCtx.setNewMsgsObj(null);
+            followingCtx.receiveMsgFollowing(wsCtx.newMsgsObj.sourceid, false);
+        }
+    }, [wsCtx.newMsgsObj])
+
     const curUserId = +localStorage.getItem("user_id");
     return (
         <div>

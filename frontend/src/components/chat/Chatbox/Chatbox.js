@@ -13,7 +13,7 @@ const Chatbox = (props) => {
 
     const [oldMsgData, setOldMsgData] = useState([]);
     const [newMsgsData, setNewMsgs] = useState([]);
-    const [justSent, setJustSent] = useState(false);
+    const [justUpdated, setJustUpdated] = useState(false);
 
     const selfId = +localStorage.getItem("user_id");
     const friendId = props.chatboxId;
@@ -39,18 +39,19 @@ const Chatbox = (props) => {
     //         createdat: msgObj.createdat,
     //     };
     useEffect(() => {
-        if (wsCtx.websocket !== null) {
-            console.log("new Received msg data", wsCtx.newMsgsObj);
+        if (wsCtx.websocket !== null && wsCtx.newMsgsObj) {
+            console.log("new Received msg data when chatbox is open", wsCtx.newMsgsObj);
+            console.log("ws receives msg from when chatbox is open: ", wsCtx.newMsgsObj.sourceid);
             setNewMsgs((prevNewMsgs) => [...prevNewMsgs, wsCtx.newMsgsObj]);
         
-            console.log("ws receives msg from : ", wsCtx.newMsgsObj.sourceid);
+            if (wsCtx.newMsgsObj !== null) wsCtx.setNewMsgsObj(null);
 
             followingCtx.receiveMsgFollowing(friendId, true);
             
-            setJustSent(prev => !prev);
+            setJustUpdated(prev => !prev);
         }
+        // console.log("new");
     }, [wsCtx.newMsgsObj])
-    
 
     // send msg to ws
     const sendMsgHandler = (msg) => {
@@ -88,7 +89,7 @@ const Chatbox = (props) => {
         // move friendId chat item to top
         followingCtx.receiveMsgFollowing(friendId, true);
 
-        setJustSent(prev => !prev);
+        setJustUpdated(prev => !prev);
     };
 
     // const scrolledBottom = (scrolled) => {
@@ -124,7 +125,7 @@ const Chatbox = (props) => {
             <button onClick={closeChatboxHandler} className={styles["close-btn"]}>X</button>
             <ChatDetailTopBar />
             {/* <ChatboxMsgArea oldMsgItems={oldMsgData} newMsgItems={newMsgsData}/> */}
-            <ChatboxMsgArea oldMsgItems={oldMsgData} newMsgItems={newMsgsData} justSent={justSent}/>
+            <ChatboxMsgArea oldMsgItems={oldMsgData} newMsgItems={newMsgsData} justUpdated={justUpdated}/>
             <SendMsg onSendMsg={sendMsgHandler}/>            
         </div>
     );

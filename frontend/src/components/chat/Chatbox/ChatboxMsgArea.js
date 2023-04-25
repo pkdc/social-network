@@ -10,9 +10,9 @@ const ChatboxMsgArea = (props) => {
 
     const scrollBottom = () => msgAreaRef.current.scrollTop = msgAreaRef.current.scrollHeight - msgAreaRef.current.clientHeight;
 
-    useEffect(() => {msgAreaRef.current && scrollBottom();}, [msgAreaRef.current, props.justSent]);
+    useEffect(() => {msgAreaRef.current && scrollBottom();}, [msgAreaRef.current, props.justUpdated]);
     
-    // props.justSent && msgAreaRef.current && scrollBottom();
+    // props.justUpdated && msgAreaRef.current && scrollBottom();
 
     return (
         <div 

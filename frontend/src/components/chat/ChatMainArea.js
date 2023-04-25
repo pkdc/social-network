@@ -1,7 +1,7 @@
 import { useEffect, useState, useContext } from "react";
 import AllUserChatItems from "./UserChat/AllUserChatItems";
 import styles from "./ChatMainArea.module.css";
-import { AuthContext } from "../store/auth-context";
+// import { AuthContext } from "../store/auth-context";
 import Chatbox from "./Chatbox/Chatbox.js";
 
 const ChatMainArea = ({grpChat}) => {
@@ -13,7 +13,7 @@ const ChatMainArea = ({grpChat}) => {
     const [grpId, setGrpId] = useState(0);
     const [chatboxReceivesMsg, setChatboxReceivesMsg] = useState(0);
 
-    const ctx = useContext(AuthContext);
+    // const ctx = useContext(AuthContext);
 
     const openUserChatboxHandler = (followerId) => {
         console.log("chatbox open for ", followerId);
@@ -31,7 +31,7 @@ const ChatMainArea = ({grpChat}) => {
     //     setChatboxReceivesMsg(chatboxId);
     // };
 
-    console.log("loggedIn at UserChatMainArea", ctx.isLoggedIn);
+    // console.log("loggedIn at UserChatMainArea", ctx.isLoggedIn);
     
     return (
         <div 

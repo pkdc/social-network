@@ -3,6 +3,7 @@ import React, {useState, useEffect} from "react";
 export const WebSocketContext = React.createContext({
     websocket: null,
     newMsgsObj: {},
+    setNewMsgsObj: () => {},
 });
 
 export const WebSocketContextProvider = (props) => {
@@ -48,6 +49,7 @@ export const WebSocketContextProvider = (props) => {
         <WebSocketContext.Provider value={{
             websocket: socket,
             newMsgsObj: newMsgsObj,
+            setNewMsgsObj: setNewMsgsObj,
         }}>
             {props.children}
         </WebSocketContext.Provider>
