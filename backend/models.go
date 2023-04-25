@@ -56,6 +56,7 @@ type UserFollowerStruct struct {
 }
 
 type UserMessageStruct struct {
+	Label     string `json:"label"`
 	Id        int    `json:"id"`
 	TargetId  int    `json:"targetid"`
 	SourceId  int    `json:"sourceid"`
@@ -214,6 +215,7 @@ type GroupPostCommentPayload struct {
 }
 
 type GroupMessageStruct struct {
+	Label     string `json:"label"`
 	Id        int    `json:"id"`
 	Message   string `json:"message"`
 	SourceId  int    `json:"sourceid"`
@@ -231,6 +233,7 @@ type SessionStruct struct {
 }
 
 type NotifStruct struct {
+	Label  string `json:"label"`
 	Type   string `json:"type"`
 	UserId int    `json:"userid"`
 }

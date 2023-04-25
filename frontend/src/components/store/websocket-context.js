@@ -8,7 +8,7 @@ export const WebSocketContext = React.createContext({
 
 export const WebSocketContextProvider = (props) => {
     const [socket, setSocket] = useState(null);
-    const [newMsgsObj, setNewMsgsObj] = useState({});
+    const [newMsgsObj, setNewMsgsObj] = useState(null);
     useEffect(() => {
         const newSocket = new WebSocket("ws://localhost:8080/ws")
 
