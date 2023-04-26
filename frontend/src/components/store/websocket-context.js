@@ -35,7 +35,7 @@ export const WebSocketContextProvider = (props) => {
             console.log("ws receives msgObj: ", msgObj);
 
             if (msgObj.label === "p-chat") {
-                console.log("ws receives private msg: ", msgObj.message);
+                console.log("ws receives private msg (wsctx): ", msgObj.message);
                 const newReceivedMsgObj = {
                     id: msgObj.id,
                     targetid: msgObj.targetid,
@@ -45,7 +45,7 @@ export const WebSocketContextProvider = (props) => {
                 };
                 setNewMsgsObj(newReceivedMsgObj);
             } else if (msgObj.label === "g-chat") {
-                console.log("ws receives grp msg: ", msgObj.message);
+                console.log("ws receives grp msg (wsctx): ", msgObj.message);
                 // const newReceivedMsgObj = {
                 //     id: msgObj.id,
                 //     targetid: msgObj.targetid,
@@ -55,8 +55,8 @@ export const WebSocketContextProvider = (props) => {
                 // };
                 // setNewMsgsObj(newReceivedMsgObj);
             } else if (msgObj.label === "noti") {
-                console.log("ws receives noti : ", msgObj);
-                console.log("ws receives noti type : ", msgObj.type);
+                console.log("ws receives noti (wsctx): ", msgObj);
+                console.log("ws receives noti type (wsctx): ", msgObj.type);
                 const newReceivedNotiObj = {
                     id: msgObj.id,
                     type: msgObj.type,

@@ -52,7 +52,7 @@
 
 
 
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import LogoutButton from "../UI/LogoutButton";
 import NotificationBtn from "../UI/NotificationBtn";
@@ -63,10 +63,13 @@ import notif from "../assets/notifications5.svg";
 import chatIcon from "../assets/chat5.svg";
 import Avatar from "../UI/Avatar";
 import { AuthContext } from "../store/auth-context";
+import { WebSocketContext } from "../store/websocket-context";
 import Notification from "../notification/Notification";
 
 const TopMenu = () => {
     const [showNoti, setSowNoti] = useState(false);
+    const [newNoti, setNewNoti] = useState();
+
     const navigate = useNavigate();
 
     const currUserId = localStorage.getItem("user_id");
@@ -86,6 +89,17 @@ const TopMenu = () => {
         ctx.onLogout();
         navigate("/", {replace: true});
     };
+
+    const wsCtx = useContext(WebSocketContext);
+
+    useEffect(() => {
+        if (wsCtx.websocket !== null && wsCtx.newNotiObj) {
+            console.log("ws receives notiObj (TopNav): ", wsCtx.newNotiObj);
+            console.log("ws receives noti type (TopNav): ", wsCtx.newNotiObj.type);
+            setNewNoti(wsCtx.newNotiObj);
+            wsCtx.setNewNotiObj(null);
+        }
+    } ,[wsCtx.newNotiObj]);
 
     const onShowNoti = () => {
         console.log("noti");
@@ -125,7 +139,7 @@ const TopMenu = () => {
                     <div className={styles.notif}>
                         <button className={styles.btn} onClick={onShowNoti}>
                             <img src={notif} alt=""></img>
-                            {showNoti && <Notification/>}
+                            {showNoti && <Notification newNoti={newNoti}/>}
                         </button>
                         <button className={styles.btn}>
                             <img src={chatIcon} alt=""></img>

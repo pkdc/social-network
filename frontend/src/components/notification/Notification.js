@@ -1,19 +1,15 @@
 import { useContext, useEffect, useState } from "react";
 import { WebSocketContext } from "../store/websocket-context";
-import NotificationItem from "./NotificationItem";
+import AllNotificationItems from "./AllNotificationItems";
 import styles from "./Notification.module.css";
 
 const Notification = (props) => {
-    const [noti, setNoti] = useState([]);
-
-    const wsCtx = useContext(WebSocketContext);
-
+    const [notiArr, setNotiArr] = useState([]);
     useEffect(() => {
-        if (wsCtx.websocket !== null && wsCtx.newNotiObj) {
-            console.log("ws receives notiObj: ", wsCtx.newNotiObj);
-            console.log("ws receives noti type: ", wsCtx.newNotiObj.type);
-        }
-    } ,[wsCtx.newNotiObj]);
+        props.newNoti && setNotiArr(prevArr => [props.newNoti, ...prevArr]);
+    }, [props.newNoti]);
+    
+    console.log("noti arr (Notification): ", notiArr);
     
     const acceptHandler = () => {
         console.log("request accepted: ");
@@ -23,14 +19,15 @@ const Notification = (props) => {
         console.log("request declined: ");
     };
 
-    let description = "follow request";
+    // let description = "follow request";
     return (
         <div className={styles["container"]}>
-            <NotificationItem 
-            description={description}
+            <AllNotificationItems notiItems={notiArr}/>
+            {/* <NotificationItem 
+            // description={description}
             onAccept={acceptHandler}
             onDecline={declineHandler}
-            />
+            /> */}
         </div>
     );
 };

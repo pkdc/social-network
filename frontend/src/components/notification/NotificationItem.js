@@ -4,9 +4,10 @@ const NotificationItem = (props) => {
 
     return (
         <div>
-            <h2>{props.description}</h2>
-            <SmallButton onClick={props.onAccept}>Accept</SmallButton>
-            <SmallButton>Decline={props.onDecline}</SmallButton>
+            <div>
+                <SmallButton onClick={props.onAccept}>Accept</SmallButton>
+                <SmallButton onClick={props.onDecline}>Decline</SmallButton>
+            </div>
         </div>
     );
 };
