@@ -58,13 +58,13 @@ const Root = (props) => {
 //   }, []);
 
 //   console.log("socket: ", socket);
-
+console.log("Root");
     return <>
     <WebSocketContextProvider>
         <UsersContextProvider>
             <FollowingContextProvider>
                 <TopNav/>
-                    <ChatSidebar/>
+                <ChatSidebar/>
                 <Outlet/>
             </FollowingContextProvider>
         </UsersContextProvider>

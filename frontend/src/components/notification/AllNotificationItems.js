@@ -6,7 +6,12 @@ const AllNotificationItems = (props) => {
             {props.notiItems.map((notiItem) => {
                 return (
                     <NotificationItem
-                        
+                        key={notiItem.id}
+                        id={notiItem.id}
+                        // targetId={notiItem.targetid}
+                        // sourceId={notiItem.sourceid}
+                        onAccept={props.acceptHandler}
+                        onDecline={props.declineHandler}
                     />
                     );
                 })

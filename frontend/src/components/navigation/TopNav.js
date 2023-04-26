@@ -66,27 +66,27 @@ import { AuthContext } from "../store/auth-context";
 import { WebSocketContext } from "../store/websocket-context";
 import Notification from "../notification/Notification";
 
-const TopMenu = () => {
+const TopNav = () => {
     const [showNoti, setSowNoti] = useState(false);
-    const [newNoti, setNewNoti] = useState();
+    const [newNoti, setNewNoti] = useState(null);
 
     const navigate = useNavigate();
 
     const currUserId = localStorage.getItem("user_id");
     console.log("current user", currUserId);
 
-    function handleClick(e) {
-        const id = e.target.id
-        console.log("profile id", id);
+    // function handleClick(e) {
+    //     const id = e.target.id
+    //     console.log("profile id", id);
 
-        navigate("/profile", { state: { id } })
-    }
+    //     navigate("/profile", { state: { id } })
+    // }
 
-    const ctx = useContext(AuthContext);
+    const authCtx = useContext(AuthContext);
 
     const onClickingLogout = () => {
         // props.onLogout();
-        ctx.onLogout();
+        authCtx.onLogout();
         navigate("/", {replace: true});
     };
 
@@ -100,7 +100,8 @@ const TopMenu = () => {
             wsCtx.setNewNotiObj(null);
         }
     } ,[wsCtx.newNotiObj]);
-
+    console.log("wsCtx.setNewNotiObj after getting (TopNav outside): ", wsCtx.newNotiObj);
+    
     const onShowNoti = () => {
         console.log("noti");
         setSowNoti(prev => !prev);
@@ -137,10 +138,10 @@ const TopMenu = () => {
 
                 <div className={styles.icons}>
                     <div className={styles.notif}>
-                        <button className={styles.btn} onClick={onShowNoti}>
+                        <div className={styles.btn} onClick={onShowNoti}>
                             <img src={notif} alt=""></img>
                             {showNoti && <Notification newNoti={newNoti}/>}
-                        </button>
+                        </div>
                         <button className={styles.btn}>
                             <img src={chatIcon} alt=""></img>
                         </button>
@@ -153,4 +154,4 @@ const TopMenu = () => {
     );
 };
 
-export default TopMenu;
+export default TopNav;
