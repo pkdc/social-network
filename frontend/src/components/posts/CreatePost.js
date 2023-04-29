@@ -9,7 +9,6 @@ import Avatar from "../UI/Avatar";
 import classes from './CreatePost.module.css';
 
 function CreatePost(props) {
-    const defaultImagePath = "default_avatar.jpg";
     const userId = +localStorage.getItem("user_id");
     const first = localStorage.getItem("fname");
     const last = localStorage.getItem("lname");
@@ -67,8 +66,7 @@ function CreatePost(props) {
         <Card className={classes.container}>
             <div className={classes["author"]}>
             <Link to={`/profile/${userId}`} >
-                {!avatar && <Avatar className={classes["avatar"]} src={require("../../images/"+`${defaultImagePath}`)} alt="" width={"50px"}/>}
-                {avatar && <Avatar className={classes["avatar"]} src={avatar} alt="" width={"50px"}/>}
+                <Avatar className={classes["avatar"]} src={avatar} alt="" width={"50px"}/>
             </Link> 
             <Link to={`/profile/${userId}`} className={classes["author"]}>
                 <div><p className={classes["details"]}>{`${first} ${last} (${nickname})`}</p></div>

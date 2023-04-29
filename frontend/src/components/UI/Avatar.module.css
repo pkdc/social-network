@@ -7,14 +7,16 @@
 
 .wrapper {
     position: relative;
+    width: 3.6rem;
+    height: 3.6rem;
 }
 
 .offline-status-dot {
     position: absolute;
     top: 60%;
     left: 60%;
-    height: 15px;
-    width: 15px;
+    height: 1rem;
+    width: 1rem;
     border-radius: 50%;
     background-color: grey;
     z-index: 10;
@@ -24,8 +26,8 @@
     position: absolute;
     top: 60%;
     left: 60%;
-    height: 15px;
-    width: 15px;
+    height: 1rem;
+    width: 1rem;
     border-radius: 50%;
     background-color: var(--emerald-green, rgb(2, 225, 2));
     z-index: 10;

@@ -12,10 +12,7 @@ const ChatUserItem = (props) => {
     
     return (
         <div className={styles["item"]} onClick={openChatboxHandler}>
-            {/* {!props.avatar && <AvatarForChatOnline className={styles["chat-avatar"]} src={require("../../../images/"+`${defaultImagePath}`)} alt="" height={"30px"} width={"30px"}/>}
-            {props.avatar && <AvatarForChatOnline className={styles["chat-avatar"]} src={props.avatar} alt="" height={"30px"} width={"30px"}/>} */}
-            {!props.avatar && <Avatar className={styles["chat-avatar"]} src={require("../../../images/"+`${defaultImagePath}`)} alt="" height={"30px"} width={"30px"}/>}
-            {props.avatar && <Avatar className={styles["chat-avatar"]} src={props.avatar} alt="" height={"30px"} width={"30px"}/>}
+            <Avatar className={styles["chat-avatar"]} src={props.avatar} alt="" height={"50px"} width={"50px"}/>
             <div><p className={styles["details"]}>{`${props.fname} ${props.lname} ${props.nname}`}</p></div>
         </div>
     );
