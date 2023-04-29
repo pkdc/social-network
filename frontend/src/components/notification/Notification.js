@@ -7,7 +7,7 @@ const Notification = (props) => {
     const [notiArr, setNotiArr] = useState([]);
     useEffect(() => {
         console.log("props.newNoti", props.newNoti);
-        props.newNoti && setNotiArr(prevArr => [props.newNoti, ...prevArr]);
+        props.newNoti && setNotiArr(prevArr => [... new Set([props.newNoti, ...prevArr])]);
         // props.onAdded();
     }, [props.newNoti]);
     
