@@ -8,8 +8,9 @@ const AllNotificationItems = (props) => {
                     <NotificationItem
                         key={notiItem.id}
                         id={notiItem.id}
-                        // targetId={notiItem.targetid}
-                        // sourceId={notiItem.sourceid}
+                        type={notiItem.type}
+                        targetId={notiItem.targetid}
+                        sourceId={notiItem.sourceid}
                         onAccept={props.acceptHandler}
                         onDecline={props.declineHandler}
                     />
