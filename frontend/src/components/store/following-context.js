@@ -41,7 +41,8 @@ export const FollowingContextProvider = (props) => {
         followPayloadObj["label"] = "noti";
         followPayloadObj["id"] = Date.now();
         followPayloadObj["type"] = "follow-req";
-        followPayloadObj["userid"] = followUser.id;
+        followPayloadObj["sourceid"] = +selfId;
+        followPayloadObj["targetid"] = followUser.id;
         console.log("gonna send fol req : ", followPayloadObj);
         if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(followPayloadObj));
     };

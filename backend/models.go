@@ -233,10 +233,11 @@ type SessionStruct struct {
 }
 
 type NotifStruct struct {
-	Label  string `json:"label"`
-	Id     int    `json:"id"`
-	Type   string `json:"type"`
-	UserId int    `json:"userid"`
+	Label    string `json:"label"`
+	Id       int    `json:"id"`
+	Type     string `json:"type"`
+	TargetId int    `json:"targetid"`
+	SourceId int    `json:"sourceid"`
 }
 
 type NotiMessageStruct struct {
@@ -248,5 +249,4 @@ type NotiMessageStruct struct {
 	GroupId   int    `json:"groupid"`
 	CreatedAt string `json:"createdat"`
 	Type      string `json:"type"`
-	UserId    int    `json:"userid"`
 }
