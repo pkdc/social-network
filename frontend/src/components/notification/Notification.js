@@ -6,7 +6,9 @@ import styles from "./Notification.module.css";
 const Notification = (props) => {
     const [notiArr, setNotiArr] = useState([]);
     useEffect(() => {
+        console.log("props.newNoti", props.newNoti);
         props.newNoti && setNotiArr(prevArr => [props.newNoti, ...prevArr]);
+        // props.onAdded();
     }, [props.newNoti]);
     
     console.log("noti arr (Notification): ", notiArr);

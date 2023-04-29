@@ -93,15 +93,15 @@ const TopNav = () => {
     const wsCtx = useContext(WebSocketContext);
 
     useEffect(() => {
-        if (wsCtx.websocket !== null && wsCtx.newNotiObj) {
+        if (wsCtx.websocket !== null && wsCtx.newNotiObj !== null) {
             console.log("ws receives notiObj (TopNav): ", wsCtx.newNotiObj);
             console.log("ws receives noti type (TopNav): ", wsCtx.newNotiObj.type);
             setNewNoti(wsCtx.newNotiObj);
             wsCtx.setNewNotiObj(null);
         }
     } ,[wsCtx.newNotiObj]);
-    console.log("wsCtx.setNewNotiObj after getting (TopNav outside): ", wsCtx.newNotiObj);
-    
+    console.log("wsCtx.setNewNotiObj before and after getting (TopNav outside): ", wsCtx.newNotiObj);
+    console.log("newNoti (TopNav outside): ", newNoti);
     const onShowNoti = () => {
         console.log("noti");
         setSowNoti(prev => !prev);
