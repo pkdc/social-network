@@ -238,6 +238,7 @@ type NotifStruct struct {
 	Type     string `json:"type"`
 	TargetId int    `json:"targetid"`
 	SourceId int    `json:"sourceid"`
+	Accepted bool   `json:"accepted"`
 }
 
 type NotiMessageStruct struct {
@@ -249,4 +250,5 @@ type NotiMessageStruct struct {
 	GroupId   int    `json:"groupid"`
 	CreatedAt string `json:"createdat"`
 	Type      string `json:"type"`
+	Accepted  bool   `json:"accepted"`
 }

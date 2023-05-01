@@ -11,8 +11,6 @@ const AllNotificationItems = (props) => {
                         type={notiItem.type}
                         targetId={notiItem.targetid}
                         sourceId={notiItem.sourceid}
-                        onAccept={props.acceptHandler}
-                        onDecline={props.declineHandler}
                     />
                     );
                 })

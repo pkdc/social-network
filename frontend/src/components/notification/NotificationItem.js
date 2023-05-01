@@ -1,20 +1,18 @@
 import { useContext } from "react";
-import SmallButton from "../UI/SmallButton";
 import { UsersContext } from "../store/users-context";
-import Avatar from "../UI/Avatar";
+import FollowReqNotiItem from "./FollowReqNotiItem";
 
 const NotificationItem = (props) => {
     const usersCtx = useContext(UsersContext);
     const sourceUser = usersCtx.users.find((user) => user.id === props.sourceId);
     console.log("src", sourceUser);
+    
     return (
         <div>
-            <div>
-                <Avatar height={50} width={50}></Avatar>
-                <h3>{`${sourceUser.fname} ${sourceUser.lname} wants to follow you`}</h3>
-                <SmallButton onClick={props.onAccept}>Accept</SmallButton>
-                <SmallButton onClick={props.onDecline}>Decline</SmallButton>
-            </div>
+            {props.type === "follow-req" && <FollowReqNotiItem 
+            srcUser={sourceUser}
+            targetId={props.targetId}
+            />}
         </div>
     );
 };
