@@ -42,14 +42,7 @@ export const WebSocketContextProvider = (props) => {
 
             if (msgObj.label === "p-chat") {
                 console.log("ws receives private msg (wsctx): ", msgObj.message);
-                const newReceivedMsgObj = {
-                    id: msgObj.id,
-                    targetid: msgObj.targetid,
-                    sourceid: msgObj.sourceid,
-                    message: msgObj.message,
-                    createdat: msgObj.createdat,
-                };
-                setNewMsgsObj(newReceivedMsgObj);
+                setNewMsgsObj(msgObj);
             } else if (msgObj.label === "g-chat") {
                 console.log("ws receives grp msg (wsctx): ", msgObj.message);
                 // const newReceivedMsgObj = {

@@ -27,8 +27,7 @@ function Profile({ userId }) {
     const followingCtx = useContext(FollowingContext);
     const usersCtx = useContext(UsersContext);
     const wsCtx = useContext(WebSocketContext);
-    
-    console.log("all users (profile)", usersCtx.users);
+
     const currUserId = localStorage.getItem("user_id");
     const [currentlyFollowing, setCurrentlyFollowing] = useState(false);
     const [requestedToFollow, setRequestedToFollow] = useState(false);
@@ -39,6 +38,82 @@ function Profile({ userId }) {
         followingCtx.following && setCurrentlyFollowing(followingCtx.following.some(followingUser => followingUser.id === +userId))
     }, [followingCtx.following, userId]);
     
+    useEffect(() => {
+        if (wsCtx.newNotiReplyObj) {
+            if (wsCtx.newNotiReplyObj.accepted) {
+                setCurrentlyFollowing(true);
+                setRequestedToFollow(false);
+
+                const followUser = usersCtx.users.find(user => user.id === wsCtx.newNotiReplyObj.sourceid);
+                console.log("found user frd (profile accepted req)", followUser);
+                followingCtx.follow(followUser);
+
+                console.log("follow user id", wsCtx.newNotiReplyObj.sourceid);
+                console.log("cur user is following (profile)", followingCtx.following);
+                const targetId =  wsCtx.newNotiReplyObj.sourceid;
+                console.log("targetid", targetId)
+                console.log("current user", currUserId)
+    
+                const data = {
+                    id: 0,
+                    sourceid: parseInt(currUserId),
+                    targetid: parseInt(targetId),
+                    status: 1
+                };
+    
+                const test = {
+                    method: "POST",
+                    credentials: "include",
+                    mode: "cors",
+                    headers: {
+                    'Content-Type': 'application/json'
+                },
+                    body: JSON.stringify(data)
+                };
+                
+                fetch('http://localhost:8080/user-follower', test)
+                .then(resp => resp.json())
+                .then(data => {
+                    console.log(data);
+                    if (data.success) {
+                        console.log("followrequest")
+                    }
+                })
+                .catch(err => {
+                console.log(err);
+                })
+            }    
+        }
+    } , [wsCtx.newNotiReplyObj]);
+
+    const followHandler = (e) => {
+        const followUser = usersCtx.users.find(user => user.id === +e.target.id);
+        console.log("found user frd (profile)", followUser);
+        console.log("frd publicity", publicity);
+        if (followUser) {
+            if (followUser.public) {
+                console.log(" user frd (public)");
+                followingCtx.follow(followUser);
+                setCurrentlyFollowing(true);
+                storeFollow(e);
+            } else if (!followUser.public) { //if frd private
+                console.log(" user frd (private)");
+                followingCtx.requestToFollow(followUser);
+                setRequestedToFollow(true);
+            }
+        } else {
+            console.log("user frd not found (profile)");
+        }
+    };
+
+    const unfollowHandler = (e) => {
+        console.log("unfollow user", e.target.id);
+        const unfollowUser = usersCtx.users.find(user => user.id === e.target.id);
+        unfollowUser && followingCtx.unfollow(unfollowUser);
+        setCurrentlyFollowing(false);
+        // delete from db
+    };
+
     // get userId (self) data
     const { error , isLoaded, data } = useGet(`/user?id=${userId}`)
      console.log("user data (profile)", data.data)
@@ -84,89 +159,6 @@ function Profile({ userId }) {
             })
     };
 
-    // follow
-    function clickedFollowHandler(e) {
-        const followUser = usersCtx.users.find(user => user.id === +e.target.id);
-        console.log("found user frd (profile)", followUser);
-        console.log("frd publicity", publicity);
-        if (followUser) {
-            if (followUser.public) {
-                console.log(" user frd (public)");
-                followingCtx.follow(followUser);
-                setCurrentlyFollowing(true);
-                storeFollow(e);
-            } else if (!followUser.public) { //if frd private
-                console.log(" user frd (private)");
-                followingCtx.requestToFollow(followUser);
-                setRequestedToFollow(true);
-            }
-        } else {
-            console.log("user frd not found (profile)");
-        }
-        
-        // // if accepted
-        // setCurrentlyFollowing(true);
-
-        // console.log("follow user", e.target.id);
-        // console.log("cur user is following (profile)", followingCtx.following);
-        // const targetId = e.target.id
-        // console.log("targetid", targetId)
-        // console.log("current user", currUserId)
-
-        // const data = {
-        //     id: 0,
-        //     sourceid: parseInt(currUserId),
-        //     targetid: parseInt(targetId),
-        //     status: 1
-        // };
-
-        // const test = {
-        //     method: "POST",
-        //     credentials: "include",
-        //     mode: "cors",
-        //     headers: {
-        //       'Content-Type': 'application/json'
-        //   },
-        //     body: JSON.stringify(data)
-        //   };
-        
-        //   fetch('http://localhost:8080/user-follower', test)
-        //     .then(resp => resp.json())
-        //     .then(data => {
-        //         console.log(data);
-        //         if (data.success) {
-        //             console.log("followrequest")
-        //         }
-        //     })
-        //     .catch(err => {
-        //       console.log(err);
-        //     })
-    }
-    
-    const unfollowHandler = (e) => {
-        console.log("unfollow user", e.target.id);
-        const unfollowUser = usersCtx.users.find(user => user.id === e.target.id);
-        unfollowUser && followingCtx.unfollow(unfollowUser);
-        setCurrentlyFollowing(false);
-        // delete from db
-    };
-
-    // frd
-    let followButton;
-    let messageButton;
-    
-    if (currUserId !== userId) {
-        console.log("currentlyFollowing", currentlyFollowing);
-        if (currentlyFollowing) {
-            followButton = <div className={classes.followbtn} id={userId} onClick={unfollowHandler}>- UnFollow</div>
-        } else if (requestedToFollow) {
-            followButton = <div className={classes.followbtn} id={userId}>Requested</div>
-        } else {
-            followButton = <div className={classes.followbtn} id={userId} onClick={clickedFollowHandler}>+ Follow</div>
-        }       
-        messageButton = <GreyButton>Message</GreyButton> 
-    }
-
     const setPublicityHandler = (e) => {
         console.log("publicity", publicity);
         console.log("toggle event", e);
@@ -188,8 +180,24 @@ function Profile({ userId }) {
 
     };
 
+    // frd
+    
+    let followButton;
+    let messageButton;
+    
+    if (currUserId !== userId) {
+        console.log("currentlyFollowing", currentlyFollowing);
+        if (currentlyFollowing) {
+            followButton = <div className={classes.followbtn} id={userId} onClick={unfollowHandler}>- UnFollow</div>
+        } else if (requestedToFollow) {
+            followButton = <div className={classes.followbtn} id={userId}>Requested</div>
+        } else {
+            followButton = <div className={classes.followbtn} id={userId} onClick={followHandler}>+ Follow</div>
+        }       
+        messageButton = <GreyButton>Message</GreyButton> 
+    }
+
     return <div className={classes.container}>
-   
     <div className={classes.private}>
         {/* label?? friends only/public/private?? */}
         {currUserId === userId && !publicity && 
