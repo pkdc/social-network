@@ -82,7 +82,10 @@ function Profile({ userId }) {
                 .catch(err => {
                 console.log(err);
                 })
-            }    
+            } else {
+                setCurrentlyFollowing(false);
+                setRequestedToFollow(false);
+            }
         }
     } , [wsCtx.newNotiReplyObj]);
 
@@ -111,9 +114,47 @@ function Profile({ userId }) {
         const unfollowUser = usersCtx.users.find(user => user.id === e.target.id);
         unfollowUser && followingCtx.unfollow(unfollowUser);
         setCurrentlyFollowing(false);
+        
         // delete from db
     };
 
+    const setPublicityHandler = (e) => {
+        console.log("publicity", publicity);
+        console.log("toggle event", e);
+        console.log("toggle prev checkbox status", e.target.defaultChecked);
+        console.log("toggle cur checkbox status", e.target.checked);
+        // e.target.defaultChecked && setPublicity(false); // wrong but css working
+        // e.target.checked && setPublicity(true); // wrong but css working
+        // setPublicity((prev) => (
+        //     prev = !prev
+        //     // !prev ? setPublicity(true) : setPublicity(false) // also doesn't work correctly
+        // ));
+        setPublicity(prev => !prev); // right but css not working
+
+        let publicityNum;
+        publicity ? publicityNum = 1 : publicityNum = 0;
+        localStorage.setItem("public", publicityNum);
+
+        // post to store publicity to db
+
+    };
+
+    // frd
+    
+    let followButton;
+    let messageButton;
+    
+    if (currUserId !== userId) {
+        console.log("currentlyFollowing", currentlyFollowing);
+        if (currentlyFollowing) {
+            followButton = <div className={classes.followbtn} id={userId} onClick={unfollowHandler}>- UnFollow</div>
+        } else if (requestedToFollow) {
+            followButton = <div className={classes.followbtn} id={userId}>Requested</div>
+        } else {
+            followButton = <div className={classes.followbtn} id={userId} onClick={followHandler}>+ Follow</div>
+        }       
+        messageButton = <GreyButton>Message</GreyButton> 
+    }
     // get userId (self) data
     const { error , isLoaded, data } = useGet(`/user?id=${userId}`)
      console.log("user data (profile)", data.data)
@@ -158,44 +199,6 @@ function Profile({ userId }) {
               console.log(err);
             })
     };
-
-    const setPublicityHandler = (e) => {
-        console.log("publicity", publicity);
-        console.log("toggle event", e);
-        console.log("toggle prev checkbox status", e.target.defaultChecked);
-        console.log("toggle cur checkbox status", e.target.checked);
-        // e.target.defaultChecked && setPublicity(false); // wrong but css working
-        // e.target.checked && setPublicity(true); // wrong but css working
-        // setPublicity((prev) => (
-        //     prev = !prev
-        //     // !prev ? setPublicity(true) : setPublicity(false) // also doesn't work correctly
-        // ));
-        setPublicity(prev => !prev); // right but css not working
-
-        let publicityNum;
-        publicity ? publicityNum = 1 : publicityNum = 0;
-        localStorage.setItem("public", publicityNum);
-
-        // post to store publicity to db
-
-    };
-
-    // frd
-    
-    let followButton;
-    let messageButton;
-    
-    if (currUserId !== userId) {
-        console.log("currentlyFollowing", currentlyFollowing);
-        if (currentlyFollowing) {
-            followButton = <div className={classes.followbtn} id={userId} onClick={unfollowHandler}>- UnFollow</div>
-        } else if (requestedToFollow) {
-            followButton = <div className={classes.followbtn} id={userId}>Requested</div>
-        } else {
-            followButton = <div className={classes.followbtn} id={userId} onClick={followHandler}>+ Follow</div>
-        }       
-        messageButton = <GreyButton>Message</GreyButton> 
-    }
 
     return <div className={classes.container}>
     <div className={classes.private}>
