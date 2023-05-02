@@ -17,59 +17,21 @@ const Root = (props) => {
     // const [usersList, setUsersList] = useState([]);
     // const [joinedGroupList, setJoinedGroupList] = useState([]);
 
-    // // get users
-    // useEffect(() => {
-    //     fetch(userUrl)
-    //     .then(resp => resp.json())
-    //     .then(data => {
-    //         console.log("user (Root): ", data)
-    //         let [usersArr] = Object.values(data); 
-    //         setUsersList(usersArr);
-    //     })
-    //     .catch(
-    //         err => console.log(err)
-    //     );
-    // }, []);
-
-    // console.log("user chat users (root)", usersList);
-
-    // const [socket, setSocket] = useState(null);
-
-    // websocket
-//     useEffect(() => {
-//         // const newSocket = new WebSocket("ws://localhost:8080/ws");
-//         const newSocket = new WebSocket("ws://localhost:8080/ws")
-  
-//         newSocket.onopen = () => {
-//             console.log("ws connected");
-//             setSocket(newSocket);
-//         };
-        
-//         newSocket.onclose = () => {
-//             console.log("bye ws");
-//             setSocket(null);
-//         };
-  
-//         newSocket.onerror = (err) => console.log("ws error");
-  
-//         return () => {
-//             newSocket.close();
-//         };   
-//   }, []);
-
-//   console.log("socket: ", socket);
-console.log("Root");
-    return <>
-    <WebSocketContextProvider>
+    console.log("Root");
+    
+    return (
+        <>
         <UsersContextProvider>
-            <FollowingContextProvider>
-                <TopNav/>
-                <ChatSidebar/>
-                <Outlet/>
-            </FollowingContextProvider>
+            <WebSocketContextProvider>
+                <FollowingContextProvider>
+                    <TopNav/>
+                    <ChatSidebar/>
+                    <Outlet/>
+                </FollowingContextProvider>
+            </WebSocketContextProvider>
         </UsersContextProvider>
-    </WebSocketContextProvider>
-    </>
+        </>
+    );
 };
 
 export default Root;

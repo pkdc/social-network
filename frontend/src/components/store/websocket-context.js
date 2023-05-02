@@ -1,4 +1,5 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useContext} from "react";
+import { UsersContext } from "./users-context";
 
 export const WebSocketContext = React.createContext({
     websocket: null,
@@ -6,6 +7,8 @@ export const WebSocketContext = React.createContext({
     setNewMsgsObj: () => {},
     newNotiObj: null,
     setNewNotiObj: () => {},
+    newNotiReplyObj: null,
+    setNewNotiReplyObj: () => {},
 });
 
 export const WebSocketContextProvider = (props) => {
@@ -13,6 +16,9 @@ export const WebSocketContextProvider = (props) => {
     const [newMsgsObj, setNewMsgsObj] = useState(null);
 
     const [newNotiObj, setNewNotiObj] = useState(null);
+    const [newNotiReplyObj, setNewNotiReplyObj] = useState(null);
+
+    const usersCtx = useContext(UsersContext);
 
     useEffect(() => {
         const newSocket = new WebSocket("ws://localhost:8080/ws")
@@ -55,15 +61,19 @@ export const WebSocketContextProvider = (props) => {
                 // };
                 // setNewMsgsObj(newReceivedMsgObj);
             } else if (msgObj.label === "noti") {
-                console.log("ws receives noti (wsctx): ", msgObj);
-                console.log("ws receives noti type (wsctx): ", msgObj.type);
-                const newReceivedNotiObj = {
-                    id: msgObj.id,
-                    type: msgObj.type,
-                    sourceid: msgObj.sourceid,
-                    targetid: msgObj.targetid,
-                };
-                setNewNotiObj(newReceivedNotiObj);
+                if (msgObj.type === "follow-req") {
+                    console.log("ws receives noti (wsctx): ", msgObj);
+                    console.log("ws receives noti type (wsctx): ", msgObj.type);
+                    setNewNotiObj(msgObj);
+                } else if (msgObj.type === "follow-req-reply") {
+                    console.log("ws receives noti reply (wsctx): ", msgObj);
+                    console.log("ws receives noti reply type (wsctx): ", msgObj.type);
+                    console.log("ws receives noti reply accepted (wsctx): ", msgObj.accepted);
+                    setNewNotiReplyObj(msgObj);
+                    // const followUser = usersCtx.users.find((user) => user.id === msgObj.sourceid);
+                    // console.log(msgObj.targetid, " Gonna follow (wsctx): ", followUser);
+                    // msgObj.accepted && 
+                }
             }
         };
 
@@ -79,6 +89,8 @@ export const WebSocketContextProvider = (props) => {
             setNewMsgsObj: setNewMsgsObj,
             newNotiObj: newNotiObj,
             setNewNotiObj: setNewNotiObj,
+            newNotiReplyObj: newNotiReplyObj,
+            setNewNotiReplyObj: setNewNotiReplyObj,
         }}>
             {props.children}
         </WebSocketContext.Provider>

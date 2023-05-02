@@ -48,7 +48,7 @@ export const FollowingContextProvider = (props) => {
     };
 
     const followHandler = (followUser) => {
-        if (following) {
+        if (following) { // not empty
             setFollowing(prevFollowing => [...prevFollowing, followUser]);
 
             const storedFollowing = JSON.parse(localStorage.getItem("following"));

@@ -64,7 +64,7 @@ import chatIcon from "../assets/chat5.svg";
 import Avatar from "../UI/Avatar";
 import { AuthContext } from "../store/auth-context";
 import { WebSocketContext } from "../store/websocket-context";
-import Notification from "../notification/Notification";
+import NotificationCentre from "../notification/NotificationCentre";
 
 const TopNav = () => {
     const [showNoti, setSowNoti] = useState(false);
@@ -140,7 +140,7 @@ const TopNav = () => {
                     <div className={styles.notif}>
                         <div className={styles.btn} onClick={onShowNoti}>
                             <img src={notif} alt=""></img>
-                            {showNoti && <Notification newNoti={newNoti}/>}
+                            {showNoti && <NotificationCentre newNoti={newNoti}/>}
                         </div>
                         <button className={styles.btn}>
                             <img src={chatIcon} alt=""></img>

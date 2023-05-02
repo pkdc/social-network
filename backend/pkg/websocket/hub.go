@@ -80,16 +80,16 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 		not.Label = "noti"
 		not.Id = msgStruct.Id
 		not.Type = msgStruct.Type
-		not.SourceId = msgStruct.SourceId
 		not.TargetId = msgStruct.TargetId
+		not.SourceId = msgStruct.SourceId
 		not.Accepted = msgStruct.Accepted
 		// fmt.Printf("not Struct: %v\n", not)
 	} else if msgStruct.Label == "private" {
 		t = 2
 		userMsg.Label = "p-chat"
 		userMsg.Id = msgStruct.Id
-		userMsg.SourceId = msgStruct.SourceId
 		userMsg.TargetId = msgStruct.TargetId
+		userMsg.SourceId = msgStruct.SourceId
 		userMsg.Message = msgStruct.Message
 		userMsg.CreatedAt = time.Now().String()
 	} else if msgStruct.Label == "group" {

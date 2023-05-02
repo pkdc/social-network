@@ -7,6 +7,7 @@ import SmallButton from "../UI/SmallButton";
 import ToggleSwitch from "../UI/ToggleSwitch";
 import { FollowingContext } from "../store/following-context";
 import { UsersContext } from "../store/users-context";
+import { WebSocketContext } from "../store/websocket-context";
 import classes from './Profile.module.css';
 
 function Profile({ userId }) {
@@ -25,6 +26,8 @@ function Profile({ userId }) {
     // friend
     const followingCtx = useContext(FollowingContext);
     const usersCtx = useContext(UsersContext);
+    const wsCtx = useContext(WebSocketContext);
+    
     console.log("all users (profile)", usersCtx.users);
     const currUserId = localStorage.getItem("user_id");
     const [currentlyFollowing, setCurrentlyFollowing] = useState(false);
@@ -156,6 +159,8 @@ function Profile({ userId }) {
         console.log("currentlyFollowing", currentlyFollowing);
         if (currentlyFollowing) {
             followButton = <div className={classes.followbtn} id={userId} onClick={unfollowHandler}>- UnFollow</div>
+        } else if (requestedToFollow) {
+            followButton = <div className={classes.followbtn} id={userId}>Requested</div>
         } else {
             followButton = <div className={classes.followbtn} id={userId} onClick={clickedFollowHandler}>+ Follow</div>
         }       
