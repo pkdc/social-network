@@ -43,6 +43,7 @@ export const FollowingContextProvider = (props) => {
         followPayloadObj["type"] = "follow-req";
         followPayloadObj["sourceid"] = +selfId;
         followPayloadObj["targetid"] = followUser.id;
+        followPayloadObj["createdat"] = Date.now();
         console.log("gonna send fol req : ", followPayloadObj);
         if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(followPayloadObj));
     };
@@ -58,17 +59,19 @@ export const FollowingContextProvider = (props) => {
             setFollowing([followUser]);
             localStorage.setItem("following", JSON.stringify([followUser]));
         }
-        console.log("locally stored following", JSON.parse(localStorage.getItem("following")));
+        console.log("locally stored following (fol)", JSON.parse(localStorage.getItem("following")));
     };
 
     const unfollowHandler = (unfollowUser) => {
+        console.log("unfollowUser (folctx)", unfollowUser);
         setFollowing(prevFollowing => {
-            prevFollowing.filter(() => unfollowUser);
+            prevFollowing.filter((followingUser) => followingUser.id !== unfollowUser.id);
         });
-        localStorage.setItem("following", JSON.stringify(following));
-        // console.log("following (unfollow) (ctx)", following); // not accurate
         const storedFollowing = JSON.parse(localStorage.getItem("following"));
-        console.log("stored fol", storedFollowing);
+        const curFollowing = storedFollowing.filter((followingUser) => followingUser.id !== unfollowUser.id);
+        localStorage.setItem("following", JSON.stringify(curFollowing));
+        // console.log("following (unfollow) (ctx)", following); // not accurate
+        console.log("locally stored following (unfol)", JSON.parse(localStorage.getItem("following")));
     };
 
     const receiveMsgHandler = (friendId, open) => {

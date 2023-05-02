@@ -110,12 +110,14 @@ function Profile({ userId }) {
     };
 
     const unfollowHandler = (e) => {
-        console.log("unfollow user", e.target.id);
-        const unfollowUser = usersCtx.users.find(user => user.id === e.target.id);
+        console.log("unfollow userid", e.target.id);
+        const unfollowUser = usersCtx.users.find(user => user.id === +e.target.id);
+        console.log("unfollow user", unfollowUser);
         unfollowUser && followingCtx.unfollow(unfollowUser);
         setCurrentlyFollowing(false);
-        
+
         // delete from db
+        
     };
 
     const setPublicityHandler = (e) => {
