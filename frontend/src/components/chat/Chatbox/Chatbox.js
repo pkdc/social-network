@@ -42,7 +42,7 @@ const Chatbox = (props) => {
         if (wsCtx.websocket !== null && wsCtx.newMsgsObj) {
             console.log("new Received msg data when chatbox is open", wsCtx.newMsgsObj);
             console.log("ws receives msg from when chatbox is open: ", wsCtx.newMsgsObj.sourceid);
-            setNewMsgs((prevNewMsgs) => [...prevNewMsgs, wsCtx.newMsgsObj]);
+            setNewMsgs((prevNewMsgs) => [...new Set([...prevNewMsgs, wsCtx.newMsgsObj])]);
         
             if (wsCtx.newMsgsObj !== null) wsCtx.setNewMsgsObj(null);
 

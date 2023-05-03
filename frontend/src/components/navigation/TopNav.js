@@ -67,7 +67,7 @@ import { WebSocketContext } from "../store/websocket-context";
 import NotificationCentre from "../notification/NotificationCentre";
 
 const TopNav = () => {
-    const [showNoti, setSowNoti] = useState(false);
+    const [showNoti, setShowNoti] = useState(false);
     const [newNoti, setNewNoti] = useState(null);
 
     const navigate = useNavigate();
@@ -102,10 +102,14 @@ const TopNav = () => {
     } ,[wsCtx.newNotiObj]);
     console.log("wsCtx.setNewNotiObj before and after getting (TopNav outside): ", wsCtx.newNotiObj);
     console.log("newNoti (TopNav outside): ", newNoti);
+    
     const onShowNoti = () => {
-        console.log("noti");
-        setSowNoti(prev => !prev);
+        console.log("noti toggled!");
+        setShowNoti(prev => !prev);
     };
+    const ReceivedNewNotiHandler = () => setNewNoti(null);
+
+    console.log("show noti centre", showNoti);
     
     return (
         <nav>
@@ -140,8 +144,12 @@ const TopNav = () => {
                     <div className={styles.notif}>
                         <div className={styles.btn} onClick={onShowNoti}>
                             <img src={notif} alt=""></img>
-                            {showNoti && <NotificationCentre newNoti={newNoti}/>}
                         </div>
+                        {showNoti && <NotificationCentre 
+                            newNoti={newNoti}
+                            onReceivedNewNoti={ReceivedNewNotiHandler}
+                            />
+                        }
                         <button className={styles.btn}>
                             <img src={chatIcon} alt=""></img>
                         </button>
@@ -155,3 +163,16 @@ const TopNav = () => {
 };
 
 export default TopNav;
+
+// {!showNoti && <div className={styles.btn} onClick={onShowNoti}>
+//                             <img src={notif} alt=""></img>
+//                             </div>}
+//                             {showNoti && <NotificationCentre 
+//                             newNoti={newNoti}
+//                             onReceivedNewNoti={ReceivedNewNotiHandler}
+//                             onRepliedToNoti={RepliedToNotiHandler}
+//                             />}
+                        
+//                         {showNoti && <div className={styles.btn} onClick={onHideNoti} style={{zIndex: "1001"}}>
+//                             <img src={notif} alt=""></img>
+//                         </div>}

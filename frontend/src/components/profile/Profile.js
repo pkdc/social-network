@@ -87,6 +87,7 @@ function Profile({ userId }) {
                 setRequestedToFollow(false);
             }
         }
+        wsCtx.setNewNotiReplyObj(null);
     } , [wsCtx.newNotiReplyObj]);
 
     const followHandler = (e) => {

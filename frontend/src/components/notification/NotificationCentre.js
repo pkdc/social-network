@@ -10,7 +10,7 @@ const NotificationCentre = (props) => {
     useEffect(() => {
         console.log("props.newNoti", props.newNoti);
         props.newNoti && setNotiArr(prevArr => [... new Set([props.newNoti, ...prevArr])]);
-        // props.onAdded();
+        props.onReceivedNewNoti();
     }, [props.newNoti]);
     
     console.log("noti arr (Notification): ", notiArr);
@@ -22,14 +22,7 @@ const NotificationCentre = (props) => {
         <div className={styles["container"]}>
             <AllNotificationItems 
                 notiItems={notiArr}
-                // acceptHandler={acceptHandler}
-                // declineHandler={declineHandler}
             />
-            {/* <NotificationItem 
-            // description={description}
-            onAccept={acceptHandler}
-            onDecline={declineHandler}
-            /> */}
         </div>
     );
 };
