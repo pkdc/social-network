@@ -855,16 +855,15 @@ func UserFollowerHandler() http.HandlerFunc {
 					Resp.Success = false
 				}
 			} else {
-				var newFollower crud.CreateFollowerParams
+				var delFollower crud.DeleteFollowerParams
 
-				newFollower.SourceID = int64(follower.SourceId)
-				newFollower.TargetID = int64(follower.TargetId)
-				newFollower.Status = int64(follower.Status)
+				delFollower.SourceID = int64(follower.SourceId)
+				delFollower.TargetID = int64(follower.TargetId)
 
-				_, err = query.CreateFollower(context.Background(), newFollower)
+				err = query.DeleteFollower(context.Background(), delFollower)
 
 				if err != nil {
-					fmt.Println("Unable to insert follower")
+					fmt.Println("Unable to delete follower")
 					Resp.Success = false
 				}
 			}
