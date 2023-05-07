@@ -831,7 +831,8 @@ func UserFollowerHandler() http.HandlerFunc {
 			if err != nil {
 				Resp.Success = false
 			}
-			fmt.Println("follow", follower)
+
+			fmt.Println("follow/unfollow", follower)
 
 			// ### CONNECT TO DATABASE ###
 
@@ -839,19 +840,33 @@ func UserFollowerHandler() http.HandlerFunc {
 
 			query := crud.New(db)
 
-			// ### ADD FOLLOWER TO DATABASE ###
+			if follower.Action == "follow" {
+				// ### ADD FOLLOWER TO DATABASE ###
+				var newFollower crud.CreateFollowerParams
 
-			var newFollower crud.CreateFollowerParams
+				newFollower.SourceID = int64(follower.SourceId)
+				newFollower.TargetID = int64(follower.TargetId)
+				newFollower.Status = int64(follower.Status)
 
-			newFollower.SourceID = int64(follower.SourceId)
-			newFollower.TargetID = int64(follower.TargetId)
-			newFollower.Status = int64(follower.Status)
+				_, err = query.CreateFollower(context.Background(), newFollower)
 
-			_, err = query.CreateFollower(context.Background(), newFollower)
+				if err != nil {
+					fmt.Println("Unable to insert follower")
+					Resp.Success = false
+				}
+			} else {
+				var newFollower crud.CreateFollowerParams
 
-			if err != nil {
-				fmt.Println("Unable to insert follower")
-				Resp.Success = false
+				newFollower.SourceID = int64(follower.SourceId)
+				newFollower.TargetID = int64(follower.TargetId)
+				newFollower.Status = int64(follower.Status)
+
+				_, err = query.CreateFollower(context.Background(), newFollower)
+
+				if err != nil {
+					fmt.Println("Unable to insert follower")
+					Resp.Success = false
+				}
 			}
 
 			// Marshals the response struct to a json object

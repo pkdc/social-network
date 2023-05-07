@@ -91,7 +91,7 @@ function Profile({ userId }) {
         setCurrentlyFollowing(false);
 
         // delete from db
-        
+        deleteFollow(e.target.id);
     };
 
     const setPublicityHandler = (e) => {
@@ -144,6 +144,41 @@ function Profile({ userId }) {
 
         const data = {
             // id: 0,
+            action: "follow",
+            sourceid: parseInt(currUserId),
+            targetid: parseInt(targetId),
+            status: 1
+        };
+
+        const reqOptions = {
+            method: "POST",
+            credentials: "include",
+            mode: "cors",
+            headers: {
+              'Content-Type': 'application/json'
+          },
+            body: JSON.stringify(data)
+          };
+        
+          fetch('http://localhost:8080/user-follower', reqOptions)
+            .then(resp => resp.json())
+            .then(data => {
+                console.log(data);
+                if (data.success) {
+                    console.log("followrequest")
+                }
+            })
+            .catch(err => {
+              console.log(err);
+            })
+    };
+
+    const deleteFollow = (targetId) => {
+        console.log("targetid (deleteFollow)", targetId)
+
+        const data = {
+            // id: 0,
+            action: "unfollow",
             sourceid: parseInt(currUserId),
             targetid: parseInt(targetId),
             status: 1

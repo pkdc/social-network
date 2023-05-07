@@ -49,10 +49,11 @@ type UserPayload struct {
 }
 
 type UserFollowerStruct struct {
-	Id       int `json:"id"`
-	SourceId int `json:"sourceid"`
-	TargetId int `json:"targetid"`
-	Status   int `json:"status"`
+	Id       int    `json:"id"`
+	Action   string `json:"action"`
+	SourceId int    `json:"sourceid"`
+	TargetId int    `json:"targetid"`
+	Status   int    `json:"status"`
 }
 
 type UserMessageStruct struct {
