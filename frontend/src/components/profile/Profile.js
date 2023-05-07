@@ -54,34 +54,7 @@ function Profile({ userId }) {
                 console.log("targetid", targetId)
                 console.log("current user", currUserId)
     
-                const data = {
-                    id: 0,
-                    sourceid: parseInt(currUserId),
-                    targetid: parseInt(targetId),
-                    status: 1
-                };
-    
-                const test = {
-                    method: "POST",
-                    credentials: "include",
-                    mode: "cors",
-                    headers: {
-                    'Content-Type': 'application/json'
-                },
-                    body: JSON.stringify(data)
-                };
-                
-                fetch('http://localhost:8080/user-follower', test)
-                .then(resp => resp.json())
-                .then(data => {
-                    console.log(data);
-                    if (data.success) {
-                        console.log("followrequest")
-                    }
-                })
-                .catch(err => {
-                console.log(err);
-                })
+                storeFollow(targetId);
             } else {
                 setCurrentlyFollowing(false);
                 setRequestedToFollow(false);
@@ -99,7 +72,7 @@ function Profile({ userId }) {
                 console.log(" user frd (public)");
                 followingCtx.follow(followUser);
                 setCurrentlyFollowing(true);
-                storeFollow(e);
+                storeFollow(e.target.id);
             } else if (!followUser.public) { //if frd private
                 console.log(" user frd (private)");
                 followingCtx.requestToFollow(followUser);
@@ -166,21 +139,17 @@ function Profile({ userId }) {
       if (error) return <div>Error: {error.message}</div>
 
     // store in db
-    const storeFollow = (e) => {
-        console.log("follow user", e.target.id);
-        console.log("cur user is following (profile)", followingCtx.following);
-        const targetId = e.target.id
-        console.log("targetid", targetId)
-        console.log("current user", currUserId)
+    const storeFollow = (targetId) => {
+        console.log("targetid (storeFollow)", targetId)
 
         const data = {
-            id: 0,
+            // id: 0,
             sourceid: parseInt(currUserId),
             targetid: parseInt(targetId),
             status: 1
         };
 
-        const test = {
+        const reqOptions = {
             method: "POST",
             credentials: "include",
             mode: "cors",
@@ -190,7 +159,7 @@ function Profile({ userId }) {
             body: JSON.stringify(data)
           };
         
-          fetch('http://localhost:8080/user-follower', test)
+          fetch('http://localhost:8080/user-follower', reqOptions)
             .then(resp => resp.json())
             .then(data => {
                 console.log(data);
