@@ -832,7 +832,7 @@ func UserFollowerHandler() http.HandlerFunc {
 				Resp.Success = false
 			}
 
-			fmt.Println("follow/unfollow", follower)
+			fmt.Println("follow", follower)
 
 			// ### CONNECT TO DATABASE ###
 
@@ -840,32 +840,49 @@ func UserFollowerHandler() http.HandlerFunc {
 
 			query := crud.New(db)
 
-			if follower.Action == "follow" {
-				// ### ADD FOLLOWER TO DATABASE ###
-				var newFollower crud.CreateFollowerParams
+			// ### ADD FOLLOWER TO DATABASE ###
+			var newFollower crud.CreateFollowerParams
 
-				newFollower.SourceID = int64(follower.SourceId)
-				newFollower.TargetID = int64(follower.TargetId)
-				newFollower.Status = int64(follower.Status)
+			newFollower.SourceID = int64(follower.SourceId)
+			newFollower.TargetID = int64(follower.TargetId)
+			newFollower.Status = int64(follower.Status)
 
-				_, err = query.CreateFollower(context.Background(), newFollower)
+			_, err = query.CreateFollower(context.Background(), newFollower)
 
-				if err != nil {
-					fmt.Println("Unable to insert follower")
-					Resp.Success = false
-				}
-			} else {
-				var delFollower crud.DeleteFollowerParams
+			if err != nil {
+				fmt.Println("Unable to insert follower")
+				Resp.Success = false
+			}
 
-				delFollower.SourceID = int64(follower.SourceId)
-				delFollower.TargetID = int64(follower.TargetId)
+		case http.MethodDelete:
+			// Declares the variables to store the follower details and handler response
+			var follower UserFollowerStruct
+			Resp := AuthResponse{Success: true}
 
-				err = query.DeleteFollower(context.Background(), delFollower)
+			// Decodes the json object to the struct, changing the response to false if it fails
+			err := json.NewDecoder(r.Body).Decode(&follower)
+			if err != nil {
+				Resp.Success = false
+			}
 
-				if err != nil {
-					fmt.Println("Unable to delete follower")
-					Resp.Success = false
-				}
+			fmt.Println("unfollow", follower)
+
+			// ### CONNECT TO DATABASE ###
+
+			db := db.DbConnect()
+
+			query := crud.New(db)
+
+			var delFollower crud.DeleteFollowerParams
+
+			delFollower.SourceID = int64(follower.SourceId)
+			delFollower.TargetID = int64(follower.TargetId)
+
+			err = query.DeleteFollower(context.Background(), delFollower)
+
+			if err != nil {
+				fmt.Println("Unable to delete follower")
+				Resp.Success = false
 			}
 
 			// Marshals the response struct to a json object

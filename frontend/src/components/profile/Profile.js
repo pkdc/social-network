@@ -144,7 +144,6 @@ function Profile({ userId }) {
 
         const data = {
             // id: 0,
-            action: "follow",
             sourceid: parseInt(currUserId),
             targetid: parseInt(targetId),
             status: 1
@@ -178,14 +177,13 @@ function Profile({ userId }) {
 
         const data = {
             // id: 0,
-            action: "unfollow",
             sourceid: parseInt(currUserId),
             targetid: parseInt(targetId),
             status: 1
         };
 
         const reqOptions = {
-            method: "POST",
+            method: "DELETE",
             credentials: "include",
             mode: "cors",
             headers: {
