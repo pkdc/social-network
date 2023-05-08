@@ -138,7 +138,7 @@ function Profile({ userId }) {
       if (!isLoaded) return <div>Loading...</div>
       if (error) return <div>Error: {error.message}</div>
 
-    // store in db
+    // store follower in db
     const storeFollow = (targetId) => {
         console.log("targetid (storeFollow)", targetId)
 
@@ -171,7 +171,8 @@ function Profile({ userId }) {
               console.log(err);
             })
     };
-
+    
+    // delete follower from db
     const deleteFollow = (targetId) => {
         console.log("targetid (deleteFollow)", targetId)
 

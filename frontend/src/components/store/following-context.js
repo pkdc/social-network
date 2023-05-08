@@ -64,9 +64,7 @@ export const FollowingContextProvider = (props) => {
 
     const unfollowHandler = (unfollowUser) => {
         console.log("unfollowUser (folctx)", unfollowUser);
-        setFollowing(prevFollowing => {
-            prevFollowing.filter((followingUser) => followingUser.id !== unfollowUser.id);
-        });
+        setFollowing(prevFollowing => prevFollowing.filter((followingUser) => followingUser.id !== unfollowUser.id));
         const storedFollowing = JSON.parse(localStorage.getItem("following"));
         const curFollowing = storedFollowing.filter((followingUser) => followingUser.id !== unfollowUser.id);
         localStorage.setItem("following", JSON.stringify(curFollowing));
