@@ -23,10 +23,13 @@ const AllUserChatItems = (props) => {
 
     const followingList = followingCtx.following;
     console.log(" following List (AllUserChatItems)", followingList);
-
-    useEffect(() => followingCtx.chatNotiUserArr && setNotiUserArr(followingCtx.chatNotiUserArr), []);
-    
+    useEffect(() => followingCtx.chatNotiUserArr && setNotiUserArr(followingCtx.chatNotiUserArr), [followingCtx.chatNotiUserArr]);
     console.log(" chatNotiUserArr (AllUserChatItems)", followingCtx.chatNotiUserArr);
+    followingList.forEach((followingUser) => {
+        if (followingCtx.chatNotiUserArr.find((chatNotiUser) => chatNotiUser.id === followingUser.id)) followingUser["noti"] = true;
+        else followingUser["noti"] = false;
+    });
+    console.log(" following List with noti set (AllUserChatItems)", followingList);
 
     const openUserChatboxHandler = (followingId) => props.onOpenChatbox(followingId);
 
@@ -68,7 +71,7 @@ const AllUserChatItems = (props) => {
                     fname={following.fname}
                     lname={following.lname}
                     nname={following.nname}
-                    // noti={noti}
+                    noti={following.noti}
                     onOpenChatbox={openUserChatboxHandler}
                 />}
                 }

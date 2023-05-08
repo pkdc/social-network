@@ -12,3 +12,14 @@
     /* z-index: 1000; */
 }
 
+.noti {
+    height: 15px;
+    width: 15px;
+    background-color: grey;
+}
+
+.noti.active {
+    height: 15px;
+    width: 15px;
+    background-color: red;
+}
