@@ -13,7 +13,7 @@ const Chatbox = (props) => {
 
     const [oldMsgData, setOldMsgData] = useState([]);
     const [newMsgsData, setNewMsgs] = useState([]);
-    const [justUpdated, setJustUpdated] = useState(false);
+    const [justUpdated, setJustUpdated] = useState(false); // if justUpdated, move chatitem to the top
 
     const selfId = +localStorage.getItem("user_id");
     const friendId = props.chatboxId;
@@ -40,15 +40,17 @@ const Chatbox = (props) => {
     //     };
     useEffect(() => {
         if (wsCtx.websocket !== null && wsCtx.newMsgsObj) {
-            console.log("new Received msg data when chatbox is open", wsCtx.newMsgsObj);
-            console.log("ws receives msg from when chatbox is open: ", wsCtx.newMsgsObj.sourceid);
-            setNewMsgs((prevNewMsgs) => [...new Set([...prevNewMsgs, wsCtx.newMsgsObj])]);
-        
-            if (wsCtx.newMsgsObj !== null) wsCtx.setNewMsgsObj(null);
-
-            followingCtx.receiveMsgFollowing(friendId, true);
+            if (wsCtx.newMsgsObj.sourceid === friendId) {
+                console.log("new Received msg data when chatbox is open", wsCtx.newMsgsObj);
+                console.log("ws receives msg from when chatbox is open: ", wsCtx.newMsgsObj.sourceid);
+                setNewMsgs((prevNewMsgs) => [...new Set([...prevNewMsgs, wsCtx.newMsgsObj])]);
             
-            setJustUpdated(prev => !prev);
+                if (wsCtx.newMsgsObj !== null) wsCtx.setNewMsgsObj(null);
+
+                followingCtx.receiveMsgFollowing(friendId, true);
+                
+                setJustUpdated(prev => !prev);
+            }
         }
         // console.log("new");
     }, [wsCtx.newMsgsObj])
