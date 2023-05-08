@@ -11,12 +11,15 @@ export const FollowingContext = React.createContext({
     follow: (followUser) => {},
     unfollow: (unfollowUser) => {},
     receiveMsgFollowing: (friendId, open) => {},
+    chatNotiUserArr: [],
+    setChatNotiUserArr: () => {},
 });
 
 export const FollowingContextProvider = (props) => {
     const selfId = localStorage.getItem("user_id");
     const followingUrl = `http://localhost:8080/user-following?id=${selfId}`;
     const [following, setFollowing] = useState([]);
+    const [chatNotiUserArr, setChatNotiUserArr] = useState([]);
     const wsCtx = useContext(WebSocketContext);
 
     // get from db
@@ -80,8 +83,7 @@ export const FollowingContextProvider = (props) => {
         // add userId chat item to the top
         setFollowing(prevFollowing => [targetUser, ...prevFollowing.filter(followingUser => followingUser.id !== +friendId)]);
         // noti if not open
-        const chatNoti = [];
-        // !open && chatNoti.push(friendId);
+        !open && setChatNotiUserArr(prevArr => [...new Set([targetUser, ...prevArr])]);
     };
 
     useEffect(() => getFollowingHandler(), []);
@@ -95,6 +97,8 @@ export const FollowingContextProvider = (props) => {
             follow: followHandler,
             unfollow: unfollowHandler,
             receiveMsgFollowing: receiveMsgHandler,
+            chatNotiUserArr: chatNotiUserArr,
+            setChatNotiUserArr: setChatNotiUserArr,
         }}>
             {props.children}
         </FollowingContext.Provider>

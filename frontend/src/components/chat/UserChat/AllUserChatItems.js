@@ -4,7 +4,7 @@ import { FollowingContext } from "../../store/following-context";
 import { WebSocketContext } from "../../store/websocket-context";
 
 const AllUserChatItems = (props) => {
-
+    const [notiUserArr, setNotiUserArr] = useState([]);
     const followingCtx = useContext(FollowingContext);
     const wsCtx = useContext(WebSocketContext);
     console.log("ws in AllUserChatItems: ",wsCtx.websocket);
@@ -23,7 +23,11 @@ const AllUserChatItems = (props) => {
 
     const followingList = followingCtx.following;
     console.log(" following List (AllUserChatItems)", followingList);
- 
+
+    useEffect(() => followingCtx.chatNotiUserArr && setNotiUserArr(followingCtx.chatNotiUserArr), []);
+    
+    console.log(" chatNotiUserArr (AllUserChatItems)", followingCtx.chatNotiUserArr);
+
     const openUserChatboxHandler = (followingId) => props.onOpenChatbox(followingId);
 
     // if (wsCtx.websocket !== null) wsCtx.websocket.onmessage = (e) => {
@@ -64,6 +68,7 @@ const AllUserChatItems = (props) => {
                     fname={following.fname}
                     lname={following.lname}
                     nname={following.nname}
+                    // noti={noti}
                     onOpenChatbox={openUserChatboxHandler}
                 />}
                 }
