@@ -16,8 +16,8 @@ const Chatbox = (props) => {
     const [justUpdated, setJustUpdated] = useState(false); // if justUpdated, move chatitem to the top
 
     const selfId = +localStorage.getItem("user_id");
-    const friendId = props.chatboxId;
-    console.log("friendId: ", friendId);
+    const frdOrGrpId = props.chatboxId;
+    console.log("friendId: ", frdOrGrpId);
 
     // const usersCtx = useContext(UsersContext);
     // console.log("chatbox: ", usersCtx.users);
@@ -38,16 +38,22 @@ const Chatbox = (props) => {
     //         message: msgObj.message,
     //         createdat: msgObj.createdat,
     //     };
+    
+    if (!props.grp) {
+        followingCtx.following.find((followingUser) => followingUser.id === frdOrGrpId)["chat_noti"] = false;
+        console.log("following (chatbox)", followingCtx.following);
+    }
+
     useEffect(() => {
         if (wsCtx.websocket !== null && wsCtx.newMsgsObj) {
-            if (wsCtx.newMsgsObj.sourceid === friendId) {
+            if (wsCtx.newMsgsObj.sourceid === frdOrGrpId) {
                 console.log("new Received msg data when chatbox is open", wsCtx.newMsgsObj);
                 console.log("ws receives msg from when chatbox is open: ", wsCtx.newMsgsObj.sourceid);
                 setNewMsgs((prevNewMsgs) => [...new Set([...prevNewMsgs, wsCtx.newMsgsObj])]);
             
                 if (wsCtx.newMsgsObj !== null) wsCtx.setNewMsgsObj(null);
 
-                followingCtx.receiveMsgFollowing(friendId, true);
+                followingCtx.receiveMsgFollowing(frdOrGrpId, true);
                 
                 setJustUpdated(prev => !prev);
             }
@@ -60,7 +66,7 @@ const Chatbox = (props) => {
         let chatPayloadObj = {};
         if (!props.grp) {
             chatPayloadObj["label"] = "private";
-            chatPayloadObj["targetid"] = friendId;
+            chatPayloadObj["targetid"] = frdOrGrpId;
         } else {
             chatPayloadObj["label"] = "group" ;
             // privateChatPayloadObj["groupid"] = grpid;
@@ -73,8 +79,7 @@ const Chatbox = (props) => {
 
         const selfNewMsgObject = {};
         if (!props.grp) {
-            selfNewMsgObject["targetid"] = friendId;
-            
+            selfNewMsgObject["targetid"] = frdOrGrpId;  
         } else {
             // selfNewMsgObject["groupid"] = grpid;
         }  
@@ -89,7 +94,7 @@ const Chatbox = (props) => {
         if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(chatPayloadObj));
 
         // move friendId chat item to top
-        followingCtx.receiveMsgFollowing(friendId, true);
+        followingCtx.receiveMsgFollowing(frdOrGrpId, true);
 
         setJustUpdated(prev => !prev);
     };
@@ -106,7 +111,7 @@ const Chatbox = (props) => {
     // get old msgsdata.data.push()
     // const AllMsgsToAndFrom = [];
     useEffect(() => {
-        fetch(`${userMsgUrl}?targetid=${selfId}&sourceid=${friendId}`)
+        fetch(`${userMsgUrl}?targetid=${selfId}&sourceid=${frdOrGrpId}`)
         .then(resp => resp.json())
         .then(data => {
             console.log("old msg data: ", data);

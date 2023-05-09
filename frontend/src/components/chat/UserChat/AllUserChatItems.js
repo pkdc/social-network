@@ -27,7 +27,7 @@ const AllUserChatItems = (props) => {
     // useEffect(() => followingCtx.chatNotiUserArr && setNotiUserArr(followingCtx.chatNotiUserArr), [followingCtx.chatNotiUserArr]);
     // console.log(" chatNotiUserArr (AllUserChatItems)", followingCtx.chatNotiUserArr);
     // followingList.forEach((followingUser) => {
-    //     if (followingCtx.chatNotiUserArr.find((chatNotiUser) => chatNotiUser.id === followingUser.id)) followingUser["noti"] = true;
+    //     if (followingCtx.chatNotiUserArr.find((chatNotiUser) => chatNotiUser.id === followingUser.id)) followingUser["chat_noti"] = true;
     //     else followingUser["noti"] = false;
     // });
     console.log(" following List with noti set (AllUserChatItems)", followingList);
