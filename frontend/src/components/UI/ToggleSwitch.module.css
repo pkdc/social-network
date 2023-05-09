@@ -11,7 +11,7 @@
     .checkbox {
     display: none;
     }
-    .label {
+    .value {
     display: block;
     overflow: hidden;
     cursor: pointer;
@@ -61,10 +61,10 @@
     border-radius: 20px;
     transition: all 0.3s ease-in 0s;
     }
-    .checkbox:checked + .label .inner {
+    .checkbox:checked + .value .inner {
     margin-left: 0;
     }
-    .checkbox:checked + .label .switch {
+    .checkbox:checked + .value .switch {
     right: 0px;
     }
     

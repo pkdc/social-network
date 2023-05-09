@@ -52,7 +52,7 @@
 
 
 
-import { useContext } from "react";
+import { useContext, useState, useEffect } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import LogoutButton from "../UI/LogoutButton";
 import NotificationBtn from "../UI/NotificationBtn";
@@ -62,28 +62,54 @@ import profile from "../assets/profileSmall.svg";
 import notif from "../assets/notifications5.svg";
 import chatIcon from "../assets/chat5.svg";
 import Avatar from "../UI/Avatar";
-import AuthContext from "../store/auth-context";
+import { AuthContext } from "../store/auth-context";
+import { WebSocketContext } from "../store/websocket-context";
+import NotificationCentre from "../notification/NotificationCentre";
 
-const TopMenu = () => {
+const TopNav = () => {
+    const [showNoti, setShowNoti] = useState(false);
+    const [newNoti, setNewNoti] = useState(null);
+
     const navigate = useNavigate();
 
     const currUserId = localStorage.getItem("user_id");
     console.log("current user", currUserId);
 
-    function handleClick(e) {
-        const id = e.target.id
-        console.log("profile id", id);
+    // function handleClick(e) {
+    //     const id = e.target.id
+    //     console.log("profile id", id);
 
-        navigate("/profile", { state: { id } })
-    }
+    //     navigate("/profile", { state: { id } })
+    // }
 
-    const ctx = useContext(AuthContext);
+    const authCtx = useContext(AuthContext);
 
     const onClickingLogout = () => {
         // props.onLogout();
-        ctx.onLogout();
+        authCtx.onLogout();
         navigate("/", {replace: true});
     };
+
+    const wsCtx = useContext(WebSocketContext);
+
+    useEffect(() => {
+        if (wsCtx.websocket !== null && wsCtx.newNotiObj !== null) {
+            console.log("ws receives notiObj (TopNav): ", wsCtx.newNotiObj);
+            console.log("ws receives noti type (TopNav): ", wsCtx.newNotiObj.type);
+            setNewNoti(wsCtx.newNotiObj);
+            wsCtx.setNewNotiObj(null);
+        }
+    } ,[wsCtx.newNotiObj]);
+    console.log("wsCtx.setNewNotiObj before and after getting (TopNav outside): ", wsCtx.newNotiObj);
+    console.log("newNoti (TopNav outside): ", newNoti);
+    
+    const onShowNoti = () => {
+        console.log("noti toggled!");
+        setShowNoti(prev => !prev);
+    };
+    const ReceivedNewNotiHandler = () => setNewNoti(null);
+
+    console.log("show noti centre", showNoti);
     
     return (
         <nav>
@@ -95,15 +121,16 @@ const TopMenu = () => {
                     <Link className={styles.lnk} to="/group">Groups</Link>
                     <Link className={styles.lnk} to="/messanger">Messenger</Link>
                     {/* <Link className={styles.lnk} to="/profile" id={currUserId} onClick={handleClick}>Profile</Link> */}
-                    <div id={currUserId} className={styles.lnk} onClick={handleClick}>
+                    {/* <div id={currUserId} className={styles.lnk} onClick={handleClick}> */}
                     {/* <img src={profile} alt=""/> */}
-                    Profile
+                    {/* Profile */}
                     {/* <Link className={styles.profile} to={`/profile/${userId}`}>
                     {!avatar && <img className={styles["avatar"]} src={require("../../images/"+`${defaultImagePath}`)} alt="" width={"35px"}/>}
                     {avatar && <Avatar src={avatar} alt="" width={"35px"}/>}
                     {nickname ? `${first} ${last} (${nickname})` : `${first} ${last}`}
                     </Link> */}
-                    </div>
+                    {/* </div> */}
+                    <Link className={styles.lnk} to={`/profile/${currUserId}`}>Profile</Link>
                 </div>
 
                 </div>
@@ -113,25 +140,39 @@ const TopMenu = () => {
                     MaddieWesst
                     </div> */}
 
-                {/* <NotificationBtn>&#128276;</NotificationBtn> */}
                 <div className={styles.icons}>
                     <div className={styles.notif}>
-                        <button className={styles.btn}>
+                        <div className={styles.btn} onClick={onShowNoti}>
                             <img src={notif} alt=""></img>
-                        </button>
+                        </div>
+                        {showNoti && <NotificationCentre 
+                            newNoti={newNoti}
+                            onReceivedNewNoti={ReceivedNewNotiHandler}
+                            />
+                        }
                         <button className={styles.btn}>
                             <img src={chatIcon} alt=""></img>
                         </button>
                     </div>
                     <div className={styles.logout} onClick={onClickingLogout}><img src={logout} alt=""/></div>
-                  
-                
                 </div>
-            
             </div>
         </nav>
         
     );
 };
 
-export default TopMenu;
+export default TopNav;
+
+// {!showNoti && <div className={styles.btn} onClick={onShowNoti}>
+//                             <img src={notif} alt=""></img>
+//                             </div>}
+//                             {showNoti && <NotificationCentre 
+//                             newNoti={newNoti}
+//                             onReceivedNewNoti={ReceivedNewNotiHandler}
+//                             onRepliedToNoti={RepliedToNotiHandler}
+//                             />}
+                        
+//                         {showNoti && <div className={styles.btn} onClick={onHideNoti} style={{zIndex: "1001"}}>
+//                             <img src={notif} alt=""></img>
+//                         </div>}

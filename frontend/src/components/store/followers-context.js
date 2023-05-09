@@ -1,7 +1,8 @@
 import React from "react";
 
 const FollowersContext = React.createContext({
-    followers: []
+    followers: [],
+    setFollowers: () => {},
 });
 
 export default FollowersContext;

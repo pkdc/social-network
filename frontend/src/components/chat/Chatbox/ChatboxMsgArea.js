@@ -6,19 +6,14 @@ import styles from "./ChatboxMsgArea.module.css";
 
 const ChatboxMsgArea = (props) => {
     const msgAreaRef = useRef();
-    // const [areaScrollTop, setAreaScrollTop] = useState();
+    // const [areaScrollTop, setAreaScrollTop] = useState();  
 
-    // const scrollHandler = () => {
-    //     console.log("scrollHandler called");
-    //     console.log("scrollTop", msgAreaRef.current.scrollTop);
-    // };
+    const scrollBottom = () => msgAreaRef.current.scrollTop = msgAreaRef.current.scrollHeight - msgAreaRef.current.clientHeight;
+
+    useEffect(() => {msgAreaRef.current && scrollBottom();}, [msgAreaRef.current, props.justUpdated]);
     
-    setTimeout(() => {
-            if (msgAreaRef.current) {
-                msgAreaRef.current.scrollTop = msgAreaRef.current.scrollHeight - msgAreaRef.current.clientHeight;
-            }
-        }, 50);
-    
+    // props.justUpdated && msgAreaRef.current && scrollBottom();
+
     return (
         <div 
             className={styles["msg-area"]} 

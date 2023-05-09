@@ -77,17 +77,25 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 	fmt.Printf("msg Struct: %v\n", msgStruct)
 	if msgStruct.Label == "noti" {
 		t = 1
+		not.Label = "noti"
+		not.Id = msgStruct.Id
 		not.Type = msgStruct.Type
-		not.UserId = msgStruct.UserId
+		not.TargetId = msgStruct.TargetId
+		not.SourceId = msgStruct.SourceId
+		not.Accepted = msgStruct.Accepted
+		not.CreatedAt = msgStruct.CreatedAt
+		// fmt.Printf("not Struct: %v\n", not)
 	} else if msgStruct.Label == "private" {
 		t = 2
+		userMsg.Label = "p-chat"
 		userMsg.Id = msgStruct.Id
-		userMsg.SourceId = msgStruct.SourceId
 		userMsg.TargetId = msgStruct.TargetId
+		userMsg.SourceId = msgStruct.SourceId
 		userMsg.Message = msgStruct.Message
 		userMsg.CreatedAt = time.Now().String()
 	} else if msgStruct.Label == "group" {
 		t = 3
+		userMsg.Label = "g-chat"
 		userMsg.Id = msgStruct.Id
 		groupMsg.Message = msgStruct.Message
 		groupMsg.SourceId = msgStruct.SourceId
@@ -106,10 +114,11 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 		if err != nil {
 			panic(err)
 		}
-
+		fmt.Printf("sendNoti: %v\n", sendNoti)
 		// Loops through the clients and sends to all users other than the sender
 		for _, c := range h.clients {
-			if c.userID != not.UserId {
+			if c.userID == not.TargetId {
+				fmt.Printf("matched %d = %d\n", c.userID, not.TargetId)
 				select {
 				case c.send <- sendNoti:
 				default:
