@@ -8,9 +8,9 @@ WHERE source_id = ?;
 
 -- name: CreateFollower :one
 INSERT INTO user_follower (
-  source_id, target_id, status_
+  source_id, target_id, status_, chat_noti, last_msg_at
 ) VALUES (
-  ?, ?, ?
+  ?, ?, ?, ?, ?
 )
 RETURNING *;
 
@@ -20,6 +20,8 @@ WHERE source_id = ? AND target_id = ?;
 
 -- name: UpdateFollower :one
 UPDATE user_follower
-set status_ = ?
+set status_ = ?,
+chat_noti = ?,
+last_msg_at = ?
 WHERE source_id = ? AND target_id = ?
 RETURNING *;

@@ -49,12 +49,13 @@ type UserPayload struct {
 }
 
 type UserFollowerStruct struct {
-	Id       int    `json:"id"`
-	Action   string `json:"action"`
-	SourceId int    `json:"sourceid"`
-	TargetId int    `json:"targetid"`
-	Status   int    `json:"status"`
-	ChatNoti bool   `json:"chat_noti`
+	Id        int    `json:"id"`
+	Action    string `json:"action"`
+	SourceId  int    `json:"sourceid"`
+	TargetId  int    `json:"targetid"`
+	Status    int    `json:"status"`
+	ChatNoti  int    `json:"chat_noti"`
+	LastMsgAt string `json:"last_msg_at"`
 }
 
 type UserMessageStruct struct {

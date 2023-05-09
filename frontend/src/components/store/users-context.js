@@ -18,7 +18,7 @@ export const UsersContextProvider = (props) => {
         fetch(userUrl)
         .then(resp => resp.json())
         .then(data => {
-            // console.log("user (context): ", data);
+            console.log("user (context): ", data);
             let [usersArr] = Object.values(data); 
             setUsersList(usersArr);
         })

@@ -46,7 +46,7 @@ const AllUserChatItems = (props) => {
         if (wsCtx.websocket !== null && wsCtx.newMsgsObj) {
             // console.log(wsCtx.newMsgsObj.sourceid);
             // console.log(followingCtx.following.find((follower) => follower.id === wsCtx.newMsgsObj.sourceid));
-            if (followingCtx.following.find((follower) => follower.id === wsCtx.newMsgsObj.sourceid)) {
+            if (followingCtx.following && followingCtx.following.find((follower) => follower.id === wsCtx.newMsgsObj.sourceid)) {
                 console.log("new Received msg data when chatbox is closed", wsCtx.newMsgsObj);
                 console.log("ws receives msg from when chatbox is closed: ", wsCtx.newMsgsObj.sourceid);
                 wsCtx.newMsgsObj !== null && wsCtx.setNewMsgsObj(null);

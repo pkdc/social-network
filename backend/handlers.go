@@ -846,6 +846,8 @@ func UserFollowerHandler() http.HandlerFunc {
 			newFollower.SourceID = int64(follower.SourceId)
 			newFollower.TargetID = int64(follower.TargetId)
 			newFollower.Status = int64(follower.Status)
+			newFollower.ChatNoti = int64(follower.ChatNoti)
+			// newFollower.LastMsgAt = follower.LastMsgAt
 
 			_, err = query.CreateFollower(context.Background(), newFollower)
 
