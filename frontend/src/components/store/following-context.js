@@ -11,15 +11,15 @@ export const FollowingContext = React.createContext({
     follow: (followUser) => {},
     unfollow: (unfollowUser) => {},
     receiveMsgFollowing: (friendId, open) => {},
-    chatNotiUserArr: [],
-    setChatNotiUserArr: () => {},
+    // chatNotiUserArr: [],
+    // setChatNotiUserArr: () => {},
 });
 
 export const FollowingContextProvider = (props) => {
     const selfId = localStorage.getItem("user_id");
     const followingUrl = `http://localhost:8080/user-following?id=${selfId}`;
     const [following, setFollowing] = useState([]);
-    const [chatNotiUserArr, setChatNotiUserArr] = useState([]);
+    // const [chatNotiUserArr, setChatNotiUserArr] = useState([]);
     const wsCtx = useContext(WebSocketContext);
 
     // get from db
@@ -52,6 +52,7 @@ export const FollowingContextProvider = (props) => {
     };
 
     const followHandler = (followUser) => {
+        followUser["chat_noti"] = false; // add noti to followUser
         if (following) { // not empty
             setFollowing(prevFollowing => [...prevFollowing, followUser]);
 
@@ -82,7 +83,8 @@ export const FollowingContextProvider = (props) => {
         // add userId chat item to the top
         setFollowing(prevFollowing => [targetUser, ...prevFollowing.filter(followingUser => followingUser.id !== +friendId)]);
         // noti if not open
-        !open && setChatNotiUserArr(prevArr => [...new Set([targetUser, ...prevArr])]);
+        // !open && setChatNotiUserArr(prevArr => [...new Set([targetUser, ...prevArr])]);
+        if (!open) targetUser["chat_noti"] = true; // set noti field to true to indicate unread
     };
 
     useEffect(() => getFollowingHandler(), []);
@@ -96,8 +98,8 @@ export const FollowingContextProvider = (props) => {
             follow: followHandler,
             unfollow: unfollowHandler,
             receiveMsgFollowing: receiveMsgHandler,
-            chatNotiUserArr: chatNotiUserArr,
-            setChatNotiUserArr: setChatNotiUserArr,
+            // chatNotiUserArr: chatNotiUserArr,
+            // setChatNotiUserArr: setChatNotiUserArr,
         }}>
             {props.children}
         </FollowingContext.Provider>

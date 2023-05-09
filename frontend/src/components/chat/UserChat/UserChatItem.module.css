@@ -15,11 +15,15 @@
 .noti {
     height: 15px;
     width: 15px;
+    border-radius: 50%;
     background-color: grey;
+    margin-left: 6px;
 }
 
 .noti.active {
     height: 15px;
     width: 15px;
-    background-color: red;
+    border-radius: 50%;
+    background-color: var(--cinnabar, red);
+    margin-left: 6px;
 }

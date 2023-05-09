@@ -54,6 +54,7 @@ type UserFollowerStruct struct {
 	SourceId int    `json:"sourceid"`
 	TargetId int    `json:"targetid"`
 	Status   int    `json:"status"`
+	ChatNoti bool   `json:"chat_noti`
 }
 
 type UserMessageStruct struct {
