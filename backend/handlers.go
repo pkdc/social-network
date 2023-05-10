@@ -1145,8 +1145,6 @@ func Grouphandler() http.HandlerFunc {
 
 			}
 
-			fmt.Println("-----", foundId)
-
 			gId, err := strconv.Atoi(groupId)
 
 			if err != nil {
@@ -1173,8 +1171,7 @@ func Grouphandler() http.HandlerFunc {
 					fmt.Println(err)
 					return
 				}
-				foundVal := session.Value
-				fmt.Println("-----", foundVal)
+
 				sessionTable, err := query.GetUserId(context.Background(), session.Value)
 
 				if err != nil {
@@ -1222,7 +1219,7 @@ func Grouphandler() http.HandlerFunc {
 					//empty response
 				}
 
-			} else {
+			}else {
 				// ### GET ALL GROUPS ###
 
 				groups, err := query.GetAllGroups(context.Background())
@@ -1367,7 +1364,6 @@ func GroupMemberHandler() http.HandlerFunc {
 			// gets all groups user is a member of
 			if foundUserId {
 				groups, err := query.GetAllGroupsByUser(context.Background(), int64(uId))
-
 				if err != nil {
 					fmt.Println("Unable to get groups")
 				}
@@ -1442,7 +1438,7 @@ func GroupMemberHandler() http.HandlerFunc {
 
 		case http.MethodPost:
 			// Declares the variables to store the group member details and handler response
-			var groupMember GroupRequestStruct
+			var groupMember GroupMemberStruct
 			Resp := AuthResponse{Success: true}
 
 			// Decodes the json object to the struct, changing the response to false if it fails
@@ -1456,11 +1452,11 @@ func GroupMemberHandler() http.HandlerFunc {
 			db := db.DbConnect()
 
 			query := crud.New(db)
-
+			statusStr := strconv.Itoa(groupMember.Status)
 			// ### UPDATE GROUP REQUEST TABLE AND ADD USER TO GROUP MEMBER TABLE ###
 
 			_, err = query.UpdateGroupRequest(context.Background(), crud.UpdateGroupRequestParams{
-				Status:  groupMember.Status,
+				Status:  statusStr,
 				GroupID: int64(groupMember.GroupId),
 				UserID:  int64(groupMember.UserId),
 			})
@@ -1492,8 +1488,8 @@ func GroupMemberHandler() http.HandlerFunc {
 			WriteHttpHeader(jsonResp, w)
 		default:
 			// Prevents all request types other than POST and GET
-			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
-			return
+			// http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
+			// return
 		}
 	}
 }
@@ -1623,8 +1619,8 @@ func GroupRequestHandler() http.HandlerFunc {
 			WriteHttpHeader(jsonResp, w)
 		default:
 			// Prevents all request types other than POST and GET
-			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
-			return
+			// http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
+			// return
 		}
 	}
 }
@@ -1747,7 +1743,7 @@ func GroupPostHandler() http.HandlerFunc {
 
 			_, err = query.CreateGroupPost(context.Background(), crud.CreateGroupPostParams{
 				Author:    int64(groupPost.Author),
-				GroupID:   int64(groupPost.Id),
+				GroupID:   int64(groupPost.GroupId),
 				Message:   groupPost.Message,
 				Image:     groupPost.Image,
 				CreatedAt: time.Now(),
@@ -1958,8 +1954,8 @@ func GroupEventHandler() http.HandlerFunc {
 			}
 			fmt.Println(groupEvent.Date)
 			newdate := strings.Split(groupEvent.Date, "T")
-			dateNew := newdate[0] +" "+ newdate[1] + ":00"
-fmt.Println(dateNew)
+			dateNew := newdate[0] + " " + newdate[1] + ":00"
+			fmt.Println(dateNew)
 			date, err := time.Parse("2006-01-02 15:04:05", dateNew)
 			fmt.Println(date)
 			if err != nil {
@@ -2016,7 +2012,6 @@ func GroupEventMemberHandler() http.HandlerFunc {
 
 		// ### CHECK USER ID AND GROUP ID MATCH IN GROUP MEMBER TABLE ###
 
-		
 		switch r.Method {
 		case http.MethodGet:
 
@@ -2026,9 +2021,9 @@ func GroupEventMemberHandler() http.HandlerFunc {
 				http.Error(w, "400 bad request", http.StatusBadRequest)
 				return
 			}
-	
+
 			eId, err := strconv.Atoi(eventId)
-	
+
 			if err != nil {
 				fmt.Println("Unable to convert event ID")
 			}
@@ -2069,7 +2064,7 @@ func GroupEventMemberHandler() http.HandlerFunc {
 
 			// Sets the http headers and writes the response to the browser
 			WriteHttpHeader(jsonResp, w)
-		
+
 		case http.MethodPost:
 			// Declares the variables to store the group event member details and handler response
 			var groupEventMember GroupEventMemberStruct
