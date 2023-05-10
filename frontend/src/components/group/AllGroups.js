@@ -5,7 +5,11 @@ import useGet from "../fetch/useGet";
 
 function AllGroups() {
 
+  const currUserId = localStorage.getItem("user_id");
+
+    // const { error , isLoaded, data } = useGet(`/group?userid=${currUserId}`)
     const { error , isLoaded, data } = useGet(`/group`)
+
 
       if (!isLoaded) return <div>Loading...</div>
       if (error) return <div>Error: {error.message}</div>

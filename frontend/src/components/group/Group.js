@@ -1,9 +1,40 @@
+import { useNavigate } from "react-router-dom";
 import Card from "../UI/Card";
 import SmallButton from "../UI/SmallButton";
 
 import classes from './Group.module.css';
 
 function Group(props) {
+
+    const currUserId = localStorage.getItem("user_id");
+    console.log("group curr id", currUserId);
+    
+
+    function handleClick(e) {
+        const id = e.target.id;
+
+        const data = {
+            id: 0,
+            userid: parseInt(currUserId),
+            groupid: parseInt(id),
+            status: 0,
+        };
+    
+        fetch('http://localhost:8080/group-request', 
+        {
+            method: 'POST',
+            credentials: "include",
+            mode: "cors",
+            body: JSON.stringify(data),
+            headers: { 
+                'Content-Type': 'application/json' 
+            }
+        }).then(() => {
+            // navigate.replace('/??')
+            console.log("group request posted")
+        })
+    }
+
     return <Card>
         <div className={classes.container}>
             <div className={classes.wrapper}>
@@ -16,11 +47,9 @@ function Group(props) {
              
             </div>
             <div className={classes.btn}>
-                <SmallButton>Join</SmallButton>
+                <div className={classes.smallbtn} id={props.id} onClick={handleClick}>Join</div>
             </div>
-         
         </div>
-  
     </Card>
 }
 

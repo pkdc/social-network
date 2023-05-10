@@ -17,14 +17,14 @@ function CreateGroup() {
 
         const date =  Date.now()
 
-        const created = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: '2-digit' }).format(date);
+        // const created = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: '2-digit' }).format(date);
 
         const data = {
             id: 0,
             title: title,
             creator: currId,
             description: description,
-            createdat: created,
+            createdat: date,
         };
 
         setTitle('');

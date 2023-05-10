@@ -6,7 +6,9 @@ import classes from './CreateGroupPost.module.css';
 import profile from '../assets/profile.svg';
 
 
-function  CreateGroupPost() {
+function  CreateGroupPost({ groupid }) {
+
+    console.log("------- groupid ",groupid);
 
     const currUserId = localStorage.getItem("user_id");
 
@@ -17,15 +19,15 @@ function  CreateGroupPost() {
         setMessage('');
 
         const date =  Date.now()
-
         const created = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: '2-digit' }).format(date);
 
         const data = {
             id: 0,
             author: parseInt(currUserId),
+            groupid: parseInt(groupid),
             message: message,
             image: '',
-            createdat: created,
+            createdat: date,
         };
 
         fetch('http://localhost:8080/group-post', 
@@ -40,6 +42,7 @@ function  CreateGroupPost() {
         }).then(() => {
             // navigate.replace('/??')
             console.log("posted")
+            
         })
     }
 

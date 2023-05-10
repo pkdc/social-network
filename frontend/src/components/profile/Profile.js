@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useParams } from "react-router-dom";
 import useGet from "../fetch/useGet";
 import Post from "../posts/Post";
@@ -6,13 +6,16 @@ import Card from "../UI/Card";
 import GreyButton from "../UI/GreyButton";
 import SmallButton from "../UI/SmallButton";
 import ToggleSwitch from "../UI/ToggleSwitch";
-
 import classes from './Profile.module.css';
+import WebSocketContext from "../store/websocket-context";
 
 function Profile({ userId }) {
 
     const currUserId = localStorage.getItem("user_id");
-
+  
+    // const wsCtx = useContext(WebSocketContext);
+    // console.log("ws in profile: ",wsCtx.websocket);
+    // wsCtx.websocket.onopen = function (){alert("ws is open")}
     // let params = useParams();   
     // let userId = params.productId 
     // console.log("params", userId)

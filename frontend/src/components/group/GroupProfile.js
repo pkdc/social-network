@@ -3,25 +3,31 @@ import SmallButton from "../UI/SmallButton";
 import GreyButton from "../UI/GreyButton";
 import Card from "../UI/Card";
 import useGet from '../fetch/useGet';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Modal from './modal';
 import { useState } from 'react';
 
-function GroupProfile( props ) {
+function GroupProfile( {groupid} ) {
 
-    const { error, isLoaded, data } = useGet(`/group?id=${props.groupid}`)
+    const navigate = useNavigate();
+
+    const { error, isLoaded, data } = useGet(`/group?id=${groupid}`)
     const [ open, setOpen ] = useState(false)
+
+    console.log("---- group data", data);
     
     const currUserId = localStorage.getItem("user_id");
-
 
     if (!isLoaded) return <div>Loading...</div>
     if (error) return <div>Error: {error.message}</div>
 
-    function handleClick() {
+    function handleClick(e) {
+        const id = e.target.id;
         const currUserId = localStorage.getItem("user_id");
 
         setOpen(true)
+
+        navigate("/groupprofile", { state: { id } })
 
         // const data = {
         //     id: 0,
@@ -58,8 +64,8 @@ function GroupProfile( props ) {
              
 
                 <div className={classes.btnWrapper}>
-                    <SmallButton className={classes.btn} onClick={handleClick}>+ Invite</SmallButton>
-                    <GreyButton className={classes.btn}>Message</GreyButton>
+                    <div id={group.id} className={classes.btn} onClick={handleClick}>+ Invite</div>
+                    <GreyButton>Message</GreyButton>
                 </div>
             </div>
          

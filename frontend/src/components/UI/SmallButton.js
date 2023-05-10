@@ -5,7 +5,7 @@ const SmallButton = (props) => {
     const classes = `${styles["small-btn"]}` + " " + props.className;
     return (
         <>
-            <button className={classes} type={props.type} onClick={props.onClick}>{props.children}</button>
+            <div className={classes} type={props.type} onClick={props.onClick}>{props.children}</div>
         </>
     )
 };

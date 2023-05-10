@@ -17,12 +17,13 @@ function GroupProfilePage() {
 
     const { state } = useLocation();
     const { id } = state; 
+    console.log("group id", id);
 
     return (
     <div className={classes.container}>
         <div className={classes.mid}>
             <GroupProfile groupid={id}></GroupProfile>
-            <CreateGroupPost/>
+            <CreateGroupPost groupid={id}/>
             <AllGroupPosts groupid={id}/>
       
         </div>
