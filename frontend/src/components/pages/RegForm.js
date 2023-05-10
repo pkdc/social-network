@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Form from '../UI/Form';
 import FormInput from "../UI/FormInput";
@@ -6,11 +6,14 @@ import FormLabel from "../UI/FormLabel";
 import FormTextarea from "../UI/FormTextarea";
 import LgButton from "../UI/LgButton";
 import ImgUpload from "../UI/ImgUpload";
+import { AuthContext } from "../store/auth-context";
 import styles from "./RegForm.module.css";
 
-const RegForm = (props) => {    
+const RegForm = () => {    
     const imageSrc = "../../images/";
     let defaultImagePath = "default_avatar.jpg";
+
+    const ctx = useContext(AuthContext);
 
     const [enteredEmail, setEnteredEmail] = useState("");
     const [enteredPw, setEnteredPw] = useState("");
@@ -24,8 +27,8 @@ const RegForm = (props) => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        props.success && navigate("/login", {replace: true})
-    }, [props.success]);
+        ctx.regSuccess && navigate("/login", {replace: true})
+    }, [ctx.regSuccess]);
     
     const emailChangeHandler = (e) => {
         setEnteredEmail(e.target.value);
@@ -82,7 +85,7 @@ const RegForm = (props) => {
         };
         console.log(regPayloadObj);
 
-        props.onReg(regPayloadObj);
+        ctx.onReg(regPayloadObj);
         
         setEnteredEmail("");
         setEnteredPw("");
@@ -118,6 +121,7 @@ const RegForm = (props) => {
                 <FormLabel className={styles["reg-label"]} htmlFor="nname">Nickname (Optional)</FormLabel>
                 <FormInput className={styles["reg-input"]} type="text" name="nname" id="nname" placeholder="Pikachu" value={enteredNickname} onChange={nicknameChangeHandler}/>
                 <FormLabel className={styles["reg-label"]} htmlFor="about">About Me (Optional)</FormLabel>
+                {/* <EmojiPicker /> */}
                 <FormTextarea className={styles["reg-input"]} name="about" id="about" placeholder="About me..." rows={5} value={enteredAbout} onChange={aboutChangeHandler}/>
                 <LgButton className={styles["sub-btn"]} type="submit">Register</LgButton>
                 <p>Already have an account? <Link to="/login">Login</Link></p>

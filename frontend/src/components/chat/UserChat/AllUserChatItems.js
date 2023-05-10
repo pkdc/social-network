@@ -1,33 +1,78 @@
 import UserChatItem from "./UserChatItem";
-import { useContext } from "react";
-import UsersContext from "../../store/users-context";
+import { useContext, useEffect, useState } from "react";
+import { FollowingContext } from "../../store/following-context";
+import { WebSocketContext } from "../../store/websocket-context";
 
 const AllUserChatItems = (props) => {
+    const [notiUserArr, setNotiUserArr] = useState([]);
+    const followingCtx = useContext(FollowingContext);
+    const wsCtx = useContext(WebSocketContext);
+    console.log("ws in AllUserChatItems: ",wsCtx.websocket);
+    console.log("cur user is following (AllUserChatItems)", followingCtx.following);
+    // useEffect(() => usersCtx.onNewUserReg(), []);
+    // console.log("users in AllUserChatItems", usersCtx.users);
+    
+    // const followingList = usersCtx.users.filter((user) => {
+    //     if (followingCtx.following)
+    //     return followingCtx.following.some((followingUser) => {
+    //         // console.log("fid", followingUser.id);
+    //         // console.log("uid", user.id);
+    //         if (followingUser && user) return followingUser.id === user.id;
+    //     });
+    // });
 
-    // console.log("user chat followers in AllUserChatItems", props.followersList);
-    // console.log("isArray", Array.isArray(props.followersList));
+    // add noti field to users(following) in chatNotiUserArr
+    const followingList = followingCtx.following;
+    console.log(" following List (AllUserChatItems)", followingList);
+    // useEffect(() => followingCtx.chatNotiUserArr && setNotiUserArr(followingCtx.chatNotiUserArr), [followingCtx.chatNotiUserArr]);
+    // console.log(" chatNotiUserArr (AllUserChatItems)", followingCtx.chatNotiUserArr);
+    // followingList.forEach((followingUser) => {
+    //     if (followingCtx.chatNotiUserArr.find((chatNotiUser) => chatNotiUser.id === followingUser.id)) followingUser["chat_noti"] = true;
+    //     else followingUser["noti"] = false;
+    // });
+    console.log(" following List with noti set (AllUserChatItems)", followingList);
 
-    const ctx = useContext(UsersContext);
+    const openUserChatboxHandler = (followingId) => props.onOpenChatbox(followingId);
 
-    const followersList = ctx.users; // temp
+    // if (wsCtx.websocket !== null) wsCtx.websocket.onmessage = (e) => {
+    //     console.log("msg event when chatbox is closed: ", e);
+    //     const msgObj = JSON.parse(e.data);
+    //     console.log("ws receives msgObj when chatbox is closed:: ", msgObj);
+    //     console.log("ws receives msg when chatbox is closed:: ", msgObj.message);
+    //     followingCtx.receiveMsgFollowing(msgObj.sourceid, false);
+    // }
 
-    const openUserChatboxHandler = (followerId) => props.onOpenChatbox(followerId);
+    useEffect(() => {
+        if (wsCtx.websocket !== null && wsCtx.newMsgsObj) {
+            // console.log(wsCtx.newMsgsObj.sourceid);
+            // console.log(followingCtx.following.find((follower) => follower.id === wsCtx.newMsgsObj.sourceid));
+            if (followingCtx.following && followingCtx.following.find((follower) => follower.id === wsCtx.newMsgsObj.sourceid)) {
+                console.log("new Received msg data when chatbox is closed", wsCtx.newMsgsObj);
+                console.log("ws receives msg from when chatbox is closed: ", wsCtx.newMsgsObj.sourceid);
+                wsCtx.newMsgsObj !== null && wsCtx.setNewMsgsObj(null);
+                followingCtx.receiveMsgFollowing(wsCtx.newMsgsObj.sourceid, false);
+            } else {
+                console.log("Cur user is not following the msg sender");
+            }
+        }
+    }, [wsCtx.newMsgsObj])
 
     const curUserId = +localStorage.getItem("user_id");
     return (
         <div>
-            {followersList && followersList.map((follower) => {
-                // console.log("each follower", follower);
+            {followingList && followingList.map((following) => {
+                // console.log("each following", following);
                 // console.log("curUserId: ", curUserId);
                 // console.log("follower.id", follower.id);
-                {if (curUserId !== follower.id) {
+                {if (curUserId !== following.id) {
                     return <UserChatItem 
-                    key={follower.id}
-                    id={follower.id}
-                    avatar={follower.avatar}
-                    fname={follower.fname}
-                    lname={follower.lname}
-                    nname={follower.nname}
+                    key={following.id}
+                    id={following.id}
+                    avatar={following.avatar}
+                    fname={following.fname}
+                    lname={following.lname}
+                    nname={following.nname}
+                    noti={following.chat_noti}
                     onOpenChatbox={openUserChatboxHandler}
                 />}
                 }

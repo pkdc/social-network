@@ -168,6 +168,7 @@ func Loginhandler() http.HandlerFunc {
 			Resp.Email = curUser.Email
 			Resp.About = curUser.About
 			Resp.Dob = curUser.Dob.String()
+			Resp.Public = int(curUser.Public)
 
 			if email == "f" {
 				Resp.Success = false
@@ -834,6 +835,7 @@ func UserFollowerHandler() http.HandlerFunc {
 			if err != nil {
 				Resp.Success = false
 			}
+
 			fmt.Println("follow", follower)
 
 			// ### CONNECT TO DATABASE ###
@@ -843,17 +845,49 @@ func UserFollowerHandler() http.HandlerFunc {
 			query := crud.New(db)
 
 			// ### ADD FOLLOWER TO DATABASE ###
-
 			var newFollower crud.CreateFollowerParams
 
 			newFollower.SourceID = int64(follower.SourceId)
 			newFollower.TargetID = int64(follower.TargetId)
 			newFollower.Status = int64(follower.Status)
+			newFollower.ChatNoti = int64(follower.ChatNoti)
+			// newFollower.LastMsgAt = follower.LastMsgAt
 
 			_, err = query.CreateFollower(context.Background(), newFollower)
 
 			if err != nil {
 				fmt.Println("Unable to insert follower")
+				Resp.Success = false
+			}
+
+		case http.MethodDelete:
+			// Declares the variables to store the follower details and handler response
+			var follower UserFollowerStruct
+			Resp := AuthResponse{Success: true}
+
+			// Decodes the json object to the struct, changing the response to false if it fails
+			err := json.NewDecoder(r.Body).Decode(&follower)
+			if err != nil {
+				Resp.Success = false
+			}
+
+			fmt.Println("unfollow", follower)
+
+			// ### CONNECT TO DATABASE ###
+
+			db := db.DbConnect()
+
+			query := crud.New(db)
+
+			var delFollower crud.DeleteFollowerParams
+
+			delFollower.SourceID = int64(follower.SourceId)
+			delFollower.TargetID = int64(follower.TargetId)
+
+			err = query.DeleteFollower(context.Background(), delFollower)
+
+			if err != nil {
+				fmt.Println("Unable to delete follower")
 				Resp.Success = false
 			}
 
@@ -916,8 +950,8 @@ func UserFollowingHandler() http.HandlerFunc {
 					fmt.Println("Unable to find followers")
 				}
 
-				for _, follower := range followings {
-					user, err := query.GetUserById(context.Background(), follower.SourceID)
+				for _, following := range followings {
+					user, err := query.GetUserById(context.Background(), following.TargetID)
 
 					if err != nil {
 						fmt.Println("Unable to find user")

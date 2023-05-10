@@ -12,6 +12,7 @@ type AuthResponse struct {
 	Email   string `json:"email"`
 	Dob     string `json:"dob"`
 	Success bool   `json:"success"`
+	Public  int    `json:"public"`
 }
 
 type loginPayload struct {
@@ -48,13 +49,17 @@ type UserPayload struct {
 }
 
 type UserFollowerStruct struct {
-	Id       int `json:"id"`
-	SourceId int `json:"sourceid"`
-	TargetId int `json:"targetid"`
-	Status   int `json:"status"`
+	Id        int    `json:"id"`
+	Action    string `json:"action"`
+	SourceId  int    `json:"sourceid"`
+	TargetId  int    `json:"targetid"`
+	Status    int    `json:"status"`
+	ChatNoti  int    `json:"chat_noti"`
+	LastMsgAt string `json:"last_msg_at"`
 }
 
 type UserMessageStruct struct {
+	Label     string `json:"label"`
 	Id        int    `json:"id"`
 	TargetId  int    `json:"targetid"`
 	SourceId  int    `json:"sourceid"`
@@ -213,6 +218,7 @@ type GroupPostCommentPayload struct {
 }
 
 type GroupMessageStruct struct {
+	Label     string `json:"label"`
 	Id        int    `json:"id"`
 	Message   string `json:"message"`
 	SourceId  int    `json:"sourceid"`
@@ -230,6 +236,23 @@ type SessionStruct struct {
 }
 
 type NotifStruct struct {
-	Type   string `json:"type"`
-	UserId int    `json:"userid"`
+	Label     string `json:"label"`
+	Id        int    `json:"id"`
+	Type      string `json:"type"`
+	TargetId  int    `json:"targetid"`
+	SourceId  int    `json:"sourceid"`
+	Accepted  bool   `json:"accepted"`
+	CreatedAt string `json:"createdat"`
+}
+
+type NotiMessageStruct struct {
+	Label     string `json:"label"`
+	Id        int    `json:"id"`
+	TargetId  int    `json:"targetid"`
+	SourceId  int    `json:"sourceid"`
+	Message   string `json:"message"`
+	GroupId   int    `json:"groupid"`
+	CreatedAt string `json:"createdat"`
+	Type      string `json:"type"`
+	Accepted  bool   `json:"accepted"`
 }

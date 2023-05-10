@@ -16,6 +16,8 @@ function Following({ userId }) {
     if (!isLoaded) return <div>Loading...</div>
     if (error) return <div>Error: {error.message}</div>
 
+    console.log("following: ", data.data);
+
     function handleClick(e) {
         const id = e.target.id
 
@@ -24,13 +26,11 @@ function Following({ userId }) {
     }
 
     return <Card>
-
     Following
-    {data.data && data.data.map((follower) => (
-         
-         <div key={follower.id} className={classes.wrapper}>
+    {data.data && data.data.map((following) => (
+         <div key={following.id} className={classes.wrapper}>
          <img className={classes.img} src={profile}/>
-         <div key={follower.id} id={follower.id} onClick={handleClick} className={classes.user}>{follower.fname}</div>
+         <div key={following.id} id={following.id} onClick={handleClick} className={classes.user}>{following.fname}</div>
         </div>
      
      ))} 

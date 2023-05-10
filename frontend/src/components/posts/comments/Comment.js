@@ -6,13 +6,11 @@ import Avatar from '../../UI/Avatar';
     
 
 function Comment(props) {
-    const defaultImagePath = "default_avatar.jpg";
     return (
     <>
         <div className={classes["author"]}>
         <Link to={`/profile/${props.authorId}`} >
-            {!props.avatar && <Avatar className={classes["comment-avatar"]} src={require("../../../images/"+`${defaultImagePath}`)} alt="" width={"50px"}/>}
-            {props.avatar && <Avatar className={classes["comment-avatar"]} src={props.avatar} alt="" width={"50px"}/>}
+            <Avatar className={classes["comment-avatar"]} src={props.avatar} alt="" width={"50px"}/>
         </Link>
         <Link to={`/profile/${props.authorId}`} >
             <div><p className={classes["details"]}>{`${props.fname} ${props.lname} ${props.nname}`}</p></div>

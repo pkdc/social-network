@@ -33,9 +33,7 @@ const ChatSidebar = (props) => {
                 onClick={clickHandler}
             >{showChat ? ">" : "<"}</button>
         </div>
-        
         </>
-        
     );
 };
 

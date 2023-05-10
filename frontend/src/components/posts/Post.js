@@ -14,8 +14,7 @@ function Post(props) {
     const navigate = useNavigate();
 
     // console.log("comment for post: ", props.postNum, " comments: ", props.commentsForThisPost)
-
-    const defaultImagePath = "default_avatar.jpg";
+    // const onlineStatus = false;
     const postCommentUrl = "http://localhost:8080/post-comment";
 
     // return <div className={classes.container}>
@@ -52,9 +51,8 @@ function Post(props) {
 
     return <Card className={classes.container} >
         <div className={classes["author"]}>
-            <Link to={`/profile/${props.authorId}`} id={props.authorId} onClick={handleClick}>
-                {!props.avatar && <Avatar className={classes["post-avatar"]} src={require("../../images/"+`${defaultImagePath}`)} alt="" width={"50px"}/>}
-                {props.avatar && <Avatar className={classes["post-avatar"]} src={props.avatar} alt="" width={"50px"}/>}
+            <Link to={`/profile/${props.authorId}`}>
+                <Avatar className={classes["post-avatar"]} src={props.avatar} alt="" width={"50px"}/>
             </Link>
             <Link to={`/profile/${props.authorId}`}>
                 <div><p className={classes["details"]}>{`${props.fname} ${props.lname} ${props.nname}`}</p></div>

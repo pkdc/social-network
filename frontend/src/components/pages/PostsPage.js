@@ -30,7 +30,7 @@ const PostsPage = () => {
             // setPostData(data) // no need to sort
             // console.log("parsed 0", Date.parse(data[0].createdat));
             // console.log("parsed 1", Date.parse(data[1].createdat));
-            data.sort((a, b) => Date.parse(b.createdat) - Date.parse(a.createdat)); // not working. convert to timestamp
+            data.sort((a, b) => Date.parse(b.createdat) - Date.parse(a.createdat));
             // console.log("sorted post data: ", data);
             setPostData(data);
         })
@@ -78,7 +78,7 @@ const PostsPage = () => {
                     // setPostData(data) // no need to sort
                     // console.log("parsed 0", Date.parse(data[0].createdat));
                     // console.log("parsed 1", Date.parse(data[1].createdat));
-                    data.sort((a, b) => Date.parse(b.createdat) - Date.parse(a.createdat)); // not working. convert to timestamp
+                    data.sort((a, b) => Date.parse(b.createdat) - Date.parse(a.createdat));
                     console.log("sorted post data: ", data);
                     setPostData(data);
                 })
