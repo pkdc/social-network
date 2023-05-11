@@ -19,6 +19,8 @@ function Group(props) {
             groupid: parseInt(id),
             status: 0,
         };
+
+        console.log({data})
     
         fetch('http://localhost:8080/group-request', 
         {

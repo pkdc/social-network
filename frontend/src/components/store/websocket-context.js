@@ -18,7 +18,7 @@ export const WebSocketContextProvider = (props) => {
     const [newNotiObj, setNewNotiObj] = useState(null);
     const [newNotiReplyObj, setNewNotiReplyObj] = useState(null);
 
-    const usersCtx = useContext(UsersContext);
+    // const usersCtx = useContext(UsersContext);
 
     useEffect(() => {
         const newSocket = new WebSocket("ws://localhost:8080/ws")
@@ -54,7 +54,7 @@ export const WebSocketContextProvider = (props) => {
                 // };
                 // setNewMsgsObj(newReceivedMsgObj);
             } else if (msgObj.label === "noti") {
-                if (msgObj.type === "follow-req") {
+                if (msgObj.type === "follow-req" || msgObj.type === "event-notif") {
                     console.log("ws receives noti (wsctx): ", msgObj);
                     console.log("ws receives noti type (wsctx): ", msgObj.type);
                     setNewNotiObj(msgObj);

@@ -10,7 +10,7 @@ import { FollowingContext } from "../store/following-context";
 import { UsersContext } from "../store/users-context";
 import { WebSocketContext } from "../store/websocket-context";
 import classes from './Profile.module.css';
-import WebSocketContext from "../store/websocket-context";
+
 
 function Profile({ userId }) {
     // get stored publicity from localStorage

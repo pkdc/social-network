@@ -1980,13 +1980,15 @@ func GroupEventHandler() http.HandlerFunc {
 			// Declares the variables to store the group event details and handler response
 			var groupEvent GroupEventStruct
 			Resp := AuthResponse{Success: true}
-
 			// Decodes the json object to the struct, changing the response to false if it fails
 			err := json.NewDecoder(r.Body).Decode(&groupEvent)
 			if err != nil {
 				Resp.Success = false
 			}
-			fmt.Println(groupEvent.Date)
+			date_int,err := strconv.Atoi(groupEvent.CreatedAt); if err!= nil {log.Fatal(err)}
+			jsDateMs := int64(date_int)
+			goDate := time.Unix(0, jsDateMs*int64(time.Millisecond))
+			fmt.Println("CREATED AT on handler func: ", goDate)
 			newdate := strings.Split(groupEvent.Date, "T")
 			dateNew := newdate[0] + " " + newdate[1] + ":00"
 			fmt.Println(dateNew)
@@ -2010,7 +2012,7 @@ func GroupEventHandler() http.HandlerFunc {
 				GroupID:     int64(groupEvent.GroupId),
 				Title:       groupEvent.Title,
 				Description: groupEvent.Description,
-				CreatedAt:   time.Now(),
+				CreatedAt:   goDate,
 				Date:        date,
 			})
 
@@ -2045,7 +2047,6 @@ func GroupEventMemberHandler() http.HandlerFunc {
 		}
 
 		// ### CHECK USER ID AND GROUP ID MATCH IN GROUP MEMBER TABLE ###
-
 		switch r.Method {
 		case http.MethodGet:
 
@@ -2087,6 +2088,7 @@ func GroupEventMemberHandler() http.HandlerFunc {
 				newMember.EventId = int(member.EventID)
 
 				Resp.Data = append(Resp.Data, newMember)
+			
 			}
 
 			// Marshals the response struct to a json object
@@ -2107,10 +2109,9 @@ func GroupEventMemberHandler() http.HandlerFunc {
 			// Decodes the json object to the struct, changing the response to false if it fails
 			err := json.NewDecoder(r.Body).Decode(&groupEventMember)
 			if err != nil {
+				log.Fatal(err)
 				Resp.Success = false
 			}
-
-			fmt.Println("----- groyp", groupEventMember)
 
 			// ### CONNECT TO DATABASE ###
 

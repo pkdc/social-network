@@ -21,9 +21,9 @@ function GroupEvent(props) {
 
         const data = {
             id: 0,
-            status: 0,
-            userid: currUserId,
-            eventid: id,
+            status: 2,
+            userid: parseInt(currUserId),
+            eventid: parseInt(id),
         };
 
         fetch('http://localhost:8080/group-event-member', 

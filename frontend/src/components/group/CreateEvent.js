@@ -1,22 +1,21 @@
-import { useState } from "react";
+import { useContext,useState } from "react";
 import Card from "../UI/Card";
 import SmallButton from "../UI/SmallButton";
-
+import { WebSocketContext } from "../store/websocket-context";
 import classes from './CreateEvent.module.css';
-
 function CreateEvent( {groupid} ) {
-
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [date, setDate] = useState('');
+    const wsCtx = useContext(WebSocketContext);
 
     function SubmitHandler(event) {
         event.preventDefault();
 
         const currUserId = localStorage.getItem("user_id");
 
-        const datenow =  Date.now()
-
+        const datenow =  Date.now().toString();
+console.log({datenow})
         const created = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: '2-digit' }).format(datenow);
 
         const data = {
@@ -25,10 +24,19 @@ function CreateEvent( {groupid} ) {
             author: parseInt(currUserId),
             title: title,
             description: description,
-            createdat: created,
+            createdat: datenow,
             date: date
         };
-
+  console.log({data})
+        const followPayloadObj = {};
+        followPayloadObj.label = "noti";
+        followPayloadObj.id = Date.now();
+        followPayloadObj.type = "event-notif";
+        followPayloadObj.sourceid = parseInt(groupid);
+        followPayloadObj.targetid = 987;
+        followPayloadObj.createdat = datenow;
+        console.log("CREATED AT: ",followPayloadObj.createdat)
+        if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(followPayloadObj));
         setTitle('');
         setDescription('');
         setDate('');
@@ -56,7 +64,7 @@ function CreateEvent( {groupid} ) {
         <textarea className={classes.content} name="description" id="description" placeholder="Description" value={description} onChange={e => setDescription(e.target.value)}></textarea>
         <input type="datetime-local" name="date" id="date" value={date} onChange={e => setDate(e.target.value)}></input>
         <div className={classes.btn}>
-            <SmallButton>Create</SmallButton>
+            <button>Create</button>
         </div>
     </form>
     </Card>

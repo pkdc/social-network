@@ -7,6 +7,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log"
 	"time"
 )
 
@@ -58,6 +59,9 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 	// Initialises variables for the different messages going through websocket
 	fmt.Printf("msg reached hub: %v\n", msgStruct)
 
+	db := db.DbConnect()
+
+	query := crud.New(db)
 	var not backend.NotifStruct
 	var userMsg backend.UserMessageStruct
 	var groupMsg backend.GroupMessageStruct
@@ -114,16 +118,49 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 		if err != nil {
 			panic(err)
 		}
-		fmt.Printf("sendNoti: %v\n", sendNoti)
+		fmt.Printf("sendNoti: %v\n", string(sendNoti))
 		// Loops through the clients and sends to all users other than the sender
-		for _, c := range h.clients {
-			if c.userID == not.TargetId {
-				fmt.Printf("matched %d = %d\n", c.userID, not.TargetId)
-				select {
-				case c.send <- sendNoti:
-				default:
-					close(c.send)
-					delete(h.clients, c.userID)
+		if not.TargetId == 987 {
+			var group crud.GetGroupMembersByGroupIdParams
+			group.GroupID = int64(not.SourceId)
+			group.Status = 1
+			users, err := query.GetGroupMembersByGroupId(context.Background(), group)
+			if err != nil {
+				log.Fatal(err)
+			}
+			events, err := query.GetGroupEvents(context.Background(), int64(not.SourceId))
+			var eventId int64
+			for _, event := range events {
+				eventId = event.ID
+			}
+			for _, p := range users {
+				_, err := query.CreateGroupEventMember(context.Background(), crud.CreateGroupEventMemberParams{
+					UserID:  p.ID,
+					EventID: eventId + 1,
+					Status:  0,
+				})
+				if err != nil {
+					log.Fatal(err)
+				}
+			}
+			for _, user := range users {
+				for _, client := range h.clients {
+					if int(user.ID) == client.userID {
+						client.send <- sendNoti
+					}
+				}
+			}
+
+		} else {
+			for _, c := range h.clients {
+				if c.userID == not.TargetId {
+					fmt.Printf("matched %d = %d\n", c.userID, not.TargetId)
+					select {
+					case c.send <- sendNoti:
+					default:
+						close(c.send)
+						delete(h.clients, c.userID)
+					}
 				}
 			}
 		}
@@ -131,10 +168,6 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 		// USER MESSAGE
 		fmt.Println("private")
 		// ### CONNECT TO DATABASE ###
-
-		db := db.DbConnect()
-
-		query := crud.New(db)
 
 		// ### ADD USER MESSAGE TO DATABASE ###
 
@@ -193,10 +226,6 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 		// var members []backend.GroupMemberStruct
 
 		// ### SEARCH FOR GROUP MEMBERS ###
-
-		db := db.DbConnect()
-
-		query := crud.New(db)
 
 		var group crud.GetGroupMembersByGroupIdParams
 
