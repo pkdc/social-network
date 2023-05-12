@@ -1,6 +1,4 @@
 import React, { useContext, useEffect, useState } from "react";
-import useGet from "../fetch/useGet";
-import { UsersContext } from "./users-context";
 import { WebSocketContext } from "./websocket-context";
 
 export const FollowingContext = React.createContext({
