@@ -1253,7 +1253,7 @@ func Grouphandler() http.HandlerFunc {
 					//empty response
 				}
 
-			}else {
+			} else {
 				// ### GET ALL GROUPS ###
 
 				groups, err := query.GetAllGroups(context.Background())
@@ -1985,7 +1985,10 @@ func GroupEventHandler() http.HandlerFunc {
 			if err != nil {
 				Resp.Success = false
 			}
-			date_int,err := strconv.Atoi(groupEvent.CreatedAt); if err!= nil {log.Fatal(err)}
+			date_int, err := strconv.Atoi(groupEvent.CreatedAt)
+			if err != nil {
+				log.Fatal(err)
+			}
 			jsDateMs := int64(date_int)
 			goDate := time.Unix(0, jsDateMs*int64(time.Millisecond))
 			fmt.Println("CREATED AT on handler func: ", goDate)
@@ -2088,7 +2091,7 @@ func GroupEventMemberHandler() http.HandlerFunc {
 				newMember.EventId = int(member.EventID)
 
 				Resp.Data = append(Resp.Data, newMember)
-			
+
 			}
 
 			// Marshals the response struct to a json object

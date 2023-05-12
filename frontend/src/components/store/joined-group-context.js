@@ -15,14 +15,14 @@ export const JoinedGroupContext = React.createContext({
 });
 
 export const JoinedGroupContextProvider = (props) => {
-    const selfId = localStorage.getItem("user_id");
+    const selfId = +localStorage.getItem("user_id");
     const [joinedGrps, setJoinedGrps] = useState([]);
-    const joinedGroupingUrl = `http://localhost:8080/joined-group?userid=${selfId}`;
+    const joinedGroupingUrl = `http://localhost:8080/group-member?userid=${selfId}`;
 
     const wsCtx = useContext(WebSocketContext);
 
     // get from db
-    const getFollowingHandler = () => {
+    const getJoinedGrpsHandler = () => {
         fetch(joinedGroupingUrl)
         .then(resp => resp.json())
         .then(data => {
@@ -82,20 +82,22 @@ export const JoinedGroupContextProvider = (props) => {
     };
 
     const leaveHandler = (toLeaveGrp, user) => {
-        console.log("unfollowUser (folctx)", unfollowUser);
-        console.log("unfollowUser (folctx)", unfollowUser);
-        setFollowing(prevFollowing => prevFollowing.filter((followingUser) => followingUser.id !== unfollowUser.id));
-        const storedFollowing = JSON.parse(localStorage.getItem("following"));
-        const curFollowing = storedFollowing.filter((followingUser) => followingUser.id !== unfollowUser.id);
-        localStorage.setItem("following", JSON.stringify(curFollowing));
-        console.log("locally stored following (unfol)", JSON.parse(localStorage.getItem("following")));
+        console.log("user (leaveHandler)", user);
+        console.log("leave grp (leaveHandler)", toLeaveGrp);
+        setJoinedGrps(prevJoinedGrps => prevJoinedGrps.filter((prevJoinedGrp) => prevJoinedGrp.id !== toLeaveGrp.id));
+        const storedJoinedGrps = JSON.parse(localStorage.getItem("joined-grps"));
+        const curJoinedGrps = storedJoinedGrps.filter((prevJoinedGrp) => prevJoinedGrp.id !== toLeaveGrp.id);
+        localStorage.setItem("joined-grps", JSON.stringify(curJoinedGrps));
+        console.log("locally stored joined-grps (leaveHandler)", JSON.parse(localStorage.getItem("joined-grps")));
     };
+
+    useEffect(() => getJoinedGrpsHandler(), []);
 
     return (
         <JoinedGroupContext.Provider value={{
             joinedGrps: joinedGrps,
-            setFollowing: setJoinedGrps,
-            getFollowing: getJoinedHandler, // implement
+            setJoinedGrps: setJoinedGrps,
+            getFollowing: getJoinedGrpsHandler, // implement
             requestToJoin: requestToJoinHandler,
             requestToParticipate: requestToParticipateHandler,
             join: joinHandler,
