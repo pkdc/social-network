@@ -1,5 +1,6 @@
 import { useContext, useState } from "react";
 import { GroupsContext } from "../store/groups-context";
+import { JoinedGroupContext } from "../store/joined-group-context";
 import Card from "../UI/Card";
 import SmallButton from "../UI/SmallButton";
 
@@ -14,6 +15,7 @@ function CreateGroup() {
     const [description, setDescription] = useState('');
 
     const grpCtx = useContext(GroupsContext);
+    const jgrpCtx = useContext(JoinedGroupContext);
 
     console.log({title})
 
@@ -53,6 +55,7 @@ function CreateGroup() {
                 if (data.success) {
                     console.log("created grp resp: ", data.success);
                     grpCtx.onNewGroupCreated();
+                    jgrpCtx.join(data.createdid, data.creator);
                 }
             })
             .catch(err => console.log(err))     

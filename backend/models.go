@@ -145,6 +145,13 @@ type GroupStruct struct {
 	CreatedAt   string `json:"createdat"`
 }
 
+type GroupResponse struct {
+	Creator        int    `json:"creator"`
+	CreatedAt      string `json:"createdat"`
+	Success        bool   `json:"success"`
+	CreatedGroupId int    `json:"createdid"`
+}
+
 type GroupPayload struct {
 	Data []GroupStruct `json:"data"`
 }

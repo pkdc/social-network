@@ -67,7 +67,8 @@ export const JoinedGroupContextProvider = (props) => {
     };
 
     const joinHandler = (toJoinGrp, user) => {
-        // followUser["chat_noti"] = false; // add noti to followUser
+        console.log("toJoinGrp (jg ctx)", toJoinGrp);
+        console.log("user (jg ctx)", user);
         if (joinedGrps) { // not empty
             setJoinedGrps(prevJoinedGrps => [...prevJoinedGrps, toJoinGrp]);
 

@@ -1291,7 +1291,7 @@ func Grouphandler() http.HandlerFunc {
 			fmt.Println("Post Grp")
 
 			var group GroupStruct
-			Resp := AuthResponse{Success: true}
+			Resp := GroupResponse{Success: true}
 
 			// Decodes the json object to the struct, changing the response to false if it fails
 			fmt.Printf("grp body %v\n", r.Body)
@@ -1330,6 +1330,9 @@ func Grouphandler() http.HandlerFunc {
 			creator.GroupID = newGroup.ID
 			creator.Status = 1
 			creator.UserID = newGroup.Creator
+
+			Resp.CreatedGroupId = int(newGroup.ID)
+			Resp.Creator = int(newGroup.Creator)
 
 			_, err = query.CreateGroupMember(context.Background(), creator)
 
