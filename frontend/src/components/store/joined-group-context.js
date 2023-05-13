@@ -5,7 +5,7 @@ export const JoinedGroupContext = React.createContext({
     joinedGrps: [],
     setJoinedGrps: () => {},
     getJoinedGrps: () => {},
-    requestToJoin: (joinGrp) => {},
+    requestToJoin: (joinGrpId) => {},
     InviteToJoin: (grp, InvitedUser) => {},
     join: (toJoinGrp, user) => {},
     leave: (toLeaveGrp, user) => {},
@@ -36,16 +36,16 @@ export const JoinedGroupContextProvider = (props) => {
         );
     };
 
-    const requestToJoinHandler = (joinGrp) => {
+    const requestToJoinHandler = (joinGrpId) => {
         console.log("request to join user (context): ", +selfId);
-        console.log("request to join grp (context): ", joinGrp);
+        console.log("request to join grp (context): ", joinGrpId);
 
         const joinGrpPayloadObj = {};
         joinGrpPayloadObj["label"] = "noti";
         joinGrpPayloadObj["id"] = Date.now();
         joinGrpPayloadObj["type"] = "join-req";
         joinGrpPayloadObj["sourceid"] = +selfId;
-        joinGrpPayloadObj["targetid"] = joinGrp.id;
+        joinGrpPayloadObj["targetid"] = joinGrpId;
         joinGrpPayloadObj["createdat"] = Date.now().toString();
         console.log("gonna send join grp req : ", joinGrpPayloadObj);
         if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(joinGrpPayloadObj));

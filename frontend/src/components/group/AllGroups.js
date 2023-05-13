@@ -18,7 +18,7 @@ function AllGroups() {
         {data.data && data.data.map((group) => (
          <Group
         key={group.id}
-        id={group.id}
+        grpid={group.id}
         title={group.title} 
         creator={group.creator}
         description={group.description}

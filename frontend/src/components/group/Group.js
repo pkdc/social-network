@@ -1,26 +1,31 @@
 import { useNavigate } from "react-router-dom";
+import { JoinedGroupContext } from "../store/joined-group-context";
 import Card from "../UI/Card";
 import SmallButton from "../UI/SmallButton";
 
 import classes from './Group.module.css';
+import { useContext } from "react";
 
 function Group(props) {
-
+    const jGrpCtx = useContext(JoinedGroupContext);
     const currUserId = localStorage.getItem("user_id");
-    console.log("group curr id", currUserId);
+    console.log("curr id", currUserId);
     
 
-    function handleClick(e) {
-        const id = e.target.id;
+    function reqToJoinHandler(e) {
+        const grpid = e.target.id;
+        console.log("grpid", e.target.id);
+        jGrpCtx.requestToJoin(grpid);
 
         const data = {
-            id: 0,
+            id: Date.now(),
             userid: parseInt(currUserId),
-            groupid: parseInt(id),
+            groupid: parseInt(grpid),
             status: 0,
+            createdat: Date.now(),
         };
 
-        console.log({data})
+        console.log(data)
     
         fetch('http://localhost:8080/group-request', 
         {
@@ -49,7 +54,7 @@ function Group(props) {
              
             </div>
             <div className={classes.btn}>
-                <div className={classes.smallbtn} id={props.id} onClick={handleClick}>Join</div>
+                <div className={classes.smallbtn} id={props.grpid} onClick={reqToJoinHandler}>Join</div>
             </div>
         </div>
     </Card>

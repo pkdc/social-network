@@ -150,10 +150,11 @@ type GroupPayload struct {
 }
 
 type GroupRequestStruct struct {
-	Id      int    `json:"id"`
-	UserId  int    `json:"userid"`
-	GroupId int    `json:"groupid"`
-	Status  string `json:"status"`
+	Id        int    `json:"id"`
+	UserId    int    `json:"userid"`
+	GroupId   int    `json:"groupid"`
+	Status    string `json:"status"`
+	CreatedAt string `json:"createdat"`
 }
 
 type GroupRequestPayload struct {
