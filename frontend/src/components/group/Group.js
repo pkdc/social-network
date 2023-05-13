@@ -15,7 +15,7 @@ function Group(props) {
     function reqToJoinHandler(e) {
         const grpid = e.target.id;
         console.log("grpid", e.target.id);
-        jGrpCtx.requestToJoin(grpid);
+        jGrpCtx.requestToJoin(+grpid);
 
         const data = {
             id: Date.now(),

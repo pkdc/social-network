@@ -54,7 +54,7 @@ export const WebSocketContextProvider = (props) => {
                 // };
                 // setNewMsgsObj(newReceivedMsgObj);
             } else if (msgObj.label === "noti") {
-                if (msgObj.type === "follow-req" || msgObj.type === "event-notif") {
+                if (msgObj.type === "follow-req" || msgObj.type === "event-notif" || msgObj.type === "join-req") {
                     console.log("ws receives noti (wsctx): ", msgObj);
                     console.log("ws receives noti type (wsctx): ", msgObj.type);
                     setNewNotiObj(msgObj);
@@ -66,7 +66,7 @@ export const WebSocketContextProvider = (props) => {
                     // const followUser = usersCtx.users.find((user) => user.id === msgObj.sourceid);
                     // console.log(msgObj.targetid, " Gonna follow (wsctx): ", followUser);
                     // msgObj.accepted && 
-                }
+                } 
             }
         };
 

@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { WebSocketContext } from "./websocket-context";
+import { GroupsContext } from "./groups-context";
 
 export const JoinedGroupContext = React.createContext({
     joinedGrps: [],
@@ -16,6 +17,8 @@ export const JoinedGroupContext = React.createContext({
 
 export const JoinedGroupContextProvider = (props) => {
     const selfId = +localStorage.getItem("user_id");
+    const grpCtx = useContext(GroupsContext);
+
     const [joinedGrps, setJoinedGrps] = useState([]);
     const joinedGroupingUrl = `http://localhost:8080/group-member?userid=${selfId}`;
 
@@ -39,13 +42,18 @@ export const JoinedGroupContextProvider = (props) => {
     const requestToJoinHandler = (joinGrpId) => {
         console.log("request to join user (context): ", +selfId);
         console.log("request to join grp (context): ", joinGrpId);
+        const grp = grpCtx.groups.find((grp) => grp.id === joinGrpId);
+        const creatorId = grp["creator"];
+        const grpTitle = grp["grptitle"];
+        console.log("creator of join grp (context): ", creatorId);
 
         const joinGrpPayloadObj = {};
         joinGrpPayloadObj["label"] = "noti";
         joinGrpPayloadObj["id"] = Date.now();
         joinGrpPayloadObj["type"] = "join-req";
         joinGrpPayloadObj["sourceid"] = +selfId;
-        joinGrpPayloadObj["targetid"] = joinGrpId;
+        joinGrpPayloadObj["targetid"] = creatorId;
+        joinGrpPayloadObj["grouptitle"] = grpTitle;
         joinGrpPayloadObj["createdat"] = Date.now().toString();
         console.log("gonna send join grp req : ", joinGrpPayloadObj);
         if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(joinGrpPayloadObj));
