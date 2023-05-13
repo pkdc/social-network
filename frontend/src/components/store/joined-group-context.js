@@ -6,7 +6,7 @@ export const JoinedGroupContext = React.createContext({
     setJoinedGrps: () => {},
     getJoinedGrps: () => {},
     requestToJoin: (joinGrp) => {},
-    requestToParticipate: (grp, targetUser) => {},
+    InviteToJoin: (grp, InvitedUser) => {},
     join: (toJoinGrp, user) => {},
     leave: (toLeaveGrp, user) => {},
     // receiveMsgFollowing: (friendId, open) => {},
@@ -51,19 +51,19 @@ export const JoinedGroupContextProvider = (props) => {
         if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(joinGrpPayloadObj));
     };
 
-    const requestToParticipateHandler = (grp, targetUser) => {
-        console.log("request to Participate user (context): ", targetUser.id);
-        console.log("request to Participate grp (context): ", grp);
+    const InviteToJoinHandler = (grp, InvitedUser) => {
+        console.log("Invite to join user (context): ", InvitedUser.id);
+        console.log("Invite to join grp (context): ", grp);
 
-        const participateGrpPayloadObj = {};
-        participateGrpPayloadObj["label"] = "noti";
-        participateGrpPayloadObj["id"] = Date.now();
-        participateGrpPayloadObj["type"] = "participate-req";
-        participateGrpPayloadObj["sourceid"] = grp.id;
-        participateGrpPayloadObj["targetid"] = targetUser.id;
-        participateGrpPayloadObj["createdat"] = Date.now().toString();
-        console.log("gonna send participate req : ", participateGrpPayloadObj);
-        if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(participateGrpPayloadObj));
+        const InviteToJoinPayloadObj = {};
+        InviteToJoinPayloadObj["label"] = "noti";
+        InviteToJoinPayloadObj["id"] = Date.now();
+        InviteToJoinPayloadObj["type"] = "invitation";
+        InviteToJoinPayloadObj["sourceid"] = grp.id;
+        InviteToJoinPayloadObj["targetid"] = InvitedUser.id;
+        InviteToJoinPayloadObj["createdat"] = Date.now().toString();
+        console.log("gonna send invite : ", InviteToJoinPayloadObj);
+        if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(InviteToJoinPayloadObj));
     };
 
     const joinHandler = (toJoinGrp, user) => {
@@ -99,7 +99,7 @@ export const JoinedGroupContextProvider = (props) => {
             setJoinedGrps: setJoinedGrps,
             getFollowing: getJoinedGrpsHandler, // implement
             requestToJoin: requestToJoinHandler,
-            requestToParticipate: requestToParticipateHandler,
+            InviteToJoin: InviteToJoinHandler,
             join: joinHandler,
             leave: leaveHandler,
             // receiveMsgFollowing: receiveMsgHandler,

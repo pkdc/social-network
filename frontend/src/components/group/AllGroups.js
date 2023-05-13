@@ -15,13 +15,13 @@ function AllGroups() {
       if (error) return <div>Error: {error.message}</div>
 
     return <div className={classes.container}>
-        {data.data.map((group) => (
+        {data.data && data.data.map((group) => (
          <Group
         key={group.id}
         id={group.id}
         title={group.title} 
         creator={group.creator}
-        description={group.description}  
+        description={group.description}
         // img={group.img}
         />
         ))}

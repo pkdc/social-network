@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { GroupsContext } from "../store/groups-context";
 import Card from "../UI/Card";
 import SmallButton from "../UI/SmallButton";
 
@@ -12,11 +13,13 @@ function CreateGroup() {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
 
+    const grpCtx = useContext(GroupsContext);
+
     console.log({title})
 
     function submitHandler(event) {
 
-        console.log("sssdsdeqfe")
+        // console.log("sssdsdeqfe")
         event.preventDefault();
 
         const date =  Date.now()
@@ -36,19 +39,24 @@ function CreateGroup() {
         setTitle('');
         setDescription('');
     
-        fetch('http://localhost:8080/group', 
-        {
+        fetch('http://localhost:8080/group', {
             method: 'POST',
             credentials: "include",
             mode: "cors",
             body: JSON.stringify(data),
             headers: { 
                 'Content-Type': 'application/json' 
-            }
-        }).then(() => {
-            // navigate.replace('/??')
-            console.log("group posted")
-        })
+            }})
+            .then(resp => resp.json())
+            .then(data => {
+                console.log("create grp data", data);
+                if (data.success) {
+                    console.log("created grp resp: ", data.success);
+                    grpCtx.onNewGroupCreated();
+                }
+            })
+            .catch(err => console.log(err))     
+            
     }
 
     return <Card className={classes.card}>
