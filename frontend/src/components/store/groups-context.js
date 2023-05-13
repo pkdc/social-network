@@ -29,7 +29,7 @@ export const GroupsContextProvider = (props) => {
         <GroupsContext.Provider value={{
             groups: groupsList,
             // onlineGroups: onlineGroupsList,
-            onNewGroupReg: getGroupsHandler,
+            onNewGroupCreated: getGroupsHandler,
             // onOnline: groupOnlineHandler,
             // onOffline: groupOfflineHandler,
         }}>
