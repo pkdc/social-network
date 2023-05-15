@@ -43,8 +43,9 @@ export const JoinedGroupContextProvider = (props) => {
         console.log("request to join user (context): ", +selfId);
         console.log("request to join grp (context): ", joinGrpId);
         const grp = grpCtx.groups.find((grp) => grp.id === joinGrpId);
+        console.log("join grp (context): ", grp);
         const creatorId = grp["creator"];
-        const grpTitle = grp["grptitle"];
+        const grpTitle = grp["title"];
         console.log("creator of join grp (context): ", creatorId);
 
         const joinGrpPayloadObj = {};

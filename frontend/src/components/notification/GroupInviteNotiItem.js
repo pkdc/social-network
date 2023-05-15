@@ -3,44 +3,42 @@ import SmallButton from "../UI/SmallButton";
 import { WebSocketContext } from "../store/websocket-context";
 import Avatar from "../UI/Avatar";
 
-const JoinGroupReqNotiItem = (props) => {
+const GroupInviteNotiItem = (props) => {
     const wsCtx = useContext(WebSocketContext);
 
-    const acceptJoinReqHandler = () => {
+    const acceptInvitationHandler = () => {
         console.log("request accepted: ");
         const notiReplyPayloadObj = {};
         notiReplyPayloadObj["label"] = "noti";
         notiReplyPayloadObj["id"] = Date.now();
-        notiReplyPayloadObj["type"] = "join-req-reply";
+        notiReplyPayloadObj["type"] = "invitation-reply";
         notiReplyPayloadObj["sourceid"] = props.targetId;
         notiReplyPayloadObj["targetid"] = props.srcUser.id;
         notiReplyPayloadObj["accepted"] = true;
-        console.log("gonna send reply (accept) to join req : ", notiReplyPayloadObj);
+        console.log("gonna send reply (accept) to Invitation : ", notiReplyPayloadObj);
         if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(notiReplyPayloadObj));
     };
-    const declineJoinReqHandler = () => {
+    const declineInvitationHandler = () => {
         console.log("request declined: ");
         const notiReplyPayloadObj = {};
         notiReplyPayloadObj["label"] = "noti";
         notiReplyPayloadObj["id"] = Date.now();
-        notiReplyPayloadObj["type"] = "join-req-reply";
+        notiReplyPayloadObj["type"] = "invitation-reply";
         notiReplyPayloadObj["sourceid"] = props.targetId;
         notiReplyPayloadObj["targetid"] = props.srcUser.id;
         notiReplyPayloadObj["accepted"] = false;
-        console.log("gonna send reply (decline) to join req : ", notiReplyPayloadObj);
+        console.log("gonna send reply (decline) to Invitation : ", notiReplyPayloadObj);
         if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(notiReplyPayloadObj));
     };
-    
-    console.log("props.grouptitle (join)", props.grouptitle);
     
     return (
         <div>
             <Avatar height={50} width={50}></Avatar>
-            <h3>{`${props.srcUser.fname} ${props.srcUser.lname} wants to join ${props.grouptitle}`}</h3>
-            <SmallButton onClick={acceptJoinReqHandler}>Accept</SmallButton>
-            <SmallButton onClick={declineJoinReqHandler}>Decline</SmallButton>
+            <h3>{`${props.srcUser.fname} ${props.srcUser.lname} invites you to join his/her group`}</h3>
+            <SmallButton onClick={acceptInvitationHandler}>Accept</SmallButton>
+            <SmallButton onClick={declineInvitationHandler}>Decline</SmallButton>
         </div>
     );
 };
 
-export default JoinGroupReqNotiItem;
+export default GroupInviteNotiItem;
