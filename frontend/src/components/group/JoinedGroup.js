@@ -20,6 +20,7 @@ function JoinedGroups() {
         const id = e.target.id
         
         navigate("/groupprofile", { state: { id } })
+        
     }
 
     return <Card>
