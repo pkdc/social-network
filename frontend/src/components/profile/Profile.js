@@ -48,18 +48,18 @@ function Profile({ userId }) {
     }, [followingCtx.following, userId]);
     
     useEffect(() => {
-        if (wsCtx.newNotiReplyObj) {
-            if (wsCtx.newNotiReplyObj.accepted) {
+        if (wsCtx.newNotiFollowReplyObj) {
+            if (wsCtx.newNotiFollowReplyObj.accepted) {
                 setCurrentlyFollowing(true);
                 setRequestedToFollow(false);
 
-                const followUser = usersCtx.users.find(user => user.id === wsCtx.newNotiReplyObj.sourceid);
+                const followUser = usersCtx.users.find(user => user.id === wsCtx.newNotiFollowReplyObj.sourceid);
                 console.log("found user frd (profile accepted req)", followUser);
                 followingCtx.follow(followUser);
 
-                console.log("follow user id", wsCtx.newNotiReplyObj.sourceid);
+                console.log("follow user id", wsCtx.newNotiFollowReplyObj.sourceid);
                 console.log("cur user is following (profile)", followingCtx.following);
-                const targetId =  wsCtx.newNotiReplyObj.sourceid;
+                const targetId =  wsCtx.newNotiFollowReplyObj.sourceid;
                 console.log("targetid", targetId)
                 console.log("current user", currUserId)
     
@@ -69,8 +69,8 @@ function Profile({ userId }) {
                 setRequestedToFollow(false);
             }
         }
-        wsCtx.setNewNotiReplyObj(null);
-    } , [wsCtx.newNotiReplyObj]);
+        wsCtx.setNewNotiFollowReplyObj(null);
+    } , [wsCtx.newNotiFollowReplyObj]);
 
     const followHandler = (e) => {
         const followUser = usersCtx.users.find(user => user.id === +e.target.id);

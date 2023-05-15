@@ -86,9 +86,9 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 		not.Type = msgStruct.Type
 		not.TargetId = msgStruct.TargetId
 		not.SourceId = msgStruct.SourceId
+		not.GroupId = msgStruct.GroupId
 		not.Accepted = msgStruct.Accepted
 		not.CreatedAt = msgStruct.CreatedAt
-		not.GroupId = msgStruct.GroupId
 		// fmt.Printf("not Struct: %v\n", not)
 	} else if msgStruct.Label == "private" {
 		t = 2

@@ -112,8 +112,9 @@ const TopNav = () => {
     const onShowNoti = () => {
         console.log("noti toggled!");
         setShowNoti(prev => !prev);
-    };
-    const ReceivedNewNotiHandler = () => setNewNoti(null);
+        // setOpen(true)
+        };
+    // const ReceivedNewNotiHandler = () => setNewNoti(null);
 
     console.log("show noti centre", showNoti);
     
@@ -151,9 +152,11 @@ const TopNav = () => {
                         <div className={styles.btn} onClick={onShowNoti}>
                             <img src={notif} alt=""></img>
                         </div>
+                        {/* showNoti &&  */}
                         {showNoti && <NotificationCentre 
                             newNoti={newNoti}
-                            onReceivedNewNoti={ReceivedNewNotiHandler}
+                            // onReceivedNewNoti={ReceivedNewNotiHandler}
+                            onClose={() => setShowNoti(false)}
                             />
                         }
                         <button className={styles.btn}>

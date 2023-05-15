@@ -21,6 +21,7 @@ const JoinGroupReqNotiItem = (props) => {
         notiReplyPayloadObj["type"] = "join-req-reply";
         notiReplyPayloadObj["sourceid"] = props.targetId;
         notiReplyPayloadObj["targetid"] = props.srcUser.id;
+        notiReplyPayloadObj["groupid"] = grp.id;
         notiReplyPayloadObj["accepted"] = true;
         console.log("gonna send reply (accept) to join req : ", notiReplyPayloadObj);
         if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(notiReplyPayloadObj));
@@ -33,6 +34,7 @@ const JoinGroupReqNotiItem = (props) => {
         notiReplyPayloadObj["type"] = "join-req-reply";
         notiReplyPayloadObj["sourceid"] = props.targetId;
         notiReplyPayloadObj["targetid"] = props.srcUser.id;
+        notiReplyPayloadObj["groupid"] = grp.id;
         notiReplyPayloadObj["accepted"] = false;
         console.log("gonna send reply (decline) to join req : ", notiReplyPayloadObj);
         if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(notiReplyPayloadObj));

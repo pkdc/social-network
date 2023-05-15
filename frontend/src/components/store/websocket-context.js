@@ -7,8 +7,8 @@ export const WebSocketContext = React.createContext({
     setNewMsgsObj: () => {},
     newNotiObj: null,
     setNewNotiObj: () => {},
-    newNotiReplyObj: null,
-    setNewNotiReplyObj: () => {},
+    newNotiFollowReplyObj: null,
+    setNewNotiFollowReplyObj: () => {},
 });
 
 export const WebSocketContextProvider = (props) => {
@@ -16,7 +16,7 @@ export const WebSocketContextProvider = (props) => {
     const [newMsgsObj, setNewMsgsObj] = useState(null);
 
     const [newNotiObj, setNewNotiObj] = useState(null);
-    const [newNotiReplyObj, setNewNotiReplyObj] = useState(null);
+    const [newNotiFollowReplyObj, setNewNotiFollowReplyObj] = useState(null);
 
     // const usersCtx = useContext(UsersContext);
 
@@ -62,7 +62,7 @@ export const WebSocketContextProvider = (props) => {
                     console.log("ws receives noti reply (wsctx): ", msgObj);
                     console.log("ws receives noti reply type (wsctx): ", msgObj.type);
                     console.log("ws receives noti reply accepted (wsctx): ", msgObj.accepted);
-                    setNewNotiReplyObj(msgObj);
+                    setNewNotiFollowReplyObj(msgObj);
                     // const followUser = usersCtx.users.find((user) => user.id === msgObj.sourceid);
                     // console.log(msgObj.targetid, " Gonna follow (wsctx): ", followUser);
                     // msgObj.accepted && 
@@ -82,8 +82,8 @@ export const WebSocketContextProvider = (props) => {
             setNewMsgsObj: setNewMsgsObj,
             newNotiObj: newNotiObj,
             setNewNotiObj: setNewNotiObj,
-            newNotiReplyObj: newNotiReplyObj,
-            setNewNotiReplyObj: setNewNotiReplyObj,
+            newNotiFollowReplyObj: newNotiFollowReplyObj,
+            setNewNotiFollowReplyObj: setNewNotiFollowReplyObj,
         }}>
             {props.children}
         </WebSocketContext.Provider>
