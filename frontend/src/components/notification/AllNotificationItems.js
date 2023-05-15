@@ -12,6 +12,7 @@ const AllNotificationItems = (props) => {
                         targetId={notiItem.targetid}
                         sourceId={notiItem.sourceid}
                         createdAt={notiItem.createdat}
+                        grouptitle={notiItem.grouptitle}
                     />
                     );
                 })

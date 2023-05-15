@@ -9,6 +9,8 @@ import WebSocketContext from "../store/websocket-context";
 import { UsersContextProvider } from "../store/users-context";
 import { FollowingContextProvider } from "../store/following-context";
 import { WebSocketContextProvider } from "../store/websocket-context";
+import { GroupsContextProvider } from "../store/groups-context";
+import { JoinedGroupContextProvider } from "../store/joined-group-context";
 
 const Root = (props) => {
     // const userFollowersUrl = "http://localhost:8080/user-follower";
@@ -24,9 +26,13 @@ const Root = (props) => {
         <UsersContextProvider>
             <WebSocketContextProvider>
                 <FollowingContextProvider>
-                    <TopNav/>
-                    <ChatSidebar/>
-                    <Outlet/>
+                    <GroupsContextProvider>
+                        <JoinedGroupContextProvider>
+                            <TopNav/>
+                            <ChatSidebar/>
+                            <Outlet/>
+                        </JoinedGroupContextProvider>
+                    </GroupsContextProvider>
                 </FollowingContextProvider>
             </WebSocketContextProvider>
         </UsersContextProvider>

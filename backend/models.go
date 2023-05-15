@@ -145,15 +145,23 @@ type GroupStruct struct {
 	CreatedAt   string `json:"createdat"`
 }
 
+type GroupResponse struct {
+	Creator        int    `json:"creator"`
+	CreatedAt      string `json:"createdat"`
+	Success        bool   `json:"success"`
+	CreatedGroupId int    `json:"createdid"`
+}
+
 type GroupPayload struct {
 	Data []GroupStruct `json:"data"`
 }
 
 type GroupRequestStruct struct {
-	Id      int    `json:"id"`
-	UserId  int    `json:"userid"`
-	GroupId int    `json:"groupid"`
-	Status  string `json:"status"`
+	Id        int    `json:"id"`
+	UserId    int    `json:"userid"`
+	GroupId   int    `json:"groupid"`
+	Status    string `json:"status"`
+	CreatedAt string `json:"createdat"`
 }
 
 type GroupRequestPayload struct {
@@ -236,23 +244,25 @@ type SessionStruct struct {
 }
 
 type NotifStruct struct {
-	Label     string `json:"label"`
-	Id        int    `json:"id"`
-	Type      string `json:"type"`
-	TargetId  int    `json:"targetid"`
-	SourceId  int    `json:"sourceid"`
-	Accepted  bool   `json:"accepted"`
-	CreatedAt string `json:"createdat"`
+	Label      string `json:"label"`
+	Id         int    `json:"id"`
+	Type       string `json:"type"`
+	TargetId   int    `json:"targetid"`
+	SourceId   int    `json:"sourceid"`
+	Accepted   bool   `json:"accepted"`
+	CreatedAt  string `json:"createdat"`
+	GroupTitle string `json:"grouptitle"`
 }
 
 type NotiMessageStruct struct {
-	Label     string `json:"label"`
-	Id        int    `json:"id"`
-	TargetId  int    `json:"targetid"`
-	SourceId  int    `json:"sourceid"`
-	Message   string `json:"message"`
-	GroupId   int    `json:"groupid"`
-	CreatedAt string `json:"createdat"`
-	Type      string `json:"type"`
-	Accepted  bool   `json:"accepted"`
+	Label      string `json:"label"`
+	Id         int    `json:"id"`
+	TargetId   int    `json:"targetid"`
+	SourceId   int    `json:"sourceid"`
+	Message    string `json:"message"`
+	GroupId    int    `json:"groupid"`
+	CreatedAt  string `json:"createdat"`
+	Type       string `json:"type"`
+	Accepted   bool   `json:"accepted"`
+	GroupTitle string `json:"grouptitle"`
 }

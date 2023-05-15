@@ -117,6 +117,7 @@ func Loginhandler() http.HandlerFunc {
 
 			err := json.NewDecoder(r.Body).Decode(&payload)
 			if err != nil {
+				fmt.Println("decode prob login")
 				log.Fatal(err)
 			}
 			fmt.Println(payload)
@@ -1253,7 +1254,7 @@ func Grouphandler() http.HandlerFunc {
 					//empty response
 				}
 
-			}else {
+			} else {
 				// ### GET ALL GROUPS ###
 
 				groups, err := query.GetAllGroups(context.Background())
@@ -1287,13 +1288,17 @@ func Grouphandler() http.HandlerFunc {
 
 		case http.MethodPost:
 			// Declares the variables to store the group details and handler response
+			fmt.Println("Post Grp")
+
 			var group GroupStruct
-			Resp := AuthResponse{Success: true}
+			Resp := GroupResponse{Success: true}
 
 			// Decodes the json object to the struct, changing the response to false if it fails
+			fmt.Printf("grp body %v\n", r.Body)
 			err := json.NewDecoder(r.Body).Decode(&group)
 			if err != nil {
-				Resp.Success = false
+				fmt.Println("decode prob grp") // why? but it can be stored in db
+				// Resp.Success = false
 			}
 
 			// ### CONNECT TO DATABASE ###
@@ -1326,20 +1331,23 @@ func Grouphandler() http.HandlerFunc {
 			creator.Status = 1
 			creator.UserID = newGroup.Creator
 
+			Resp.CreatedGroupId = int(newGroup.ID)
+			Resp.Creator = int(newGroup.Creator)
+
 			_, err = query.CreateGroupMember(context.Background(), creator)
 
 			if err != nil {
 				Resp.Success = false
 				fmt.Println("Unable to add creator to members list")
 			}
-
+			fmt.Printf("resp %v\n", Resp)
 			// Marshals the response struct to a json object
 			jsonResp, err := json.Marshal(Resp)
 			if err != nil {
 				http.Error(w, "500 internal server error", http.StatusInternalServerError)
 				return
 			}
-
+			fmt.Printf("jsonresp %v", jsonResp)
 			// Sets the http headers and writes the response to the browser
 			WriteHttpHeader(jsonResp, w)
 		default:
@@ -1985,7 +1993,10 @@ func GroupEventHandler() http.HandlerFunc {
 			if err != nil {
 				Resp.Success = false
 			}
-			date_int,err := strconv.Atoi(groupEvent.CreatedAt); if err!= nil {log.Fatal(err)}
+			date_int, err := strconv.Atoi(groupEvent.CreatedAt)
+			if err != nil {
+				log.Fatal(err)
+			}
 			jsDateMs := int64(date_int)
 			goDate := time.Unix(0, jsDateMs*int64(time.Millisecond))
 			fmt.Println("CREATED AT on handler func: ", goDate)
@@ -2088,7 +2099,7 @@ func GroupEventMemberHandler() http.HandlerFunc {
 				newMember.EventId = int(member.EventID)
 
 				Resp.Data = append(Resp.Data, newMember)
-			
+
 			}
 
 			// Marshals the response struct to a json object
