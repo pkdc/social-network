@@ -244,14 +244,14 @@ type SessionStruct struct {
 }
 
 type NotifStruct struct {
-	Label      string `json:"label"`
-	Id         int    `json:"id"`
-	Type       string `json:"type"`
-	TargetId   int    `json:"targetid"`
-	SourceId   int    `json:"sourceid"`
-	Accepted   bool   `json:"accepted"`
-	CreatedAt  string `json:"createdat"`
-	GroupTitle string `json:"grouptitle"`
+	Label     string `json:"label"`
+	Id        int    `json:"id"`
+	Type      string `json:"type"`
+	TargetId  int    `json:"targetid"`
+	SourceId  int    `json:"sourceid"`
+	Accepted  bool   `json:"accepted"`
+	CreatedAt string `json:"createdat"`
+	GroupId   int    `json:"groupid"`
 }
 
 type NotiMessageStruct struct {

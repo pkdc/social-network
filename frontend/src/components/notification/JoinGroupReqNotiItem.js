@@ -2,9 +2,16 @@ import { useContext } from "react";
 import SmallButton from "../UI/SmallButton";
 import { WebSocketContext } from "../store/websocket-context";
 import Avatar from "../UI/Avatar";
+import { GroupsContext } from "../store/groups-context";
 
 const JoinGroupReqNotiItem = (props) => {
     const wsCtx = useContext(WebSocketContext);
+    const grpCtx = useContext(GroupsContext);
+
+    const grp = grpCtx.groups.find((grp) => grp.id === props.groupId);
+    console.log("join grp (noti): ", grp);
+    const grpTitle = grp["title"];
+    console.log("grp title (noti): ", grpTitle);
 
     const acceptJoinReqHandler = () => {
         console.log("request accepted: ");
@@ -31,12 +38,12 @@ const JoinGroupReqNotiItem = (props) => {
         if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(notiReplyPayloadObj));
     };
     
-    console.log("props.grouptitle (join)", props.grouptitle);
+    console.log("props.groupid (join)", props.grouptitle);
     
     return (
         <div>
             <Avatar height={50} width={50}></Avatar>
-            <h3>{`${props.srcUser.fname} ${props.srcUser.lname} wants to join ${props.grouptitle}`}</h3>
+            <h3>{`${props.srcUser.fname} ${props.srcUser.lname} wants to join ${grpTitle}`}</h3>
             <SmallButton onClick={acceptJoinReqHandler}>Accept</SmallButton>
             <SmallButton onClick={declineJoinReqHandler}>Decline</SmallButton>
         </div>

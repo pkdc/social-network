@@ -54,7 +54,7 @@ export const JoinedGroupContextProvider = (props) => {
         joinGrpPayloadObj["type"] = "join-req";
         joinGrpPayloadObj["sourceid"] = +selfId;
         joinGrpPayloadObj["targetid"] = creatorId;
-        joinGrpPayloadObj["grouptitle"] = grpTitle;
+        joinGrpPayloadObj["groupid"] = joinGrpId;
         joinGrpPayloadObj["createdat"] = Date.now().toString();
         console.log("gonna send join grp req : ", joinGrpPayloadObj);
         if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(joinGrpPayloadObj));
