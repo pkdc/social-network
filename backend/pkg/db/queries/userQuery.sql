@@ -40,3 +40,9 @@ RETURNING *;
 SELECT COUNT(*)
 FROM user
 WHERE email = ? OR nick_name = ?;
+
+-- name: UpdateUserPrivacy :one
+UPDATE user
+set public = ?
+WHERE id = ?
+RETURNING *;
