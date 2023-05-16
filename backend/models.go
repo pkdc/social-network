@@ -48,6 +48,11 @@ type UserPayload struct {
 	Data []UserStruct `json:"data"`
 }
 
+type UserId struct {
+	TargetId int `json:"targetid"`
+	Public   int `json:"public"`
+}
+
 type UserFollowerStruct struct {
 	Id        int    `json:"id"`
 	Action    string `json:"action"`
