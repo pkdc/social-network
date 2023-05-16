@@ -29,19 +29,19 @@ function Group(props) {
     }, [jGrpCtx.joinedGrps, props.grpid])
 
     useEffect(() => {
-        if (wsCtx.newNotiJoinReplyObj) {
-            if (wsCtx.newNotiJoinReplyObj.accepted) {
+        if (wsCtx.newNotiInvitationReplyObj) {
+            if (wsCtx.newNotiInvitationReplyObj.accepted) {
                 setCurrentlyJoined(true);
                 setRequestedToJoin(false);
 
-                const UserJoining = usersCtx.users.find(user => user.id === wsCtx.newNotiJoinReplyObj.sourceid);
-                const JoinGroup = grpCtx.groups.find(group => group.id === wsCtx.newNotiJoinReplyObj.groupid);
+                const UserJoining = usersCtx.users.find(user => user.id === wsCtx.newNotiInvitationReplyObj.sourceid);
+                const JoinGroup = grpCtx.groups.find(group => group.id === wsCtx.newNotiInvitationReplyObj.groupid);
                 console.log("found group to join (group accepted req)", JoinGroup);
                 jGrpCtx.join(JoinGroup);
 
-                console.log("join group id", wsCtx.newNotiJoinReplyObj.groupid);
+                console.log("join group id", wsCtx.newNotiInvitationReplyObj.groupid);
                 console.log("cur user has joined these groups (group)", jGrpCtx.joinedGrps);
-                console.log("user join this group", UserJoining)
+                console.log("This user join the group", UserJoining)
     
                 joinGrpHandler(JoinGroup, UserJoining);
             } else {
@@ -50,7 +50,7 @@ function Group(props) {
             }
         }
         wsCtx.setNewNotiJoinReplyObj(null);
-    } , [wsCtx.newNotiJoinReplyObj]);
+    } , [wsCtx.newNotiInvitationReplyObj]);
 
     function reqToJoinHandler(e) {
         const grpid = e.target.id;
@@ -89,6 +89,7 @@ function Group(props) {
         console.log("user joining group (group)", grp);
         jGrpCtx.storeGroupMember(grp, user);
         setCurrentlyJoined(true);
+        setRequestedToJoin(false);
     };
 
     return <Card>

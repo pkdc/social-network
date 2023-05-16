@@ -1,18 +1,17 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import useGet from '../fetch/useGet';
-import { JoinedGroupContext } from "../store/joined-group-context";
 import Card from '../UI/Card';
 import SmallButton from '../UI/SmallButton';
 import styles from './modal.module.css';
+import { JoinedGroupContext } from "../store/joined-group-context";
 
 
-function Modal({open, onClose}) {
-    const jGrpCtx = useContext(JoinedGroupContext);
+function Modal({open, onClose, onInvite, currentlyJoined, invitedToJoin}) {
     const currUserId = localStorage.getItem("user_id");
-
+    const jGrpCtx = useContext(JoinedGroupContext);
     const { state } = useLocation();
-    const { id } = state; 
+    const { id } = state; // group id
 
     const { error, isLoaded, data } = useGet(`/user`)
 
@@ -21,9 +20,14 @@ function Modal({open, onClose}) {
     if (!open) return null;
 
     function inviteHandler(e) {
+        e.preventDefault();
         const uid = e.target.id;
         jGrpCtx.InviteToJoin(+id, +uid);
         console.log("group invite id", id);
+
+        onInvite(true);
+        // setInvitedToJoin(true);
+        // setCurrentlyJoined(false);
 
         const data = {
             // id: 0,
@@ -58,8 +62,9 @@ function Modal({open, onClose}) {
                         <div>{user.fname}{user.lname}</div>
              
                 <div className={styles.end}>
-                <div className={styles.btn} id={user.id} onClick={inviteHandler}>Send Invitation</div>
-              
+                {!currentlyJoined && !invitedToJoin && <div className={styles.btn} id={user.id} onClick={inviteHandler}>Send Invitation</div>}
+                {!currentlyJoined && invitedToJoin && <div className={styles.btn} id={user.id} onClick={inviteHandler}>Invited</div>}
+                {currentlyJoined && !invitedToJoin &&<div className={styles.btn} id={user.id} onClick={inviteHandler}>Joined</div>}
                 </div>
                     </div>
                 ))}
