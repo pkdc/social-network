@@ -44,6 +44,7 @@ function Profile({ userId }) {
     useEffect(() => {
         const storedFollowing = JSON.parse(localStorage.getItem("following"));
         console.log("stored following (profile)", storedFollowing);
+        // check if the current profile is one of the users in the following array
         followingCtx.following && setCurrentlyFollowing(followingCtx.following.some(followingUser => followingUser.id === +userId))
     }, [followingCtx.following, userId]);
     

@@ -1,21 +1,64 @@
 import { useNavigate } from "react-router-dom";
+import { GroupsContext } from "../store/groups-context";
 import { JoinedGroupContext } from "../store/joined-group-context";
+import { WebSocketContext } from "../store/websocket-context";
+import { UsersContext } from "../store/users-context";
 import Card from "../UI/Card";
 import SmallButton from "../UI/SmallButton";
 
 import classes from './Group.module.css';
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 
 function Group(props) {
-    const jGrpCtx = useContext(JoinedGroupContext);
     const currUserId = localStorage.getItem("user_id");
-    console.log("curr id", currUserId);
+    // console.log("curr id", currUserId);
     
+    const [currentlyJoined, setCurrentlyJoined] = useState(false);
+    const [requestedToJoin, setRequestedToJoin] = useState(false);
+
+    const jGrpCtx = useContext(JoinedGroupContext);
+    const grpCtx = useContext(GroupsContext);
+    const wsCtx = useContext(WebSocketContext);
+    const usersCtx = useContext(UsersContext);
+
+    useEffect(() => {
+        const storedJoinedGrps = JSON.parse(localStorage.getItem("joined-grps"));
+        console.log("stored joined-grps (group)", storedJoinedGrps);
+        // check if the current group item is one of the joined Grps in the joinedGrps array
+        jGrpCtx.joinedGrps && setCurrentlyJoined(jGrpCtx.joinedGrps.some(joinedGrp => joinedGrp.id === +props.grpid))
+    }, [jGrpCtx.joinedGrps, props.grpid])
+
+    useEffect(() => {
+        if (wsCtx.newNotiJoinReplyObj) {
+            if (wsCtx.newNotiJoinReplyObj.accepted) {
+                setCurrentlyJoined(true);
+                setRequestedToJoin(false);
+
+                const UserJoining = usersCtx.users.find(user => user.id === wsCtx.newNotiJoinReplyObj.sourceid);
+                const JoinGroup = grpCtx.groups.find(group => group.id === wsCtx.newNotiJoinReplyObj.groupid);
+                console.log("found group to join (group accepted req)", JoinGroup);
+                jGrpCtx.join(JoinGroup);
+
+                console.log("join group id", wsCtx.newNotiJoinReplyObj.groupid);
+                console.log("cur user has joined these groups (group)", jGrpCtx.joinedGrps);
+                console.log("user join this group", UserJoining)
+    
+                joinGrpHandler(JoinGroup, UserJoining);
+            } else {
+                setCurrentlyJoined(false);
+                setRequestedToJoin(false);
+            }
+        }
+        wsCtx.setNewNotiJoinReplyObj(null);
+    } , [wsCtx.newNotiJoinReplyObj]);
 
     function reqToJoinHandler(e) {
         const grpid = e.target.id;
         console.log("grpid", e.target.id);
         jGrpCtx.requestToJoin(+grpid);
+
+        setRequestedToJoin(true);
+        setCurrentlyJoined(false);
 
         const data = {
             id: Date.now(),
@@ -42,6 +85,12 @@ function Group(props) {
         })
     }
 
+    const joinGrpHandler = (grp, user) => {
+        console.log("user joining group (group)", grp);
+        jGrpCtx.storeGroupMember(grp, user);
+        setCurrentlyJoined(true);
+    };
+
     return <Card>
         <div className={classes.container}>
             <div className={classes.wrapper}>
@@ -54,7 +103,9 @@ function Group(props) {
              
             </div>
             <div className={classes.btn}>
-                <div className={classes.smallbtn} id={props.grpid} onClick={reqToJoinHandler}>Join</div>
+            {!currentlyJoined && !requestedToJoin && <div className={classes.smallbtn} id={props.grpid} onClick={reqToJoinHandler}>Join</div>}
+            {!currentlyJoined && requestedToJoin && <div className={classes.smallbtn} id={props.grpid}>Requested</div>}
+            {currentlyJoined && !requestedToJoin && <div className={classes.smallbtn} id={props.grpid}>Joined</div>}
             </div>
         </div>
     </Card>

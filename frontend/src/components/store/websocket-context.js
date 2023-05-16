@@ -76,7 +76,12 @@ export const WebSocketContextProvider = (props) => {
                     console.log("ws receives noti join-req-reply (wsctx): ", msgObj);
                     console.log("ws receives noti join-req-reply type (wsctx): ", msgObj.type);
                     console.log("ws receives noti join-req-reply accepted (wsctx): ", msgObj.accepted);
-                    setNewNotiFollowReplyObj(msgObj);
+                    setNewNotiJoinReplyObj(msgObj);
+                } else if (msgObj.type === "invitation-reply" || msgObj.type === "invitation-reply") {
+                    console.log("ws receives noti invitation-reply (wsctx): ", msgObj);
+                    console.log("ws receives noti invitation-reply type (wsctx): ", msgObj.type);
+                    console.log("ws receives noti invitation-reply accepted (wsctx): ", msgObj.accepted);
+                    setNewNotiInvitationReplyObj(msgObj);
                 } 
             } 
         };
@@ -97,7 +102,7 @@ export const WebSocketContextProvider = (props) => {
             setNewNotiFollowReplyObj: setNewNotiFollowReplyObj,
             newNotiJoinReplyObj: newNotiJoinReplyObj,
             setNewNotiJoinReplyObj: setNewNotiJoinReplyObj,
-            newNotiJoinReplyObj: newNotiJoinReplyObj,
+            newNotiInvitationReplyObj: newNotiInvitationReplyObj,
             setNewNotiInvitationReplyObj: setNewNotiInvitationReplyObj,
         }}>
             {props.children}

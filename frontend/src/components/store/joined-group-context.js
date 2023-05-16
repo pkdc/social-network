@@ -9,7 +9,8 @@ export const JoinedGroupContext = React.createContext({
     requestToJoin: (joinGrpId) => {},
     InviteToJoin: (grp, InvitedUser) => {},
     join: (toJoinGrp, user) => {},
-    leave: (toLeaveGrp, user) => {},
+    // leave: (toLeaveGrp, user) => {},
+    storeGroupMember: (userId, groupId) => {},
     // receiveMsgFollowing: (friendId, open) => {},
     // chatNotiUserArr: [],
     // setChatNotiUserArr: () => {},
@@ -85,10 +86,9 @@ export const JoinedGroupContextProvider = (props) => {
         console.log("user (jg ctx)", user);
         if (joinedGrps) { // not empty
             setJoinedGrps(prevJoinedGrps => [...prevJoinedGrps, toJoinGrp]);
-
-            const storedJoinedGrps = JSON.parse(localStorage.getItem("joined-grps"));
-            const curJoined = [...storedJoinedGrps, toJoinGrp];
-            localStorage.setItem("joined", JSON.stringify(curJoined));
+            // const storedJoinedGrps = JSON.parse(localStorage.getItem("joined-grps"));
+            // const curJoined = [...storedJoinedGrps, toJoinGrp];
+            // localStorage.setItem("joined", JSON.stringify(curJoined));
         } else {
             setJoinedGrps([toJoinGrp]);
             localStorage.setItem("joined-grps", JSON.stringify([toJoinGrp]));
@@ -96,14 +96,18 @@ export const JoinedGroupContextProvider = (props) => {
         console.log("locally stored joined grp (jg ctx)", JSON.parse(localStorage.getItem("joined-grps")));
     };
 
-    const leaveHandler = (toLeaveGrp, user) => {
-        console.log("user (leaveHandler)", user);
-        console.log("leave grp (leaveHandler)", toLeaveGrp);
-        setJoinedGrps(prevJoinedGrps => prevJoinedGrps.filter((prevJoinedGrp) => prevJoinedGrp.id !== toLeaveGrp.id));
-        const storedJoinedGrps = JSON.parse(localStorage.getItem("joined-grps"));
-        const curJoinedGrps = storedJoinedGrps.filter((prevJoinedGrp) => prevJoinedGrp.id !== toLeaveGrp.id);
-        localStorage.setItem("joined-grps", JSON.stringify(curJoinedGrps));
-        console.log("locally stored joined-grps (leaveHandler)", JSON.parse(localStorage.getItem("joined-grps")));
+    // const leaveHandler = (toLeaveGrp, user) => {
+    //     console.log("user (leaveHandler)", user);
+    //     console.log("leave grp (leaveHandler)", toLeaveGrp);
+    //     setJoinedGrps(prevJoinedGrps => prevJoinedGrps.filter((prevJoinedGrp) => prevJoinedGrp.id !== toLeaveGrp.id));
+    //     const storedJoinedGrps = JSON.parse(localStorage.getItem("joined-grps"));
+    //     const curJoinedGrps = storedJoinedGrps.filter((prevJoinedGrp) => prevJoinedGrp.id !== toLeaveGrp.id);
+    //     localStorage.setItem("joined-grps", JSON.stringify(curJoinedGrps));
+    //     console.log("locally stored joined-grps (leaveHandler)", JSON.parse(localStorage.getItem("joined-grps")));
+    // };
+
+    const storeGroupMemberHandler = () => {
+        // store the new member to group member db table
     };
 
     useEffect(() => getJoinedGrpsHandler(), []);
@@ -116,7 +120,8 @@ export const JoinedGroupContextProvider = (props) => {
             requestToJoin: requestToJoinHandler,
             InviteToJoin: InviteToJoinHandler,
             join: joinHandler,
-            leave: leaveHandler,
+            // leave: leaveHandler,
+            storeGroupMember: storeGroupMemberHandler,
             // receiveMsgFollowing: receiveMsgHandler,
             // chatNotiUserArr: chatNotiUserArr,
             // setChatNotiUserArr: setChatNotiUserArr,
