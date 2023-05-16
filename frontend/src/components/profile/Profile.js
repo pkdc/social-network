@@ -135,12 +135,12 @@ function Profile({ userId }) {
         {
             
             method: 'POST',
-            credentials: "include",
-            mode: 'cors',
+            // credentials: "include",
+            // mode: 'cors',
             body: JSON.stringify(data),
-            headers: { 
-                'Content-Type': 'application/json' 
-            }
+            // headers: { 
+            //     'Content-Type': 'application/json' 
+            // }
         }).then(() => {
             // navigate.replace('/??')
             console.log("privacy changed")
