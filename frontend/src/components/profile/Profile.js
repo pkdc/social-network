@@ -9,13 +9,14 @@ import { FollowingContext } from "../store/following-context";
 import { UsersContext } from "../store/users-context";
 import { WebSocketContext } from "../store/websocket-context";
 import classes from './Profile.module.css';
-
+import axios from "axios";
+let boolstatus ; 
 function Profile({ userId }) {
     
     // get stored publicity from localStorage
     // let selfPublicStatus;
     // selfPublicNum === 0 ? selfPublicStatus = false : selfPublicStatus = true;
-
+let statusofcuruser ;
     // self
     const [publicity, setPublicity] = useState(false); // 1 false is public, 0 true is private
     const selfPublicNum = +localStorage.getItem("public");
@@ -149,11 +150,37 @@ function Profile({ userId }) {
     
     let followButton;
     let messageButton;
-    
+    useEffect(() => {
+        // const fetchData = () => {
+    fetch(`http://localhost:8080/user-follow-status?tid=${userId}&sid=${currUserId}`)
+    .then(response => response.text())
+    .then(data => {
+      // Access the boolean value from the response
+    //   const value = data.value;
+  
+      // Use the boolean value in your JavaScript code
+      console.log("------data: ",data);
+if (data == "true"){
+    // console.log("bool false ")
+    setRequestedToFollow(true)
+}else {
+    // console.log("bool true")
+    setRequestedToFollow(false)
+}
+console.log(requestedToFollow)
+    //   setRequestedToFollow(true)
+    //   setRequestedToFollow(data)
+    //   console.log("----",requestedToFollow)
+    }).catch(error => {
+                console.log({error})
+            });
+        // };
+        // fetchData();
+      }, []);
     if (currUserId !== userId) {
-        console.log("currentlyFollowing", currentlyFollowing);
         if (currentlyFollowing) {
             followButton = <div className={classes.followbtn} id={userId} onClick={unfollowHandler}>- UnFollow</div>
+            console.log("currentlyFollowing", currentlyFollowing);
         } else if (requestedToFollow) {
             followButton = <div className={classes.followbtn} id={userId}>Requested</div>
         } else {
@@ -161,11 +188,10 @@ function Profile({ userId }) {
         }       
         messageButton = <GreyButton>Message</GreyButton> 
     }
-    // get userId (self) data
+ 
     const { error , isLoaded, data } = useGet(`/user?id=${userId}`)
     if (data.data !== undefined) {
 
-   
         if( data.data[0].public == 0 ){
             localStorage.setItem('isChecked', true);
         }else {
@@ -175,6 +201,11 @@ function Profile({ userId }) {
      console.log("user data (profile)", data.data)
       if (!isLoaded) return <div>Loading...</div>
       if (error) return <div>Error: {error.message}</div>
+
+       console.log("user data (profile)", data.data)
+        if (!isLoaded) return <div>Loading...</div>
+        if (error) return <div>Error: {error.message}</div>
+    
 
     // store follower in db
     const storeFollow = (targetId) => {

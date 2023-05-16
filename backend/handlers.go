@@ -794,23 +794,21 @@ func UserFollowerHandler() http.HandlerFunc {
 					if err != nil {
 						fmt.Println("Unable to find user")
 					}
-
-					var oneUser UserStruct
-
-					oneUser.Id = int(user.ID)
-					oneUser.Fname = user.FirstName
-					oneUser.Lname = user.LastName
-					oneUser.Nname = user.NickName
-					oneUser.Email = user.Email
-					oneUser.Password = user.Password
-					oneUser.Dob = user.Dob.String()
-					oneUser.Avatar = user.Image
-					oneUser.About = user.About
-					oneUser.Public = int(user.Public)
-
-					Resp.Data = append(Resp.Data, oneUser)
+					if follower.Status == 1 {
+						var oneUser UserStruct
+						oneUser.Id = int(user.ID)
+						oneUser.Fname = user.FirstName
+						oneUser.Lname = user.LastName
+						oneUser.Nname = user.NickName
+						oneUser.Email = user.Email
+						oneUser.Password = user.Password
+						oneUser.Dob = user.Dob.String()
+						oneUser.Avatar = user.Image
+						oneUser.About = user.About
+						oneUser.Public = int(user.Public)
+						Resp.Data = append(Resp.Data, oneUser)
+					}
 				}
-
 			}
 
 			// Marshals the response struct to a json object
@@ -953,7 +951,7 @@ func UserFollowingHandler() http.HandlerFunc {
 					if err != nil {
 						fmt.Println("Unable to find user")
 					}
-
+					if following.Status ==1 {
 					var oneUser UserStruct
 
 					oneUser.Id = int(user.ID)
@@ -969,6 +967,7 @@ func UserFollowingHandler() http.HandlerFunc {
 
 					Resp.Data = append(Resp.Data, oneUser)
 				}
+			}
 
 			}
 
@@ -1006,7 +1005,7 @@ func UserFollowingHandler() http.HandlerFunc {
 			newFollower.TargetID = int64(follower.TargetId)
 
 			err = query.DeleteFollower(context.Background(), newFollower)
-
+			fmt.Println("NEW FOLLOW REQUESTED")
 			if err != nil {
 				fmt.Println("Unable to insert follower")
 				Resp.Success = false
@@ -2337,6 +2336,66 @@ func PrivacyHandler() http.HandlerFunc {
 
 			// Sets the http headers and writes the response to the browser
 			WriteHttpHeader(jsonResp, w)
+		}
+	}
+}
+func UserFollowerStatusHandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		EnableCors(&w)
+		// Prevents the endpoint being called from other url paths
+		if err := UrlPathMatcher(w, r, "/user-follow-status"); err != nil {
+			return
+		}
+		if r.Method == "GET" {
+
+			// Checks to find a user id in the url
+			tid := r.URL.Query().Get("tid")
+			sid := r.URL.Query().Get("sid")
+			id, err := strconv.Atoi(tid)
+			if err != nil {
+				fmt.Println("Unable to convert to int")
+			}
+			source_id, err := strconv.Atoi(sid)
+			if err != nil {
+				fmt.Println("Unable to convert to int")
+			}
+
+			foundId := false
+
+			if tid != "" {
+				foundId = true
+			}
+
+			// ### CONNECT TO DATABASE ###
+
+			db := db.DbConnect()
+
+			query := crud.New(db)
+
+			if foundId {
+				// ### GET USER FOLLOWERS ###
+				followers, err := query.GetFollowers(context.Background(), int64(id))
+				var value bool 
+				if err != nil {
+					fmt.Println("Unable to find followers")
+				}
+
+				for _, follower := range followers {
+					if err != nil {
+						fmt.Println("Unable to find user")
+					}
+					// w.Header().Set("Content-Type", "application/json")
+					if int(follower.SourceID) == source_id {
+						if follower.Status == 1 {
+							value = false
+						} else if follower.Status == 0 {
+							value = true
+						}
+					}
+				}
+				fmt.Fprint(w, value)
+
+			}
 		}
 	}
 }
