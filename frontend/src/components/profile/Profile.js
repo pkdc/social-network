@@ -17,7 +17,7 @@ function Profile({ userId }) {
     // selfPublicNum === 0 ? selfPublicStatus = false : selfPublicStatus = true;
 
     // self
-    const [publicity, setPublicity] = useState(false); // 0 false is public, 1 true is private
+    const [publicity, setPublicity] = useState(false); // 1 false is public, 0 true is private
     const selfPublicNum = +localStorage.getItem("public");
     let public1  ; 
     console.log("stored publicity (profile)", selfPublicNum);
@@ -116,9 +116,9 @@ function Profile({ userId }) {
         // setPublicity(prev => !prev); // right but css not working
         let publicityNum;
         if (e.target.checked ){
-            publicityNum = 1
+            publicityNum = 0
         }else {
-            publicityNum = 0;
+            publicityNum = 1;
         }
         console.log({publicityNum})
         localStorage.setItem("public", publicityNum);
@@ -166,7 +166,7 @@ function Profile({ userId }) {
     if (data.data !== undefined) {
 
    
-        if( data.data[0].public == 1 ){
+        if( data.data[0].public == 0 ){
             localStorage.setItem('isChecked', true);
         }else {
             localStorage.setItem('isChecked', false);
