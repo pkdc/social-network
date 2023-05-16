@@ -36,6 +36,10 @@ func (h *Hub) Run() {
 	for {
 		select {
 		case client := <-h.register:
+
+			// update clients status
+			h.StatusUpdate(client, "online")
+
 			// Adds connected user to the client list
 			h.clients[client.userID] = client
 			fmt.Printf("client %v is connected \n", client)
@@ -47,9 +51,35 @@ func (h *Hub) Run() {
 				fmt.Printf("client %v left \n", client)
 				close(client.send)
 			}
+			// update clients status
+			h.StatusUpdate(client, "offline")
 		case message := <-h.broadcast:
 			// Sends message/notification to appropriate users
 			h.Notif(message)
+		}
+	}
+}
+
+func (h *Hub) StatusUpdate(c *Client, status string) {
+	var userMsg backend.UserMessageStruct
+	userMsg.Label = status
+	userMsg.SourceId = c.userID
+
+	// Marshals the struct to a json object
+	fmt.Println("Marshals the struct to a json object")
+	sendMsg, err := json.Marshal(userMsg)
+	if err != nil {
+		panic(err)
+	}
+
+	// Loops through the clients and updates status
+	for _, c := range h.clients {
+		select {
+		case c.send <- sendMsg:
+			fmt.Printf("sendMsg %v\n", sendMsg)
+		default:
+			close(c.send)
+			delete(h.clients, c.userID)
 		}
 	}
 }
