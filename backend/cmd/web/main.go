@@ -29,6 +29,7 @@ func main() {
 	mux.Handle("/logout", backend.Logouthandler())
 	mux.Handle("/reg", backend.Reghandler())
 	mux.Handle("/user", backend.Userhandler())
+	mux.Handle("/privacy", backend.PrivacyHandler())
 	mux.Handle("/user-follower", backend.UserFollowerHandler())
 	mux.Handle("/user-following", backend.UserFollowingHandler())
 	mux.Handle("/user-message", backend.UserMessageHandler())

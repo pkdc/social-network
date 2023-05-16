@@ -318,6 +318,7 @@ func Reghandler() http.HandlerFunc {
 
 			if err != nil {
 				Resp.Success = false
+				fmt.Println(err)
 				fmt.Println("Unable to check if user exists")
 			}
 
@@ -2265,6 +2266,77 @@ func GroupMessageHandler() http.HandlerFunc {
 			// Prevents all request types other than POST and GET
 			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
 			return
+		}
+	}
+}
+
+func PrivacyHandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println(r.Method)
+		if r.Method == "POST" {
+			fmt.Println("its arrived")
+
+			EnableCors(&w)
+			// Prevents the endpoint being called from other url paths
+			if err := UrlPathMatcher(w, r, "/privacy"); err != nil {
+				return
+			}
+
+			// // Prevents all request types other than GET
+			// if r.Method != http.MethodPost {
+			// 	http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
+			// 	return
+			// }
+
+			var payload UserId
+			err := json.NewDecoder(r.Body).Decode(&payload)
+			if err != nil {
+
+			}
+			fmt.Println(payload)
+
+			id := payload.TargetId
+			public := payload.Public
+
+			// Declares the payload struct
+			var Resp AuthResponse
+
+			Resp.Success = true
+
+			// ### CONNECT TO DATABASE ###
+
+			db := db.DbConnect()
+
+			query := crud.New(db)
+
+			// update public column in user table
+
+			user, err := query.UpdateUserPrivacy(context.Background(), crud.UpdateUserPrivacyParams{
+				Public: int64(public),
+				ID:     int64(id),
+			})
+
+			if err != nil {
+				fmt.Println("Unable to update user")
+				Resp.Success = false
+			}
+
+			Resp.UserId = int(user.ID)
+			Resp.Fname = user.FirstName
+			Resp.Lname = user.LastName
+			Resp.Nname = user.NickName
+			Resp.Email = user.Email
+			Resp.Public = int(user.Public)
+
+			// Marshals the response struct to a json object
+			jsonResp, err := json.Marshal(Resp)
+			if err != nil {
+				http.Error(w, "500 internal server error", http.StatusInternalServerError)
+				return
+			}
+
+			// Sets the http headers and writes the response to the browser
+			WriteHttpHeader(jsonResp, w)
 		}
 	}
 }

@@ -11,13 +11,15 @@ import { WebSocketContext } from "../store/websocket-context";
 import classes from './Profile.module.css';
 
 function Profile({ userId }) {
+    
     // get stored publicity from localStorage
     // let selfPublicStatus;
     // selfPublicNum === 0 ? selfPublicStatus = false : selfPublicStatus = true;
 
     // self
-    const [publicity, setPublicity] = useState(false); // 0, false is private, 1, true is public
+    const [publicity, setPublicity] = useState(false); // 0 false is public, 1 true is private
     const selfPublicNum = +localStorage.getItem("public");
+    let public1  ; 
     console.log("stored publicity (profile)", selfPublicNum);
     useEffect(() => {
         selfPublicNum ? setPublicity(true) : setPublicity(false);
@@ -95,27 +97,55 @@ function Profile({ userId }) {
     };
 
     const setPublicityHandler = (e) => {
-        console.log("publicity", publicity);
-        console.log("toggle event", e);
-        console.log("toggle prev checkbox status", e.target.defaultChecked);
-        console.log("toggle cur checkbox status", e.target.checked);
+    //     console.log("publicity", publicity);
+    //     console.log("toggle event", e);
+    //     console.log("toggle prev checkbox status", e.target.defaultChecked);
+        console.log("---------------------toggle cur checkbox status", e.target.checked);
         // e.target.defaultChecked && setPublicity(false); // wrong but css working
-        // e.target.checked && setPublicity(true); // wrong but css working
+        if (e.target.checked ){
+            setPublicity(true); // private
+        }else {
+            setPublicity(false);
+        }
+        
+           // wrong but css working
         // setPublicity((prev) => (
         //     prev = !prev
         //     // !prev ? setPublicity(true) : setPublicity(false) // also doesn't work correctly
         // ));
-        setPublicity(prev => !prev); // right but css not working
-
+        // setPublicity(prev => !prev); // right but css not working
         let publicityNum;
-        publicity ? publicityNum = 1 : publicityNum = 0;
+        if (e.target.checked ){
+            publicityNum = 1
+        }else {
+            publicityNum = 0;
+        }
+        console.log({publicityNum})
         localStorage.setItem("public", publicityNum);
 
         // post to store publicity to db
 
+        const data = { 
+            // Define the data to send in the request body
+            targetid: parseInt(userId),
+            public : publicityNum,
+        };
+        
+        fetch('http://localhost:8080/privacy', 
+        {
+            
+            method: 'POST',
+            // credentials: "include",
+            // mode: 'cors',
+            body: JSON.stringify(data),
+            // headers: { 
+            //     'Content-Type': 'application/json' 
+            // }
+        }).then(() => {
+            // navigate.replace('/??')
+            console.log("privacy changed")
+        })
     };
-
-    // frd
     
     let followButton;
     let messageButton;
@@ -133,8 +163,16 @@ function Profile({ userId }) {
     }
     // get userId (self) data
     const { error , isLoaded, data } = useGet(`/user?id=${userId}`)
-     console.log("user data (profile)", data.data)
+    if (data.data !== undefined) {
 
+   
+        if( data.data[0].public == 1 ){
+            localStorage.setItem('isChecked', true);
+        }else {
+            localStorage.setItem('isChecked', false);
+        }
+    }
+     console.log("user data (profile)", data.data)
       if (!isLoaded) return <div>Loading...</div>
       if (error) return <div>Error: {error.message}</div>
 
@@ -209,22 +247,22 @@ function Profile({ userId }) {
     return <div className={classes.container}>
     <div className={classes.private}>
         {/* label?? friends only/public/private?? */}
-        {currUserId === userId && !publicity && 
             <ToggleSwitch
                 label={"Private"}
                 value={"Private"}
                 // onClick={setPublicChangeHandler}
                 // onChange={setPublicChangeHandler}
-                onChange={setPublicityHandler}
-            ></ToggleSwitch>}
-        {currUserId === userId && publicity && 
+                onClick={setPublicityHandler}
+            ></ToggleSwitch>
+            {/* } */}
+        {/* {currUserId === userId && !publicity && 
             <ToggleSwitch 
                 label={"Public"}
                 value={"Public"}
                 // onClick={setPrivateChangeHandler}
                 // onChange={setPrivateChangeHandler}
                 onChange={setPublicityHandler}
-            ></ToggleSwitch>}            
+            ></ToggleSwitch>}             */}
     </div>
     <Card> 
         <div className={classes.wrapper}>
