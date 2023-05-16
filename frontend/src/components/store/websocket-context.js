@@ -60,7 +60,7 @@ export const WebSocketContextProvider = (props) => {
                 // };
                 // setNewMsgsObj(newReceivedMsgObj);
             } else if (msgObj.label === "noti") {
-                if (msgObj.type === "follow-req" || msgObj.type === "event-notif" || msgObj.type === "join-req") {
+                if (msgObj.type === "follow-req" || msgObj.type === "event-notif" || msgObj.type === "join-req" || msgObj.type === "invitation") {
                     console.log("ws receives noti (wsctx): ", msgObj);
                     console.log("ws receives noti type (wsctx): ", msgObj.type);
                     setNewNotiObj(msgObj);

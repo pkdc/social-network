@@ -45,7 +45,6 @@ export const JoinedGroupContextProvider = (props) => {
         const grp = grpCtx.groups.find((grp) => grp.id === joinGrpId);
         console.log("join grp (context): ", grp);
         const creatorId = grp["creator"];
-        const grpTitle = grp["title"];
         console.log("creator of join grp (context): ", creatorId);
 
         const joinGrpPayloadObj = {};
@@ -60,16 +59,22 @@ export const JoinedGroupContextProvider = (props) => {
         if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(joinGrpPayloadObj));
     };
 
-    const InviteToJoinHandler = (grp, InvitedUser) => {
-        console.log("Invite to join user (context): ", InvitedUser.id);
-        console.log("Invite to join grp (context): ", grp);
+    const InviteToJoinHandler = (grpid, InvitedUserId) => {
+        console.log("Invite to join user (context): ", InvitedUserId);
+        console.log("Invite to join grp (context): ", grpid);
+
+        const grp = grpCtx.groups.find((grp) => grp.id === grpid);
+        console.log("invite grp (context): ", grp);
+        const creatorId = grp["creator"];
+        console.log("creator of invite grp (context): ", creatorId);
 
         const InviteToJoinPayloadObj = {};
         InviteToJoinPayloadObj["label"] = "noti";
         InviteToJoinPayloadObj["id"] = Date.now();
         InviteToJoinPayloadObj["type"] = "invitation";
-        InviteToJoinPayloadObj["sourceid"] = grp.id;
-        InviteToJoinPayloadObj["targetid"] = InvitedUser.id;
+        InviteToJoinPayloadObj["sourceid"] = creatorId;
+        InviteToJoinPayloadObj["targetid"] = InvitedUserId;
+        InviteToJoinPayloadObj["groupid"] = grpid;
         InviteToJoinPayloadObj["createdat"] = Date.now().toString();
         console.log("gonna send invite : ", InviteToJoinPayloadObj);
         if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(InviteToJoinPayloadObj));

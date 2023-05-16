@@ -4,7 +4,7 @@ import { WebSocketContext } from "../store/websocket-context";
 import Avatar from "../UI/Avatar";
 import { GroupsContext } from "../store/groups-context";
 
-const GroupInviteNotiItem = (props) => {
+const InviteToJoinGroupNotiItem = (props) => {
     const wsCtx = useContext(WebSocketContext);
     const grpCtx = useContext(GroupsContext);
 
@@ -43,11 +43,11 @@ const GroupInviteNotiItem = (props) => {
     return (
         <div>
             <Avatar height={50} width={50}></Avatar>
-            <h3>{`${props.srcUser.fname} ${props.srcUser.lname} invites you to join his/her group`}</h3>
+            <h3>{`${props.srcUser.fname} ${props.srcUser.lname} invites you to join his/her group: ${grpTitle}`}</h3>
             <SmallButton onClick={acceptInvitationHandler}>Accept</SmallButton>
             <SmallButton onClick={declineInvitationHandler}>Decline</SmallButton>
         </div>
     );
 };
 
-export default GroupInviteNotiItem;
+export default InviteToJoinGroupNotiItem;

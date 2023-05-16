@@ -6,8 +6,8 @@ import SmallButton from "../UI/SmallButton";
 import { useNavigate } from "react-router-dom";
 import styles from './NotificationItem.module.css'
 import profile from "../assets/profileSmall.svg";
-
 import JoinGroupReqNotiItem from "./JoinGroupReqNotiItem";
+import InviteToJoinGroupNotiItem from "./InviteToJoinGroupNotiItem";
 
 const NotificationItem = (props) => {
     const navigate = useNavigate();
@@ -65,6 +65,11 @@ const NotificationItem = (props) => {
             targetId={props.targetId}
             />}
             {props.type === "join-req" && <JoinGroupReqNotiItem 
+            srcUser={sourceUser}
+            targetId={props.targetId}
+            groupId={props.groupId}
+            />}
+            {props.type === "invitation" && <InviteToJoinGroupNotiItem 
             srcUser={sourceUser}
             targetId={props.targetId}
             groupId={props.groupId}
