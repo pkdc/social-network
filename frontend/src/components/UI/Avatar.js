@@ -1,8 +1,29 @@
+import { useState, useContext, useEffect } from "react";
+import { WebSocketContext } from "../store/websocket-context";
 import styles from "./Avatar.module.css";
 import profile from '../assets/profile.svg'
 
 const Avatar = (props) => {
-    const onlineStatus = false; // change this
+    // const onlineStatus = false; // change this
+    const [onlineStatus, setOnlineStatus] = useState(false);
+
+    const wsCtx = useContext(WebSocketContext);
+
+    useEffect(() => {
+        console.log("Avatar online status for user (effect)", props.id, onlineStatus);
+        if (wsCtx.websocket !== null && wsCtx.newOnlineStatusObj) {
+            console.log("incoming Avatar online status changed", wsCtx.newOnlineStatusObj);
+            console.log("ws sourceid", wsCtx.newOnlineStatusObj["sourceid"]);
+            console.log("props.id", props.id);
+            if (+wsCtx.newOnlineStatusObj["sourceid"] === props.id) {
+                console.log("matched uid");
+                setOnlineStatus(wsCtx.newOnlineStatusObj["onlinestatus"]);
+            } 
+        }
+    },[wsCtx.newOnlineStatusObj]);
+
+    console.log("Avatar online status for user", props.id, onlineStatus);
+    
     const defaultImagePath = "default_avatar.jpg";
     const classes = `${styles["avatar"]} ${props.className || ""}`;
     return (

@@ -38,7 +38,7 @@ func (h *Hub) Run() {
 		case client := <-h.register:
 
 			// update clients status
-			h.StatusUpdate(client, "online")
+			h.StatusUpdate(client, true)
 
 			// Adds connected user to the client list
 			h.clients[client.userID] = client
@@ -52,7 +52,7 @@ func (h *Hub) Run() {
 				close(client.send)
 			}
 			// update clients status
-			h.StatusUpdate(client, "offline")
+			h.StatusUpdate(client, false)
 		case message := <-h.broadcast:
 			// Sends message/notification to appropriate users
 			h.Notif(message)
@@ -60,10 +60,11 @@ func (h *Hub) Run() {
 	}
 }
 
-func (h *Hub) StatusUpdate(c *Client, status string) {
+func (h *Hub) StatusUpdate(c *Client, status bool) {
 	var userMsg backend.UserMessageStruct
-	userMsg.Label = status
+	userMsg.Label = "online-status"
 	userMsg.SourceId = c.userID
+	userMsg.OnlineStatus = status
 
 	// Marshals the struct to a json object
 	fmt.Println("Marshals the struct to a json object")

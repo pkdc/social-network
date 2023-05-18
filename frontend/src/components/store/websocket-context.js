@@ -9,6 +9,8 @@ export const WebSocketContext = React.createContext({
     setNewNotiObj: () => {},
     newNotiReplyObj: null,
     setNewNotiReplyObj: () => {},
+    newOnlineStatusObj: false,
+    setNewOnlineStatusObj: () => {},
 });
 
 export const WebSocketContextProvider = (props) => {
@@ -17,6 +19,8 @@ export const WebSocketContextProvider = (props) => {
 
     const [newNotiObj, setNewNotiObj] = useState(null);
     const [newNotiReplyObj, setNewNotiReplyObj] = useState(null);
+
+    const [newOnlineStatusObj, setNewOnlineStatusObj] = useState(false);
 
     const usersCtx = useContext(UsersContext);
 
@@ -67,6 +71,10 @@ export const WebSocketContextProvider = (props) => {
                     // console.log(msgObj.targetid, " Gonna follow (wsctx): ", followUser);
                     // msgObj.accepted && 
                 }
+            } else if (msgObj.label === "online-status") {
+                console.log("ws receives online-status (wsctx): ", msgObj);
+                console.log("ws receives online-status onlinestatus (wsctx): ", msgObj.onlinestatus);
+                setNewOnlineStatusObj(msgObj);
             }
         };
 
@@ -84,6 +92,8 @@ export const WebSocketContextProvider = (props) => {
             setNewNotiObj: setNewNotiObj,
             newNotiReplyObj: newNotiReplyObj,
             setNewNotiReplyObj: setNewNotiReplyObj,
+            newOnlineStatusObj: newOnlineStatusObj,
+            setNewOnlineStatusObj: setNewOnlineStatusObj,
         }}>
             {props.children}
         </WebSocketContext.Provider>
