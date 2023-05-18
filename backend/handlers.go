@@ -242,7 +242,7 @@ func Reghandler() http.HandlerFunc {
 		if r.Method == http.MethodPost {
 			fmt.Printf("----reg-POST-----\n")
 			var payload regPayload
-
+		var errormsg string = "error"
 			err := json.NewDecoder(r.Body).Decode(&payload)
 			if err != nil {
 				log.Fatal(err)
@@ -280,6 +280,7 @@ func Reghandler() http.HandlerFunc {
 
 			if err != nil {
 				Resp.Success = false
+				errormsg = "ERROR - Invalid password"
 				fmt.Println("Unable generate password!")
 			}
 
@@ -287,6 +288,7 @@ func Reghandler() http.HandlerFunc {
 
 			if err != nil {
 				Resp.Success = false
+				errormsg = "ERROR - Invalid date of birth"
 				fmt.Println("Unable to convert date of birth")
 			}
 
@@ -318,12 +320,13 @@ func Reghandler() http.HandlerFunc {
 
 			if err != nil {
 				Resp.Success = false
-				fmt.Println(err)
-				fmt.Println("Unable to check if user exists")
+				errormsg = "ERROR"
+				fmt.Println("Unable to check if user exists because of error")
 			}
 
 			if records > 0 {
-
+				errormsg = "ERROR - This email is already taken"
+				fmt.Println("Unable to check if user exists because of duplicate")
 				// user already exists
 				Resp.Success = false
 
@@ -335,6 +338,7 @@ func Reghandler() http.HandlerFunc {
 
 				if err != nil {
 					Resp.Success = false
+					errormsg = "ERROR - Something went wrong! Try again"
 					fmt.Println("Unable to create user!")
 				}
 
@@ -348,10 +352,14 @@ func Reghandler() http.HandlerFunc {
 				Resp.Dob = curUser.Dob.String()
 
 				if email == "f" {
+					fmt.Println("email false")
+					errormsg = "ERROR - Invalid e-mail"
 					Resp.Success = false
 				}
 			}
-
+if Resp.Success == false{
+	Resp.Fname = errormsg
+}
 			jsonResp, err := json.Marshal(Resp)
 			fmt.Println(string(jsonResp))
 
@@ -2375,7 +2383,7 @@ func UserFollowerStatusHandler() http.HandlerFunc {
 			if foundId {
 				// ### GET USER FOLLOWERS ###
 				followers, err := query.GetFollowers(context.Background(), int64(id))
-				var value bool 
+				var value bool
 				if err != nil {
 					fmt.Println("Unable to find followers")
 				}

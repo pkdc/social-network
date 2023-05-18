@@ -12,11 +12,10 @@ export const AuthContext = React.createContext({
 export const AuthContextProvider = (props) => {
     const [loggedIn, setLoggedIn] = useState(false);
     const [regSuccess, setRegSuccess] = useState(false);
-  
     const loginURL = "http://localhost:8080/login";
     const regURL = "http://localhost:8080/reg";
     const logoutURL = "http://localhost:8080/logout";
-  
+
   const usersCtx = useContext(UsersContext);
 
     const regHandler = (regPayloadObj) => {
@@ -30,7 +29,7 @@ export const AuthContextProvider = (props) => {
         },
           body: JSON.stringify(regPayloadObj)
         };
-      
+
         fetch(regURL, reqOptions)
           .then(resp => resp.json())
           .then(data => {
@@ -50,6 +49,7 @@ export const AuthContextProvider = (props) => {
               //   data.about && localStorage.setItem("about", data.about);
               } else {
                 setRegSuccess(false);
+                alert(data.fname)
               }
           })
           .catch(err => {
@@ -68,6 +68,7 @@ export const AuthContextProvider = (props) => {
           },
           body: JSON.stringify(loginPayloadObj)
         };
+
         fetch(loginURL, reqOptions)
         .then(resp => resp.json())
         .then(data => {
@@ -82,6 +83,9 @@ export const AuthContextProvider = (props) => {
             data.avatar && localStorage.setItem("avatar", data.avatar);
             data.about && localStorage.setItem("about", data.about);
             localStorage.setItem("public", data.public);
+          }else {
+            setLoggedIn(false)
+            alert("ERROR - Please check your credentials")
           }
         })
         .catch(err => {
@@ -92,7 +96,7 @@ export const AuthContextProvider = (props) => {
       const logoutHandler = () => {
         localStorage.clear();
         localStorage.removeItem("following");
-     
+
         const reqOptions = {
           method: "GET",
           credentials: "include",
@@ -105,9 +109,9 @@ export const AuthContextProvider = (props) => {
         .then(resp => resp.json())
         .then(data => console.log(data))
         .catch(err => console.log(err))
-        
+
         setLoggedIn(false);
-    
+
         // in case the next user wants to reg
         setRegSuccess(false);
       };
@@ -115,7 +119,7 @@ export const AuthContextProvider = (props) => {
     useEffect(() => {localStorage.getItem("user_id") && setLoggedIn(true)}, []);
 
     return (
-        <AuthContext.Provider 
+        <AuthContext.Provider
             value={{
                 isLoggedIn: loggedIn,
                 onReg: regHandler,
