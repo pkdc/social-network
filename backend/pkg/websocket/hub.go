@@ -37,12 +37,12 @@ func (h *Hub) Run() {
 		select {
 		case client := <-h.register:
 
-			// update clients status
-			h.StatusUpdate(client, true)
-
 			// Adds connected user to the client list
 			h.clients[client.userID] = client
 			fmt.Printf("client %v is connected \n", client)
+
+			// update clients status
+			h.StatusUpdate(client, true)
 
 		case client := <-h.unregister:
 			// Removes client from client list when disconnected
@@ -64,7 +64,7 @@ func (h *Hub) StatusUpdate(c *Client, status bool) {
 	var userMsg backend.UserMessageStruct
 	userMsg.Label = "online-status"
 	userMsg.SourceId = c.userID
-	userMsg.OnlineStatus = status
+	userMsg.OnlineUserIds = []int{}
 
 	// Marshals the struct to a json object
 	fmt.Println("Marshals the struct to a json object")
