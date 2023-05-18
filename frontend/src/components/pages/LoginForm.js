@@ -7,12 +7,11 @@ import LgButton from "../UI/LgButton";
 import { AuthContext } from "../store/auth-context";
 import styles from "./LoginForm.module.css";
 
-const LoginForm = () => {  
+const LoginForm = () => {
     const [enteredEmail, setEnteredEmail] = useState("");
     const [enteredPw, setEnteredPw] = useState("");
     const navigate = useNavigate();
     const ctx = useContext(AuthContext);
-
     const emailChangeHandler = (e) => {
         setEnteredEmail(e.target.value);
         console.log(enteredEmail);
@@ -21,7 +20,7 @@ const LoginForm = () => {
         setEnteredPw(e.target.value);
         console.log(enteredPw);
     };
-        
+
     const submitHandler = (e) => {
         e.preventDefault();
         const loginPayloadObj = {
@@ -29,12 +28,10 @@ const LoginForm = () => {
             pw: enteredPw
         };
         console.log(loginPayloadObj);
-
         ctx.onLogin(loginPayloadObj);
-        
         setEnteredEmail("");
         setEnteredPw("");
-        navigate("/", {replace: true});
+        navigate("/", {replace: true})
     };
 
     return (
@@ -49,7 +46,7 @@ const LoginForm = () => {
                 <p>Don't have an account? <Link to={"/reg"}>Register</Link></p>
             </Form>
         </>
-        
+
     )
 };
 
