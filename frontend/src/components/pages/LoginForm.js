@@ -31,6 +31,7 @@ const LoginForm = () => {
         ctx.onLogin(loginPayloadObj);
         setEnteredEmail("");
         setEnteredPw("");
+
         navigate("/", {replace: true})
     };
 
