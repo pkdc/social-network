@@ -34,7 +34,8 @@ const AllUserChatItems = (props) => {
 
     const usersCtx = useContext(UsersContext);
     console.log("users (chatitems)", usersCtx.users);
-    const followingUids = followingCtx.following.map((following) => following.id);
+    const followingUids = []; // in case followingCtx.following is empty
+    followingCtx.following && followingCtx.following.map((following) => following.id);
     console.log("following id (chatitems)", followingUids);
     // const publicUsers = usersCtx.users.filter((user) => user.public === 1 && !followingCtx.following.includes(user));
     const publicUsers = usersCtx.users.filter((user) => user.public === 1 && !followingUids.includes(user.id));
