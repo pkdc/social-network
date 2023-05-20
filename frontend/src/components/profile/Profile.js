@@ -278,13 +278,13 @@ console.log(requestedToFollow)
     return <div className={classes.container}>
     <div className={classes.private}>
         {/* label?? friends only/public/private?? */}
-            <ToggleSwitch
-                label={"Private"}
-                value={"Private"}
+            {userId === currUserId && <ToggleSwitch
+                label= {"Private"}
+                value= {"Private"}
                 // onClick={setPublicChangeHandler}
                 // onChange={setPublicChangeHandler}
                 onClick={setPublicityHandler}
-            ></ToggleSwitch>
+            ></ToggleSwitch>}
             {/* } */}
         {/* {currUserId === userId && !publicity && 
             <ToggleSwitch 

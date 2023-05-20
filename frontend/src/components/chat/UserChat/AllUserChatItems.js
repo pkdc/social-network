@@ -2,6 +2,7 @@ import UserChatItem from "./UserChatItem";
 import { useContext, useEffect, useState } from "react";
 import { FollowingContext } from "../../store/following-context";
 import { WebSocketContext } from "../../store/websocket-context";
+import { UsersContext } from "../../store/users-context";
 
 const AllUserChatItems = (props) => {
     const [notiUserArr, setNotiUserArr] = useState([]);
@@ -12,7 +13,7 @@ const AllUserChatItems = (props) => {
     // useEffect(() => usersCtx.onNewUserReg(), []);
     // console.log("users in AllUserChatItems", usersCtx.users);
     
-    // const followingList = usersCtx.users.filter((user) => {
+    // const followingCtx.following = usersCtx.users.filter((user) => {
     //     if (followingCtx.following)
     //     return followingCtx.following.some((followingUser) => {
     //         // console.log("fid", followingUser.id);
@@ -22,16 +23,23 @@ const AllUserChatItems = (props) => {
     // });
 
     // add noti field to users(following) in chatNotiUserArr
-    const followingList = followingCtx.following;
-    console.log(" following List (AllUserChatItems)", followingList);
+    console.log(" following List (AllUserChatItems)", followingCtx.following);
     // useEffect(() => followingCtx.chatNotiUserArr && setNotiUserArr(followingCtx.chatNotiUserArr), [followingCtx.chatNotiUserArr]);
     // console.log(" chatNotiUserArr (AllUserChatItems)", followingCtx.chatNotiUserArr);
-    // followingList.forEach((followingUser) => {
+    // followingCtx.following.forEach((followingUser) => {
     //     if (followingCtx.chatNotiUserArr.find((chatNotiUser) => chatNotiUser.id === followingUser.id)) followingUser["chat_noti"] = true;
     //     else followingUser["noti"] = false;
     // });
-    console.log(" following List with noti set (AllUserChatItems)", followingList);
+    console.log(" following List with noti set (AllUserChatItems)", followingCtx.following);
 
+    const usersCtx = useContext(UsersContext);
+    console.log("users (chatitems)", usersCtx.users);
+    const followingUids = followingCtx.following.map((following) => following.id);
+    console.log("following id (chatitems)", followingUids);
+    // const publicUsers = usersCtx.users.filter((user) => user.public === 1 && !followingCtx.following.includes(user));
+    const publicUsers = usersCtx.users.filter((user) => user.public === 1 && !followingUids.includes(user.id));
+    console.log("public users (chatitems)", publicUsers);
+    
     const openUserChatboxHandler = (followingId) => props.onOpenChatbox(followingId);
 
     // if (wsCtx.websocket !== null) wsCtx.websocket.onmessage = (e) => {
@@ -59,8 +67,10 @@ const AllUserChatItems = (props) => {
 
     const curUserId = +localStorage.getItem("user_id");
     return (
+        <>
+        <div >Users You Are Following:</div>
         <div>
-            {followingList && followingList.map((following) => {
+            {followingCtx.following && followingCtx.following.map((following) => {
                 // console.log("each following", following);
                 // console.log("curUserId: ", curUserId);
                 // console.log("follower.id", follower.id);
@@ -78,6 +88,28 @@ const AllUserChatItems = (props) => {
                 }
             })}
         </div>
+        <div>Public Users:</div>
+        <div>
+            {publicUsers && publicUsers.map((publicUser) => {
+                // console.log("each following", following);
+                // console.log("curUserId: ", curUserId);
+                // console.log("follower.id", follower.id);
+                {if (curUserId !== publicUser.id) {
+                    return <UserChatItem 
+                    key={publicUser.id}
+                    id={publicUser.id}
+                    avatar={publicUser.avatar}
+                    fname={publicUser.fname}
+                    lname={publicUser.lname}
+                    nname={publicUser.nname}
+                    noti={publicUser.chat_noti}
+                    onOpenChatbox={openUserChatboxHandler}
+                />}
+                }
+            })}
+        </div>
+        </>
+        
     );
 };
 
