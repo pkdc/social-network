@@ -55,13 +55,20 @@ const AllUserChatItems = (props) => {
         if (wsCtx.websocket !== null && wsCtx.newMsgsObj) {
             // console.log(wsCtx.newMsgsObj.sourceid);
             // console.log(followingCtx.following.find((follower) => follower.id === wsCtx.newMsgsObj.sourceid));
-            if (followingCtx.following && followingCtx.following.find((follower) => follower.id === wsCtx.newMsgsObj.sourceid)) {
-                console.log("new Received msg data when chatbox is closed", wsCtx.newMsgsObj);
-                console.log("ws receives msg from when chatbox is closed: ", wsCtx.newMsgsObj.sourceid);
+
+            // if Cur user is following the sender
+            if (followingCtx.following && followingCtx.following.find((following) => following.id === wsCtx.newMsgsObj.sourceid)) {
+                console.log("new Received msg data when chatbox is closed (following)", wsCtx.newMsgsObj);
+                console.log("ws receives msg from when chatbox is closed (following): ", wsCtx.newMsgsObj.sourceid);
                 wsCtx.newMsgsObj !== null && wsCtx.setNewMsgsObj(null);
-                followingCtx.receiveMsgFollowing(wsCtx.newMsgsObj.sourceid, false);
+                followingCtx.receiveMsgFollowing(wsCtx.newMsgsObj.sourceid, false, true);
+            } else if (!followingUids.includes(wsCtx.newMsgsObj.sourceid)) { // Cur user is public, and not following the sender
+                console.log("new Received msg data when chatbox is closed (public)", wsCtx.newMsgsObj);
+                console.log("ws receives msg from when chatbox is closed (public): ", wsCtx.newMsgsObj.sourceid);
+                wsCtx.newMsgsObj !== null && wsCtx.setNewMsgsObj(null);
+                followingCtx.receiveMsgFollowing(wsCtx.newMsgsObj.sourceid, false, false);
             } else {
-                console.log("Cur user is not following the msg sender");
+                console.log("Cur user is not following the msg sender nor having a public profile");
             }
         }
     }, [wsCtx.newMsgsObj])

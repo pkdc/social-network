@@ -60,7 +60,13 @@ const Chatbox = (props) => {
             
                 if (wsCtx.newMsgsObj !== null) wsCtx.setNewMsgsObj(null);
 
-                followingCtx.receiveMsgFollowing(frdOrGrpId, true);
+                // if chatboxId is a user that the cur user is following (chatting coz of public user)
+                if (followingCtx.following.find((following => following.id === props.chatboxId))) {
+                    followingCtx.receiveMsgFollowing(frdOrGrpId, true, true);
+                } else {
+                    followingCtx.receiveMsgFollowing(frdOrGrpId, true, false);
+                }
+                
                 
                 setJustUpdated(prev => !prev);
             }
