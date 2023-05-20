@@ -38,6 +38,7 @@ let statusofcuruser ;
     useEffect(() => {
         const storedFollowing = JSON.parse(localStorage.getItem("following"));
         console.log("stored following (profile)", storedFollowing);
+        // check if the current profile is one of the users in the following array
         followingCtx.following && setCurrentlyFollowing(followingCtx.following.some(followingUser => followingUser.id === +userId))
     }, [followingCtx.following, userId]);
     
@@ -198,7 +199,7 @@ console.log(requestedToFollow)
             localStorage.setItem('isChecked', false);
         }
     }
-     console.log("user data (profile)", data.data)
+    //  console.log("user data (profile)", data.data)
       if (!isLoaded) return <div>Loading...</div>
       if (error) return <div>Error: {error.message}</div>
 

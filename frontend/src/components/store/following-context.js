@@ -21,7 +21,8 @@ export const FollowingContextProvider = (props) => {
     const [following, setFollowing] = useState([]);
     // const [chatNotiUserArr, setChatNotiUserArr] = useState([]);
     const wsCtx = useContext(WebSocketContext);
-
+    const usersCtx = useContext(UsersContext);
+    
     // get from db
     const getFollowingHandler = () => {
         fetch(followingUrl)

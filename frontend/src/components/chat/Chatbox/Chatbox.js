@@ -40,8 +40,15 @@ const Chatbox = (props) => {
     //     };
     
     if (!props.grp) {
-        followingCtx.following.find((followingUser) => followingUser.id === frdOrGrpId)["chat_noti"] = false;
-        console.log("following (chatbox)", followingCtx.following);
+        // followingCtx.following.find((followingUser) => followingUser.id === frdOrGrpId)["chat_noti"] = false;
+        // console.log("following (chatbox)", followingCtx.following);
+
+        // no noti for public users
+        // remove noti when following user open chatbox
+        if (followingCtx.following.includes((following) => following.id === props.chatboxId)) {
+            followingCtx.following.find((followingUser) => followingUser.id === frdOrGrpId)["chat_noti"] = false;
+            console.log("following (chatbox)", followingCtx.following);
+        }
     }
 
     useEffect(() => {
