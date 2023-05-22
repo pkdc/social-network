@@ -203,6 +203,45 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 				}
 			}
 
+		}else if not.Type == "join-req"{
+			s, _ := json.MarshalIndent(not, "", "\t")
+			fmt.Print("notif: ",string(s))
+			var somebool bool = false
+			for _, c := range h.clients {
+				if c.userID == not.TargetId {
+					somebool = true
+					fmt.Printf("matched %d = %d\n", c.userID, not.TargetId)
+					// db := db.DbConnect()
+					// query := crud.New(db)
+					// ### ADD FOLLOW REQUEST TO DATABASE ###
+					// var newFollower crud.CreateFollowerParams
+					// newFollower.SourceID = int64(not.SourceId)
+					// newFollower.TargetID = int64(not.TargetId)
+					// newFollower.Status = int64(0)
+					// newFollower.ChatNoti = int64(0)
+					// _, err = query.CreateFollower(context.Background(), newFollower)
+					select {
+					case c.send <- sendNoti:
+					default:
+						close(c.send)
+						delete(h.clients, c.userID)
+					}
+				}
+			}
+			for _, c := range h.clients {
+				if c.userID == not.SourceId && !somebool {
+					fmt.Printf("matched %d = %d\n", c.userID, not.TargetId)
+					// db := db.DbConnect()
+					// query := crud.New(db)
+					// ### ADD FOLLOW REQUEST TO DATABASE ###
+					// var newFollower crud.CreateFollowerParams
+					// newFollower.SourceID = int64(not.SourceId)
+					// newFollower.TargetID = int64(not.TargetId)
+					// newFollower.Status = int64(0)
+					// newFollower.ChatNoti = int64(0)
+					// _, err = query.CreateFollower(context.Background(), newFollower)
+				}
+			}
 		}
 	case 2:
 		// USER MESSAGE
