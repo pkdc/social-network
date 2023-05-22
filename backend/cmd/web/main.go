@@ -10,7 +10,7 @@ import (
 
 func main() {
 
-	// db.RunMigration()
+	db.RunMigration()
 	db.DbConnect()
 	// db.RemoveMigration(m)
 	// db.InsertMockUserData()
@@ -44,6 +44,7 @@ func main() {
 	mux.Handle("/group-event", backend.GroupEventHandler())
 	mux.Handle("/group-event-member", backend.GroupEventMemberHandler())
 	mux.Handle("/group-message", backend.GroupMessageHandler())
+	mux.Handle("/group-request-by-user", backend.GroupRequestByUserHandler())
 
 
 

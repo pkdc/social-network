@@ -12,7 +12,6 @@ import { useContext, useEffect, useState } from "react";
 function Group(props) {
     const currUserId = localStorage.getItem("user_id");
     // console.log("curr id", currUserId);
-    
     const [currentlyJoined, setCurrentlyJoined] = useState(false);
     const [requestedToJoin, setRequestedToJoin] = useState(false);
 
@@ -29,6 +28,17 @@ function Group(props) {
     }, [jGrpCtx.joinedGrps, props.grpid])
 
     useEffect(() => {
+        const reqGroups = JSON.parse(localStorage.getItem("requestedGroups"));
+        console.log("stored req-grps (group)", reqGroups);
+        if (reqGroups != null) {
+            reqGroups.forEach(element => {
+                if (element.groupid == props.grpid) {
+                    setRequestedToJoin(true)
+                }
+            }
+    )}
+    }, [jGrpCtx.requestedGroups,props.grpid])
+    useEffect(() => {
         if (wsCtx.newNotiInvitationReplyObj) {
             if (wsCtx.newNotiInvitationReplyObj.accepted) {
                 setCurrentlyJoined(true);
@@ -42,7 +52,7 @@ function Group(props) {
                 console.log("join group id", wsCtx.newNotiInvitationReplyObj.groupid);
                 console.log("cur user has joined these groups (group)", jGrpCtx.joinedGrps);
                 console.log("This user join the group", UserJoining)
-    
+
                 joinGrpHandler(JoinGroup, UserJoining);
             } else {
                 setCurrentlyJoined(false);
@@ -50,13 +60,13 @@ function Group(props) {
             }
         }
         wsCtx.setNewNotiJoinReplyObj(null);
-    } , [wsCtx.newNotiInvitationReplyObj]);
+    }, [wsCtx.newNotiInvitationReplyObj]);
 
     function reqToJoinHandler(e) {
         const grpid = e.target.id;
         console.log("grpid", e.target.id);
         jGrpCtx.requestToJoin(+grpid);
-
+        jGrpCtx.requestLocalStrg();
         setRequestedToJoin(true);
         setCurrentlyJoined(false);
 
@@ -69,20 +79,20 @@ function Group(props) {
         };
 
         console.log(data)
-    
-        fetch('http://localhost:8080/group-request', 
-        {
-            method: 'POST',
-            credentials: "include",
-            mode: "cors",
-            body: JSON.stringify(data),
-            headers: { 
-                'Content-Type': 'application/json' 
-            }
-        }).then(() => {
-            // navigate.replace('/??')
-            console.log("group request posted")
-        })
+
+        fetch('http://localhost:8080/group-request',
+            {
+                method: 'POST',
+                credentials: "include",
+                mode: "cors",
+                body: JSON.stringify(data),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(() => {
+                // navigate.replace('/??')
+                console.log("group request posted")
+            })
     }
 
     const joinGrpHandler = (grp, user) => {
@@ -101,12 +111,12 @@ function Group(props) {
                     <div className={classes.members}>{props.members} members</div>
                     <div className={classes.desc}>{props.description}</div>
                 </div>
-             
+
             </div>
             <div className={classes.btn}>
-            {!currentlyJoined && !requestedToJoin && <div className={classes.smallbtn} id={props.grpid} onClick={reqToJoinHandler}>Join</div>}
-            {!currentlyJoined && requestedToJoin && <div className={classes.smallbtn} id={props.grpid}>Requested</div>}
-            {currentlyJoined && !requestedToJoin && <div className={classes.smallbtn} id={props.grpid}>Joined</div>}
+                {!currentlyJoined && !requestedToJoin && <div className={classes.smallbtn} id={props.grpid} onClick={reqToJoinHandler}>Join</div>}
+                {!currentlyJoined && requestedToJoin && <div className={classes.smallbtn} id={props.grpid}>Requested</div>}
+                {currentlyJoined && !requestedToJoin && <div className={classes.smallbtn} id={props.grpid}>Joined</div>}
             </div>
         </div>
     </Card>

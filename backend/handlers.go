@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -515,7 +516,7 @@ func Posthandler() http.HandlerFunc {
 			fmt.Printf("----post-GET---(display-posts)--\n")
 			userId := r.URL.Query().Get("id")
 			fmt.Println("USERID: ", userId)
-			if userId =="" {
+			if userId == "" {
 				return
 			}
 			int_user_id, err := strconv.Atoi(userId)
@@ -1573,6 +1574,7 @@ func GroupRequestHandler() http.HandlerFunc {
 
 			if err != nil {
 				fmt.Println("Unable to convert group ID")
+
 			}
 
 			// connect to database
@@ -2462,4 +2464,51 @@ func checkFollower(sourceid, targetid int) bool {
 		return true
 	}
 	return false
+}
+func GroupRequestByUserHandler() http.HandlerFunc {
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		EnableCors(&w)
+		// Prevents the endpoint being called from other url paths
+		if err := UrlPathMatcher(w, r, "/group-request-by-user"); err != nil {
+			os.Exit(1)
+			return
+		}
+		if r.Method == "GET" {
+
+			userId := r.URL.Query().Get("id")
+			if userId == "" {
+				http.Error(w, "400 bad request", http.StatusBadRequest)
+				return
+			}
+			uId, err := strconv.Atoi(userId)
+			if err != nil {
+				fmt.Println("Unable to convert group ID", uId)
+			}
+			db := db.DbConnect()
+
+			query := crud.New(db)
+			var Resp GroupRequestPayload
+			groupRequests, err := query.GetGroupRequestsByUser(context.Background(), int64(uId))
+			for _, group := range groupRequests {
+				var newGroup GroupRequestStruct
+
+				newGroup.Id = int(group.ID)
+				newGroup.UserId = int(group.UserID)
+				newGroup.GroupId = int(group.GroupID)
+				newGroup.Status = "0"
+				newGroup.CreatedAt = ""
+				Resp.Data= append(Resp.Data, newGroup)
+			}
+			fmt.Println("---------", Resp.Data)
+			jsonResp, err := json.Marshal(Resp)
+			if err != nil {
+				http.Error(w, "500 internal server error", http.StatusInternalServerError)
+				return
+			}
+
+			// Sets the http headers and writes the response to the browser
+			WriteHttpHeader(jsonResp, w)
+		}
+	}
 }

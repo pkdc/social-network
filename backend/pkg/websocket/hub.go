@@ -171,9 +171,6 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 				if c.userID == not.TargetId {
 					somebool = true
 					fmt.Printf("matched %d = %d\n", c.userID, not.TargetId)
-					// db := db.DbConnect()
-					// query := crud.New(db)
-					// ### ADD FOLLOW REQUEST TO DATABASE ###
 					var newFollower crud.CreateFollowerParams
 					newFollower.SourceID = int64(not.SourceId)
 					newFollower.TargetID = int64(not.TargetId)
@@ -191,9 +188,6 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 			for _, c := range h.clients {
 				if c.userID == not.SourceId && !somebool {
 					fmt.Printf("matched %d = %d\n", c.userID, not.TargetId)
-					// db := db.DbConnect()
-					// query := crud.New(db)
-					// ### ADD FOLLOW REQUEST TO DATABASE ###
 					var newFollower crud.CreateFollowerParams
 					newFollower.SourceID = int64(not.SourceId)
 					newFollower.TargetID = int64(not.TargetId)
@@ -211,15 +205,6 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 				if c.userID == not.TargetId {
 					somebool = true
 					fmt.Printf("matched %d = %d\n", c.userID, not.TargetId)
-					// db := db.DbConnect()
-					// query := crud.New(db)
-					// ### ADD FOLLOW REQUEST TO DATABASE ###
-					// var newFollower crud.CreateFollowerParams
-					// newFollower.SourceID = int64(not.SourceId)
-					// newFollower.TargetID = int64(not.TargetId)
-					// newFollower.Status = int64(0)
-					// newFollower.ChatNoti = int64(0)
-					// _, err = query.CreateFollower(context.Background(), newFollower)
 					select {
 					case c.send <- sendNoti:
 					default:
@@ -231,17 +216,21 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 			for _, c := range h.clients {
 				if c.userID == not.SourceId && !somebool {
 					fmt.Printf("matched %d = %d\n", c.userID, not.TargetId)
-					// db := db.DbConnect()
-					// query := crud.New(db)
-					// ### ADD FOLLOW REQUEST TO DATABASE ###
-					// var newFollower crud.CreateFollowerParams
-					// newFollower.SourceID = int64(not.SourceId)
-					// newFollower.TargetID = int64(not.TargetId)
-					// newFollower.Status = int64(0)
-					// newFollower.ChatNoti = int64(0)
-					// _, err = query.CreateFollower(context.Background(), newFollower)
 				}
 			}
+		}else if not.Type == "join-req-reply"{
+			s, _ := json.MarshalIndent(not, "", "\t")
+			fmt.Print("notif-reply: ",string(s))
+			var newMember crud.CreateGroupMemberParams
+			newMember.UserID = int64(not.TargetId)
+			newMember.GroupID= int64(not.GroupId)
+			newMember.Status = int64(1)
+			_, err = query.CreateGroupMember(context.Background(), newMember)
+
+			var deleteReq crud.DeleteGroupRequestParams
+			deleteReq.GroupID =  int64(not.GroupId)
+			deleteReq.UserID = int64(not.TargetId)
+			err = query.DeleteGroupRequest(context.Background(), deleteReq)
 		}
 	case 2:
 		// USER MESSAGE

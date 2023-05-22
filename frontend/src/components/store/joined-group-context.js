@@ -21,8 +21,9 @@ export const JoinedGroupContextProvider = (props) => {
     const grpCtx = useContext(GroupsContext);
 
     const [joinedGrps, setJoinedGrps] = useState([]);
+    const [requestedGroups, setRequestedGroups] = useState([]);
     const joinedGroupingUrl = `http://localhost:8080/group-member?userid=${selfId}`;
-
+const requestedGroupUrl = `http://localhost:8080/group-request-by-user?id=${selfId}`;
     const wsCtx = useContext(WebSocketContext);
 
     // get from db
@@ -39,8 +40,22 @@ export const JoinedGroupContextProvider = (props) => {
             err => console.log(err)
         );
     };
-
+    const getRequestedGrpsHandler = () => {
+        console.log("RUNNNING")
+        fetch(requestedGroupUrl)
+        .then(resp => resp.json())
+        .then(data => {
+            console.log("requestedGroup (context): ", data);
+            let [requestedGroupsArr] = Object.values(data); 
+            setRequestedGroups(requestedGroupsArr);
+            localStorage.setItem("requestedGroups", JSON.stringify(requestedGroupsArr));
+        })
+        .catch(
+            err => console.log(err)
+        );
+    };
     const requestToJoinHandler = (joinGrpId) => {
+        getRequestedGrpsHandler()
         console.log("request to join user (context): ", +selfId);
         console.log("request to join grp (context): ", joinGrpId);
         const grp = grpCtx.groups.find((grp) => grp.id === joinGrpId);
@@ -112,6 +127,8 @@ export const JoinedGroupContextProvider = (props) => {
 
     useEffect(() => getJoinedGrpsHandler(), []);
 
+    useEffect(() => getRequestedGrpsHandler(), []);
+
     return (
         <JoinedGroupContext.Provider value={{
             joinedGrps: joinedGrps,
@@ -119,6 +136,9 @@ export const JoinedGroupContextProvider = (props) => {
             getFollowing: getJoinedGrpsHandler, // implement
             requestToJoin: requestToJoinHandler,
             InviteToJoin: InviteToJoinHandler,
+            requestLocalStrg: getRequestedGrpsHandler,
+            requestedGroups:requestedGroups,
+            // getFollowing : getRequestedGrpsHandler,
             join: joinHandler,
             // leave: leaveHandler,
             storeGroupMember: storeGroupMemberHandler,

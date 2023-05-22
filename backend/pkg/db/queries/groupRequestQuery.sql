@@ -2,6 +2,10 @@
 SELECT * FROM group_request
 WHERE group_id = ? AND status_ = ?;
 
+-- name: GetGroupRequestsByUser :many
+SELECT * FROM group_request
+WHERE user_id = ?;
+
 -- name: CreateGroupRequest :one
 INSERT INTO group_request (
   user_id, group_id, status_
