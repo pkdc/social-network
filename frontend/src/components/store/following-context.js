@@ -10,7 +10,7 @@ export const FollowingContext = React.createContext({
     requestToFollow: (followUser) => {},
     follow: (followUser) => {},
     unfollow: (unfollowUser) => {},
-    receiveMsgFollowing: (friendId, open, isFollowing) => {},
+    receiveMsgFollowing: (friendId, open) => {},
     // chatNotiUserArr: [],
     // setChatNotiUserArr: () => {},
 });
@@ -88,10 +88,8 @@ export const FollowingContextProvider = (props) => {
             // noti if not open
             // !open && setChatNotiUserArr(prevArr => [...new Set([targetUser, ...prevArr])]);
             if (!open) targetUser["chat_noti"] = true; // set noti field to true to indicate unread
-        } else { // if cur user is public and receives a msg coz of that
-            
+        } else { // if cur user is public and receives a msg coz of that      
         }
-        
     };
 
     useEffect(() => getFollowingHandler(), []);

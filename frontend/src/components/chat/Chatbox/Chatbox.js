@@ -45,7 +45,7 @@ const Chatbox = (props) => {
 
         // no noti for public users
         // remove noti when following user open chatbox
-        if (followingCtx.following.includes((following) => following.id === props.chatboxId)) {
+        if (followingCtx.following && followingCtx.following.includes((following) => following.id === props.chatboxId)) {
             followingCtx.following.find((followingUser) => followingUser.id === frdOrGrpId)["chat_noti"] = false;
             console.log("following (chatbox)", followingCtx.following);
         }
@@ -60,19 +60,17 @@ const Chatbox = (props) => {
             
                 if (wsCtx.newMsgsObj !== null) wsCtx.setNewMsgsObj(null);
 
-                // if chatboxId is a user that the cur user is following (chatting coz of public user)
+                // if chatboxId is a user that the cur user is following (chatting coz of public user) // bug
                 if (followingCtx.following.find((following => following.id === props.chatboxId))) {
                     followingCtx.receiveMsgFollowing(frdOrGrpId, true, true);
                 } else {
                     followingCtx.receiveMsgFollowing(frdOrGrpId, true, false);
                 }
-                
-                
                 setJustUpdated(prev => !prev);
             }
         }
         // console.log("new");
-    }, [wsCtx.newMsgsObj])
+    }, [wsCtx.newMsgsObj, props.chatboxId])
 
     // send msg to ws
     const sendMsgHandler = (msg) => {
