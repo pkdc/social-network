@@ -243,3 +243,33 @@ func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, e
 	)
 	return i, err
 }
+
+const updateUserPrivacy = `-- name: UpdateUserPrivacy :one
+UPDATE user
+set public = ?
+WHERE id = ?
+RETURNING id, first_name, last_name, nick_name, email, password_, dob, image_, about, public
+`
+
+type UpdateUserPrivacyParams struct {
+	Public int64
+	ID     int64
+}
+
+func (q *Queries) UpdateUserPrivacy(ctx context.Context, arg UpdateUserPrivacyParams) (User, error) {
+	row := q.db.QueryRowContext(ctx, updateUserPrivacy, arg.Public, arg.ID)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.FirstName,
+		&i.LastName,
+		&i.NickName,
+		&i.Email,
+		&i.Password,
+		&i.Dob,
+		&i.Image,
+		&i.About,
+		&i.Public,
+	)
+	return i, err
+}

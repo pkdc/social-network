@@ -247,7 +247,7 @@ func Reghandler() http.HandlerFunc {
 		if r.Method == http.MethodPost {
 			fmt.Printf("----reg-POST-----\n")
 			var payload regPayload
-
+			var errormsg string = "error"
 			err := json.NewDecoder(r.Body).Decode(&payload)
 			if err != nil {
 				log.Fatal(err)
@@ -285,6 +285,7 @@ func Reghandler() http.HandlerFunc {
 
 			if err != nil {
 				Resp.Success = false
+				errormsg = "ERROR - Invalid password"
 				fmt.Println("Unable generate password!")
 			}
 
@@ -292,6 +293,7 @@ func Reghandler() http.HandlerFunc {
 
 			if err != nil {
 				Resp.Success = false
+				errormsg = "ERROR - Invalid date of birth"
 				fmt.Println("Unable to convert date of birth")
 			}
 
@@ -323,11 +325,13 @@ func Reghandler() http.HandlerFunc {
 
 			if err != nil {
 				Resp.Success = false
-				fmt.Println("Unable to check if user exists")
+				errormsg = "ERROR"
+				fmt.Println("Unable to check if user exists because of error")
 			}
 
 			if records > 0 {
-
+				errormsg = "ERROR - This email is already taken"
+				fmt.Println("Unable to check if user exists because of duplicate")
 				// user already exists
 				Resp.Success = false
 
@@ -339,6 +343,7 @@ func Reghandler() http.HandlerFunc {
 
 				if err != nil {
 					Resp.Success = false
+					errormsg = "ERROR - Something went wrong! Try again"
 					fmt.Println("Unable to create user!")
 				}
 
@@ -352,10 +357,14 @@ func Reghandler() http.HandlerFunc {
 				Resp.Dob = curUser.Dob.String()
 
 				if email == "f" {
+					fmt.Println("email false")
+					errormsg = "ERROR - Invalid e-mail"
 					Resp.Success = false
 				}
 			}
-
+			if Resp.Success == false {
+				Resp.Fname = errormsg
+			}
 			jsonResp, err := json.Marshal(Resp)
 			fmt.Println(string(jsonResp))
 
@@ -504,43 +513,49 @@ func Posthandler() http.HandlerFunc {
 
 		if r.Method == http.MethodGet {
 			fmt.Printf("----post-GET---(display-posts)--\n")
-
+			userId := r.URL.Query().Get("id")
+			fmt.Println("USERID: ", userId)
+			if userId =="" {
+				return
+			}
+			int_user_id, err := strconv.Atoi(userId)
+			if err != nil {
+				log.Fatal("error - user id ", err)
+			}
 			var data []PostResponse
-
 			// get all public posts
-
 			db := db.DbConnect()
-
 			query := crud.New(db)
-
 			posts, err := query.GetAllPosts(context.Background())
-
+			fmt.Println("posts: ", posts)
 			if err != nil {
 				fmt.Println("Unable to get all posts")
 			}
-
 			for _, post := range posts {
-				var newPost PostResponse
-				newPost.Success = true
-				newPost.Id = int(post.ID)
-				newPost.Author = int(post.Author)
-				newPost.Message = post.Message
-				newPost.CreatedAt = post.CreatedAt.String()
-				newPost.Image = post.Image
+				fmt.Println("msg: ", post.Message, "--bool: ", checkFollower(int(post.Author), int_user_id))
+				if post.Privacy == 0 || (post.Privacy == 1 && checkFollower(int(post.Author), int_user_id)) {
+					var newPost PostResponse
+					newPost.Success = true
+					newPost.Id = int(post.ID)
+					newPost.Author = int(post.Author)
+					newPost.Message = post.Message
+					newPost.CreatedAt = post.CreatedAt.String()
+					newPost.Image = post.Image
 
-				curUser, err := query.GetUserById(context.Background(), post.Author)
+					curUser, err := query.GetUserById(context.Background(), post.Author)
 
-				if err != nil {
-					newPost.Success = false
-					fmt.Println("Unable to get user information")
+					if err != nil {
+						newPost.Success = false
+						fmt.Println("Unable to get user information")
+					}
+
+					newPost.Avatar = curUser.Image
+					newPost.Fname = curUser.FirstName
+					newPost.Lname = curUser.LastName
+					newPost.Nname = curUser.NickName
+
+					data = append(data, newPost)
 				}
-
-				newPost.Avatar = curUser.Image
-				newPost.Fname = curUser.FirstName
-				newPost.Lname = curUser.LastName
-				newPost.Nname = curUser.NickName
-
-				data = append(data, newPost)
 			}
 
 			// fmt.Printf("data %v\n", data)
@@ -548,6 +563,7 @@ func Posthandler() http.HandlerFunc {
 			// fmt.Printf("posts resp %s\n", string(jsonResp))
 
 			WriteHttpHeader(jsonResp, w)
+
 		}
 	}
 }
@@ -668,6 +684,7 @@ func Userhandler() http.HandlerFunc {
 		}
 
 		// Checks to find a user id in the url
+		fmt.Println("urluser: ", r.URL)
 		userId := r.URL.Query().Get("id")
 		id, err := strconv.Atoi(userId)
 		if err != nil {
@@ -798,23 +815,21 @@ func UserFollowerHandler() http.HandlerFunc {
 					if err != nil {
 						fmt.Println("Unable to find user")
 					}
-
-					var oneUser UserStruct
-
-					oneUser.Id = int(user.ID)
-					oneUser.Fname = user.FirstName
-					oneUser.Lname = user.LastName
-					oneUser.Nname = user.NickName
-					oneUser.Email = user.Email
-					oneUser.Password = user.Password
-					oneUser.Dob = user.Dob.String()
-					oneUser.Avatar = user.Image
-					oneUser.About = user.About
-					oneUser.Public = int(user.Public)
-
-					Resp.Data = append(Resp.Data, oneUser)
+					if follower.Status == 1 {
+						var oneUser UserStruct
+						oneUser.Id = int(user.ID)
+						oneUser.Fname = user.FirstName
+						oneUser.Lname = user.LastName
+						oneUser.Nname = user.NickName
+						oneUser.Email = user.Email
+						oneUser.Password = user.Password
+						oneUser.Dob = user.Dob.String()
+						oneUser.Avatar = user.Image
+						oneUser.About = user.About
+						oneUser.Public = int(user.Public)
+						Resp.Data = append(Resp.Data, oneUser)
+					}
 				}
-
 			}
 
 			// Marshals the response struct to a json object
@@ -957,21 +972,22 @@ func UserFollowingHandler() http.HandlerFunc {
 					if err != nil {
 						fmt.Println("Unable to find user")
 					}
+					if following.Status == 1 {
+						var oneUser UserStruct
 
-					var oneUser UserStruct
+						oneUser.Id = int(user.ID)
+						oneUser.Fname = user.FirstName
+						oneUser.Lname = user.LastName
+						oneUser.Nname = user.NickName
+						oneUser.Email = user.Email
+						oneUser.Password = user.Password
+						oneUser.Dob = user.Dob.String()
+						oneUser.Avatar = user.Image
+						oneUser.About = user.About
+						oneUser.Public = int(user.Public)
 
-					oneUser.Id = int(user.ID)
-					oneUser.Fname = user.FirstName
-					oneUser.Lname = user.LastName
-					oneUser.Nname = user.NickName
-					oneUser.Email = user.Email
-					oneUser.Password = user.Password
-					oneUser.Dob = user.Dob.String()
-					oneUser.Avatar = user.Image
-					oneUser.About = user.About
-					oneUser.Public = int(user.Public)
-
-					Resp.Data = append(Resp.Data, oneUser)
+						Resp.Data = append(Resp.Data, oneUser)
+					}
 				}
 
 			}
@@ -1010,7 +1026,7 @@ func UserFollowingHandler() http.HandlerFunc {
 			newFollower.TargetID = int64(follower.TargetId)
 
 			err = query.DeleteFollower(context.Background(), newFollower)
-
+			fmt.Println("NEW FOLLOW REQUESTED")
 			if err != nil {
 				fmt.Println("Unable to insert follower")
 				Resp.Success = false
@@ -2295,4 +2311,155 @@ func GroupMessageHandler() http.HandlerFunc {
 			return
 		}
 	}
+}
+
+func PrivacyHandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println(r.Method)
+		if r.Method == "POST" {
+			fmt.Println("its arrived")
+
+			EnableCors(&w)
+			// Prevents the endpoint being called from other url paths
+			if err := UrlPathMatcher(w, r, "/privacy"); err != nil {
+				return
+			}
+
+			// // Prevents all request types other than GET
+			// if r.Method != http.MethodPost {
+			// 	http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
+			// 	return
+			// }
+
+			var payload UserId
+			err := json.NewDecoder(r.Body).Decode(&payload)
+			if err != nil {
+
+			}
+			fmt.Println(payload)
+
+			id := payload.TargetId
+			public := payload.Public
+
+			// Declares the payload struct
+			var Resp AuthResponse
+
+			Resp.Success = true
+
+			// ### CONNECT TO DATABASE ###
+
+			db := db.DbConnect()
+
+			query := crud.New(db)
+
+			// update public column in user table
+
+			user, err := query.UpdateUserPrivacy(context.Background(), crud.UpdateUserPrivacyParams{
+				Public: int64(public),
+				ID:     int64(id),
+			})
+
+			if err != nil {
+				fmt.Println("Unable to update user")
+				Resp.Success = false
+			}
+
+			Resp.UserId = int(user.ID)
+			Resp.Fname = user.FirstName
+			Resp.Lname = user.LastName
+			Resp.Nname = user.NickName
+			Resp.Email = user.Email
+			Resp.Public = int(user.Public)
+
+			// Marshals the response struct to a json object
+			jsonResp, err := json.Marshal(Resp)
+			if err != nil {
+				http.Error(w, "500 internal server error", http.StatusInternalServerError)
+				return
+			}
+
+			// Sets the http headers and writes the response to the browser
+			WriteHttpHeader(jsonResp, w)
+		}
+	}
+}
+func UserFollowerStatusHandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		EnableCors(&w)
+		// Prevents the endpoint being called from other url paths
+		if err := UrlPathMatcher(w, r, "/user-follow-status"); err != nil {
+			return
+		}
+		if r.Method == "GET" {
+
+			// Checks to find a user id in the url
+			tid := r.URL.Query().Get("tid")
+			sid := r.URL.Query().Get("sid")
+			id, err := strconv.Atoi(tid)
+			if err != nil {
+				fmt.Println("Unable to convert to int")
+			}
+			source_id, err := strconv.Atoi(sid)
+			if err != nil {
+				fmt.Println("Unable to convert to int")
+			}
+
+			foundId := false
+
+			if tid != "" {
+				foundId = true
+			}
+
+			// ### CONNECT TO DATABASE ###
+
+			db := db.DbConnect()
+
+			query := crud.New(db)
+
+			if foundId {
+				// ### GET USER FOLLOWERS ###
+				followers, err := query.GetFollowers(context.Background(), int64(id))
+				var value bool
+				if err != nil {
+					fmt.Println("Unable to find followers")
+				}
+
+				for _, follower := range followers {
+					if err != nil {
+						fmt.Println("Unable to find user")
+					}
+					// w.Header().Set("Content-Type", "application/json")
+					if int(follower.SourceID) == source_id {
+						if follower.Status == 1 {
+							value = false
+						} else if follower.Status == 0 {
+							value = true
+						}
+					}
+				}
+				fmt.Fprint(w, value)
+
+			}
+		}
+	}
+}
+func checkFollower(sourceid, targetid int) bool {
+	if sourceid == targetid {
+		return true
+	}
+	db := db.DbConnect()
+	var query *crud.Queries
+	query = crud.New(db)
+	var checkFollower crud.CheckFollowerParams
+	checkFollower.SourceID = int64(sourceid)
+	checkFollower.TargetID = int64(targetid)
+	following, err := query.CheckFollower(context.Background(), checkFollower)
+	if err != nil {
+		return false
+	}
+	fmt.Println("following return value: ", following)
+	if following.ID != 0 {
+		return true
+	}
+	return false
 }

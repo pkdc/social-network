@@ -28,6 +28,7 @@ function App() {
       element: <Root />,
       children: [
           {path: "/", element: <PostsPage />},
+          {path: "/:userId", element: <PostsPage/>},
           {path: "/profile", element: <ProfilePage />},
           {path: "/group", element: <GroupPage />},
           {path: "/groupprofile", element: <GroupProfilePage />},

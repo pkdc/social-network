@@ -6,6 +6,10 @@ WHERE target_id = ?;
 SELECT * FROM user_follower
 WHERE source_id = ?;
 
+-- name: CheckFollower :one
+SELECT * FROM user_follower
+WHERE source_id = ? AND target_id = ? AND status_= 1;
+
 -- name: CreateFollower :one
 INSERT INTO user_follower (
   source_id, target_id, status_, chat_noti, last_msg_at

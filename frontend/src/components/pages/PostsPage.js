@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useParams,useEffect, useState } from "react";
 import FormLabel from "../UI/FormLabel";
 import FormInput from "../UI/FormInput";
 import FormTextarea from "../UI/FormTextarea";
@@ -11,19 +11,22 @@ import FollowRequest from "../requests/FollowRequest";
 import Card from "../UI/Card";
 import GroupRequest from "../requests/GroupRequests";
 import useGet from "../fetch/useGet";
+import { Navigate } from "react-router-dom";
+
 const PostsPage = () => {
     const sessionUrl = "http://localhost:8080/session";
-    const postUrl = "http://localhost:8080/post";
+    // const postUrl = "http://localhost:8080/post";
     const postCommentUrl = "http://localhost:8080/post-comment";
-
     const [postData, setPostData] = useState([]);
     const [commentData, setCommentData] = useState([]);
 
     // useGet(sessionUrl);
 
     // get posts
+    let userId = localStorage.getItem("user_id")
+    console.log(userId)
     useEffect(() => {
-        fetch(postUrl)
+        fetch(`http://localhost:8080/post?id=${userId}`)
         .then(resp => resp.json())
         .then(data => {
             // console.log("post data: ", data)
@@ -63,13 +66,13 @@ const PostsPage = () => {
             method: "POST",
             body: JSON.stringify(createPostPayloadObj)
         };
-        fetch(postUrl, reqOptions)
+        fetch(`http://localhost:8080/post`, reqOptions)
         .then(resp => resp.json())
         .then(data => {
             console.log("post success", data.success);
             if (data.success) {
                 // render all posts
-                fetch(postUrl)
+                fetch(`http://localhost:8080/post?id=${userId}`)
                 .then(resp => {
                     return resp.json();
                 })
@@ -111,10 +114,10 @@ const PostsPage = () => {
     };
 
     return ( <div className={styles.container}>
-        
+
         {/* <h1 className={styles["title"]}>Create New Post</h1> */}
-       
-    
+
+
             <div className={styles.mid}>
                 <CreatePost onCreatePost={createPostHandler}/>
                 <AllPosts posts={postData} comments={commentData} onCreateCommentSuccessful={createCommentSuccessHandler}/>
@@ -133,7 +136,7 @@ const PostsPage = () => {
 
                 </Card>
            </div>
-         
+
         </div>
     )
 };

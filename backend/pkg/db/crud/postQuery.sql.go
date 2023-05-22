@@ -64,7 +64,6 @@ func (q *Queries) DeletePost(ctx context.Context, arg DeletePostParams) error {
 
 const getAllPosts = `-- name: GetAllPosts :many
 SELECT id, author, message_, image_, created_at, privacy FROM post
-WHERE privacy = 0
 ORDER BY created_at DESC
 `
 

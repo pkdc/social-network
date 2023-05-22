@@ -4,7 +4,6 @@ WHERE author = ?;
 
 -- name: GetAllPosts :many
 SELECT * FROM post
-WHERE privacy = 0
 ORDER BY created_at DESC;
 
 -- name: CreatePost :one

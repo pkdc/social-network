@@ -29,8 +29,10 @@ func main() {
 	mux.Handle("/logout", backend.Logouthandler())
 	mux.Handle("/reg", backend.Reghandler())
 	mux.Handle("/user", backend.Userhandler())
+	mux.Handle("/privacy", backend.PrivacyHandler())
 	mux.Handle("/user-follower", backend.UserFollowerHandler())
 	mux.Handle("/user-following", backend.UserFollowingHandler())
+	mux.Handle("/user-follow-status", backend.UserFollowerStatusHandler())
 	mux.Handle("/user-message", backend.UserMessageHandler())
 	mux.Handle("/post", backend.Posthandler())
 	mux.Handle("/post-comment", backend.PostCommentHandler())
@@ -42,6 +44,8 @@ func main() {
 	mux.Handle("/group-event", backend.GroupEventHandler())
 	mux.Handle("/group-event-member", backend.GroupEventMemberHandler())
 	mux.Handle("/group-message", backend.GroupMessageHandler())
+
+
 
 	mux.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		websocket.ServeWs(hub, w, r)
