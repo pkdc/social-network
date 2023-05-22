@@ -66,6 +66,11 @@ func (h *Hub) StatusUpdate(c *Client, status bool) {
 	userMsg.SourceId = c.userID
 	userMsg.OnlineUserIds = []int{}
 
+	// Adds user ids to the array
+	for k := range h.clients {
+		userMsg.OnlineUserIds = append(userMsg.OnlineUserIds, k)
+	}
+
 	// Marshals the struct to a json object
 	fmt.Println("Marshals the struct to a json object")
 	sendMsg, err := json.Marshal(userMsg)
