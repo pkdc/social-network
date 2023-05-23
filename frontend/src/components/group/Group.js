@@ -38,6 +38,7 @@ function Group(props) {
             }
     )}
     }, [jGrpCtx.requestedGroups,props.grpid])
+
     useEffect(() => {
         if (wsCtx.newNotiInvitationReplyObj) {
             if (wsCtx.newNotiInvitationReplyObj.accepted) {
@@ -117,6 +118,7 @@ function Group(props) {
                 {!currentlyJoined && !requestedToJoin && <div className={classes.smallbtn} id={props.grpid} onClick={reqToJoinHandler}>Join</div>}
                 {!currentlyJoined && requestedToJoin && <div className={classes.smallbtn} id={props.grpid}>Requested</div>}
                 {currentlyJoined && !requestedToJoin && <div className={classes.smallbtn} id={props.grpid}>Joined</div>}
+                {currentlyJoined && requestedToJoin && <div className={classes.smallbtn} id={props.grpid}>Requested & Joined</div>}
             </div>
         </div>
     </Card>

@@ -10,9 +10,15 @@ WHERE group_id = ? AND user_id = ? AND status_ = ? LIMIT 1;
 SELECT user.* FROM group_member JOIN user ON group_member.user_id = user.id
 WHERE group_member.group_id = ? AND group_member.status_ = ?;
 
+-- name: GetGroupMembersByGroupIdWithoutStatus :many
+SELECT user.* FROM group_member JOIN user ON group_member.user_id = user.id
+WHERE group_member.group_id = ? ;
+
 -- name: GetAllGroupsByUser :many
 SELECT group_.* FROM group_member JOIN group_ ON group_member.group_id = group_.id
-WHERE group_member.user_id = ?;
+WHERE group_member.user_id = ? AND group_member.status_ = 1;
+
+
 
 -- name: CreateGroupMember :one
 INSERT INTO group_member (

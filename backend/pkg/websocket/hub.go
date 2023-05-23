@@ -231,6 +231,45 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 			deleteReq.GroupID =  int64(not.GroupId)
 			deleteReq.UserID = int64(not.TargetId)
 			err = query.DeleteGroupRequest(context.Background(), deleteReq)
+		} else if not.Type == "invitation" {
+			s, _ := json.MarshalIndent(not, "", "\t")
+			fmt.Print("invite: ",string(s))
+			var newInvite crud.CreateGroupMemberParams
+			newInvite.UserID = int64(not.TargetId)
+			newInvite.GroupID= int64(not.GroupId)
+			newInvite.Status = int64(0)
+			_, err = query.CreateGroupMember(context.Background(), newInvite)
+			fmt.Println("length: ", len(h.clients), "\n", h.clients)
+			for _, c := range h.clients {
+				if c.userID == not.TargetId {
+					fmt.Printf("matched %d = %d\n", c.userID, not.TargetId)
+					select {
+					case c.send <- sendNoti:
+					default:
+						close(c.send)
+						delete(h.clients, c.userID)
+					}
+				}
+			}
+		} else if not.Type == "invitation-reply" {
+			if not.Accepted {
+				var deleteReq crud.DeleteGroupMemberParams
+				deleteReq.GroupID =  int64(not.GroupId)
+				deleteReq.UserID = int64(not.SourceId)
+				err = query.DeleteGroupMember(context.Background(), deleteReq)
+				s, _ := json.MarshalIndent(not, "", "\t")
+				fmt.Print("invite: ",string(s))
+				var newInvite crud.CreateGroupMemberParams
+				newInvite.UserID = int64(not.SourceId)
+				newInvite.GroupID= int64(not.GroupId)
+				newInvite.Status = int64(1)
+				_, err = query.CreateGroupMember(context.Background(), newInvite)
+			} else {
+				var deleteReq crud.DeleteGroupMemberParams
+				deleteReq.GroupID =  int64(not.GroupId)
+				deleteReq.UserID = int64(not.SourceId)
+				err = query.DeleteGroupMember(context.Background(), deleteReq)
+			}
 		}
 	case 2:
 		// USER MESSAGE

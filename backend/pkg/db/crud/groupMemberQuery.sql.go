@@ -70,8 +70,10 @@ func (q *Queries) DeleteGroupMember(ctx context.Context, arg DeleteGroupMemberPa
 }
 
 const getAllGroupsByUser = `-- name: GetAllGroupsByUser :many
+;
+
 SELECT group_.id, group_.title, group_.creator, group_.description_, group_.created_at FROM group_member JOIN group_ ON group_member.group_id = group_.id
-WHERE group_member.user_id = ?
+WHERE group_member.user_id = ? AND group_member.status_ = 1
 `
 
 func (q *Queries) GetAllGroupsByUser(ctx context.Context, userID int64) ([]Group, error) {
@@ -153,6 +155,45 @@ type GetGroupMembersByGroupIdParams struct {
 
 func (q *Queries) GetGroupMembersByGroupId(ctx context.Context, arg GetGroupMembersByGroupIdParams) ([]User, error) {
 	rows, err := q.db.QueryContext(ctx, getGroupMembersByGroupId, arg.GroupID, arg.Status)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []User
+	for rows.Next() {
+		var i User
+		if err := rows.Scan(
+			&i.ID,
+			&i.FirstName,
+			&i.LastName,
+			&i.NickName,
+			&i.Email,
+			&i.Password,
+			&i.Dob,
+			&i.Image,
+			&i.About,
+			&i.Public,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getGroupMembersByGroupIdWithoutStatus = `-- name: GetGroupMembersByGroupIdWithoutStatus :many
+SELECT user.id, user.first_name, user.last_name, user.nick_name, user.email, user.password_, user.dob, user.image_, user.about, user.public FROM group_member JOIN user ON group_member.user_id = user.id
+WHERE group_member.group_id = ?
+`
+
+func (q *Queries) GetGroupMembersByGroupIdWithoutStatus(ctx context.Context, groupID int64) ([]User, error) {
+	rows, err := q.db.QueryContext(ctx, getGroupMembersByGroupIdWithoutStatus, groupID)
 	if err != nil {
 		return nil, err
 	}

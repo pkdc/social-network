@@ -17,11 +17,16 @@ function GroupProfile( {groupid} ) {
 
     const [currentlyJoined, setCurrentlyJoined] = useState(false);
     const [invitedToJoin, setInvitedToJoin] = useState(false);
+    const [groupMembers, setgroupmembers] = useState(null);
+
 
     const jGrpCtx = useContext(JoinedGroupContext);
     const grpCtx = useContext(GroupsContext);
     const wsCtx = useContext(WebSocketContext);
     const usersCtx = useContext(UsersContext);
+
+
+
 
     useEffect(() => {
         console.log(wsCtx.newNotiInvitationReplyObj);
@@ -64,29 +69,6 @@ function GroupProfile( {groupid} ) {
         setOpen(true)
 
         navigate("/groupprofile", { state: { id } })
-
-        // const data = {
-        //     id: 0,
-        //     author: parseInt(currUserId),
-        //     message: message,
-        //     image: '',
-        //     createdat: created,
-        // };
-
-        // fetch('http://localhost:8080/group', 
-        // {
-        //     method: 'POST',
-        //     credentials: "include",
-        //     mode: "cors",
-        //     body: JSON.stringify(data),
-        //     headers: { 
-        //         'Content-Type': 'application/json' 
-        //     }
-        // }).then(() => {
-        //     // navigate.replace('/??')
-        //     console.log("posted")
-        // })
-        // console.log(data)
     
     }
 
@@ -101,6 +83,8 @@ function GroupProfile( {groupid} ) {
         if (invited) {
             setInvitedToJoin(true);
             setCurrentlyJoined(false);
+        }else {
+            setInvitedToJoin(false)
         }
         
     };
