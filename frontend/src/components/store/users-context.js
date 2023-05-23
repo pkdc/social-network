@@ -4,13 +4,13 @@ export const UsersContext = React.createContext({
     users: [],
     onlineUsers: [],
     onNewUserReg: () => {},
+    onPrivacyChange: () => {},
     // onOnline: (onlineUser) => {},
     // onOffline: (offlineUser) => {},
 });
 
 export const UsersContextProvider = (props) => {
     const [usersList, setUsersList] = useState([]);
-    // const [onlineUsersList, setOnlineUsersList] = useState([]);
 
     // get users
     const getUsersHandler = () => {
@@ -27,28 +27,25 @@ export const UsersContextProvider = (props) => {
         );
     };
 
+    const privacyChangeHandler = (userid, privacy) => {
+        // usersList[userid].public = privacy;
+        setUsersList((prevUsersList) => prevUsersList.map((user) => {
+            if (user.id === userid){
+                return user.public = privacy;
+            } else {
+                return user;
+            }
+        }));
+    };
+
     useEffect(getUsersHandler, []);
-    // const userOnlineHandler = (onlineUser) => {
-    //     console.log("before login",onlineUsersList);
-    //     setOnlineUsersList(prevOnlineUsersList => [...prevOnlineUsersList, onlineUser]);
-    //     console.log("after login",onlineUsersList);
-    // };
-
-    // const userOfflineHandler = (offlineUser) => {
-    //     console.log("before logout",onlineUsersList);
-    //     setOnlineUsersList(prevOnlineUsersList => {
-    //         prevOnlineUsersList.filter((prevOnlineUser) => prevOnlineUser.id !== offlineUser.id);
-    //     })
-    //     console.log("after logout", onlineUsersList);
-    // };
-
-    // console.log("onlineUsersList outside",onlineUsersList);
 
     return (
         <UsersContext.Provider value={{
             users: usersList,
             // onlineUsers: onlineUsersList,
             onNewUserReg: getUsersHandler,
+            onPrivacyChange: privacyChangeHandler,
             // onOnline: userOnlineHandler,
             // onOffline: userOfflineHandler,
         }}>

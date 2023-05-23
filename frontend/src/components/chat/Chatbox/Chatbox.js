@@ -53,6 +53,7 @@ const Chatbox = (props) => {
 
     useEffect(() => {
         if (wsCtx.websocket !== null && wsCtx.newMsgsObj) {
+            // if the new msg should be shown in this chatbox
             if (wsCtx.newMsgsObj.sourceid === frdOrGrpId) {
                 console.log("new Received msg data when chatbox is open", wsCtx.newMsgsObj);
                 console.log("ws receives msg from when chatbox is open: ", wsCtx.newMsgsObj.sourceid);
@@ -60,8 +61,8 @@ const Chatbox = (props) => {
             
                 if (wsCtx.newMsgsObj !== null) wsCtx.setNewMsgsObj(null);
 
-                // if chatboxId is a user that the cur user is following (chatting coz of public user) // bug
-                if (followingCtx.following.find((following => following.id === props.chatboxId))) {
+                // if chatboxId is a user that the cur user is following (not chatting coz of public user)
+                if (followingCtx.following && followingCtx.following.find((following => following.id === props.chatboxId))) {
                     followingCtx.receiveMsgFollowing(frdOrGrpId, true, true);
                 } else {
                     followingCtx.receiveMsgFollowing(frdOrGrpId, true, false);
