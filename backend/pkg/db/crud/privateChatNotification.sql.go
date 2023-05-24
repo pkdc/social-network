@@ -59,25 +59,36 @@ func (q *Queries) DeletePrivateChatNotification(ctx context.Context, arg DeleteP
 	return err
 }
 
-const getPrivateChatNoti = `-- name: GetPrivateChatNoti :one
+const getPrivateChatNoti = `-- name: GetPrivateChatNoti :many
 SELECT id, source_id, target_id, chat_noti, last_msg_at FROM private_chat_notification
-WHERE source_id = ? AND target_id = ?
+WHERE target_id = ?
 `
 
-type GetPrivateChatNotiParams struct {
-	SourceID int64
-	TargetID int64
-}
-
-func (q *Queries) GetPrivateChatNoti(ctx context.Context, arg GetPrivateChatNotiParams) (PrivateChatNotification, error) {
-	row := q.db.QueryRowContext(ctx, getPrivateChatNoti, arg.SourceID, arg.TargetID)
-	var i PrivateChatNotification
-	err := row.Scan(
-		&i.ID,
-		&i.SourceID,
-		&i.TargetID,
-		&i.ChatNoti,
-		&i.LastMsgAt,
-	)
-	return i, err
+func (q *Queries) GetPrivateChatNoti(ctx context.Context, targetID int64) ([]PrivateChatNotification, error) {
+	rows, err := q.db.QueryContext(ctx, getPrivateChatNoti, targetID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []PrivateChatNotification
+	for rows.Next() {
+		var i PrivateChatNotification
+		if err := rows.Scan(
+			&i.ID,
+			&i.SourceID,
+			&i.TargetID,
+			&i.ChatNoti,
+			&i.LastMsgAt,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }

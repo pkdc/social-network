@@ -6,9 +6,9 @@
 )
 RETURNING *;
 
--- name: GetPrivateChatNoti :one
+-- name: GetPrivateChatNoti :many
 SELECT * FROM private_chat_notification
-WHERE source_id = ? AND target_id = ?;
+WHERE target_id = ?;
 
 -- name: DeletePrivateChatNotification :exec
 DELETE FROM private_chat_notification
