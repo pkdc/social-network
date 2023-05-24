@@ -123,30 +123,42 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 		// Loops through the clients and sends to all users other than the sender
 		if not.Type == "event-notif" {
 			var group crud.GetGroupMembersByGroupIdParams
-			group.GroupID = int64(not.SourceId)
+			group.GroupID = int64(not.GroupId)
 			group.Status = 1
 			users, err := query.GetGroupMembersByGroupId(context.Background(), group)
 			if err != nil {
 				log.Fatal(err)
 			}
-			events, err := query.GetGroupEvents(context.Background(), int64(not.SourceId))
-			var eventId int64
+			events, err := query.GetGroupEventsWithoutId(context.Background())
+			var eventId int
 			for _, event := range events {
-				eventId = event.ID
+				fmt.Println(event)
+				eventId = int(event.ID)
 			}
 			for _, p := range users {
-				_, err := query.CreateGroupEventMember(context.Background(), crud.CreateGroupEventMemberParams{
+				fmt.Println("member of group: ", p)
+				if int(p.ID) != not.SourceId {
+					_, err := query.CreateGroupEventMember(context.Background(), crud.CreateGroupEventMemberParams{
+						UserID:  p.ID,
+						EventID:int64(eventId + 1),
+						Status:  0,
+					})
+					if err != nil {
+						log.Fatal(err)
+					}
+				}else{	_, err := query.CreateGroupEventMember(context.Background(), crud.CreateGroupEventMemberParams{
 					UserID:  p.ID,
-					EventID: eventId + 1,
-					Status:  0,
+					EventID: int64(eventId + 1),
+					Status:  1,
 				})
 				if err != nil {
 					log.Fatal(err)
-				}
+				}}
 			}
 			for _, user := range users {
 				for _, client := range h.clients {
-					if int(user.ID) == client.userID {
+					if int(user.ID) == client.userID && client.userID != not.SourceId {
+						fmt.Println("users matched for event notification" , user.ID, client.userID)
 						client.send <- sendNoti
 					}
 				}

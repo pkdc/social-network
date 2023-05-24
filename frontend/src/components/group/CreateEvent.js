@@ -32,7 +32,8 @@ console.log({datenow})
         followPayloadObj.label = "noti";
         followPayloadObj.id = Date.now();
         followPayloadObj.type = "event-notif";
-        followPayloadObj.sourceid = parseInt(groupid);
+        followPayloadObj.sourceid = parseInt(currUserId);
+        followPayloadObj.groupid = parseInt(groupid);
         followPayloadObj.targetid = 987;
         followPayloadObj.createdat = datenow;
         console.log("CREATED AT: ",followPayloadObj.createdat)

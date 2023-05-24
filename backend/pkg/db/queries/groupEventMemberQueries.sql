@@ -24,6 +24,10 @@ set status_ = ?
 WHERE event_id = ? AND user_id = ?
 RETURNING *;
 
+-- name: GetGroupEventsByUserNoReply :many
+SELECT * FROM group_event_member
+WHERE user_id = ? AND status_ = 0;
+
 -- name: DeleteGroupEventMember :exec
 DELETE FROM group_event_member
 WHERE event_id = ? AND user_id = ?;

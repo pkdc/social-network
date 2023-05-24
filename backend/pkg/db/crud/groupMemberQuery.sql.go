@@ -226,6 +226,44 @@ func (q *Queries) GetGroupMembersByGroupIdWithoutStatus(ctx context.Context, gro
 	return items, nil
 }
 
+const getGroupMembersByUserId = `-- name: GetGroupMembersByUserId :many
+SELECT id, user_id, group_id, status_ FROM group_member
+WHERE user_id = ? AND status_ = ?
+`
+
+type GetGroupMembersByUserIdParams struct {
+	UserID int64
+	Status int64
+}
+
+func (q *Queries) GetGroupMembersByUserId(ctx context.Context, arg GetGroupMembersByUserIdParams) ([]GroupMember, error) {
+	rows, err := q.db.QueryContext(ctx, getGroupMembersByUserId, arg.UserID, arg.Status)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GroupMember
+	for rows.Next() {
+		var i GroupMember
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.GroupID,
+			&i.Status,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const updateGroupMember = `-- name: UpdateGroupMember :one
 UPDATE group_member
 set status_ = ?

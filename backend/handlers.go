@@ -128,7 +128,11 @@ func Loginhandler() http.HandlerFunc {
 
 			fmt.Printf("Email: %s\n", email)
 			fmt.Printf("password: %s\n", pw)
-
+			type NotandAuthResp struct {
+				Resp  AuthResponse  `json:"resp"`
+				Notif []NotifStruct `json:"notif"`
+			}
+			var offlineNotResp NotandAuthResp
 			var Resp AuthResponse
 			Resp.Success = true
 			// ### CONNECT TO DATABASE ###
@@ -223,7 +227,9 @@ func Loginhandler() http.HandlerFunc {
 
 			}
 
-			jsonResp, err := json.Marshal(Resp)
+			offlineNotResp.Resp = Resp
+			offlineNotResp.Notif = offlineNot(offlineNotResp.Resp.UserId)
+			jsonResp, err := json.Marshal(offlineNotResp)
 			fmt.Println(string(jsonResp))
 
 			WriteHttpHeader(jsonResp, w)
@@ -1391,7 +1397,6 @@ func GroupMemberHandler() http.HandlerFunc {
 			// Checks to find a user id in the url
 			userId := r.URL.Query().Get("userid")
 			groupId := r.URL.Query().Get("groupid")
-			notMembers := r.URL.Query().Get("checknotmembers")
 			uId, err := strconv.Atoi(userId)
 
 			if err != nil {
@@ -1406,16 +1411,12 @@ func GroupMemberHandler() http.HandlerFunc {
 
 			foundUserId := false
 			foundGroupId := false
-			foundNotMembers := false
 			if userId != "" {
 				foundUserId = true
 			}
 
 			if groupId != "" {
 				foundGroupId = true
-			}
-			if notMembers != "" {
-				foundNotMembers = true
 			}
 			// ### CONNECT TO DATABASE ###
 
@@ -1457,7 +1458,7 @@ func GroupMemberHandler() http.HandlerFunc {
 			}
 
 			// get all members with the following group id
-			if foundGroupId && !foundNotMembers {
+			if foundGroupId {
 				users, err := query.GetGroupMembersByGroupId(context.Background(), crud.GetGroupMembersByGroupIdParams{
 					GroupID: int64(gId),
 					Status:  1,
@@ -1468,7 +1469,11 @@ func GroupMemberHandler() http.HandlerFunc {
 				}
 
 				// Declares the payload struct
-				var usersResp UserPayload
+				type UserPayload2 struct {
+					Members    []UserStruct `json:"members"`
+					NotMembers []UserStruct `json:"notmembers"`
+				}
+				var usersResp UserPayload2
 
 				for _, user := range users {
 					var oneUser UserStruct
@@ -1484,32 +1489,20 @@ func GroupMemberHandler() http.HandlerFunc {
 					oneUser.About = user.About
 					oneUser.Public = int(user.Public)
 
-					usersResp.Data = append(usersResp.Data, oneUser)
+					usersResp.Members = append(usersResp.Members, oneUser)
 				}
-
-				// Marshals the response struct to a json object
-				jsonResp, err := json.Marshal(usersResp)
-				if err != nil {
-					http.Error(w, "500 internal server error", http.StatusInternalServerError)
-					return
-				}
-
-				// Sets the http headers and writes the response to the browser
-				WriteHttpHeader(jsonResp, w)
-			} else if foundGroupId && foundNotMembers {
-				users, err := query.GetGroupMembersByGroupIdWithoutStatus(context.Background(), int64(gId))
+				users2, err := query.GetGroupMembersByGroupIdWithoutStatus(context.Background(), int64(gId))
 
 				if err != nil {
 					fmt.Println("Unable to get members")
 				}
-				var usersResp UserPayload
 				allUsers, err := query.ListUsers(context.Background())
 				for i := 0; i < len(allUsers); i++ {
 					check := false
-					for k := 0; k < len(users); k++ {
-						if allUsers[i].ID == users[k].ID {
+					for k := 0; k < len(users2); k++ {
+						if allUsers[i].ID == users2[k].ID {
 							check = true
-						} else if k == len(users)-1 && !check {
+						} else if k == len(users2)-1 && !check {
 							var oneUser UserStruct
 
 							oneUser.Id = int(allUsers[i].ID)
@@ -1523,7 +1516,7 @@ func GroupMemberHandler() http.HandlerFunc {
 							oneUser.About = allUsers[i].About
 							oneUser.Public = int(allUsers[i].Public)
 
-							usersResp.Data = append(usersResp.Data, oneUser)
+							usersResp.NotMembers = append(usersResp.NotMembers, oneUser)
 						}
 					}
 				}
@@ -2553,4 +2546,97 @@ func GroupRequestByUserHandler() http.HandlerFunc {
 			WriteHttpHeader(jsonResp, w)
 		}
 	}
+}
+func offlineNot(userid int) []NotifStruct {
+	var ResultArr []NotifStruct
+	db := db.DbConnect()
+
+	query := crud.New(db)
+	requests, err := query.GetAllGroupReq(context.Background())
+	if err != nil {
+		log.Fatal(err)
+	}
+	groups, err := query.GetAllGroups(context.Background())
+	if err != nil {
+		log.Fatal(err)
+	}
+	for _, onegroup := range groups {
+		if onegroup.Creator == int64(userid) {
+			for _, onereq := range requests {
+				if onereq.GroupID == onegroup.ID{
+					var oneNotif NotifStruct
+					oneNotif.Label = "noti"
+					oneNotif.Id = 0
+					oneNotif.Type = "join-req"
+					oneNotif.TargetId = userid
+					oneNotif.SourceId = int(onereq.UserID)
+					oneNotif.Accepted = false
+					oneNotif.CreatedAt = "not now"
+					oneNotif.GroupId = int(onereq.GroupID)
+					ResultArr = append(ResultArr, oneNotif)
+				}
+			}
+		}
+	}
+	events, err := query.GetGroupEventsByUserNoReply(context.Background(), int64(userid))
+	if err != nil {
+		log.Fatal(err)
+	}
+	for _, oneevent := range events {
+		groupid, err := query.GetGroupEventById(context.Background(), oneevent.EventID)
+		if err != nil {
+			log.Fatal(err)
+		}
+		var oneNotif NotifStruct
+		oneNotif.Label = "noti"
+		oneNotif.Id = 0
+		oneNotif.Type = "event-notif"
+		oneNotif.TargetId = 987
+		oneNotif.SourceId = userid
+		oneNotif.Accepted = false
+		oneNotif.CreatedAt = "not now"
+		oneNotif.GroupId = int(groupid.GroupID)
+		ResultArr = append(ResultArr, oneNotif)
+	}
+	invites, err := query.GetGroupMembersByUserId(context.Background(), crud.GetGroupMembersByUserIdParams{UserID: int64(userid), Status: 0})
+	if err != nil {
+		log.Fatal(err)
+	}
+	for _, oneinvite := range invites {
+		group, err := query.GetGroup(context.Background(), oneinvite.GroupID)
+		if err != nil {
+			log.Fatal(err)
+		}
+		var oneNotif NotifStruct
+		oneNotif.Label = "noti"
+		oneNotif.Id = 0
+		oneNotif.Type = "invitation"
+		oneNotif.TargetId = userid
+		oneNotif.SourceId = int(group.Creator)
+		oneNotif.Accepted = false
+		oneNotif.CreatedAt = "not now"
+		oneNotif.GroupId = int(oneinvite.GroupID)
+		ResultArr = append(ResultArr, oneNotif)
+	}
+	followers, err := query.GetFollowers(context.Background(), int64(userid))
+	if err != nil {
+		log.Fatal(err)
+	}
+	for _, onefollower := range followers {
+		if onefollower.Status == 0 {
+
+			var oneNotif NotifStruct
+			oneNotif.Label = "noti"
+			oneNotif.Id = 0
+			oneNotif.Type = "follow-req"
+			oneNotif.TargetId = userid
+			oneNotif.SourceId = int(onefollower.SourceID)
+			oneNotif.Accepted = false
+			oneNotif.CreatedAt = "not now"
+			oneNotif.GroupId = 0
+			ResultArr = append(ResultArr, oneNotif)
+		}
+	}
+	fmt.Println("Most Important Thing: ", ResultArr)
+	return ResultArr
 }

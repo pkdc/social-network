@@ -134,6 +134,39 @@ func (q *Queries) GetGroupEventMembersGoing(ctx context.Context, eventID int64) 
 	return items, nil
 }
 
+const getGroupEventsByUserNoReply = `-- name: GetGroupEventsByUserNoReply :many
+SELECT id, user_id, event_id, status_ FROM group_event_member
+WHERE user_id = ? AND status_ = 0
+`
+
+func (q *Queries) GetGroupEventsByUserNoReply(ctx context.Context, userID int64) ([]GroupEventMember, error) {
+	rows, err := q.db.QueryContext(ctx, getGroupEventsByUserNoReply, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GroupEventMember
+	for rows.Next() {
+		var i GroupEventMember
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.EventID,
+			&i.Status,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const updateGroupEventMember = `-- name: UpdateGroupEventMember :one
 UPDATE group_event_member
 set status_ = ?
