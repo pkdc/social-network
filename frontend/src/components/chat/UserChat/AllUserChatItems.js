@@ -74,6 +74,18 @@ const AllUserChatItems = (props) => {
             }
         }
     }, [usersCtx.users, followingCtx.following, followingUids, wsCtx.newMsgsObj]);
+
+    // private chat notification list after login
+    useEffect(() => {
+        fetch("http://localhost:8080/private-chat-notification")
+            .then(resp => resp.json())
+            .then(data => {
+                    console.log(data)
+
+            }).catch(err => {
+                console.log(err)
+            })
+    }, [])
     
     console.log("otherListedChatUsers (chatitems)", otherListedChatUsers);
     console.log("following id (chatitems)", followingUids);
