@@ -199,6 +199,8 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 			fmt.Println("Unable to store message to database")
 		}
 
+		// save private chat notification
+
 		// Marshals the struct to a json object
 		fmt.Println("Marshals the struct to a json object")
 		sendMsg, err := json.Marshal(userMsg)
