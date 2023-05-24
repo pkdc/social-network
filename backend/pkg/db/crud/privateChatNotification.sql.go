@@ -11,7 +11,7 @@ import (
 )
 
 const createPrivateChatNotification = `-- name: CreatePrivateChatNotification :one
-INSERT INTO private_chat_notification (
+ INSERT INTO private_chat_notification (
   source_id, target_id, chat_noti, last_msg_at
 ) VALUES (
   ?, ?, ?, ?
@@ -42,4 +42,19 @@ func (q *Queries) CreatePrivateChatNotification(ctx context.Context, arg CreateP
 		&i.LastMsgAt,
 	)
 	return i, err
+}
+
+const deletePrivateChatNotification = `-- name: DeletePrivateChatNotification :exec
+DELETE FROM private_chat_notification
+WHERE source_id = ? AND target_id = ?
+`
+
+type DeletePrivateChatNotificationParams struct {
+	SourceID int64
+	TargetID int64
+}
+
+func (q *Queries) DeletePrivateChatNotification(ctx context.Context, arg DeletePrivateChatNotificationParams) error {
+	_, err := q.db.ExecContext(ctx, deletePrivateChatNotification, arg.SourceID, arg.TargetID)
+	return err
 }

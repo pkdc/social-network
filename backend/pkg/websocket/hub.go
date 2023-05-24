@@ -201,6 +201,13 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 
 		// save private chat notification
 
+		_, err = query.CreatePrivateChatNotification(context.Background(), crud.CreatePrivateChatNotificationParams{
+			LastMsgAt: time.Now(),
+			SourceID:  int64(userMsg.SourceId),
+			TargetID:  int64(userMsg.TargetId),
+			ChatNoti:  0,
+		})
+
 		// Marshals the struct to a json object
 		fmt.Println("Marshals the struct to a json object")
 		sendMsg, err := json.Marshal(userMsg)
