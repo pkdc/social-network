@@ -21,6 +21,7 @@ export const FollowingContextProvider = (props) => {
     const [following, setFollowing] = useState([]);
     // const [chatNotiUserArr, setChatNotiUserArr] = useState([]);
     const wsCtx = useContext(WebSocketContext);
+    const usersCtx = useContext(UsersContext);
 
     // get from db
     const getFollowingHandler = () => {
@@ -75,16 +76,20 @@ export const FollowingContextProvider = (props) => {
         console.log("locally stored following (unfol)", JSON.parse(localStorage.getItem("following")));
     };
 
-    const receiveMsgHandler = (friendId, open) => {
-        const targetUser = following.find(followingUser => followingUser.id === +friendId);
-        console.log("target user", targetUser);
-        // const tempFollowing = following.filter(followingUser => followingUser.id !== +friendId);
-        // console.log("temp fol (removed)", tempFollowing);
-        // add userId chat item to the top
-        setFollowing(prevFollowing => [targetUser, ...prevFollowing.filter(followingUser => followingUser.id !== +friendId)]);
-        // noti if not open
-        // !open && setChatNotiUserArr(prevArr => [...new Set([targetUser, ...prevArr])]);
-        if (!open) targetUser["chat_noti"] = true; // set noti field to true to indicate unread
+    const receiveMsgHandler = (friendId, open, isFollowing) => {
+        if (isFollowing) {
+            const targetUser = following.find(followingUser => followingUser.id === +friendId);
+            // const targetUser = usersCtx.users.find(user => user.id === +friendId);
+            console.log("target user", targetUser);
+            // const tempFollowing = following.filter(followingUser => followingUser.id !== +friendId);
+            // console.log("temp fol (removed)", tempFollowing);
+            // add userId chat item to the top
+            setFollowing(prevFollowing => [targetUser, ...prevFollowing.filter(followingUser => followingUser.id !== +friendId)]);
+            // noti if not open
+            // !open && setChatNotiUserArr(prevArr => [...new Set([targetUser, ...prevArr])]);
+            if (!open) targetUser["chat_noti"] = true; // set noti field to true to indicate unread
+        } else { // if cur user is public and receives a msg coz of that      
+        }
     };
 
     useEffect(() => getFollowingHandler(), []);

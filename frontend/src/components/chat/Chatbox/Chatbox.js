@@ -40,12 +40,20 @@ const Chatbox = (props) => {
     //     };
     
     if (!props.grp) {
-        followingCtx.following.find((followingUser) => followingUser.id === frdOrGrpId)["chat_noti"] = false;
-        console.log("following (chatbox)", followingCtx.following);
+        // followingCtx.following.find((followingUser) => followingUser.id === frdOrGrpId)["chat_noti"] = false;
+        // console.log("following (chatbox)", followingCtx.following);
+
+        // no noti for public users
+        // remove noti when following user open chatbox
+        if (followingCtx.following && followingCtx.following.includes((following) => following.id === props.chatboxId)) {
+            followingCtx.following.find((followingUser) => followingUser.id === frdOrGrpId)["chat_noti"] = false;
+            console.log("following (chatbox)", followingCtx.following);
+        }
     }
 
     useEffect(() => {
         if (wsCtx.websocket !== null && wsCtx.newMsgsObj) {
+            // if the new msg should be shown in this chatbox
             if (wsCtx.newMsgsObj.sourceid === frdOrGrpId) {
                 console.log("new Received msg data when chatbox is open", wsCtx.newMsgsObj);
                 console.log("ws receives msg from when chatbox is open: ", wsCtx.newMsgsObj.sourceid);
@@ -53,13 +61,17 @@ const Chatbox = (props) => {
             
                 if (wsCtx.newMsgsObj !== null) wsCtx.setNewMsgsObj(null);
 
-                followingCtx.receiveMsgFollowing(frdOrGrpId, true);
-                
+                // if chatboxId is a user that the cur user is following (not chatting coz of public user)
+                if (followingCtx.following && followingCtx.following.find((following => following.id === props.chatboxId))) {
+                    followingCtx.receiveMsgFollowing(frdOrGrpId, true, true);
+                } else {
+                    followingCtx.receiveMsgFollowing(frdOrGrpId, true, false);
+                }
                 setJustUpdated(prev => !prev);
             }
         }
         // console.log("new");
-    }, [wsCtx.newMsgsObj])
+    }, [wsCtx.newMsgsObj, props.chatboxId])
 
     // send msg to ws
     const sendMsgHandler = (msg) => {

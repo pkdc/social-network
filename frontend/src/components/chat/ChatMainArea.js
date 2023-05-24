@@ -9,20 +9,20 @@ const ChatMainArea = ({grpChat}) => {
 
     const [privChatboxOpen, setPrivChatboxOpen] = useState(false);
     const [grpChatboxOpen, setGrpChatboxOpen] = useState(false);
-    const [followerId, setFollowerId] = useState(0);
+    const [followingOrPublicUserId, setfollowingOrPublicUserId] = useState(0);
     const [grpId, setGrpId] = useState(0);
     const [chatboxReceivesMsg, setChatboxReceivesMsg] = useState(0);
 
     // const ctx = useContext(AuthContext);
 
-    const openUserChatboxHandler = (followerId) => {
-        console.log("chatbox open for ", followerId);
+    const openUserChatboxHandler = (followingOrPublicUserId) => {
+        console.log("chatbox open for ", followingOrPublicUserId);
         setPrivChatboxOpen(true);
-        setFollowerId(followerId);
+        setfollowingOrPublicUserId(followingOrPublicUserId);
     };
 
     const closeUserChatboxHandler = () => {
-        console.log("chatbox open for ", followerId);
+        console.log("chatbox open for ", followingOrPublicUserId);
         setPrivChatboxOpen(false);
     };
 
@@ -46,7 +46,7 @@ const ChatMainArea = ({grpChat}) => {
                 />}
             {!grpChat && privChatboxOpen &&
                 <Chatbox 
-                    chatboxId={followerId} 
+                    chatboxId={followingOrPublicUserId} 
                     onCloseChatbox={closeUserChatboxHandler}
                     // onReceiveNewMsg={receiveNewMsgHandler}
                     open={privChatboxOpen}
