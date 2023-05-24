@@ -12,7 +12,7 @@ import (
 
 const checkFollower = `-- name: CheckFollower :one
 SELECT id, source_id, target_id, status_, chat_noti, last_msg_at FROM user_follower
-WHERE source_id = ? AND target_id = ? AND status_= 1
+WHERE source_id = ? AND target_id = ? AND status_= 1 OR status_ = 2
 `
 
 type CheckFollowerParams struct {

@@ -10,7 +10,6 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-	"strings"
 	"time"
 
 	uuid "github.com/satori/go.uuid"
@@ -1122,12 +1121,16 @@ func CloseFriendHandler() http.HandlerFunc {
 			// Sets the http headers and writes the response to the browser
 			WriteHttpHeader(jsonResp, w)
 		case http.MethodPost:
+			type Ids struct {
+				Data []int `json:"data"`
+			}
+
 			// Declares the variables to store the follower details and handler response
-			var follower UserFollowerStruct
+			var followers Ids
 			Resp := AuthResponse{Success: true}
 
 			// Decodes the json object to the struct, changing the response to false if it fails
-			err := json.NewDecoder(r.Body).Decode(&follower)
+			err := json.NewDecoder(r.Body).Decode(&followers)
 			if err != nil {
 				Resp.Success = false
 			}
@@ -1138,28 +1141,38 @@ func CloseFriendHandler() http.HandlerFunc {
 
 			query := crud.New(db)
 
-			// ### delete FOLLOWER TO DATABASE ###
+			for _, i := range followers.Data {
+				followerContext := crud.CheckFollowerParams{SourceID: 0, TargetID: int64(i)}
 
-			var newFollower crud.UpdateFollowerParams
+				follower, err := query.CheckFollower(context.Background(), followerContext)
+				if err != nil {
+					fmt.Println("Unable to find follower")
+					Resp.Success = false
+				}
 
-			newFollower.ChatNoti = int64(follower.ChatNoti)
-			newFollower.LastMsgAt, _ = time.Parse(time.RFC3339, strings.Replace(follower.LastMsgAt, " ", "T", 1))
-			newFollower.SourceID = int64(follower.SourceId)
-			newFollower.TargetID = int64(follower.TargetId)
+				// ### update FOLLOWER TO DATABASE ###
 
-			if follower.Status == 1 {
-				newFollower.Status = int64(2)
-			} else if follower.Status == 2 {
-				newFollower.Status = int64(1)
-			} else {
-				newFollower.Status = int64(follower.Status)
-			}
+				var newFollower crud.UpdateFollowerParams
 
-			_, err = query.UpdateFollower(context.Background(), newFollower)
-			fmt.Println("NEW FOLLOW REQUESTED")
-			if err != nil {
-				fmt.Println("Unable to insert follower")
-				Resp.Success = false
+				newFollower.ChatNoti = follower.ChatNoti
+				newFollower.LastMsgAt = follower.LastMsgAt
+				newFollower.SourceID = follower.SourceID
+				newFollower.TargetID = follower.TargetID
+
+				if follower.Status == 1 {
+					newFollower.Status = int64(2)
+				} else if follower.Status == 2 {
+					newFollower.Status = int64(1)
+				} else {
+					newFollower.Status = int64(follower.Status)
+				}
+
+				_, err = query.UpdateFollower(context.Background(), newFollower)
+				fmt.Println("UPDATED CLOSE FRIEND")
+				if err != nil {
+					fmt.Println("Unable to update close friend")
+					Resp.Success = false
+				}
 			}
 
 			// Marshals the response struct to a json object
