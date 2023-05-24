@@ -58,3 +58,26 @@ func (q *Queries) DeletePrivateChatNotification(ctx context.Context, arg DeleteP
 	_, err := q.db.ExecContext(ctx, deletePrivateChatNotification, arg.SourceID, arg.TargetID)
 	return err
 }
+
+const getPrivateChatNoti = `-- name: GetPrivateChatNoti :one
+SELECT id, source_id, target_id, chat_noti, last_msg_at FROM private_chat_notification
+WHERE source_id = ? AND target_id = ?
+`
+
+type GetPrivateChatNotiParams struct {
+	SourceID int64
+	TargetID int64
+}
+
+func (q *Queries) GetPrivateChatNoti(ctx context.Context, arg GetPrivateChatNotiParams) (PrivateChatNotification, error) {
+	row := q.db.QueryRowContext(ctx, getPrivateChatNoti, arg.SourceID, arg.TargetID)
+	var i PrivateChatNotification
+	err := row.Scan(
+		&i.ID,
+		&i.SourceID,
+		&i.TargetID,
+		&i.ChatNoti,
+		&i.LastMsgAt,
+	)
+	return i, err
+}
