@@ -1122,6 +1122,7 @@ func CloseFriendHandler() http.HandlerFunc {
 			WriteHttpHeader(jsonResp, w)
 		case http.MethodPost:
 			type Ids struct {
+				SourceID int64
 				Data []int `json:"data"`
 			}
 
@@ -1142,7 +1143,7 @@ func CloseFriendHandler() http.HandlerFunc {
 			query := crud.New(db)
 
 			for _, i := range followers.Data {
-				followerContext := crud.CheckFollowerParams{SourceID: 0, TargetID: int64(i)}
+				followerContext := crud.CheckFollowerParams{SourceID: followers.SourceID, TargetID: int64(i)}
 
 				follower, err := query.CheckFollower(context.Background(), followerContext)
 				if err != nil {
