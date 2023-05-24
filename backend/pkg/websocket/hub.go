@@ -85,6 +85,20 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 		not.Accepted = msgStruct.Accepted
 		not.CreatedAt = msgStruct.CreatedAt
 		// fmt.Printf("not Struct: %v\n", not)
+	} else if msgStruct.Label == "pChatNoti" {
+		db := db.DbConnect()
+
+		query := crud.New(db)
+
+		err := query.DeletePrivateChatNotification(context.Background(), crud.DeletePrivateChatNotificationParams{
+			SourceID: int64(msgStruct.SourceId),
+			TargetID: int64(msgStruct.TargetId),
+		})
+
+		if err != nil {
+			fmt.Println("Unable to delete private chat notification to database")
+		}
+
 	} else if msgStruct.Label == "private" {
 		t = 2
 		userMsg.Label = "p-chat"
@@ -207,6 +221,10 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 			TargetID:  int64(userMsg.TargetId),
 			ChatNoti:  0,
 		})
+
+		if err != nil {
+			fmt.Println("Unable to store private chat notification to database")
+		}
 
 		// Marshals the struct to a json object
 		fmt.Println("Marshals the struct to a json object")
