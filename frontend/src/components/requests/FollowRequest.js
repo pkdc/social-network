@@ -13,6 +13,9 @@ function FollowRequest() {
         navigate("/profile", {state: { id } })
     }
 
+    function handleClick() {
+        
+    }
     return<div className={classes.container}>
         <div className={classes.wrapper}>
             <img className={classes.img} src={profile} alt=''/>
@@ -20,7 +23,7 @@ function FollowRequest() {
         </div>
     
         <div>
-            <SmallButton className={classes.btn}>Confirm</SmallButton>
+            <SmallButton className={classes.btn} onClick={handleClick}>Confirm</SmallButton>
         </div>
     </div>
 }

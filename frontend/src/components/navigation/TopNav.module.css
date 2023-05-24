@@ -81,6 +81,7 @@ nav {
     border: none;
     outline: none;
     background: none;
+    position: relative;
 }
 
 .notif {
@@ -95,3 +96,13 @@ nav {
     display: flex;
     align-items: center;
 }
+
+.badge {
+    position: absolute;
+    top: 1px;
+    right: 6px;
+    padding: 5px 5px;
+    border-radius: 50%;
+    background: rgb(196, 0, 0);
+    color: white;
+  }

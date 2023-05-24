@@ -122,6 +122,39 @@ func (q *Queries) GetGroupRequests(ctx context.Context, arg GetGroupRequestsPara
 	return items, nil
 }
 
+const getGroupRequestsByUser = `-- name: GetGroupRequestsByUser :many
+SELECT id, user_id, group_id, status_ FROM group_request
+WHERE user_id = ?
+`
+
+func (q *Queries) GetGroupRequestsByUser(ctx context.Context, userID int64) ([]GroupRequest, error) {
+	rows, err := q.db.QueryContext(ctx, getGroupRequestsByUser, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GroupRequest
+	for rows.Next() {
+		var i GroupRequest
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.GroupID,
+			&i.Status,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const updateGroupRequest = `-- name: UpdateGroupRequest :one
 UPDATE group_request
 set status_ = ?

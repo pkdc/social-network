@@ -1,13 +1,15 @@
 import useGet from "../fetch/useGet";
 import GroupEvent from "./GroupEvent";
 
-function AllEvents() {
+function AllEvents({groupid}) {
 
-const { data } = useGet("/group-event")
-// console.log("event data", typeof(data))
+const { error, isLoaded, data } = useGet(`/group-event?id=${groupid}`)
+
+if (!isLoaded) return <div>Loading...</div>
+if (error) return <div>Error: {error.message}</div>
 
     return <div>
-        {data.map((event) => (
+        {data.data && data.data.map((event) => (
          <GroupEvent
         key={event.id}
         id={event.id}

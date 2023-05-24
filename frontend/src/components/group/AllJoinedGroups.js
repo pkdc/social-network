@@ -3,15 +3,21 @@ import JoinedGroup from "./JoinedGroup";
 import classes from './AllJoinedGroups.module.css';
 import useGet from "../fetch/useGet";
 
-function AllJoinedGroups(   ) {
+function AllJoinedGroups() {
 
-    // const { data } = useGet("/group");
+    const currUserId = localStorage.getItem("user_id");
+
+    const { error , isLoaded, data } = useGet(`/group-member?userid=${currUserId}`)
+    // for group members `/group-member?groupid=${groupId}
+
+      if (!isLoaded) return <div>Loading...</div>
+      if (error) return <div>Error: {error.message}</div>
 
     return <Card>
         <div className={classes.label}>
         Groups you've joined
         </div>
-        {/* {data.map((group) => (
+        {data.data && data.data.map((group) => (
          <JoinedGroup
         key={group.id}
         id={group.id}
@@ -20,7 +26,7 @@ function AllJoinedGroups(   ) {
         description={group.description}  
         // img={group.img}
         />
-        ))} */}
+        ))} 
     </Card>
 }
 

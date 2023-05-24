@@ -7,8 +7,12 @@ export const WebSocketContext = React.createContext({
     setNewMsgsObj: () => {},
     newNotiObj: null,
     setNewNotiObj: () => {},
-    newNotiReplyObj: null,
-    setNewNotiReplyObj: () => {},
+    newNotiFollowReplyObj: null,
+    setNewNotiFollowReplyObj: () => {},
+    newNotiJoinReplyObj: null,
+    setNewNotiJoinReplyObj: () => {},
+    newNotiInvitationReplyObj: null,
+    setNewNotiInvitationReplyObj: () => {},
 });
 
 export const WebSocketContextProvider = (props) => {
@@ -16,9 +20,11 @@ export const WebSocketContextProvider = (props) => {
     const [newMsgsObj, setNewMsgsObj] = useState(null);
 
     const [newNotiObj, setNewNotiObj] = useState(null);
-    const [newNotiReplyObj, setNewNotiReplyObj] = useState(null);
+    const [newNotiFollowReplyObj, setNewNotiFollowReplyObj] = useState(null);
+    const [newNotiJoinReplyObj, setNewNotiJoinReplyObj] = useState(null);
+    const [newNotiInvitationReplyObj, setNewNotiInvitationReplyObj] = useState(null);
 
-    const usersCtx = useContext(UsersContext);
+    // const usersCtx = useContext(UsersContext);
 
     useEffect(() => {
         const newSocket = new WebSocket("ws://localhost:8080/ws")
@@ -54,20 +60,30 @@ export const WebSocketContextProvider = (props) => {
                 // };
                 // setNewMsgsObj(newReceivedMsgObj);
             } else if (msgObj.label === "noti") {
-                if (msgObj.type === "follow-req") {
+                if (msgObj.type === "follow-req" || msgObj.type === "event-notif" || msgObj.type === "join-req" || msgObj.type === "invitation") {
                     console.log("ws receives noti (wsctx): ", msgObj);
                     console.log("ws receives noti type (wsctx): ", msgObj.type);
                     setNewNotiObj(msgObj);
                 } else if (msgObj.type === "follow-req-reply") {
-                    console.log("ws receives noti reply (wsctx): ", msgObj);
-                    console.log("ws receives noti reply type (wsctx): ", msgObj.type);
-                    console.log("ws receives noti reply accepted (wsctx): ", msgObj.accepted);
-                    setNewNotiReplyObj(msgObj);
+                    console.log("ws receives noti follow reply (wsctx): ", msgObj);
+                    console.log("ws receives noti follow reply type (wsctx): ", msgObj.type);
+                    console.log("ws receives noti follow reply accepted (wsctx): ", msgObj.accepted);
+                    setNewNotiFollowReplyObj(msgObj);
                     // const followUser = usersCtx.users.find((user) => user.id === msgObj.sourceid);
                     // console.log(msgObj.targetid, " Gonna follow (wsctx): ", followUser);
                     // msgObj.accepted && 
-                }
-            }
+                } else if (msgObj.type === "join-req-reply") {
+                    console.log("ws receives noti join-req-reply (wsctx): ", msgObj);
+                    console.log("ws receives noti join-req-reply type (wsctx): ", msgObj.type);
+                    console.log("ws receives noti join-req-reply accepted (wsctx): ", msgObj.accepted);
+                    setNewNotiJoinReplyObj(msgObj);
+                } else if (msgObj.type === "invitation-reply") {
+                    console.log("ws receives noti invitation-reply (wsctx): ", msgObj);
+                    console.log("ws receives noti invitation-reply type (wsctx): ", msgObj.type);
+                    console.log("ws receives noti invitation-reply accepted (wsctx): ", msgObj.accepted);
+                    setNewNotiInvitationReplyObj(msgObj);
+                } 
+            } 
         };
 
         return () => {
@@ -82,8 +98,12 @@ export const WebSocketContextProvider = (props) => {
             setNewMsgsObj: setNewMsgsObj,
             newNotiObj: newNotiObj,
             setNewNotiObj: setNewNotiObj,
-            newNotiReplyObj: newNotiReplyObj,
-            setNewNotiReplyObj: setNewNotiReplyObj,
+            newNotiFollowReplyObj: newNotiFollowReplyObj,
+            setNewNotiFollowReplyObj: setNewNotiFollowReplyObj,
+            newNotiJoinReplyObj: newNotiJoinReplyObj,
+            setNewNotiJoinReplyObj: setNewNotiJoinReplyObj,
+            newNotiInvitationReplyObj: newNotiInvitationReplyObj,
+            setNewNotiInvitationReplyObj: setNewNotiInvitationReplyObj,
         }}>
             {props.children}
         </WebSocketContext.Provider>

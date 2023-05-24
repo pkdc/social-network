@@ -16,23 +16,23 @@ import classes from './layout.module.css';
 function GroupProfilePage() {
 
     const { state } = useLocation();
-    console.log("state", state);
     const { id } = state; 
-    console.log("id", id); 
+    console.log("group id", id);
 
-    return <div className={classes.container}>
+    return (
+    <div className={classes.container}>
         <div className={classes.mid}>
-            <GroupProfile userId={id}></GroupProfile>
-            <CreateGroupPost/>
-            <AllGroupPosts/>
+            <GroupProfile groupid={id}></GroupProfile>
+            <CreateGroupPost groupid={id}/>
+            <AllGroupPosts groupid={id}/>
       
         </div>
         <div className={classes.right}>
-            <AllEvents></AllEvents>
-            <CreateEvent></CreateEvent>
+        <CreateEvent groupid={id}></CreateEvent>
+        <AllEvents groupid={id}></AllEvents>
         </div>
-
     </div>
-}
+  
+)}
 
 export default GroupProfilePage;

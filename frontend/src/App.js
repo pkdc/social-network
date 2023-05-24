@@ -19,7 +19,7 @@ function App() {
     {path: "/login", element: <LoginForm/>},
     {path: "/reg", element: <RegForm/>},
     {path: "/groupprofile", element: <GroupProfilePage />},
-    {path: "/groups", element: <GroupPage />},
+    {path: "/group", element: <GroupPage />},
   ]);
 
  if (authCtx.isLoggedIn) router = createBrowserRouter([

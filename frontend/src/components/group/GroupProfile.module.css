@@ -1,9 +1,20 @@
 .container {
+    /* padding: 20px; */
+    display: flex;
+    gap: 30px;
+    width: 93.2%;
+    margin-bottom: 20px;
+}
+
+.groupContainer {
+    display: flex;
+    flex-direction: row;
     padding: 20px;
     display: flex;
     gap: 30px;
     width: 93.2%;
-    margin: 20px;
+        
+
 }
 
 .wrapper {
@@ -45,3 +56,19 @@
 /* .btn {
     background-color: #7B77AF;
 } */
+.btn {
+    background-color: var(--ultra-violet-0, purple);
+    color: var(--antiflash-white, white);
+    padding: .5rem 1rem;
+    cursor: pointer;
+    border: none;
+    border-radius: .6rem;
+    /* width: 75%; */
+    font-size: .8rem;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+    background-color: var(--ultra-violet, purple);
+}

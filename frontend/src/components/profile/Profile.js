@@ -1,4 +1,5 @@
 import { useEffect, useState, useContext } from "react";
+import { useParams } from "react-router-dom";
 import useGet from "../fetch/useGet";
 import Post from "../posts/Post";
 import Card from "../UI/Card";
@@ -9,8 +10,6 @@ import { FollowingContext } from "../store/following-context";
 import { UsersContext } from "../store/users-context";
 import { WebSocketContext } from "../store/websocket-context";
 import classes from './Profile.module.css';
-import axios from "axios";
-let boolstatus ; 
 function Profile({ userId }) {
     
     // get stored publicity from localStorage
@@ -32,28 +31,36 @@ let statusofcuruser ;
     const wsCtx = useContext(WebSocketContext);
 
     const currUserId = localStorage.getItem("user_id");
+  
+    // const wsCtx = useContext(WebSocketContext);
+    // console.log("ws in profile: ",wsCtx.websocket);
+    // wsCtx.websocket.onopen = function (){alert("ws is open")}
+    // let params = useParams();   
+    // let userId = params.productId 
+    // console.log("params", userId)
     const [currentlyFollowing, setCurrentlyFollowing] = useState(false);
     const [requestedToFollow, setRequestedToFollow] = useState(false);
 
     useEffect(() => {
         const storedFollowing = JSON.parse(localStorage.getItem("following"));
         console.log("stored following (profile)", storedFollowing);
+        // check if the current profile is one of the users in the following array
         followingCtx.following && setCurrentlyFollowing(followingCtx.following.some(followingUser => followingUser.id === +userId))
     }, [followingCtx.following, userId]);
     
     useEffect(() => {
-        if (wsCtx.newNotiReplyObj) {
-            if (wsCtx.newNotiReplyObj.accepted) {
+        if (wsCtx.newNotiFollowReplyObj) {
+            if (wsCtx.newNotiFollowReplyObj.accepted) {
                 setCurrentlyFollowing(true);
                 setRequestedToFollow(false);
 
-                const followUser = usersCtx.users.find(user => user.id === wsCtx.newNotiReplyObj.sourceid);
+                const followUser = usersCtx.users.find(user => user.id === wsCtx.newNotiFollowReplyObj.sourceid);
                 console.log("found user frd (profile accepted req)", followUser);
                 followingCtx.follow(followUser);
 
-                console.log("follow user id", wsCtx.newNotiReplyObj.sourceid);
+                console.log("follow user id", wsCtx.newNotiFollowReplyObj.sourceid);
                 console.log("cur user is following (profile)", followingCtx.following);
-                const targetId =  wsCtx.newNotiReplyObj.sourceid;
+                const targetId =  wsCtx.newNotiFollowReplyObj.sourceid;
                 console.log("targetid", targetId)
                 console.log("current user", currUserId)
     
@@ -63,8 +70,8 @@ let statusofcuruser ;
                 setRequestedToFollow(false);
             }
         }
-        wsCtx.setNewNotiReplyObj(null);
-    } , [wsCtx.newNotiReplyObj]);
+        wsCtx.setNewNotiFollowReplyObj(null);
+    } , [wsCtx.newNotiFollowReplyObj]);
 
     const followHandler = (e) => {
         const followUser = usersCtx.users.find(user => user.id === +e.target.id);

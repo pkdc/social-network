@@ -40,7 +40,6 @@
 //                     </Link>
 //                     </div>
 //                 </div>
-//                 {/* <NotificationBtn>&#128276;</NotificationBtn> */}
 //                 <LogoutButton onClick={onClickingLogout}><img src={logout} alt=""/></LogoutButton>
 //             </div>
 //         </nav>
@@ -62,6 +61,9 @@ import profile from "../assets/profileSmall.svg";
 import notif from "../assets/notifications5.svg";
 import chatIcon from "../assets/chat5.svg";
 import Avatar from "../UI/Avatar";
+// import AuthContext from "../store/auth-context";
+// import Modal from "../group/modal";
+// import NotifModal from "./NotifModal";
 import { AuthContext } from "../store/auth-context";
 import { WebSocketContext } from "../store/websocket-context";
 import NotificationCentre from "../notification/NotificationCentre";
@@ -73,7 +75,6 @@ const TopNav = () => {
     const navigate = useNavigate();
 
     const currUserId = localStorage.getItem("user_id");
-    console.log("current user", currUserId);
 
     // function handleClick(e) {
     //     const id = e.target.id
@@ -84,12 +85,17 @@ const TopNav = () => {
 
     const authCtx = useContext(AuthContext);
 
+    const [ open, setOpen ] = useState(false)
+
     const onClickingLogout = () => {
         // props.onLogout();
         authCtx.onLogout();
         navigate("/", {replace: true});
     };
 
+    // function handleClick() {
+    //     setOpen(true)
+    // }
     const wsCtx = useContext(WebSocketContext);
 
     useEffect(() => {
@@ -106,8 +112,9 @@ const TopNav = () => {
     const onShowNoti = () => {
         console.log("noti toggled!");
         setShowNoti(prev => !prev);
-    };
-    const ReceivedNewNotiHandler = () => setNewNoti(null);
+        // setOpen(true)
+        };
+    // const ReceivedNewNotiHandler = () => setNewNoti(null);
 
     console.log("show noti centre", showNoti);
     
@@ -145,20 +152,25 @@ const TopNav = () => {
                         <div className={styles.btn} onClick={onShowNoti}>
                             <img src={notif} alt=""></img>
                         </div>
+                        {/* showNoti &&  */}
                         {showNoti && <NotificationCentre 
                             newNoti={newNoti}
-                            onReceivedNewNoti={ReceivedNewNotiHandler}
+                            // onReceivedNewNoti={ReceivedNewNotiHandler}
+                            onClose={() => setShowNoti(false)}
                             />
                         }
                         <button className={styles.btn}>
                             <img src={chatIcon} alt=""></img>
+                            {/* <div className={styles.badge}></div> */}
                         </button>
                     </div>
                     <div className={styles.logout} onClick={onClickingLogout}><img src={logout} alt=""/></div>
                 </div>
             </div>
+            {/* <div>
+                <NotifModal open={open} onClose={() => setOpen(false)}></NotifModal>
+            </div> */}
         </nav>
-        
     );
 };
 

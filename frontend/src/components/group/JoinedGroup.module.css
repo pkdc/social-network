@@ -7,18 +7,14 @@
     /* justify-content: space-between; */
 }
 
+.label {
+    margin-bottom: 20px;
+}
+
 .container:hover {
     background-color: var(--antiflash-white);
     border-radius: 20px;
 }
-
-/* .wrapper {
-    display: flex; 
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-} */
-
 
 .img {
     padding: 25px;
@@ -26,16 +22,6 @@
     /* margin-left: 8px; */
     background: var(--antiflash-white);
 }
-
-/* .desc {
-    color: grey;
-} */
- 
-/* .members {
-    color: grey;
-    font-size: 0.8rem;
-    margin-bottom: 12px;
-} */
 
 .btn {
 
