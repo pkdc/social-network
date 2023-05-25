@@ -18,10 +18,9 @@ function GroupEvent(props) {
 
     function handleNotGoing(e) {
         const id = e.target.id;
-
         const data = {
             id: 0,
-            status: 2,
+            status: 3,
             userid: parseInt(currUserId),
             eventid: parseInt(id),
         };
@@ -43,10 +42,9 @@ function GroupEvent(props) {
 
     function handleGoing(e) {
         const id = e.target.id;
-
         const data = {
             id: 0,
-            status: 1,
+            status: 2,
             userid: parseInt(currUserId),
             eventid: parseInt(id),
         };

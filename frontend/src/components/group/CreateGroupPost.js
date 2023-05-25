@@ -8,8 +8,6 @@ import profile from '../assets/profile.svg';
 
 function  CreateGroupPost({ groupid }) {
 
-    console.log("------- groupid ",groupid);
-
     const currUserId = localStorage.getItem("user_id");
 
     const [ message, setMessage ] = useState('')

@@ -47,9 +47,9 @@ type UserStruct struct {
 type UserPayload struct {
 	Data []UserStruct `json:"data"`
 }
-type UserPayloadWithStatus struct{
-	Data UserStruct  `json:"data"`
- 	Status int `json:"status"`
+type UserPayloadWithStatus struct {
+	Data   UserStruct `json:"data"`
+	Status int        `json:"status"`
 }
 
 type UserId struct {
@@ -211,6 +211,9 @@ type GroupEventMemberPayload struct {
 
 type GroupPostStruct struct {
 	Id        int    `json:"id"`
+	Fname     string `json:"fname"`
+	Lname     string `json:"lname"`
+	Nickname  string `json:"nname"`
 	Author    int    `json:"author"`
 	GroupId   int    `json:"groupid"`
 	Message   string `json:"message"`
@@ -224,6 +227,9 @@ type GroupPostPayload struct {
 
 type GroupPostCommentStruct struct {
 	Id          int    `json:"id"`
+	Fname     string `json:"fname"`
+	Lname     string `json:"lname"`
+	Nickname  string `json:"nname"`
 	GroupPostId int    `json:"postid"`
 	Author      int    `json:"userid"`
 	CreatedAt   string `json:"createdat"`

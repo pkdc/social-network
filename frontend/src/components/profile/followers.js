@@ -18,11 +18,7 @@ function Followers({userId}) {
         const id = e.target.id
 
         console.log("id: ", id)
-        navigate("/profile", {
-            state: {
-                id
-            }
-        })
+        navigate(`/profile/${id}`)
 
     }
 

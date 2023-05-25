@@ -156,6 +156,22 @@ func (q *Queries) GetFollowings(ctx context.Context, sourceID int64) ([]UserFoll
 	return items, nil
 }
 
+const replyFollowReq = `-- name: ReplyFollowReq :exec
+UPDATE user_follower
+set status_ = 1
+WHERE source_id = ? AND target_id = ?
+`
+
+type ReplyFollowReqParams struct {
+	SourceID int64
+	TargetID int64
+}
+
+func (q *Queries) ReplyFollowReq(ctx context.Context, arg ReplyFollowReqParams) error {
+	_, err := q.db.ExecContext(ctx, replyFollowReq, arg.SourceID, arg.TargetID)
+	return err
+}
+
 const updateFollower = `-- name: UpdateFollower :one
 UPDATE user_follower
 set status_ = ?,

@@ -22,6 +22,11 @@ RETURNING *;
 DELETE FROM user_follower
 WHERE source_id = ? AND target_id = ?;
 
+-- name: ReplyFollowReq :exec
+UPDATE user_follower
+set status_ = 1
+WHERE source_id = ? AND target_id = ?;
+
 -- name: UpdateFollower :one
 UPDATE user_follower
 set status_ = ?,

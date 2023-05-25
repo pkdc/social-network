@@ -1775,7 +1775,13 @@ func GroupPostHandler() http.HandlerFunc {
 				}
 
 				var onePost GroupPostStruct
-
+				us, err := query.GetUserById(context.Background(), groupPost.Author)
+				if err != nil {
+					log.Fatal(err)
+				}
+				onePost.Fname = us.FirstName
+				onePost.Lname = us.LastName
+				onePost.Nickname = us.NickName
 				onePost.Id = int(groupPost.ID)
 				onePost.GroupId = int(groupPost.GroupID)
 				onePost.Author = int(groupPost.Author)
@@ -1795,7 +1801,13 @@ func GroupPostHandler() http.HandlerFunc {
 
 				for _, post := range groupPosts {
 					var onePost GroupPostStruct
-
+					us, err := query.GetUserById(context.Background(), post.Author)
+					if err != nil {
+						log.Fatal(err)
+					}
+					onePost.Fname = us.FirstName
+					onePost.Lname = us.LastName
+					onePost.Nickname = us.NickName
 					onePost.Id = int(post.ID)
 					onePost.GroupId = int(post.GroupID)
 					onePost.Author = int(post.Author)
@@ -1877,20 +1889,21 @@ func GroupPostCommentHandler() http.HandlerFunc {
 		// ### CHECK USER ID AND GROUP ID MATCH IN GROUP MEMBER TABLE ###
 
 		// Checks to find a post id in the url
-		groupPostId := r.URL.Query().Get("id")
-		gPostId, err := strconv.Atoi(groupPostId)
-
-		if err != nil {
-			fmt.Println("Unable to convert group post ID")
-		}
-
-		if groupPostId == "" {
-			http.Error(w, "400 bad request", http.StatusBadRequest)
-			return
-		}
 
 		switch r.Method {
 		case http.MethodGet:
+			groupPostId := r.URL.Query().Get("id")
+			gPostId, err := strconv.Atoi(groupPostId)
+
+			if err != nil {
+				fmt.Println("Unable to convert group post ID")
+			}
+
+			if groupPostId == "" {
+				http.Error(w, "400 bad request", http.StatusBadRequest)
+				return
+			}
+
 			// Declares the payload struct
 			var Resp GroupPostCommentPayload
 
@@ -1909,8 +1922,14 @@ func GroupPostCommentHandler() http.HandlerFunc {
 			}
 
 			for _, comment := range comments {
+				us, err := query.GetUserById(context.Background(), comment.Author)
+				if err != nil {
+					log.Fatal(err)
+				}
 				var newComment GroupPostCommentStruct
-
+				newComment.Fname = us.FirstName
+				newComment.Lname = us.LastName
+				newComment.Nickname = us.NickName
 				newComment.Id = int(comment.ID)
 				newComment.Author = int(comment.Author)
 				newComment.Message = comment.Message
@@ -1919,7 +1938,7 @@ func GroupPostCommentHandler() http.HandlerFunc {
 
 				Resp.Data = append(Resp.Data, newComment)
 			}
-
+			fmt.Println("Resp: ", Resp.Data, len(Resp.Data))
 			// Marshals the response struct to a json object
 			jsonResp, err := json.Marshal(Resp)
 			if err != nil {
@@ -1990,17 +2009,23 @@ func GroupEventHandler() http.HandlerFunc {
 		case http.MethodGet:
 			// Declares the payload struct
 			groupId := r.URL.Query().Get("id")
-
+			if groupId == "" {
+				http.Error(w, "400 bad request", http.StatusBadRequest)
+				return
+			}
 			gId, err := strconv.Atoi(groupId)
+
+			userid := r.URL.Query().Get("userid")
+			if userid == "" {
+				http.Error(w, "400 bad request", http.StatusBadRequest)
+				return
+			}
+			uid, err := strconv.Atoi(userid)
 
 			if err != nil {
 				fmt.Println("Unable to convert group ID")
 			}
 
-			if groupId == "" {
-				http.Error(w, "400 bad request", http.StatusBadRequest)
-				return
-			}
 			var Resp GroupEventPayload
 
 			// ### CONNECT TO DATABASE ###
@@ -2015,7 +2040,7 @@ func GroupEventHandler() http.HandlerFunc {
 
 			for _, event := range events {
 				var newEvent GroupEventStruct
-
+				err = query.ExecUpdateGroupEventMember(context.Background(), crud.ExecUpdateGroupEventMemberParams{UserID: int64(uid), Status: 1, EventID: event.ID})
 				newEvent.Id = int(event.ID)
 				newEvent.GroupId = int(event.GroupID)
 				newEvent.Author = int(event.Author)
@@ -2120,7 +2145,6 @@ func GroupEventMemberHandler() http.HandlerFunc {
 				http.Error(w, "400 bad request", http.StatusBadRequest)
 				return
 			}
-
 			eId, err := strconv.Atoi(eventId)
 
 			if err != nil {
@@ -2563,7 +2587,7 @@ func offlineNot(userid int) []NotifStruct {
 	for _, onegroup := range groups {
 		if onegroup.Creator == int64(userid) {
 			for _, onereq := range requests {
-				if onereq.GroupID == onegroup.ID{
+				if onereq.GroupID == onegroup.ID {
 					var oneNotif NotifStruct
 					oneNotif.Label = "noti"
 					oneNotif.Id = 0
@@ -2587,16 +2611,18 @@ func offlineNot(userid int) []NotifStruct {
 		if err != nil {
 			log.Fatal(err)
 		}
-		var oneNotif NotifStruct
-		oneNotif.Label = "noti"
-		oneNotif.Id = 0
-		oneNotif.Type = "event-notif"
-		oneNotif.TargetId = 987
-		oneNotif.SourceId = userid
-		oneNotif.Accepted = false
-		oneNotif.CreatedAt = "not now"
-		oneNotif.GroupId = int(groupid.GroupID)
-		ResultArr = append(ResultArr, oneNotif)
+		if oneevent.Status == 0 {
+			var oneNotif NotifStruct
+			oneNotif.Label = "noti"
+			oneNotif.Id = 0
+			oneNotif.Type = "event-notif"
+			oneNotif.TargetId = 987
+			oneNotif.SourceId = userid
+			oneNotif.Accepted = false
+			oneNotif.CreatedAt = "not now"
+			oneNotif.GroupId = int(groupid.GroupID)
+			ResultArr = append(ResultArr, oneNotif)
+		}
 	}
 	invites, err := query.GetGroupMembersByUserId(context.Background(), crud.GetGroupMembersByUserIdParams{UserID: int64(userid), Status: 0})
 	if err != nil {

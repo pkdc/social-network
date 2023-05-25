@@ -121,6 +121,7 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 		}
 		fmt.Printf("sendNoti: %v\n", string(sendNoti))
 		// Loops through the clients and sends to all users other than the sender
+		//EVENT STATUS: 0 not seen yet, 1 not decided yet, 2 accepted, 3 declined
 		if not.Type == "event-notif" {
 			var group crud.GetGroupMembersByGroupIdParams
 			group.GroupID = int64(not.GroupId)
@@ -140,44 +141,76 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 				if int(p.ID) != not.SourceId {
 					_, err := query.CreateGroupEventMember(context.Background(), crud.CreateGroupEventMemberParams{
 						UserID:  p.ID,
-						EventID:int64(eventId + 1),
+						EventID: int64(eventId + 1),
 						Status:  0,
 					})
 					if err != nil {
 						log.Fatal(err)
 					}
-				}else{	_, err := query.CreateGroupEventMember(context.Background(), crud.CreateGroupEventMemberParams{
-					UserID:  p.ID,
-					EventID: int64(eventId + 1),
-					Status:  1,
-				})
-				if err != nil {
-					log.Fatal(err)
-				}}
+				} else {
+					_, err := query.CreateGroupEventMember(context.Background(), crud.CreateGroupEventMemberParams{
+						UserID:  p.ID,
+						EventID: int64(eventId + 1),
+						Status:  2,
+					})
+					if err != nil {
+						log.Fatal(err)
+					}
+				}
 			}
 			for _, user := range users {
 				for _, client := range h.clients {
 					if int(user.ID) == client.userID && client.userID != not.SourceId {
-						fmt.Println("users matched for event notification" , user.ID, client.userID)
+						fmt.Println("users matched for event notification", user.ID, client.userID)
 						client.send <- sendNoti
 					}
 				}
 			}
 
-		}else if not.Type == "follow-req-reply" {
-			for _, c := range h.clients {
-				if c.userID == not.TargetId {
-					fmt.Printf("matched %d = %d\n", c.userID, not.TargetId)
-
-					select {
-					case c.send <- sendNoti:
-					default:
-						close(c.send)
-						delete(h.clients, c.userID)
+		} else if not.Type == "follow-req-reply" {
+			somebool := false
+			if not.Accepted {
+				for _, c := range h.clients {
+					if c.userID == not.SourceId {
+						somebool = true
+						fmt.Printf("matched with targetuser %d = %d\n", c.userID, not.TargetId)
+						err := query.ReplyFollowReq(context.Background(), crud.ReplyFollowReqParams{SourceID: int64(not.TargetId), TargetID: int64(not.SourceId)})
+						if err != nil {
+							log.Fatal(err)
+						}
+						select {
+						case c.send <- sendNoti:
+						default:
+							close(c.send)
+							delete(h.clients, c.userID)
+						}
 					}
 				}
+				if !somebool {
+					for _, c := range h.clients {
+						if c.userID == not.TargetId {
+							somebool = true
+							fmt.Printf("matched with sourceuser%d = %d\n", c.userID, not.SourceId)
+							err := query.ReplyFollowReq(context.Background(), crud.ReplyFollowReqParams{SourceID: int64(not.TargetId), TargetID: int64(not.SourceId)})
+							if err != nil {
+								log.Fatal(err)
+							}
+							select {
+							case c.send <- sendNoti:
+							default:
+								close(c.send)
+								delete(h.clients, c.userID)
+							}
+						}
+					}
+				}
+			} else {
+				err := query.DeleteFollower(context.Background(), crud.DeleteFollowerParams{SourceID: int64(not.TargetId), TargetID: int64(not.SourceId)})
+				if err != nil {
+					log.Fatal(err)
+				}
 			}
-		}else if not.Type == "follow-req" {
+		} else if not.Type == "follow-req" {
 			var somebool bool = false
 			for _, c := range h.clients {
 				if c.userID == not.TargetId {
@@ -209,9 +242,9 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 				}
 			}
 
-		}else if not.Type == "join-req"{
+		} else if not.Type == "join-req" {
 			s, _ := json.MarshalIndent(not, "", "\t")
-			fmt.Print("notif: ",string(s))
+			fmt.Print("notif: ", string(s))
 			var somebool bool = false
 			for _, c := range h.clients {
 				if c.userID == not.TargetId {
@@ -230,25 +263,25 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 					fmt.Printf("matched %d = %d\n", c.userID, not.TargetId)
 				}
 			}
-		}else if not.Type == "join-req-reply"{
+		} else if not.Type == "join-req-reply" {
 			s, _ := json.MarshalIndent(not, "", "\t")
-			fmt.Print("notif-reply: ",string(s))
+			fmt.Print("notif-reply: ", string(s))
 			var newMember crud.CreateGroupMemberParams
 			newMember.UserID = int64(not.TargetId)
-			newMember.GroupID= int64(not.GroupId)
+			newMember.GroupID = int64(not.GroupId)
 			newMember.Status = int64(1)
 			_, err = query.CreateGroupMember(context.Background(), newMember)
 
 			var deleteReq crud.DeleteGroupRequestParams
-			deleteReq.GroupID =  int64(not.GroupId)
+			deleteReq.GroupID = int64(not.GroupId)
 			deleteReq.UserID = int64(not.TargetId)
 			err = query.DeleteGroupRequest(context.Background(), deleteReq)
 		} else if not.Type == "invitation" {
 			s, _ := json.MarshalIndent(not, "", "\t")
-			fmt.Print("invite: ",string(s))
+			fmt.Print("invite: ", string(s))
 			var newInvite crud.CreateGroupMemberParams
 			newInvite.UserID = int64(not.TargetId)
-			newInvite.GroupID= int64(not.GroupId)
+			newInvite.GroupID = int64(not.GroupId)
 			newInvite.Status = int64(0)
 			_, err = query.CreateGroupMember(context.Background(), newInvite)
 			fmt.Println("length: ", len(h.clients), "\n", h.clients)
@@ -266,19 +299,19 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 		} else if not.Type == "invitation-reply" {
 			if not.Accepted {
 				var deleteReq crud.DeleteGroupMemberParams
-				deleteReq.GroupID =  int64(not.GroupId)
+				deleteReq.GroupID = int64(not.GroupId)
 				deleteReq.UserID = int64(not.SourceId)
 				err = query.DeleteGroupMember(context.Background(), deleteReq)
 				s, _ := json.MarshalIndent(not, "", "\t")
-				fmt.Print("invite: ",string(s))
+				fmt.Print("invite: ", string(s))
 				var newInvite crud.CreateGroupMemberParams
 				newInvite.UserID = int64(not.SourceId)
-				newInvite.GroupID= int64(not.GroupId)
+				newInvite.GroupID = int64(not.GroupId)
 				newInvite.Status = int64(1)
 				_, err = query.CreateGroupMember(context.Background(), newInvite)
 			} else {
 				var deleteReq crud.DeleteGroupMemberParams
-				deleteReq.GroupID =  int64(not.GroupId)
+				deleteReq.GroupID = int64(not.GroupId)
 				deleteReq.UserID = int64(not.SourceId)
 				err = query.DeleteGroupMember(context.Background(), deleteReq)
 			}

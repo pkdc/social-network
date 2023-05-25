@@ -2,8 +2,8 @@ import useGet from "../fetch/useGet";
 import GroupEvent from "./GroupEvent";
 
 function AllEvents({groupid}) {
-
-const { error, isLoaded, data } = useGet(`/group-event?id=${groupid}`)
+let userid = localStorage.getItem("user_id")
+const { error, isLoaded, data } = useGet(`/group-event?id=${groupid}&userid=${userid}`)
 
 if (!isLoaded) return <div>Loading...</div>
 if (error) return <div>Error: {error.message}</div>

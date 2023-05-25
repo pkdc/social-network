@@ -24,6 +24,12 @@ set status_ = ?
 WHERE event_id = ? AND user_id = ?
 RETURNING *;
 
+
+-- name: ExecUpdateGroupEventMember :exec
+UPDATE group_event_member
+set status_ = ?
+WHERE event_id = ? AND user_id = ?;
+
 -- name: GetGroupEventsByUserNoReply :many
 SELECT * FROM group_event_member
 WHERE user_id = ? AND status_ = 0;

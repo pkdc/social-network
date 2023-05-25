@@ -3,7 +3,7 @@ import classes from './AllComments.module.css'
 import Comment from './Comment';
 
 function AllComments(props) {
-   
+   console.log("props: ",props.comments)
     // console.log("comments in All comments", props.comments);
 
     return (
