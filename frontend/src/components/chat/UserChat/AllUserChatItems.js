@@ -5,44 +5,30 @@ import { WebSocketContext } from "../../store/websocket-context";
 import { UsersContext } from "../../store/users-context";
 import styles from "./AllUserChatItems.module.css";
 
-
 const AllUserChatItems = (props) => {
-    // const [notiUserArr, setNotiUserArr] = useState([]);
     const followingCtx = useContext(FollowingContext);
     const wsCtx = useContext(WebSocketContext);
     console.log("ws in AllUserChatItems: ",wsCtx.websocket);
     console.log("cur user is following (AllUserChatItems)", followingCtx.following);
-    // useEffect(() => usersCtx.onNewUserReg(), []);
-    // console.log("users in AllUserChatItems", usersCtx.users);
-    
-    // const followingCtx.following = usersCtx.users.filter((user) => {
-    //     if (followingCtx.following)
-    //     return followingCtx.following.some((followingUser) => {
-    //         // console.log("fid", followingUser.id);
-    //         // console.log("uid", user.id);
-    //         if (followingUser && user) return followingUser.id === user.id;
-    //     });
-    // });
 
     // add noti field to users(following) in chatNotiUserArr
     console.log(" following List (AllUserChatItems)", followingCtx.following);
-    // useEffect(() => followingCtx.chatNotiUserArr && setNotiUserArr(followingCtx.chatNotiUserArr), [followingCtx.chatNotiUserArr]);
-    // console.log(" chatNotiUserArr (AllUserChatItems)", followingCtx.chatNotiUserArr);
-    // followingCtx.following.forEach((followingUser) => {
-    //     if (followingCtx.chatNotiUserArr.find((chatNotiUser) => chatNotiUser.id === followingUser.id)) followingUser["chat_noti"] = true;
-    //     else followingUser["noti"] = false;
-    // });
     console.log(" following List with noti set (AllUserChatItems)", followingCtx.following);
 
     const usersCtx = useContext(UsersContext);
     console.log("users (chatitems)", usersCtx.users);
-    let followingUids = []; // in case followingCtx.following is empty
+    // const [followingUids, setFollowingUids] = useState([]); // in case followingCtx.following is empty
     const [otherListedChatUsers, setOtherListedChatUsers] = useState([]);
-    let otherListedChatUsersUids = []; // in case it is empty
+    // let otherListedChatUsersUids = []; // in case it is empty
+    // const [otherListedChatUsersUids, setOtherListedChatUsersUids] = useState([]);
     // const publicUsers = usersCtx.users.filter((user) => user.public === 1 && !followingCtx.following.includes(user));
     // let otherListedChatUsers = usersCtx.users.filter((user) => user.public === 1 && !followingUids.includes(user.id));
     useEffect(() => {
+        console.log("public users from ctx", usersCtx.publicUsers);
+        let followingUids = [];
+        let otherListedChatUsersUids = [];
         if (followingCtx.following) followingUids = followingCtx.following.map((following) => following.id);
+        // pot bug
         usersCtx.users && setOtherListedChatUsers(usersCtx.users.filter((user) => user.public === 1 && !followingUids.includes(user.id)));
         if (otherListedChatUsers) otherListedChatUsersUids = otherListedChatUsers.map((otherListedChatUser) => otherListedChatUser.id);
     
@@ -73,21 +59,11 @@ const AllUserChatItems = (props) => {
                 console.log("Cur user is not following the msg sender nor having a public profile");
             }
         }
-    }, [usersCtx.users, followingCtx.following, followingUids, wsCtx.newMsgsObj]);
+    }, [usersCtx.users, followingCtx.following, wsCtx.newMsgsObj, otherListedChatUsers]);
     
     console.log("otherListedChatUsers (chatitems)", otherListedChatUsers);
-    console.log("following id (chatitems)", followingUids);
-    console.log("otherListedChatUsers uid (chatitems)", otherListedChatUsersUids);
     
     const openUserChatboxHandler = (followingId) => props.onOpenChatbox(followingId);
-
-    // if (wsCtx.websocket !== null) wsCtx.websocket.onmessage = (e) => {
-    //     console.log("msg event when chatbox is closed: ", e);
-    //     const msgObj = JSON.parse(e.data);
-    //     console.log("ws receives msgObj when chatbox is closed:: ", msgObj);
-    //     console.log("ws receives msg when chatbox is closed:: ", msgObj.message);
-    //     followingCtx.receiveMsgFollowing(msgObj.sourceid, false);
-    // }
 
     const curUserId = +localStorage.getItem("user_id");
     return (
@@ -95,9 +71,6 @@ const AllUserChatItems = (props) => {
         <div ><h3 className={styles["description"]}>Users You Are Following:</h3></div>
         <div>
             {followingCtx.following && followingCtx.following.map((following) => {
-                // console.log("each following", following);
-                // console.log("curUserId: ", curUserId);
-                // console.log("follower.id", follower.id);
                 {if (curUserId !== following.id) {
                     return <UserChatItem 
                     key={following.id}

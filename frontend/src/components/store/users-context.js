@@ -2,15 +2,17 @@ import React, {useState, useEffect} from "react";
 
 export const UsersContext = React.createContext({
     users: [],
-    onlineUsers: [],
+    // onlineUsers: [],
     onNewUserReg: () => {},
     onPrivacyChange: () => {},
+    publicUsers: [],
     // onOnline: (onlineUser) => {},
     // onOffline: (offlineUser) => {},
 });
 
 export const UsersContextProvider = (props) => {
     const [usersList, setUsersList] = useState([]);
+    const [publicUsersList, setPublicUsersList] = useState([]);
 
     // get users
     const getUsersHandler = () => {
@@ -27,18 +29,32 @@ export const UsersContextProvider = (props) => {
         );
     };
 
+    const getInitialUserPrivacy = () => {
+        setPublicUsersList(usersList.filter(user => user.public === 1))
+    };
+
     const privacyChangeHandler = (userid, privacy) => {
         // usersList[userid].public = privacy;
+        let privacyChangedUser;
         setUsersList((prevUsersList) => prevUsersList.map((user) => {
             if (user.id === userid){
+                privacyChangedUser = user;
                 return user.public = privacy;
             } else {
                 return user;
             }
         }));
+        if (publicUsersList) {
+            // public
+            privacy && setPublicUsersList(prevPublicList => [privacyChangedUser, ...new Set(...prevPublicList)]);
+            !privacy && setPublicUsersList(prevPublicList => prevPublicList.filter(publicUser => publicUser.id !== privacyChangedUser.id));
+        } else { // first public user
+            setPublicUsersList([privacyChangedUser]);
+        }
     };
 
     useEffect(getUsersHandler, []);
+    useEffect(getInitialUserPrivacy, []);
 
     return (
         <UsersContext.Provider value={{
@@ -46,6 +62,7 @@ export const UsersContextProvider = (props) => {
             // onlineUsers: onlineUsersList,
             onNewUserReg: getUsersHandler,
             onPrivacyChange: privacyChangeHandler,
+            publicUsers: publicUsersList,
             // onOnline: userOnlineHandler,
             // onOffline: userOfflineHandler,
         }}>
