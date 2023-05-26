@@ -87,7 +87,18 @@ export const FollowingContextProvider = (props) => {
             setFollowing(prevFollowing => [targetUser, ...prevFollowing.filter(followingUser => followingUser.id !== +friendId)]);
             // noti if not open
             // !open && setChatNotiUserArr(prevArr => [...new Set([targetUser, ...prevArr])]);
-            if (!open) targetUser["chat_noti"] = true; // set noti field to true to indicate unread
+            if (!open) {
+                targetUser["chat_noti"] = true // set noti field to true to indicate unread
+            } else {
+                // delete private chat notification from database
+                const privateChatNotiPayloadObj = {};
+                privateChatNotiPayloadObj["label"] = "pChatNoti";
+                privateChatNotiPayloadObj["sourceid"] = friendId;
+                privateChatNotiPayloadObj["targetid"] = +selfId;
+
+                if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(privateChatNotiPayloadObj));
+
+            } 
         } else { // if cur user is public and receives a msg coz of that      
         }
     };

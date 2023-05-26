@@ -96,6 +96,14 @@ type PostMember struct {
 	PostID int64
 }
 
+type PrivateChatNotification struct {
+	ID        int64
+	SourceID  int64
+	TargetID  int64
+	ChatNoti  int64
+	LastMsgAt time.Time
+}
+
 type SessionTable struct {
 	SessionToken string
 	UserID       int64

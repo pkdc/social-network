@@ -18,16 +18,16 @@ function ProfilePage() {
     const [commentData, setCommentData] = useState([]);
 
     // const followingCtx = useContext(FollowingContext);
-
-    const { data } = useGet(`/post`)
+console.log(localStorage.getItem("user_id"), "useridlocal")
+    const { data } = useGet(`/post?id=${localStorage.getItem("user_id")}`)
 
     const sessionUrl = "http://localhost:8080/session";
     // const { state } = useLocation();
     // const { id } = state;
     const params = useParams();
     const id = params.userId;
-    console.log("id---", id); 
-
+    console.log("id---", id);
+console.log("allPost: ",data)
     const postData = data.filter(x => x.author === +id)
 
     // get comments
@@ -55,7 +55,7 @@ function ProfilePage() {
     // };
 
     // useEffect(() => checkCurFollowing(), [followingCtx.following]);
-    
+
 
     return <div className={classes.container}>
      <div className={classes.mid}>
