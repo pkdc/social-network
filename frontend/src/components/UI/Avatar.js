@@ -10,17 +10,22 @@ const Avatar = (props) => {
     const wsCtx = useContext(WebSocketContext);
 
     useEffect(() => {
-        console.log("Avatar online status for user (effect)", props.id, onlineStatus);
-        if (wsCtx.websocket !== null && wsCtx.newOnlineStatusObj) {
-            console.log("incoming Avatar online status changed", wsCtx.newOnlineStatusObj);
-            console.log("ws sourceid", wsCtx.newOnlineStatusObj["sourceid"]);
-            console.log("props.id", props.id);
-            if (+wsCtx.newOnlineStatusObj["sourceid"] === props.id) {
-                console.log("matched uid");
-                setOnlineStatus(wsCtx.newOnlineStatusObj["onlinestatus"]);
-            } 
+
+        if (wsCtx.websocket !== null && wsCtx.newOnlineStatusObj.onlineuserids) {
+            for (let wsOnlineUserId of wsCtx.newOnlineStatusObj.onlineuserids) {
+                console.log("incoming wsOnlineUserId", wsOnlineUserId);
+                console.log("Avatar user id (effect)", props.id);
+                console.log("Avatar online status for user (effect) (may be before change)", onlineStatus);
+                
+                if (wsOnlineUserId === props.id) {
+                    console.log("matched uid"); 
+                    setOnlineStatus(true);
+                } else {
+                    setOnlineStatus(false);
+                }
+            }
         }
-    },[wsCtx.newOnlineStatusObj]);
+    },[wsCtx.newOnlineStatusObj.onlineuserids]);
 
     console.log("Avatar online status for user", props.id, onlineStatus);
     

@@ -73,7 +73,7 @@ export const WebSocketContextProvider = (props) => {
                 }
             } else if (msgObj.label === "online-status") {
                 console.log("ws receives online-status (wsctx): ", msgObj);
-                console.log("ws receives online-status onlinestatus (wsctx): ", msgObj.onlinestatus);
+                console.log("ws receives online-status onlineuserids (wsctx): ", msgObj.onlineuserids);
                 setNewOnlineStatusObj(msgObj);
             }
         };
