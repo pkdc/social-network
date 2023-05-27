@@ -105,10 +105,10 @@ let statusofcuruser ;
         // e.target.defaultChecked && setPublicity(false); // wrong but css working
         if (e.target.checked ){
             setPublicity(true);
-            usersCtx.onPrivacyChange(currUserId, 0);
+            // usersCtx.onPrivacyChange(currUserId, 0);
         }else {
             setPublicity(false);
-            usersCtx.onPrivacyChange(currUserId, 1);
+            // usersCtx.onPrivacyChange(currUserId, 1);
         }
         
            // wrong but css working

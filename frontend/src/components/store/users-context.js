@@ -4,8 +4,8 @@ export const UsersContext = React.createContext({
     users: [],
     // onlineUsers: [],
     onNewUserReg: () => {},
-    onPrivacyChange: () => {},
-    publicUsers: [],
+    // onPrivacyChange: () => {},
+    // publicUsers: [],
     // onOnline: (onlineUser) => {},
     // onOffline: (offlineUser) => {},
 });
@@ -33,25 +33,25 @@ export const UsersContextProvider = (props) => {
         setPublicUsersList(usersList.filter(user => user.public === 1))
     };
 
-    const privacyChangeHandler = (userid, privacy) => {
-        // usersList[userid].public = privacy;
-        let privacyChangedUser;
-        setUsersList((prevUsersList) => prevUsersList.map((user) => {
-            if (user.id === userid){
-                privacyChangedUser = user;
-                return user.public = privacy;
-            } else {
-                return user;
-            }
-        }));
-        if (publicUsersList) {
-            // public
-            privacy && setPublicUsersList(prevPublicList => [privacyChangedUser, ...new Set(...prevPublicList)]);
-            !privacy && setPublicUsersList(prevPublicList => prevPublicList.filter(publicUser => publicUser.id !== privacyChangedUser.id));
-        } else { // first public user
-            setPublicUsersList([privacyChangedUser]);
-        }
-    };
+    // const privacyChangeHandler = (userid, privacy) => {
+    //     // usersList[userid].public = privacy;
+    //     let privacyChangedUser;
+    //     setUsersList((prevUsersList) => prevUsersList.map((user) => {
+    //         if (user.id === userid){
+    //             privacyChangedUser = user;
+    //             return user.public = privacy;
+    //         } else {
+    //             return user;
+    //         }
+    //     }));
+    //     // if (publicUsersList) {
+    //     //     // public
+    //     //     privacy && setPublicUsersList(prevPublicList => [privacyChangedUser, ...new Set(...prevPublicList)]);
+    //     //     !privacy && setPublicUsersList(prevPublicList => prevPublicList.filter(publicUser => publicUser.id !== privacyChangedUser.id));
+    //     // } else { // first public user
+    //     //     setPublicUsersList([privacyChangedUser]);
+    //     // }
+    // };
 
     useEffect(getUsersHandler, []);
     useEffect(getInitialUserPrivacy, []);
@@ -61,8 +61,8 @@ export const UsersContextProvider = (props) => {
             users: usersList,
             // onlineUsers: onlineUsersList,
             onNewUserReg: getUsersHandler,
-            onPrivacyChange: privacyChangeHandler,
-            publicUsers: publicUsersList,
+            // onPrivacyChange: privacyChangeHandler,
+            // publicUsers: publicUsersList,
             // onOnline: userOnlineHandler,
             // onOffline: userOfflineHandler,
         }}>
