@@ -66,9 +66,18 @@ func (h *Hub) StatusUpdate(c *Client, status bool) {
 	userMsg.SourceId = c.userID
 	userMsg.OnlineUserIds = []int{}
 
-	// Adds user ids to the array
-	for k := range h.clients {
-		userMsg.OnlineUserIds = append(userMsg.OnlineUserIds, k)
+	if status {
+		// Adds user ids to the array
+		for k := range h.clients {
+			userMsg.OnlineUserIds = append(userMsg.OnlineUserIds, k)
+		}
+	} else {
+		// remove user ids from the array
+		for i := len(userMsg.OnlineUserIds) - 1; i >= 0; i-- {
+			if userMsg.OnlineUserIds[i] == c.userID {
+				userMsg.OnlineUserIds = append(userMsg.OnlineUserIds[:i], userMsg.OnlineUserIds[i+1:]...)
+			}
+		}
 	}
 
 	// Marshals the struct to a json object

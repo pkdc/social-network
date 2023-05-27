@@ -10,7 +10,7 @@ const Avatar = (props) => {
     const wsCtx = useContext(WebSocketContext);
 
     useEffect(() => {
-
+        console.log("incoming wsCtx.newOnlineStatusObj.onlineuserids", wsCtx.newOnlineStatusObj.onlineuserids);
         if (wsCtx.websocket !== null && wsCtx.newOnlineStatusObj.onlineuserids) {
             for (let wsOnlineUserId of wsCtx.newOnlineStatusObj.onlineuserids) {
                 console.log("incoming wsOnlineUserId", wsOnlineUserId);
@@ -20,8 +20,6 @@ const Avatar = (props) => {
                 if (wsOnlineUserId === props.id) {
                     console.log("matched uid"); 
                     setOnlineStatus(true);
-                } else {
-                    setOnlineStatus(false);
                 }
             }
         }
