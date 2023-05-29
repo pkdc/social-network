@@ -8,6 +8,8 @@ const { error, isLoaded, data } = useGet(`/group-event?id=${groupid}&userid=${us
 if (!isLoaded) return <div>Loading...</div>
 if (error) return <div>Error: {error.message}</div>
 
+console.log("data test", data.data)
+
     return <div>
         {data.data && data.data.map((event) => (
          <GroupEvent

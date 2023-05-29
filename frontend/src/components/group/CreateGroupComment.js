@@ -11,7 +11,6 @@ function CreateGroupComment(props) {
     const avatar = localStorage.getItem("avatar");
 
     const commentInput = useRef();
-    // const [commentMsg, setCommentMsg] = useState("");
 
     function SubmitHandler(event) {
         event.preventDefault();
@@ -24,9 +23,7 @@ function CreateGroupComment(props) {
             message: enteredContent,
         };
 
-        // console.log("create comment: ", commentData)
-
-        props.onCreateComment(commentData);
+        props.onCreateComment(commentData, props.pid);
 
         commentInput.current.value = "";
     }

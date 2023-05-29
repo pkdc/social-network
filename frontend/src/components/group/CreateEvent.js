@@ -15,8 +15,6 @@ function CreateEvent( {groupid} ) {
         const currUserId = localStorage.getItem("user_id");
 
         const datenow =  Date.now().toString();
-console.log({datenow})
-        const created = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: '2-digit' }).format(datenow);
 
         const data = {
             id: 0,

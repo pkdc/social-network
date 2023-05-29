@@ -9,7 +9,6 @@ import Profile from "../profile/Profile";
 import ProfilePosts from "../profile/profilePost";
 import FollowRequest from "../requests/FollowRequest";
 import { FollowingContext } from "../store/following-context";
-
 // import classes from './ProfilePage.module.css';
 import { useParams } from "react-router-dom";
 import classes from './layout.module.css';
@@ -17,34 +16,35 @@ import classes from './layout.module.css';
 function ProfilePage() {
     const [commentData, setCommentData] = useState([]);
 
-    // const followingCtx = useContext(FollowingContext);
-console.log(localStorage.getItem("user_id"), "useridlocal")
-    const { data } = useGet(`/post?id=${localStorage.getItem("user_id")}`)
-
     const sessionUrl = "http://localhost:8080/session";
     // const { state } = useLocation();
     // const { id } = state;
     const params = useParams();
     const id = params.userId;
-    console.log("id---", id);
-console.log("allPost: ",data)
-    const postData = data.filter(x => x.author === +id)
 
     // get comments
     useEffect(() => {
         fetch("http://localhost:8080/post-comment")
-        .then(resp => resp.json())
-        .then(data => {
-            // console.log("post page raw comment data: ", data)
-            // setCommentData(data);
-            data.sort((a, b) => Date.parse(a.createdat) - Date.parse(b.createdat)); // ascending order
-            // console.log("post page sorted comment data: ", data)
-            setCommentData(data);
-        })
-        .catch(
-            err => console.log(err)
-        );
+            .then(resp => resp.json())
+            .then(data => {
+                // console.log("post page raw comment data: ", data)
+                // setCommentData(data);
+                data.sort((a, b) => Date.parse(a.createdat) - Date.parse(b.createdat)); // ascending order
+                // console.log("post page sorted comment data: ", data)
+                setCommentData(data);
+            })
+            .catch(
+                err => console.log(err)
+            );
     }, []);
+
+    const { error, isLoaded, data } = useGet(`/post?id=${localStorage.getItem("user_id")}`)
+
+    if (!isLoaded) return <div>Loading...</div>
+    if (error) return <div>Error: {error.message}</div>
+
+    const postData = data.filter(x => x.author === +id)
+
 
     // let curFollowing;
     // const [curFollowing, setCurFollowing] = useState(false);
@@ -58,18 +58,15 @@ console.log("allPost: ",data)
 
 
     return <div className={classes.container}>
-     <div className={classes.mid}>
-        {/* <CreatePost></CreatePost> */}
-        <Profile userId={id} ></Profile>
-        {/* <ProfilePosts userId={id}></ProfilePosts> */}
-        <AllPosts userId={id} posts={postData} comments={commentData}></AllPosts>
-
+        <div className={classes.mid}>
+            <Profile userId={id} ></Profile>
+            <AllPosts userId={id} posts={postData} comments={commentData}></AllPosts>
         </div>
         <div className={classes.right}>
             <Followers userId={id}></Followers>
             <Following userId={id}></Following>
-         </div>
         </div>
+    </div>
 }
 
 export default ProfilePage;

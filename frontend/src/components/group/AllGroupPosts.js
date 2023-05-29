@@ -9,32 +9,11 @@ import GroupPost from "./GroupPost";
 
 function AllGroupPosts(props) {
 
-
     const { error, isLoaded, data } = useGet(`/group-post?groupid=${props.groupid}`)
-    console.log("all group posts data", data.data)
 
     if (!isLoaded) return <div>Loading...</div>
     if (error) return <div>Error: {error.message}</div>
-
-    
-    let eachPostCommentsArr = [];
-    if (data.data != null) {
-        for (let i = 0; i < data.data.length; i++) {
-            let thisPostComments = [];
-            for (let j = 0; j < props.comments.length; j++) {
-                props.comments[j] && props.comments[j].postid === data.data[i].id && thisPostComments.push(props.comments[j]);
-            }
-            eachPostCommentsArr.push(thisPostComments);
-        }
-        
-
-    }
-    const createCommentSuccessHandler = (createCommentSuccessful) => {
-        // lift it up to PostPage
-        props.onCreateCommentSuccessful(createCommentSuccessful)
-    };
-
-
+   
     return <div className={classes.container}>
         {data.data && data.data.map((post, p) => (
             <GroupPost
@@ -49,10 +28,6 @@ function AllGroupPosts(props) {
                 image={post.image}
                 createdat={post.createdat}
                 authorId={post.author}
-                // totalNumPost={props.posts.length}
-                postNum={p}
-                commentsForThisPost={eachPostCommentsArr[p]}
-                onCreateCommentSuccessful={createCommentSuccessHandler}
             />
         ))}
     </div>

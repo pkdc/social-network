@@ -1,12 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import classes from './Post.module.css'
-// import profile from '../assets/profile.svg';
 import AllComments from "./comments/AllComments";
 import CreateComment from './comments/CreateComment';
 import Avatar from '../UI/Avatar';
 import Card from '../UI/Card';
-// import AllComments from './comments/AllComments';
 
 
 function Post(props) {
@@ -64,8 +62,8 @@ function Post(props) {
         {/* {props.commentsForThisPost.length}  */}
         {showComments && 
             <>
-                <AllComments comments={props.commentsForThisPost}/>
                 <CreateComment pid={props.id} onCreateComment={createCommentHandler}/> 
+                <AllComments comments={props.commentsForThisPost}/>
             </>
         }
     </Card>

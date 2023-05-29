@@ -19,7 +19,7 @@ let statusofcuruser ;
     // self
     const [publicity, setPublicity] = useState(false); // 1 false is public, 0 true is private
     const selfPublicNum = +localStorage.getItem("public");
-    let public1  ; 
+
     console.log("stored publicity (profile)", selfPublicNum);
     useEffect(() => {
         selfPublicNum ? setPublicity(true) : setPublicity(false);
@@ -105,34 +105,23 @@ let statusofcuruser ;
     };
 
     const setPublicityHandler = (e) => {
-    //     console.log("publicity", publicity);
-    //     console.log("toggle event", e);
-    //     console.log("toggle prev checkbox status", e.target.defaultChecked);
-        console.log("---------------------toggle cur checkbox status", e.target.checked);
-        // e.target.defaultChecked && setPublicity(false); // wrong but css working
+   
         if (e.target.checked ){
             setPublicity(true); // private
-        }else {
+        } else {
             setPublicity(false);
         }
         
-           // wrong but css working
-        // setPublicity((prev) => (
-        //     prev = !prev
-        //     // !prev ? setPublicity(true) : setPublicity(false) // also doesn't work correctly
-        // ));
-        // setPublicity(prev => !prev); // right but css not working
         let publicityNum;
         if (e.target.checked ){
             publicityNum = 0
-        }else {
+        } else {
             publicityNum = 1;
         }
         console.log({publicityNum})
         localStorage.setItem("public", publicityNum);
 
         // post to store publicity to db
-
         const data = { 
             // Define the data to send in the request body
             targetid: parseInt(userId),
@@ -143,58 +132,37 @@ let statusofcuruser ;
         {
             
             method: 'POST',
-            // credentials: "include",
-            // mode: 'cors',
+            credentials: "include",
+            mode: 'cors',
             body: JSON.stringify(data),
-            // headers: { 
-            //     'Content-Type': 'application/json' 
-            // }
+            headers: { 
+                'Content-Type': 'application/json' 
+            }
         }).then(() => {
-            // navigate.replace('/??')
             console.log("privacy changed")
         })
     };
     
-    let followButton;
-    let messageButton;
+
     useEffect(() => {
-        // const fetchData = () => {
+
     fetch(`http://localhost:8080/user-follow-status?tid=${userId}&sid=${currUserId}`)
     .then(response => response.text())
     .then(data => {
-      // Access the boolean value from the response
-    //   const value = data.value;
-  
-      // Use the boolean value in your JavaScript code
-      console.log("------data: ",data);
-if (data == "true"){
-    // console.log("bool false ")
-    setRequestedToFollow(true)
-}else {
-    // console.log("bool true")
-    setRequestedToFollow(false)
-}
-console.log(requestedToFollow)
-    //   setRequestedToFollow(true)
-    //   setRequestedToFollow(data)
-    //   console.log("----",requestedToFollow)
+
+        if (data == "true"){
+            setRequestedToFollow(true)
+        }else {
+            setRequestedToFollow(false)
+        }
+   
     }).catch(error => {
                 console.log({error})
-            });
-        // };
-        // fetchData();
-      }, []);
-    if (currUserId !== userId) {
-        if (currentlyFollowing) {
-            followButton = <div className={classes.followbtn} id={userId} onClick={unfollowHandler}>- UnFollow</div>
-            console.log("currentlyFollowing", currentlyFollowing);
-        } else if (requestedToFollow) {
-            followButton = <div className={classes.followbtn} id={userId}>Requested</div>
-        } else {
-            followButton = <div className={classes.followbtn} id={userId} onClick={followHandler}>+ Follow</div>
-        }       
-        messageButton = <GreyButton>Message</GreyButton> 
-    }
+    });
+    
+    }, []);
+
+
  
     const { error , isLoaded, data } = useGet(`/user?id=${userId}`)
     if (data.data !== undefined) {
@@ -208,10 +176,6 @@ console.log(requestedToFollow)
      console.log("user data (profile)", data.data)
       if (!isLoaded) return <div>Loading...</div>
       if (error) return <div>Error: {error.message}</div>
-
-       console.log("user data (profile)", data.data)
-        if (!isLoaded) return <div>Loading...</div>
-        if (error) return <div>Error: {error.message}</div>
     
 
     // store follower in db
@@ -282,49 +246,64 @@ console.log(requestedToFollow)
             })
     };
 
+    function closeFriendHandler(e) {
+        if (e.target.checked) {
+
+        } else {
+
+        }
+    }
+
+
+    let followButton;
+    let messageButton;
+
+    if (currUserId !== userId) {
+        if (currentlyFollowing) {
+            followButton = <div className={classes.followbtn} id={userId} onClick={unfollowHandler}>UnFollow</div>
+            console.log("currentlyFollowing", currentlyFollowing);
+        } else if (requestedToFollow) {
+            followButton = <div className={classes.followbtn} id={userId}>Requested</div>
+        } else {
+            followButton = <div className={classes.followbtn} id={userId} onClick={followHandler}>+ Follow</div>
+        }       
+        messageButton = <GreyButton>Message</GreyButton> 
+    }
+
     return <div className={classes.container}>
-    <div className={classes.private}>
-        {/* label?? friends only/public/private?? */}
-            <ToggleSwitch
-                label={"Private"}
-                value={"Private"}
-                // onClick={setPublicChangeHandler}
-                // onChange={setPublicChangeHandler}
-                onClick={setPublicityHandler}
-            ></ToggleSwitch>
-            {/* } */}
-        {/* {currUserId === userId && !publicity && 
-            <ToggleSwitch 
-                label={"Public"}
-                value={"Public"}
-                // onClick={setPrivateChangeHandler}
-                // onChange={setPrivateChangeHandler}
-                onChange={setPublicityHandler}
-            ></ToggleSwitch>}             */}
-    </div>
-    <Card> 
-        <div className={classes.wrapper}>
-        <div className={classes.img}></div>
-        <div className={classes.column}>
-            <div className={classes.row}>
-                <div className={classes.name}>{data.data[0].fname} {data.data[0].lname}</div>
-                <div className={classes.btn}>
-                    {followButton}
-                    {messageButton}
+        <div className={classes.private}>
+            {currUserId === userId && !publicity &&
+                <ToggleSwitch
+                    label={"Private"}
+                    value={"Private"}
+                    onClick={setPublicityHandler}
+                ></ToggleSwitch>
+            }
+        </div>
+        <Card>
+            <div className={classes.wrapper}>
+                <div className={classes.img}></div>
+                <div className={classes.column}>
+                    <div className={classes.row}>
+                        <div className={classes.name}>{data.data[0].fname} {data.data[0].lname}</div>
+                        <div className={classes.btn}>
+                            {followButton}
+                            {messageButton}
+                            <input type="checkbox" onChange={closeFriendHandler} />
+                        </div>
+                    </div>
+
+                    <div className={classes.username}>{data.data[0].nname}</div>
+                    <div className={classes.followers}>
+                        {/* <div><span className={classes.count}>10k</span> followers</div>
+                        <div><span className={classes.count}>200</span> following</div> */}
+                    </div>
+                    <div>{data.data[0].about}</div>
+                </div>
+                <div>
                 </div>
             </div>
-        
-            <div className={classes.username}>{data.data[0].nname}</div> 
-            <div className={classes.followers}>
-                {/* <div><span className={classes.count}>10k</span> followers</div>
-                <div><span className={classes.count}>200</span> following</div> */}
-            </div>
-            <div>{data.data[0].about}</div>
-        </div>
-        <div>
-        </div>
-    </div>
-    </Card>    
+        </Card>
     </div>
 }
 

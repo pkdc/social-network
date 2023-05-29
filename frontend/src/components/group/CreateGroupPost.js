@@ -9,23 +9,20 @@ import profile from '../assets/profile.svg';
 function  CreateGroupPost({ groupid }) {
 
     const currUserId = localStorage.getItem("user_id");
-
     const [ message, setMessage ] = useState('')
 
     function SubmitHandler(event) {
         event.preventDefault();
         setMessage('');
-
-        const date =  Date.now()
-        const created = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: '2-digit' }).format(date);
-
+        // const date =  Date.now()
+        // const created = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: '2-digit' }).format(date);
         const data = {
             id: 0,
             author: parseInt(currUserId),
             groupid: parseInt(groupid),
             message: message,
             image: '',
-            createdat: date,
+            createdat: Date.now(),
         };
 
         fetch('http://localhost:8080/group-post', 

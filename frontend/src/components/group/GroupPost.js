@@ -4,72 +4,96 @@ import Card from '../UI/Card';
 import { useState } from 'react';
 import AllComments from '../posts/comments/AllComments';
 import CreateGroupComment from './CreateGroupComment';
-import useGet from '../fetch/useGet';
 
 function GroupPost(props) {
-    console.log("prosp id2 :",props.id)
-    const [commentData, setCommentData] = useState([]);
 
+    const [commentData, setCommentData] = useState([]);
     const [showComments, setShowComments] = useState(false);
 
     const showCommentsHandler = (e) => {
-        console.log("props id: ",e.target.id)
-        fetch(`http://localhost:8080/group-post-comment?id=${e.target.id}`)
-        .then(resp => resp.json())
-        .then(data => {
-            setCommentData(data.data);
-            console.log("comments data", data)
-        })
-        .catch(
-            err => console.log(err)
-        );
-
-
-        console.log(showComments);
+        console.log("props id target: ", e.target.id)
+  
         !showComments && setShowComments(true);
         showComments && setShowComments(false);
+
+        fetch(`http://localhost:8080/group-post-comment?id=${e.target.id}`)
+            .then(resp => resp.json())
+            .then(data => {
+                setCommentData(data.data);
+                console.log("comments data", data)
+            })
+            .catch(
+                err => console.log(err)
+            );
     };
 
     const createCommentHandler = (createCommentPayloadObj) => {
-        console.log("create comment for Post", createCommentPayloadObj)
-        
+
         const reqOptions = {
             method: "POST",
             body: JSON.stringify(createCommentPayloadObj),
         }
         fetch("http://localhost:8080/group-post-comment", reqOptions)
-        .then(resp => resp.json())
-        .then(data => {
-            console.log("create comment success", data.success);
-            props.onCreateCommentSuccessful(data.success); // lift it up to PostPage
-        })
-        .catch(err => {
-            console.log(err);
-        })
+            .then(resp => resp.json())
+            .then(data => {
+                createCommentSuccessHandler(data.success);
+            })
+            .catch(err => {
+                console.log(err);
+            })
     };
 
+    const createCommentSuccessHandler = (createCommentSuccessful) => {
+        // fetch comment
+        console.log({createCommentSuccessful})
+        console.log("props id: ", props.id)
+        if (createCommentSuccessful) {
+        fetch(`http://localhost:8080/group-post-comment?id=${props.id}`)
+            .then(resp => resp.json())
+            .then(data => {
+                console.log("post page raw comment data: ", data.data)
+        
+                setCommentData(data.data);
+            })
+            .catch(
+                err => console.log(err)
+            );
+        }
+    };
+
+    const created = new Intl.DateTimeFormat('en-GB', {
+        day: 'numeric',
+        month: 'short',
+        year: '2-digit',
+        hour: 'numeric',
+        minute: 'numeric'
+      }).format(new Date(props.createdat));    
+       console.log("created ", created)
+
     return <Card className={classes.container} >
-          <div className={classes.user}>
+        <div className={classes.user}>
             <img src={profile} alt='' />
             <div>
-                <div className={classes.username}>{props.fname}</div>
-                <div className={classes.date}>{props.createdat}</div>
+                <div className={classes.username}>{props.fname} {props.lname}</div>
+                <div className={classes.date}>{created}</div>
             </div>
-          
+
         </div>
         <div className={classes.content}>{props.message}</div>
-        {/* <div className={classes.comments}>comments</div> */}
-        <div className={classes.comments} id={props.id} onClick={showCommentsHandler}>Comments</div>
-        {/* {props.commentsForThisPost.length}  */}
-        {showComments && commentData &&
+        <div className={classes.comments} id={props.id} onClick={showCommentsHandler}> comments</div>
+        {/* {commentData.length} */}
+        {showComments &&
             <>
-                <AllComments comments={commentData}/>
-                <CreateGroupComment pid={props.id} onCreateComment={createCommentHandler}/> 
+                {commentData &&
+                  <AllComments comments={commentData} />
+                   }
+              
+                <CreateGroupComment pid={props.id} onCreateComment={createCommentHandler} />
             </>
         }
     </Card>
 
-      
+
     // </div>
 }
 
