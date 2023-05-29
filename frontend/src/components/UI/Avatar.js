@@ -12,15 +12,10 @@ const Avatar = (props) => {
     useEffect(() => {
         console.log("incoming wsCtx.newOnlineStatusObj.onlineuserids", wsCtx.newOnlineStatusObj.onlineuserids);
         if (wsCtx.websocket !== null && wsCtx.newOnlineStatusObj.onlineuserids) {
-            for (let wsOnlineUserId of wsCtx.newOnlineStatusObj.onlineuserids) {
-                console.log("incoming wsOnlineUserId", wsOnlineUserId);
-                console.log("Avatar user id (effect)", props.id);
-                console.log("Avatar online status for user (effect) (may be before change)", onlineStatus);
-                
-                if (wsOnlineUserId === props.id) {
-                    console.log("matched uid"); 
-                    setOnlineStatus(true);
-                }
+            if (wsCtx.newOnlineStatusObj.onlineuserids.find((userId) => props.id === userId)) {
+                setOnlineStatus(true);
+            } else {
+                setOnlineStatus(false);
             }
         }
     },[wsCtx.newOnlineStatusObj.onlineuserids]);
