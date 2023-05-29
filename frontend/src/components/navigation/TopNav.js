@@ -151,6 +151,7 @@ const TopNav = () => {
                     <div className={styles.notif}>
                         <div className={styles.btn} onClick={onShowNoti}>
                             <img src={notif} alt=""></img>
+                            <span className={styles.badge}></span>
                         </div>
                         {/* showNoti &&  */}
                         {showNoti && <NotificationCentre 

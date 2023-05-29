@@ -4,6 +4,8 @@ import { WebSocketContext } from "../store/websocket-context";
 import Avatar from "../UI/Avatar";
 import { GroupsContext } from "../store/groups-context";
 import { JoinedGroupContext } from "../store/joined-group-context";
+import styles from './NotificationItem.module.css'
+
 
 const InviteToJoinGroupNotiItem = (props) => {
     const [isVisible, setIsVisible] = useState(true);
@@ -50,15 +52,30 @@ const InviteToJoinGroupNotiItem = (props) => {
     return (
         <div>
             {isVisible && (
-                <div>
-                    <Avatar height={50} width={50}></Avatar>
-                    <h3>{`${props.srcUser.fname} ${props.srcUser.lname} invites you to join his/her group: ${grpTitle}`}</h3>
-                    <SmallButton onClick={acceptInvitationHandler}>Accept</SmallButton>
-                    <SmallButton onClick={declineInvitationHandler}>Decline</SmallButton>
+
+                <div className={styles.container}>
+                    <div className={styles.left}>
+
+                        <Avatar height={50} width={50}></Avatar>
+                    </div>
+                    <div className={styles.mid}>
+
+                        <div>{`${props.srcUser.fname} ${props.srcUser.lname} wants you to join ${grpTitle}`}</div>
+                        <div className={styles.btn}>
+
+                            <SmallButton onClick={acceptInvitationHandler}>Accept</SmallButton>
+                            <SmallButton onClick={declineInvitationHandler}>Decline</SmallButton>
+                        </div>
+                    </div>
+                    <div className={styles.right}>
+                        {/* <div className={styles.notif}></div> */}
+                    </div>
+
                 </div>
             )}
         </div>
     );
 };
+
 
 export default InviteToJoinGroupNotiItem;

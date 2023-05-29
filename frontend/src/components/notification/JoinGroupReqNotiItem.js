@@ -3,6 +3,8 @@ import SmallButton from "../UI/SmallButton";
 import { WebSocketContext } from "../store/websocket-context";
 import Avatar from "../UI/Avatar";
 import { GroupsContext } from "../store/groups-context";
+import styles from './NotificationItem.module.css'
+
 
 const JoinGroupReqNotiItem = (props) => {
     const wsCtx = useContext(WebSocketContext);
@@ -49,11 +51,23 @@ const JoinGroupReqNotiItem = (props) => {
     return (
         <div>
             {isVisible && (
-                <div>
-                    <Avatar height={50} width={50}></Avatar>
-                    <h3>{`${props.srcUser.fname} ${props.srcUser.lname} wants to join ${grpTitle}`}</h3>
-                    <SmallButton onClick={acceptJoinReqHandler}>Accept</SmallButton>
-                    <SmallButton onClick={declineJoinReqHandler}>Decline</SmallButton>
+                <div className={styles.container}>
+                    <div className={styles.left}>
+
+                        <Avatar height={50} width={50}></Avatar>
+                    </div>
+                    <div className={styles.mid}>
+
+                        <div>{`${props.srcUser.fname} ${props.srcUser.lname} wants to join ${grpTitle}`}</div>
+                        <div className={styles.btn}>
+
+                            <SmallButton onClick={acceptJoinReqHandler}>Accept</SmallButton>
+                            <SmallButton onClick={declineJoinReqHandler}>Decline</SmallButton>
+                        </div>
+                    </div>
+                    <div className={styles.right}>
+                        {/* <div className={styles.notif}></div> */}
+                    </div>
                 </div>
             )}
         </div>
