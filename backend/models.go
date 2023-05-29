@@ -68,12 +68,13 @@ type UserFollowerStruct struct {
 }
 
 type UserMessageStruct struct {
-	Label     string `json:"label"`
-	Id        int    `json:"id"`
-	TargetId  int    `json:"targetid"`
-	SourceId  int    `json:"sourceid"`
-	Message   string `json:"message"`
-	CreatedAt string `json:"createdat"`
+	Label         string `json:"label"`
+	Id            int    `json:"id"`
+	TargetId      int    `json:"targetid"`
+	SourceId      int    `json:"sourceid"`
+	Message       string `json:"message"`
+	CreatedAt     string `json:"createdat"`
+	OnlineUserIds []int  `json:"onlineuserids"`
 }
 
 type UserMessagePayload struct {

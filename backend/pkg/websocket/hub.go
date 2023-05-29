@@ -37,9 +37,13 @@ func (h *Hub) Run() {
 	for {
 		select {
 		case client := <-h.register:
+
 			// Adds connected user to the client list
 			h.clients[client.userID] = client
 			fmt.Printf("client %v is connected \n", client)
+
+			// update clients status
+			h.StatusUpdate(client, true)
 
 		case client := <-h.unregister:
 			// Removes client from client list when disconnected
@@ -48,9 +52,41 @@ func (h *Hub) Run() {
 				fmt.Printf("client %v left \n", client)
 				close(client.send)
 			}
+			// update clients status
+			h.StatusUpdate(client, false)
 		case message := <-h.broadcast:
 			// Sends message/notification to appropriate users
 			h.Notif(message)
+		}
+	}
+}
+
+func (h *Hub) StatusUpdate(c *Client, status bool) {
+	var userMsg backend.UserMessageStruct
+	userMsg.Label = "online-status"
+	userMsg.SourceId = c.userID
+	userMsg.OnlineUserIds = []int{}
+
+	// Adds user ids to the array
+	for k := range h.clients {
+		userMsg.OnlineUserIds = append(userMsg.OnlineUserIds, k)
+	}
+
+	// Marshals the struct to a json object
+	fmt.Println("Marshals the struct to a json object")
+	sendMsg, err := json.Marshal(userMsg)
+	if err != nil {
+		panic(err)
+	}
+
+	// Loops through the clients and updates status
+	for _, c := range h.clients {
+		select {
+		case c.send <- sendMsg:
+			fmt.Printf("sendMsg %v\n", sendMsg)
+		default:
+			close(c.send)
+			delete(h.clients, c.userID)
 		}
 	}
 }
