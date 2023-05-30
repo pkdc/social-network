@@ -85,7 +85,7 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 		not.Accepted = msgStruct.Accepted
 		not.CreatedAt = msgStruct.CreatedAt
 		// fmt.Printf("not Struct: %v\n", not)
-	} else if msgStruct.Label == "pChatNoti" {
+	} else if msgStruct.Label == "delete-p-chat-noti" {
 		db := db.DbConnect()
 
 		query := crud.New(db)
@@ -199,6 +199,7 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 		// 	fmt.Println("Unable to convert to date")
 		// }
 
+		// create private chat noti in db
 		var message crud.CreateMessageParams
 		message.CreatedAt = time.Now()
 		message.Message = userMsg.Message

@@ -76,6 +76,7 @@ export const FollowingContextProvider = (props) => {
         console.log("locally stored following (unfol)", JSON.parse(localStorage.getItem("following")));
     };
 
+    // receiveMsgHandler is not only for following, but also for public user chat
     const receiveMsgHandler = (friendId, open, isFollowing) => {
         if (isFollowing) {
             const targetUser = following.find(followingUser => followingUser.id === +friendId);
@@ -88,16 +89,21 @@ export const FollowingContextProvider = (props) => {
             // noti if not open
             // !open && setChatNotiUserArr(prevArr => [...new Set([targetUser, ...prevArr])]);
             if (!open) {
+                console.log("chatbox closed, open=", open);
                 targetUser["chat_noti"] = true; // set noti field to true to indicate unread
+                // add noti to db
+                // already dealt with in hub.go
             } else {
+                targetUser["chat_noti"] = false; 
+                console.log("chatbox opened, open=", open);
                 // delete private chat notification from database
                 const privateChatNotiPayloadObj = {};
-                privateChatNotiPayloadObj["label"] = "pChatNoti";
+                privateChatNotiPayloadObj["label"] = "delete-p-chat-noti";
                 privateChatNotiPayloadObj["sourceid"] = friendId;
                 privateChatNotiPayloadObj["targetid"] = +selfId;
 
                 if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(privateChatNotiPayloadObj));
-
+                
             } 
         } else { // if cur user is public and receives a msg coz of that      
         }
