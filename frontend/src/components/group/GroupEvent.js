@@ -19,21 +19,24 @@ function GroupEvent(props) {
             .then(resp => resp.json())
             .then(data => {
                 setEventMemberData(data.data)
+                
             })
             .catch(
                 err => console.log(err)
             );
 
-        //changing status to 1 ???????
 
+    }, []);
 
+    useEffect(() => {
         eventMemberData && eventMemberData.map((member) => {
+            console.log({member})
             if (member.userid === (parseInt(userid))) {
-                if (member.status === 2) {
+                if (member.status == 2) {
                     setGoing(true)
                     setNotGoing(false)
                 
-            } else if (member.status === 3) {
+            } else if (member.status == 3) {
                 setNotGoing(true)
                 setGoing(false)
 
@@ -43,9 +46,8 @@ function GroupEvent(props) {
             }
         }
         })
-    }, []);
-
-
+        
+    }, [eventMemberData]);
 
 
     var myDate = new Date(props.date);

@@ -257,6 +257,7 @@ let statusofcuruser ;
 
     let followButton;
     let messageButton;
+    let closeFriend;
 
     if (currUserId !== userId) {
         if (currentlyFollowing) {
@@ -268,6 +269,8 @@ let statusofcuruser ;
             followButton = <div className={classes.followbtn} id={userId} onClick={followHandler}>+ Follow</div>
         }       
         messageButton = <GreyButton>Message</GreyButton> 
+        closeFriend = <input type="checkbox" onChange={closeFriendHandler} />
+        
     }
 
     return <div className={classes.container}>
@@ -289,7 +292,7 @@ let statusofcuruser ;
                         <div className={classes.btn}>
                             {followButton}
                             {messageButton}
-                            <input type="checkbox" onChange={closeFriendHandler} />
+                            {closeFriend}
                         </div>
                     </div>
 

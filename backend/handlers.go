@@ -863,25 +863,25 @@ func UserFollowerHandler() http.HandlerFunc {
 
 			// ### CONNECT TO DATABASE ###
 
-			db := db.DbConnect()
+			// db := db.DbConnect()
 
-			query := crud.New(db)
+			// query := crud.New(db)
 
 			// ### ADD FOLLOWER TO DATABASE ###
-			var newFollower crud.CreateFollowerParams
+			// var newFollower crud.CreateFollowerParams
 
-			newFollower.SourceID = int64(follower.SourceId)
-			newFollower.TargetID = int64(follower.TargetId)
-			newFollower.Status = int64(follower.Status)
-			newFollower.ChatNoti = int64(follower.ChatNoti)
-			// newFollower.LastMsgAt = follower.LastMsgAt
+			// newFollower.SourceID = int64(follower.SourceId)
+			// newFollower.TargetID = int64(follower.TargetId)
+			// newFollower.Status = int64(follower.Status)
+			// newFollower.ChatNoti = int64(follower.ChatNoti)
+			// // newFollower.LastMsgAt = follower.LastMsgAt
 
-			_, err = query.CreateFollower(context.Background(), newFollower)
+			// _, err = query.CreateFollower(context.Background(), newFollower)
 
-			if err != nil {
-				fmt.Println("Unable to insert follower")
-				Resp.Success = false
-			}
+			// if err != nil {
+			// 	fmt.Println("Unable to insert follower")
+			// 	Resp.Success = false
+			// }
 
 		case http.MethodDelete:
 			// Declares the variables to store the follower details and handler response
@@ -2037,10 +2037,9 @@ func GroupEventHandler() http.HandlerFunc {
 			// ### GET ALL EVENTS FOR THE GROUP ID ###
 
 			events, err := query.GetGroupEvents(context.Background(), int64(gId))
-
 			for _, event := range events {
 				var newEvent GroupEventStruct
-				err = query.ExecUpdateGroupEventMember(context.Background(), crud.ExecUpdateGroupEventMemberParams{UserID: int64(uid), Status: 1, EventID: event.ID})
+				err = query.ExecUpdateGroupEventMember(context.Background(), crud.ExecUpdateGroupEventMemberParams{UserID: int64(uid), EventID: event.ID})
 				newEvent.Id = int(event.ID)
 				newEvent.GroupId = int(event.GroupID)
 				newEvent.Author = int(event.Author)

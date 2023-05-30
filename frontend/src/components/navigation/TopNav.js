@@ -25,20 +25,14 @@ const TopNav = () => {
 
     const currUserId = localStorage.getItem("user_id");
 
-    // function handleClick(e) {
-    //     const id = e.target.id
-    //     console.log("profile id", id);
-
-    //     navigate("/profile", { state: { id } })
-    // }
-
     const authCtx = useContext(AuthContext);
 
     useEffect(() => {
-        if (authCtx.notif !== null) {
+        console.log("auth notif", authCtx.notif)
+        if (authCtx.notif.length != 0) {
             setShowNotiBadge(true)
         }
-    }, []);
+    }, [authCtx]);
 
     const onClickingLogout = () => {
         // props.onLogout();
@@ -46,9 +40,6 @@ const TopNav = () => {
         navigate("/", {replace: true});
     };
 
-    // function handleClick() {
-    //     setOpen(true)
-    // }
     const wsCtx = useContext(WebSocketContext);
 
     useEffect(() => {

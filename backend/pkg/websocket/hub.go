@@ -132,9 +132,13 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 			}
 			events, err := query.GetGroupEventsWithoutId(context.Background())
 			var eventId int
-			for _, event := range events {
-				fmt.Println(event)
-				eventId = int(event.ID)
+			if len(events) != 0 {
+				for _, event := range events {
+					fmt.Println(event)
+					eventId = int(event.ID)
+				}
+			}else {
+				
 			}
 			for _, p := range users {
 				fmt.Println("member of group: ", p)
@@ -266,12 +270,13 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 		} else if not.Type == "join-req-reply" {
 			s, _ := json.MarshalIndent(not, "", "\t")
 			fmt.Print("notif-reply: ", string(s))
-			var newMember crud.CreateGroupMemberParams
-			newMember.UserID = int64(not.TargetId)
-			newMember.GroupID = int64(not.GroupId)
-			newMember.Status = int64(1)
-			_, err = query.CreateGroupMember(context.Background(), newMember)
-
+			if not.Accepted {
+				var newMember crud.CreateGroupMemberParams
+				newMember.UserID = int64(not.TargetId)
+				newMember.GroupID = int64(not.GroupId)
+				newMember.Status = int64(1)
+				_, err = query.CreateGroupMember(context.Background(), newMember)
+			}
 			var deleteReq crud.DeleteGroupRequestParams
 			deleteReq.GroupID = int64(not.GroupId)
 			deleteReq.UserID = int64(not.TargetId)

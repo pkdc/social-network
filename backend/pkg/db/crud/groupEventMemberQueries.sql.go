@@ -53,18 +53,20 @@ func (q *Queries) DeleteGroupEventMember(ctx context.Context, arg DeleteGroupEve
 
 const execUpdateGroupEventMember = `-- name: ExecUpdateGroupEventMember :exec
 UPDATE group_event_member
-set status_ = ?
+SET status_ = CASE
+    WHEN status_ = 0 THEN 1
+    ELSE status_
+END
 WHERE event_id = ? AND user_id = ?
 `
 
 type ExecUpdateGroupEventMemberParams struct {
-	Status  int64
 	EventID int64
 	UserID  int64
 }
 
 func (q *Queries) ExecUpdateGroupEventMember(ctx context.Context, arg ExecUpdateGroupEventMemberParams) error {
-	_, err := q.db.ExecContext(ctx, execUpdateGroupEventMember, arg.Status, arg.EventID, arg.UserID)
+	_, err := q.db.ExecContext(ctx, execUpdateGroupEventMember, arg.EventID, arg.UserID)
 	return err
 }
 

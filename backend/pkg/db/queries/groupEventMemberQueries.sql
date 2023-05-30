@@ -27,7 +27,10 @@ RETURNING *;
 
 -- name: ExecUpdateGroupEventMember :exec
 UPDATE group_event_member
-set status_ = ?
+SET status_ = CASE
+    WHEN status_ = 0 THEN 1
+    ELSE status_
+END
 WHERE event_id = ? AND user_id = ?;
 
 -- name: GetGroupEventsByUserNoReply :many
