@@ -88,7 +88,7 @@ export const FollowingContextProvider = (props) => {
             // noti if not open
             // !open && setChatNotiUserArr(prevArr => [...new Set([targetUser, ...prevArr])]);
             if (!open) {
-                targetUser["chat_noti"] = true // set noti field to true to indicate unread
+                targetUser["chat_noti"] = true; // set noti field to true to indicate unread
             } else {
                 // delete private chat notification from database
                 const privateChatNotiPayloadObj = {};

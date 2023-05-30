@@ -510,7 +510,7 @@ func Posthandler() http.HandlerFunc {
 			fmt.Printf("----post-GET---(display-posts)--\n")
 			userId := r.URL.Query().Get("id")
 			fmt.Println("USERID: ", userId)
-			if userId =="" {
+			if userId == "" {
 				return
 			}
 			int_user_id, err := strconv.Atoi(userId)
@@ -861,7 +861,7 @@ func UserFollowerHandler() http.HandlerFunc {
 			newFollower.SourceID = int64(follower.SourceId)
 			newFollower.TargetID = int64(follower.TargetId)
 			newFollower.Status = int64(follower.Status)
-			newFollower.ChatNoti = int64(follower.ChatNoti)
+			// newFollower.ChatNoti = int64(follower.ChatNoti)
 			// newFollower.LastMsgAt = follower.LastMsgAt
 
 			_, err = query.CreateFollower(context.Background(), newFollower)

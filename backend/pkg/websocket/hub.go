@@ -156,7 +156,7 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 					newFollower.SourceID = int64(not.SourceId)
 					newFollower.TargetID = int64(not.TargetId)
 					newFollower.Status = int64(0)
-					newFollower.ChatNoti = int64(0)
+					// newFollower.ChatNoti = int64(0)
 					_, err = query.CreateFollower(context.Background(), newFollower)
 					select {
 					case c.send <- sendNoti:
@@ -176,7 +176,7 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 					newFollower.SourceID = int64(not.SourceId)
 					newFollower.TargetID = int64(not.TargetId)
 					newFollower.Status = int64(0)
-					newFollower.ChatNoti = int64(0)
+					// newFollower.ChatNoti = int64(0)
 					_, err = query.CreateFollower(context.Background(), newFollower)
 				}
 			}
