@@ -92,3 +92,36 @@ func (q *Queries) GetPrivateChatNoti(ctx context.Context, targetID int64) ([]Pri
 	}
 	return items, nil
 }
+
+const updatePrivateChatNotification = `-- name: UpdatePrivateChatNotification :one
+UPDATE private_chat_notification
+SET chat_noti = ?,
+last_msg_at = ?
+WHERE source_id = ? AND target_id = ?
+RETURNING id, source_id, target_id, chat_noti, last_msg_at
+`
+
+type UpdatePrivateChatNotificationParams struct {
+	ChatNoti  int64
+	LastMsgAt time.Time
+	SourceID  int64
+	TargetID  int64
+}
+
+func (q *Queries) UpdatePrivateChatNotification(ctx context.Context, arg UpdatePrivateChatNotificationParams) (PrivateChatNotification, error) {
+	row := q.db.QueryRowContext(ctx, updatePrivateChatNotification,
+		arg.ChatNoti,
+		arg.LastMsgAt,
+		arg.SourceID,
+		arg.TargetID,
+	)
+	var i PrivateChatNotification
+	err := row.Scan(
+		&i.ID,
+		&i.SourceID,
+		&i.TargetID,
+		&i.ChatNoti,
+		&i.LastMsgAt,
+	)
+	return i, err
+}

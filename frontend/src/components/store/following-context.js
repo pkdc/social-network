@@ -42,20 +42,17 @@ export const FollowingContextProvider = (props) => {
         );
     };
 
-        // get list of chat users from db
-        // const getPrivateChatUsersHandler = () => {
-        //     fetch(followingUrl)
-        //     .then(resp => resp.json())
-        //     .then(data => {
-        //         console.log("followingArr (context): ", data);
-        //         let [followingArr] = Object.values(data); 
-        //         setFollowing(followingArr);
-        //         localStorage.setItem("following", JSON.stringify(followingArr));
-        //     })
-        //     .catch(
-        //         err => console.log(err)
-        //     );
-        // };
+    const getPrivateChatHandler = () => {
+        // private chat notification list after login
+        fetch(`http://localhost:8080/private-chat-notification?id=${selfId}`)
+        .then(resp => resp.json())
+        .then(data => {
+                console.log(data)
+
+        }).catch(err => {
+            console.log(err)
+        })
+    }
 
     const requestToFollowHandler = (followUser) => {
         console.log("request to follow (context): ", followUser.id);
@@ -136,10 +133,12 @@ export const FollowingContextProvider = (props) => {
 
     useEffect(() => {
         getFollowingHandler();
-        if (following) {
-            usersCtx.users && setOtherListedChatUsers(usersCtx.users.filter((user) => user.public === 1));
-        }
-    }, [following]);
+        getPrivateChatHandler();
+        // if (following) {
+        //     usersCtx.users && setOtherListedChatUsers(usersCtx.users.filter((user) => user.public === 1));
+        // }
+    // }, [following]);
+    }, []);
 
     return (
         <FollowingContext.Provider value={{

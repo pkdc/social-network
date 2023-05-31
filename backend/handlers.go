@@ -2435,3 +2435,129 @@ func checkFollower(sourceid, targetid int) bool {
 	}
 	return false
 }
+
+func PrivateChatNotificationHandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		EnableCors(&w)
+		// Prevents the endpoint being called from other url paths
+		if err := UrlPathMatcher(w, r, "/private-chat-notification"); err != nil {
+			return
+		}
+
+		switch r.Method {
+		case http.MethodGet:
+			fmt.Printf("GET PrivateChatNotificationHandler\n")
+			// Checks to find a user id in the url
+			sourceId := r.URL.Query().Get("id")
+			id, err := strconv.Atoi(sourceId)
+			if err != nil {
+				fmt.Println("Unable to convert to int")
+			}
+
+			foundId := false
+
+			if sourceId != "" {
+				foundId = true
+			}
+
+			fmt.Printf("GET PrivateChatNotificationHandler %d\n", sourceId)
+
+			// Declares the payload struct
+			var Resp UserPayload
+
+			// ### CONNECT TO DATABASE ###
+
+			db := db.DbConnect()
+
+			query := crud.New(db)
+
+			if foundId {
+				// ### GET USER FOLLOWERS ###
+				followings, err := query.GetPrivateChatNoti(context.Background(), int64(id))
+
+				if err != nil {
+					fmt.Println("Unable to find followers")
+				}
+
+				for _, following := range followings {
+					user, err := query.GetUserById(context.Background(), following.TargetID)
+
+					if err != nil {
+						fmt.Println("Unable to find user")
+					}
+					if following.Status == 1 {
+						var oneUser UserStruct
+
+						oneUser.Id = int(user.ID)
+						oneUser.Fname = user.FirstName
+						oneUser.Lname = user.LastName
+						oneUser.Nname = user.NickName
+						oneUser.Email = user.Email
+						oneUser.Password = user.Password
+						oneUser.Dob = user.Dob.String()
+						oneUser.Avatar = user.Image
+						oneUser.About = user.About
+						oneUser.Public = int(user.Public)
+
+						Resp.Data = append(Resp.Data, oneUser)
+					}
+				}
+
+			}
+
+			// Marshals the response struct to a json object
+			jsonResp, err := json.Marshal(Resp)
+			if err != nil {
+				http.Error(w, "500 internal server error", http.StatusInternalServerError)
+				return
+			}
+
+			// Sets the http headers and writes the response to the browser
+			WriteHttpHeader(jsonResp, w)
+		case http.MethodPost:
+			// Declares the variables to store the follower details and handler response
+			var follower UserFollowerStruct
+			Resp := AuthResponse{Success: true}
+
+			// Decodes the json object to the struct, changing the response to false if it fails
+			err := json.NewDecoder(r.Body).Decode(&follower)
+			if err != nil {
+				Resp.Success = false
+			}
+
+			// ### CONNECT TO DATABASE ###
+
+			db := db.DbConnect()
+
+			query := crud.New(db)
+
+			// ### delete FOLLOWER TO DATABASE ###
+
+			var newFollower crud.DeleteFollowerParams
+
+			newFollower.SourceID = int64(follower.SourceId)
+			newFollower.TargetID = int64(follower.TargetId)
+
+			err = query.DeleteFollower(context.Background(), newFollower)
+			fmt.Println("NEW FOLLOW REQUESTED")
+			if err != nil {
+				fmt.Println("Unable to insert follower")
+				Resp.Success = false
+			}
+
+			// Marshals the response struct to a json object
+			jsonResp, err := json.Marshal(Resp)
+			if err != nil {
+				http.Error(w, "500 internal server error", http.StatusInternalServerError)
+				return
+			}
+
+			// Sets the http headers and writes the response to the browser
+			WriteHttpHeader(jsonResp, w)
+		default:
+			// Prevents all request types other than POST and GET
+			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
+	}
+}
