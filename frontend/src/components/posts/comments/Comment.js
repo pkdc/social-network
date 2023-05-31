@@ -19,7 +19,7 @@ function Comment(props) {
     <>
         <div className={classes["author"]}>
         <Link to={`/profile/${props.authorId}`} >
-            <Avatar className={classes["comment-avatar"]} src={props.avatar} alt="" width={"50px"}/>
+            <Avatar className={classes["comment-avatar"]} id={props.authorId} src={props.avatar} alt="" width={"50px"}/>
         </Link>
         <Link to={`/profile/${props.authorId}`} >
             <div><p className={classes["details"]}>{`${props.fname} ${props.lname} ${props.nname}`}</p></div>

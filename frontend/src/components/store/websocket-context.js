@@ -13,6 +13,8 @@ export const WebSocketContext = React.createContext({
     setNewNotiJoinReplyObj: () => {},
     newNotiInvitationReplyObj: null,
     setNewNotiInvitationReplyObj: () => {},
+    newOnlineStatusObj: false,
+    setNewOnlineStatusObj: () => {},
 });
 
 export const WebSocketContextProvider = (props) => {
@@ -23,6 +25,8 @@ export const WebSocketContextProvider = (props) => {
     const [newNotiFollowReplyObj, setNewNotiFollowReplyObj] = useState(null);
     const [newNotiJoinReplyObj, setNewNotiJoinReplyObj] = useState(null);
     const [newNotiInvitationReplyObj, setNewNotiInvitationReplyObj] = useState(null);
+
+    const [newOnlineStatusObj, setNewOnlineStatusObj] = useState(false);
 
     // const usersCtx = useContext(UsersContext);
 
@@ -84,7 +88,11 @@ export const WebSocketContextProvider = (props) => {
                     console.log("ws receives noti invitation-reply accepted (wsctx): ", msgObj.accepted);
                     setNewNotiInvitationReplyObj(msgObj);
                 } 
-            } 
+            } else if (msgObj.label === "online-status") {
+                console.log("ws receives online-status (wsctx): ", msgObj);
+                console.log("ws receives online-status onlineuserids (wsctx): ", msgObj.onlineuserids);
+                setNewOnlineStatusObj(msgObj);
+            }
         };
 
         return () => {
@@ -105,6 +113,8 @@ export const WebSocketContextProvider = (props) => {
             setNewNotiJoinReplyObj: setNewNotiJoinReplyObj,
             newNotiInvitationReplyObj: newNotiInvitationReplyObj,
             setNewNotiInvitationReplyObj: setNewNotiInvitationReplyObj,
+            newOnlineStatusObj: newOnlineStatusObj,
+            setNewOnlineStatusObj: setNewOnlineStatusObj,
         }}>
             {props.children}
         </WebSocketContext.Provider>
