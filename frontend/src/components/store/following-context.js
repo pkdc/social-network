@@ -18,6 +18,7 @@ export const FollowingContext = React.createContext({
 export const FollowingContextProvider = (props) => {
     const selfId = localStorage.getItem("user_id");
     const followingUrl = `http://localhost:8080/user-following?id=${selfId}`;
+
     const [following, setFollowing] = useState([]);
     // const [chatNotiUserArr, setChatNotiUserArr] = useState([]);
     const wsCtx = useContext(WebSocketContext);
@@ -37,6 +38,21 @@ export const FollowingContextProvider = (props) => {
             err => console.log(err)
         );
     };
+
+        // get list of chat users from db
+        // const getPrivateChatUsersHandler = () => {
+        //     fetch(followingUrl)
+        //     .then(resp => resp.json())
+        //     .then(data => {
+        //         console.log("followingArr (context): ", data);
+        //         let [followingArr] = Object.values(data); 
+        //         setFollowing(followingArr);
+        //         localStorage.setItem("following", JSON.stringify(followingArr));
+        //     })
+        //     .catch(
+        //         err => console.log(err)
+        //     );
+        // };
 
     const requestToFollowHandler = (followUser) => {
         console.log("request to follow (context): ", followUser.id);
@@ -80,11 +96,10 @@ export const FollowingContextProvider = (props) => {
     const receiveMsgHandler = (friendId, open, isFollowing) => {
         if (isFollowing) {
             const targetUser = following.find(followingUser => followingUser.id === +friendId);
-            // const targetUser = usersCtx.users.find(user => user.id === +friendId);
             console.log("target user", targetUser);
             // const tempFollowing = following.filter(followingUser => followingUser.id !== +friendId);
             // console.log("temp fol (removed)", tempFollowing);
-            // add userId chat item to the top
+            // move userId chat item to the top
             setFollowing(prevFollowing => [targetUser, ...prevFollowing.filter(followingUser => followingUser.id !== +friendId)]);
             // noti if not open
             // !open && setChatNotiUserArr(prevArr => [...new Set([targetUser, ...prevArr])]);
@@ -105,7 +120,10 @@ export const FollowingContextProvider = (props) => {
                 if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(privateChatNotiPayloadObj));
                 
             } 
-        } else { // if cur user is public and receives a msg coz of that      
+        } else { // if cur user is public and receives a msg coz of that   
+            const targetUser = usersCtx.find(user => user.id === +friendId);
+            console.log("target user", targetUser);
+
         }
     };
 

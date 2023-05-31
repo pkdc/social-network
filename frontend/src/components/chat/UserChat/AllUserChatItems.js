@@ -18,20 +18,20 @@ const AllUserChatItems = (props) => {
     const usersCtx = useContext(UsersContext);
     console.log("users (chatitems)", usersCtx.users);
     // const [followingUids, setFollowingUids] = useState([]); // in case followingCtx.following is empty
-    const [otherListedChatUsers, setOtherListedChatUsers] = useState([]);
-    // let otherListedChatUsersUids = []; // in case it is empty
-    // const [otherListedChatUsersUids, setOtherListedChatUsersUids] = useState([]);
+    // const [followingCtx.otherListedChatUsers, followingCtx.setfollowingCtx.otherListedChatUsers] = useState([]);
+    // let followingCtx.otherListedChatUsersUids = []; // in case it is empty
+    // const [followingCtx.otherListedChatUsersUids, followingCtx.setotherListedChatUsersUids] = useState([]);
     // const publicUsers = usersCtx.users.filter((user) => user.public === 1 && !followingCtx.following.includes(user));
-    // let otherListedChatUsers = usersCtx.users.filter((user) => user.public === 1 && !followingUids.includes(user.id));
+    // let followingCtx.otherListedChatUsers = usersCtx.users.filter((user) => user.public === 1 && !followingUids.includes(user.id));
     useEffect(() => {
-        console.log("public users from ctx", usersCtx.publicUsers);
+        // console.log("public users from ctx", usersCtx.publicUsers);
         let followingUids = [];
         let otherListedChatUsersUids = [];
         if (followingCtx.following) followingUids = followingCtx.following.map((following) => following.id);
         // pot bug
-        usersCtx.users && setOtherListedChatUsers(usersCtx.users.filter((user) => user.public === 1 && !followingUids.includes(user.id)));
-        if (otherListedChatUsers) otherListedChatUsersUids = otherListedChatUsers.map((otherListedChatUser) => otherListedChatUser.id);
-    
+        usersCtx.users && usersCtx.setOtherListedChatUsers (usersCtx.users.filter((user) => user.public === 1 && !followingUids.includes(user.id)));
+        if (followingCtx.otherListedChatUsers) otherListedChatUsersUids = followingCtx.otherListedChatUsers.map((otherListedChatUser) => otherListedChatUser.id);
+
         if (wsCtx.websocket !== null && wsCtx.newMsgsObj) {
             console.log("sourceid  (chatitems)", wsCtx.newMsgsObj.sourceid);
             console.log("targetid  (chatitems)", wsCtx.newMsgsObj.targetid);
@@ -54,7 +54,7 @@ const AllUserChatItems = (props) => {
                 console.log("new Received msg data when chatbox is closed (public, from private)", wsCtx.newMsgsObj);
                 console.log("ws receives msg  when chatbox is closed (public, from private): ", wsCtx.newMsgsObj.sourceid);
                 const privateSender = usersCtx.users.find((user) => user.id === wsCtx.newMsgsObj.sourceid);
-                setOtherListedChatUsers((prevList) => [privateSender, ...prevList]);
+                usersCtx.setOtherListedChatUsers ((prevList) => [privateSender, ...prevList]);
             } else {
                 console.log("Cur user is not following the msg sender nor having a public profile");
             }
@@ -73,7 +73,7 @@ const AllUserChatItems = (props) => {
             })
     }, [])
     
-    console.log("otherListedChatUsers (chatitems)", otherListedChatUsers);
+    console.log("followingCtx.otherListedChatUsers (chatitems)", followingCtx.otherListedChatUsers);
     
     const openUserChatboxHandler = (followingId) => props.onOpenChatbox(followingId);
 
@@ -99,7 +99,7 @@ const AllUserChatItems = (props) => {
         </div>
         <div><h3 className={styles["description"]}>Other Users:</h3></div>
         <div>
-            {otherListedChatUsers && otherListedChatUsers.map((publicUser) => {
+            {followingCtx.otherListedChatUsers && followingCtx.otherListedChatUsers.map((publicUser) => {
                 // console.log("each following", following);
                 // console.log("curUserId: ", curUserId);
                 // console.log("follower.id", follower.id);

@@ -67,7 +67,6 @@ const Chatbox = (props) => {
                 } else { // public
                     followingCtx.receiveMsgFollowing(frdOrGrpId, true, false);
                 }
-                setJustUpdated(prev => !prev);
             }
         }
 
@@ -78,6 +77,7 @@ const Chatbox = (props) => {
             followingCtx.receiveMsgFollowing(frdOrGrpId, true, false);
         }
         
+        setJustUpdated(prev => !prev);
         // props.chatboxId is changed when the chatbox is opened
     }, [wsCtx.newMsgsObj, props.chatboxId]) 
 

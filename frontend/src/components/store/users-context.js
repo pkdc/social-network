@@ -8,11 +8,14 @@ export const UsersContext = React.createContext({
     // publicUsers: [],
     // onOnline: (onlineUser) => {},
     // onOffline: (offlineUser) => {},
+    otherListedChatUsers: [],
+    setOtherListedChatUsers: () => {},
 });
 
 export const UsersContextProvider = (props) => {
     const [usersList, setUsersList] = useState([]);
-    const [publicUsersList, setPublicUsersList] = useState([]);
+    // const [publicUsersList, setPublicUsersList] = useState([]);
+    const [otherListedChatUsers, setOtherListedChatUsers] = useState([]);
 
     // get users
     const getUsersHandler = () => {
@@ -29,9 +32,9 @@ export const UsersContextProvider = (props) => {
         );
     };
 
-    const getInitialUserPrivacy = () => {
-        setPublicUsersList(usersList.filter(user => user.public === 1))
-    };
+    // const getInitialUserPrivacy = () => {
+    //     setPublicUsersList(usersList.filter(user => user.public === 1))
+    // };
 
     // const privacyChangeHandler = (userid, privacy) => {
     //     // usersList[userid].public = privacy;
@@ -53,8 +56,10 @@ export const UsersContextProvider = (props) => {
     //     // }
     // };
 
+
+
     useEffect(getUsersHandler, []);
-    useEffect(getInitialUserPrivacy, []);
+    // useEffect(getInitialUserPrivacy, []);
 
     return (
         <UsersContext.Provider value={{
@@ -65,6 +70,8 @@ export const UsersContextProvider = (props) => {
             // publicUsers: publicUsersList,
             // onOnline: userOnlineHandler,
             // onOffline: userOfflineHandler,
+            otherListedChatUsers: otherListedChatUsers,
+            setOtherListedChatUsers: setOtherListedChatUsers,
         }}>
         {props.children}
         </UsersContext.Provider>
