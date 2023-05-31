@@ -37,6 +37,11 @@ WHERE event_id = ? AND user_id = ?;
 SELECT * FROM group_event_member
 WHERE user_id = ? AND status_ = 0;
 
+
+-- name: GetGroupEventsByUserAccepted :many
+SELECT * FROM group_event_member
+WHERE user_id = ? AND status_ = 2;
+
 -- name: DeleteGroupEventMember :exec
 DELETE FROM group_event_member
 WHERE event_id = ? AND user_id = ?;

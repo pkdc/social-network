@@ -12,6 +12,8 @@ import Card from "../UI/Card";
 import GroupRequest from "../requests/GroupRequests";
 import useGet from "../fetch/useGet";
 import { Navigate } from "react-router-dom";
+import JoinedGroups from "../group/JoinedGroup";
+import UserEvents from "../posts/UserEvents";
 
 const PostsPage = () => {
     const sessionUrl = "http://localhost:8080/session";
@@ -113,18 +115,28 @@ const PostsPage = () => {
         }
     };
 
+    // useEffect(() => {
+    //     fetch(`http://localhost:8080/group-event-member?userid=${userId}`)
+    //     .then(resp => resp.json())
+    //     .then(data => {
+            
+    //     })
+    //     .catch(
+    //         err => console.log(err)
+    //     );
+    // }, []);
+
     return ( <div className={styles.container}>
 
         {/* <h1 className={styles["title"]}>Create New Post</h1> */}
-
 
             <div className={styles.mid}>
                 <CreatePost onCreatePost={createPostHandler}/>
                 <AllPosts posts={postData} comments={commentData} onCreateCommentSuccessful={createCommentSuccessHandler}/>
             </div>
 
-            {/* <div className={styles.right}>
-                <Card className={styles.requests}>
+            <div className={styles.right}>
+                {/* <Card className={styles.requests}>
                     <div className={styles.label}>Follow Requests</div>
                     <FollowRequest></FollowRequest>
                     <FollowRequest></FollowRequest>
@@ -134,8 +146,12 @@ const PostsPage = () => {
                     <GroupRequest></GroupRequest>
                     <GroupRequest></GroupRequest>
 
-                </Card>
-           </div> */}
+                </Card> */}
+                <UserEvents userId={userId}></UserEvents>
+                
+        <JoinedGroups></JoinedGroups>
+
+           </div>
 
         </div>
     )

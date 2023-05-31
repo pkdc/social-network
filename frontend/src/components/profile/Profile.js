@@ -289,6 +289,8 @@ let statusofcuruser ;
     }
 
 
+
+
     let followButton;
     let messageButton;
     let closeFriend;
@@ -331,11 +333,12 @@ let statusofcuruser ;
 
                     <div className={classes.username}>{data.data[0].nname}</div>
                     <div className={classes.followers}>
-                        {/* <div><span className={classes.count}>10k</span> followers</div>
-                        <div><span className={classes.count}>200</span> following</div> */}
+                        <div><span className={classes.count}>10k</span> followers</div>
+                        <div><span className={classes.count}>200</span> following</div>
                     </div>
                     <div>{data.data[0].about}</div>
                 </div>
+
                 <div>
                 </div>
             </div>

@@ -399,7 +399,7 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 				fmt.Printf("matched %d = %d\n", c.userID, userMsg.TargetId)
 				select {
 				case c.send <- sendMsg:
-					fmt.Printf("sendMsg %v\n", sendMsg)
+					// fmt.Printf("sendMsg %v\n", sendMsg)
 				default:
 					close(c.send)
 					delete(h.clients, c.userID)

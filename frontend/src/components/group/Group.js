@@ -10,6 +10,8 @@ import classes from './Group.module.css';
 import { useContext, useEffect, useState } from "react";
 
 function Group(props) {
+    const navigate = useNavigate();
+
     const currUserId = localStorage.getItem("user_id");
     // console.log("curr id", currUserId);
     const [currentlyJoined, setCurrentlyJoined] = useState(false);
@@ -103,6 +105,14 @@ function Group(props) {
         setRequestedToJoin(false);
     };
 
+
+    function handleClick(e) {
+        const id = e.target.id
+        
+        navigate("/groupprofile", { state: { id } })
+        
+    }
+
     return <Card>
         <div className={classes.container}>
             <div className={classes.wrapper}>
@@ -117,8 +127,8 @@ function Group(props) {
             <div className={classes.btn}>
                 {!currentlyJoined && !requestedToJoin && <div className={classes.smallbtn} id={props.grpid} onClick={reqToJoinHandler}>Join</div>}
                 {!currentlyJoined && requestedToJoin && <div className={classes.smallbtn} id={props.grpid}>Requested</div>}
-                {currentlyJoined && !requestedToJoin && <div className={classes.smallbtn} id={props.grpid}>Joined</div>}
-                {currentlyJoined && requestedToJoin && <div className={classes.smallbtn} id={props.grpid}>Requested & Joined</div>}
+                {currentlyJoined && !requestedToJoin && <div className={classes.smallbtn} id={props.grpid} onClick={handleClick} >Joined</div>}
+                {/* {currentlyJoined && requestedToJoin && <div className={classes.smallbtn} id={props.grpid}>Requested & Joined</div>} */}
             </div>
         </div>
     </Card>

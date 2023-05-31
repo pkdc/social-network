@@ -8,7 +8,7 @@ WHERE source_id = ?;
 
 -- name: CheckFollower :one
 SELECT * FROM user_follower
-WHERE source_id = ? AND target_id = ? AND status_= 1 OR status_ = 2;
+WHERE source_id = ? AND target_id = ? AND (status_= 1 OR status_ = 2);
 
 -- name: CreateFollower :one
 INSERT INTO user_follower (

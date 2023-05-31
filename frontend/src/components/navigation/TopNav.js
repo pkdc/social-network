@@ -32,6 +32,15 @@ const TopNav = () => {
         if (authCtx.notif.length != 0) {
             setShowNotiBadge(true)
         }
+    // }, []);
+
+    // const storedNotif = JSON.parse(localStorage.getItem("new_notif"));
+
+    // // useEffect(() => {
+    // //     // console.log("auth notif", authCtx.notif)
+    // //     if (storedNotif.length != 0) {
+    // //         setShowNotiBadge(true)
+    // //     }
     }, [authCtx]);
 
     const onClickingLogout = () => {
@@ -47,10 +56,18 @@ const TopNav = () => {
             console.log("ws receives notiObj (TopNav): ", wsCtx.newNotiObj);
             console.log("ws receives noti type (TopNav): ", wsCtx.newNotiObj.type);
             setNewNoti(wsCtx.newNotiObj);
+            // let onlineNotif =localStorage.getItem("new_notif")
+            // if (onlineNotif ==""){
+            //     // localStorage.setItem("new_notif", JSON.stringify(Object.values(wsCtx.newNotiObj)))
+
+            // } else{
+            //     // onlineNotif
+            // }
             setShowNotiBadge(true)
             wsCtx.setNewNotiObj(null);
         }
     } ,[wsCtx.newNotiObj]);
+
     console.log("wsCtx.setNewNotiObj before and after getting (TopNav outside): ", wsCtx.newNotiObj);
     console.log("newNoti (TopNav outside): ", newNoti);
     

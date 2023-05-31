@@ -540,7 +540,9 @@ func Posthandler() http.HandlerFunc {
 			}
 			for _, post := range posts {
 				fmt.Println("msg: ", post.Message, "--bool: ", checkFollower(int(post.Author), int_user_id))
-				if post.Privacy == 0 || (post.Privacy == 1 && checkFollower(int(post.Author), int_user_id)) {
+				if post.Privacy == 0 ||
+					(post.Privacy == 1 && checkFollower(int(post.Author), int_user_id) > 0 ||
+						post.Privacy == 2 && checkFollower(int(post.Author), int_user_id) == 2) {
 					var newPost PostResponse
 					newPost.Success = true
 					newPost.Id = int(post.ID)
@@ -2284,21 +2286,22 @@ func GroupEventMemberHandler() http.HandlerFunc {
 		// ### CHECK USER ID AND GROUP ID MATCH IN GROUP MEMBER TABLE ###
 		switch r.Method {
 		case http.MethodGet:
-
+			fmt.Println("url:=", r.URL)
+			var checkforevent bool = true
 			// Checks to find a post id in the url
 			eventId := r.URL.Query().Get("id")
+			fmt.Println("bool:= ", eventId == "", " len:= ", len(eventId))
 			if eventId == "" {
-				http.Error(w, "400 bad request", http.StatusBadRequest)
-				return
+				fmt.Println("checking events by user")
+				checkforevent = false
 			}
 			eId, err := strconv.Atoi(eventId)
-
+			userId := r.URL.Query().Get("userid")
+			uId, err := strconv.Atoi(userId)
 			if err != nil {
-				fmt.Println("Unable to convert event ID")
 			}
-			// Declares the payload struct
 			var Resp GroupEventMemberPayload
-
+			var Resp2 GroupEventPayload
 			// ### CONNECT TO DATABASE ###
 
 			db := db.DbConnect()
@@ -2306,34 +2309,66 @@ func GroupEventMemberHandler() http.HandlerFunc {
 			query := crud.New(db)
 
 			// ### GET ALL GROUP EVENT MEMBERS ###
+			if checkforevent {
+				members, err := query.GetGroupEventMembers(context.Background(), int64(eId))
 
-			members, err := query.GetGroupEventMembers(context.Background(), int64(eId))
+				if err != nil {
+					fmt.Println("Unable to get all members")
+				}
 
-			if err != nil {
-				fmt.Println("Unable to get all members")
-			}
+				for _, member := range members {
+					var newMember GroupEventMemberStruct
 
-			for _, member := range members {
-				var newMember GroupEventMemberStruct
+					newMember.Id = int(member.ID)
+					newMember.Status = int(member.Status)
+					newMember.UserId = int(member.UserID)
+					newMember.EventId = int(member.EventID)
 
-				newMember.Id = int(member.ID)
-				newMember.Status = int(member.Status)
-				newMember.UserId = int(member.UserID)
-				newMember.EventId = int(member.EventID)
+					Resp.Data = append(Resp.Data, newMember)
 
-				Resp.Data = append(Resp.Data, newMember)
+				}
+				// Marshals the response struct to a json object
+				jsonResp, err := json.Marshal(Resp)
+				if err != nil {
+					http.Error(w, "500 internal server error", http.StatusInternalServerError)
+					return
+				}
+				WriteHttpHeader(jsonResp, w)
 
-			}
+			} else {
+				acceptedEventsByUser, err := query.GetGroupEventsByUserAccepted(context.Background(), int64(uId))
+				if err != nil {
+					log.Fatal(err)
+				}
+				for _, oneeventId := range acceptedEventsByUser {
+					selectedEvent, err := query.GetGroupEventById(context.Background(), oneeventId.EventID)
+					if err != nil {
+					}
+					// s2, _ := json.MarshalIndent(selectedEvent, "", "\t")
+					// fmt.Print("oneevent:=  ", string(s2))
+					var oneevent GroupEventStruct
+					oneevent.Id = int(oneeventId.EventID)
+					oneevent.Title = selectedEvent.Title
+					oneevent.Description = selectedEvent.Description
+					oneevent.Date = selectedEvent.Date.String()
+					oneevent.GroupId=int(selectedEvent.GroupID)
+					// s, _ := json.MarshalIndent(oneevent, "", "\t")
+					// fmt.Print("oneevent:=  ", string(s))
+					Resp2.Data = append(Resp2.Data, oneevent)
 
-			// Marshals the response struct to a json object
-			jsonResp, err := json.Marshal(Resp)
-			if err != nil {
-				http.Error(w, "500 internal server error", http.StatusInternalServerError)
-				return
+				}
+
+				// Marshals the response struct to a json object
+				jsonResp, err := json.Marshal(Resp2)
+				if err != nil {
+					http.Error(w, "500 internal server error", http.StatusInternalServerError)
+					return
+				}
+				WriteHttpHeader(jsonResp, w)
+
 			}
 
 			// Sets the http headers and writes the response to the browser
-			WriteHttpHeader(jsonResp, w)
 
 		case http.MethodPost:
 			// Declares the variables to store the group event member details and handler response
@@ -2664,9 +2699,11 @@ func UserFollowerStatusHandler() http.HandlerFunc {
 		}
 	}
 }
-func checkFollower(sourceid, targetid int) bool {
+func checkFollower(targetid, sourceid int) int {
+	fmt.Printf("checking target: %d and source: %d\n", targetid, sourceid)
 	if sourceid == targetid {
-		return true
+		fmt.Println("OWN PROFILE")
+		return 2
 	}
 	db := db.DbConnect()
 	var query *crud.Queries
@@ -2676,13 +2713,14 @@ func checkFollower(sourceid, targetid int) bool {
 	checkFollower.TargetID = int64(targetid)
 	following, err := query.CheckFollower(context.Background(), checkFollower)
 	if err != nil {
-		return false
+		return 0
 	}
-	fmt.Println("following return value: ", following)
+	s, _ := json.MarshalIndent(following, "", "\t")
+	fmt.Print("following: ", string(s))
 	if following.ID != 0 {
-		return true
+		return int(following.Status)
 	}
-	return false
+	return 0
 }
 func GroupRequestByUserHandler() http.HandlerFunc {
 
