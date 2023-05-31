@@ -2436,17 +2436,17 @@ func checkFollower(sourceid, targetid int) bool {
 	return false
 }
 
-func PrivateChatNotificationHandler() http.HandlerFunc {
+func PrivateChatItemHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		EnableCors(&w)
 		// Prevents the endpoint being called from other url paths
-		if err := UrlPathMatcher(w, r, "/private-chat-notification"); err != nil {
+		if err := UrlPathMatcher(w, r, "/private-chat-item"); err != nil {
 			return
 		}
 
 		switch r.Method {
 		case http.MethodGet:
-			fmt.Printf("GET PrivateChatNotificationHandler\n")
+			fmt.Printf("GET PrivateChatItemHandler\n")
 			// Checks to find a user id in the url
 			sourceId := r.URL.Query().Get("id")
 			id, err := strconv.Atoi(sourceId)
@@ -2460,10 +2460,10 @@ func PrivateChatNotificationHandler() http.HandlerFunc {
 				foundId = true
 			}
 
-			fmt.Printf("GET PrivateChatNotificationHandler %d\n", sourceId)
+			fmt.Printf("GET PrivateChatItemHandler %s\n", sourceId)
 
 			// Declares the payload struct
-			var Resp UserPayload
+			var Resp PrivateChatItemPayload
 
 			// ### CONNECT TO DATABASE ###
 
@@ -2472,35 +2472,38 @@ func PrivateChatNotificationHandler() http.HandlerFunc {
 			query := crud.New(db)
 
 			if foundId {
-				// ### GET USER FOLLOWERS ###
-				followings, err := query.GetPrivateChatNoti(context.Background(), int64(id))
+				// ### GET CHAT ITEMS WITH SELF ID AS TARGET ID ###
+				privateChatItem, err := query.GetPrivateChatItem(context.Background(), int64(id))
 
 				if err != nil {
-					fmt.Println("Unable to find followers")
+					fmt.Println("Unable to find chat item")
 				}
 
-				for _, following := range followings {
-					user, err := query.GetUserById(context.Background(), following.TargetID)
+				for _, item := range privateChatItem {
+					fmt.Println(item)
+					// form the resp
 
-					if err != nil {
-						fmt.Println("Unable to find user")
-					}
-					if following.Status == 1 {
-						var oneUser UserStruct
+					// 	user, err := query.GetUserById(context.Background(), item.TargetID)
 
-						oneUser.Id = int(user.ID)
-						oneUser.Fname = user.FirstName
-						oneUser.Lname = user.LastName
-						oneUser.Nname = user.NickName
-						oneUser.Email = user.Email
-						oneUser.Password = user.Password
-						oneUser.Dob = user.Dob.String()
-						oneUser.Avatar = user.Image
-						oneUser.About = user.About
-						oneUser.Public = int(user.Public)
+					// 	if err != nil {
+					// 		fmt.Println("Unable to find item")
+					// 	}
+					// 	if item.Status == 1 {
+					// 		var oneUser UserStruct
 
-						Resp.Data = append(Resp.Data, oneUser)
-					}
+					// 		oneUser.Id = int(user.ID)
+					// 		oneUser.Fname = user.FirstName
+					// 		oneUser.Lname = user.LastName
+					// 		oneUser.Nname = user.NickName
+					// 		oneUser.Email = user.Email
+					// 		oneUser.Password = user.Password
+					// 		oneUser.Dob = user.Dob.String()
+					// 		oneUser.Avatar = user.Image
+					// 		oneUser.About = user.About
+					// 		oneUser.Public = int(user.Public)
+
+					// 		Resp.Data = append(Resp.Data, oneUser)
+					// 	}
 				}
 
 			}

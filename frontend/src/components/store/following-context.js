@@ -44,11 +44,11 @@ export const FollowingContextProvider = (props) => {
 
     const getPrivateChatHandler = () => {
         // private chat notification list after login
-        fetch(`http://localhost:8080/private-chat-notification?id=${selfId}`)
+        fetch(`http://localhost:8080/private-chat-item?id=${selfId}`)
         .then(resp => resp.json())
         .then(data => {
                 console.log(data)
-
+                // set otherListedChatUsers, filter out following
         }).catch(err => {
             console.log(err)
         })

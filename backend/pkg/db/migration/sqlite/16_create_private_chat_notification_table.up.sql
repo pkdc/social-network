@@ -1,4 +1,4 @@
-CREATE TABLE private_chat_notification (
+CREATE TABLE private_chat_item (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   source_id INTEGER NOT NULL,
   target_id INTEGER NOT NULL,

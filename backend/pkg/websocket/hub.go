@@ -86,18 +86,18 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 		not.CreatedAt = msgStruct.CreatedAt
 		// fmt.Printf("not Struct: %v\n", not)
 	} else if msgStruct.Label == "delete-p-chat-noti" {
-		db := db.DbConnect()
+		// db := db.DbConnect()
 
-		query := crud.New(db)
+		// query := crud.New(db)
 
-		err := query.DeletePrivateChatNotification(context.Background(), crud.DeletePrivateChatNotificationParams{
-			SourceID: int64(msgStruct.SourceId),
-			TargetID: int64(msgStruct.TargetId),
-		})
+		// err := query.DeletePrivateChatNotification(context.Background(), crud.DeletePrivateChatNotificationParams{
+		// 	SourceID: int64(msgStruct.SourceId),
+		// 	TargetID: int64(msgStruct.TargetId),
+		// })
 
-		if err != nil {
-			fmt.Println("Unable to delete private chat notification to database")
-		}
+		// if err != nil {
+		// 	fmt.Println("Unable to delete private chat notification to database")
+		// }
 
 	} else if msgStruct.Label == "private" {
 		t = 2
@@ -216,7 +216,7 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 
 		// save private chat notification
 
-		_, err = query.CreatePrivateChatNotification(context.Background(), crud.CreatePrivateChatNotificationParams{
+		_, err = query.CreatePrivateChatItem(context.Background(), crud.CreatePrivateChatItemParams{
 			LastMsgAt: time.Now(),
 			SourceID:  int64(userMsg.SourceId),
 			TargetID:  int64(userMsg.TargetId),

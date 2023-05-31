@@ -47,9 +47,9 @@ type UserStruct struct {
 type UserPayload struct {
 	Data []UserStruct `json:"data"`
 }
-type UserPayloadWithStatus struct{
-	Data UserStruct  `json:"data"`
- 	Status int `json:"status"`
+type UserPayloadWithStatus struct {
+	Data   UserStruct `json:"data"`
+	Status int        `json:"status"`
 }
 
 type UserId struct {
@@ -58,13 +58,11 @@ type UserId struct {
 }
 
 type UserFollowerStruct struct {
-	Id        int    `json:"id"`
-	Action    string `json:"action"`
-	SourceId  int    `json:"sourceid"`
-	TargetId  int    `json:"targetid"`
-	Status    int    `json:"status"`
-	ChatNoti  int    `json:"chat_noti"`
-	LastMsgAt string `json:"last_msg_at"`
+	Id       int    `json:"id"`
+	Action   string `json:"action"`
+	SourceId int    `json:"sourceid"`
+	TargetId int    `json:"targetid"`
+	Status   int    `json:"status"`
 }
 
 type UserMessageStruct struct {
@@ -264,4 +262,16 @@ type NotiMessageStruct struct {
 	CreatedAt string `json:"createdat"`
 	Type      string `json:"type"`
 	Accepted  bool   `json:"accepted"`
+}
+
+type PrivateChatItemStruct struct {
+	Id        int    `json:"id"`
+	TargetId  int    `json:"targetid"`
+	SourceId  int    `json:"sourceid"`
+	ChatNoti  int    `json:"chat_noti"`
+	LastMsgAt string `json:"last_msg_at"`
+}
+
+type PrivateChatItemPayload struct {
+	Data []PrivateChatItemStruct `json:"data"`
 }

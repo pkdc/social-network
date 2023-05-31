@@ -1,1 +1,1 @@
-DROP TABLE IF EXISTS private_chat_notification;
+DROP TABLE IF EXISTS private_chat_item;

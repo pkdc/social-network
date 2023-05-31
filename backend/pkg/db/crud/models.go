@@ -96,7 +96,7 @@ type PostMember struct {
 	PostID int64
 }
 
-type PrivateChatNotification struct {
+type PrivateChatItem struct {
 	ID        int64
 	SourceID  int64
 	TargetID  int64
