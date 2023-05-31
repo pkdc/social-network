@@ -72,9 +72,9 @@ const Chatbox = (props) => {
 
         // clear noti if the chatbox is initilly closed, but then opened
         if (followingCtx.following && followingCtx.following.find((following => following.id === props.chatboxId))) {
-            followingCtx.receiveMsgFollowing(frdOrGrpId, true, true);
+            // followingCtx.receiveMsgFollowing(frdOrGrpId, true, true);
         } else {
-            followingCtx.receiveMsgFollowing(frdOrGrpId, true, false);
+            // followingCtx.receiveMsgFollowing(frdOrGrpId, true, false);
         }
         
         setJustUpdated(prev => !prev);

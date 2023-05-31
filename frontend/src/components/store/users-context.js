@@ -8,14 +8,14 @@ export const UsersContext = React.createContext({
     // publicUsers: [],
     // onOnline: (onlineUser) => {},
     // onOffline: (offlineUser) => {},
-    otherListedChatUsers: [],
-    setOtherListedChatUsers: () => {},
+    // otherListedChatUsers: [],
+    // setOtherListedChatUsers: () => {},
 });
 
 export const UsersContextProvider = (props) => {
     const [usersList, setUsersList] = useState([]);
     // const [publicUsersList, setPublicUsersList] = useState([]);
-    const [otherListedChatUsers, setOtherListedChatUsers] = useState([]);
+    // const [otherListedChatUsers, setOtherListedChatUsers] = useState([]);
 
     // get users
     const getUsersHandler = () => {
@@ -70,8 +70,8 @@ export const UsersContextProvider = (props) => {
             // publicUsers: publicUsersList,
             // onOnline: userOnlineHandler,
             // onOffline: userOfflineHandler,
-            otherListedChatUsers: otherListedChatUsers,
-            setOtherListedChatUsers: setOtherListedChatUsers,
+            // otherListedChatUsers: otherListedChatUsers,
+            // setOtherListedChatUsers: setOtherListedChatUsers,
         }}>
         {props.children}
         </UsersContext.Provider>

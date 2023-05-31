@@ -24,14 +24,15 @@ const AllUserChatItems = (props) => {
     // const publicUsers = usersCtx.users.filter((user) => user.public === 1 && !followingCtx.following.includes(user));
     // let followingCtx.otherListedChatUsers = usersCtx.users.filter((user) => user.public === 1 && !followingUids.includes(user.id));
     useEffect(() => {
-        // console.log("public users from ctx", usersCtx.publicUsers);
+        console.log("public users from ctx", usersCtx.publicUsers);
         let followingUids = [];
         let otherListedChatUsersUids = [];
         if (followingCtx.following) followingUids = followingCtx.following.map((following) => following.id);
         // pot bug
-        usersCtx.users && usersCtx.setOtherListedChatUsers (usersCtx.users.filter((user) => user.public === 1 && !followingUids.includes(user.id)));
+        // this clears prev public-private convo
+        console.log("followingCtx.otherListedChatUsers (chatitems)", followingCtx.otherListedChatUsers);
         if (followingCtx.otherListedChatUsers) otherListedChatUsersUids = followingCtx.otherListedChatUsers.map((otherListedChatUser) => otherListedChatUser.id);
-
+        console.log("otherListedChatUsersUids (chatitems)", otherListedChatUsersUids);
         if (wsCtx.websocket !== null && wsCtx.newMsgsObj) {
             console.log("sourceid  (chatitems)", wsCtx.newMsgsObj.sourceid);
             console.log("targetid  (chatitems)", wsCtx.newMsgsObj.targetid);
@@ -54,12 +55,14 @@ const AllUserChatItems = (props) => {
                 console.log("new Received msg data when chatbox is closed (public, from private)", wsCtx.newMsgsObj);
                 console.log("ws receives msg  when chatbox is closed (public, from private): ", wsCtx.newMsgsObj.sourceid);
                 const privateSender = usersCtx.users.find((user) => user.id === wsCtx.newMsgsObj.sourceid);
-                usersCtx.setOtherListedChatUsers ((prevList) => [privateSender, ...prevList]);
+                if (privateSender && !followingCtx.otherListedChatUsers.some(chatUser => chatUser.id === privateSender.id)) {
+                    followingCtx.setOtherListedChatUsers((prevList) => [privateSender, ...prevList]);
+                }
             } else {
                 console.log("Cur user is not following the msg sender nor having a public profile");
             }
         }
-    }, [usersCtx.users, followingCtx.following, wsCtx.newMsgsObj]);
+    }, [usersCtx.users, followingCtx.following, wsCtx.newMsgsObj, followingCtx.otherListedChatUsers.length]);
 
     // private chat notification list after login
     useEffect(() => {
