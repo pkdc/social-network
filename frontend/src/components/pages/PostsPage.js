@@ -123,7 +123,7 @@ const PostsPage = () => {
                 <AllPosts posts={postData} comments={commentData} onCreateCommentSuccessful={createCommentSuccessHandler}/>
             </div>
 
-            <div className={styles.right}>
+            {/* <div className={styles.right}>
                 <Card className={styles.requests}>
                     <div className={styles.label}>Follow Requests</div>
                     <FollowRequest></FollowRequest>
@@ -135,7 +135,7 @@ const PostsPage = () => {
                     <GroupRequest></GroupRequest>
 
                 </Card>
-           </div>
+           </div> */}
 
         </div>
     )

@@ -822,7 +822,7 @@ func UserFollowerHandler() http.HandlerFunc {
 					if err != nil {
 						fmt.Println("Unable to find user")
 					}
-					if follower.Status == 1 {
+					if follower.Status > 0 {
 						var oneUser UserStruct
 						oneUser.Id = int(user.ID)
 						oneUser.Fname = user.FirstName
@@ -1064,6 +1064,7 @@ func CloseFriendHandler() http.HandlerFunc {
 			return
 		}
 
+		fmt.Println(r.Method)
 		switch r.Method {
 		case http.MethodGet:
 
@@ -1073,7 +1074,6 @@ func CloseFriendHandler() http.HandlerFunc {
 			if err != nil {
 				fmt.Println("Unable to convert to int")
 			}
-
 			foundId := false
 
 			if sourceId != "" {
@@ -1134,8 +1134,8 @@ func CloseFriendHandler() http.HandlerFunc {
 			WriteHttpHeader(jsonResp, w)
 		case http.MethodPost:
 			type Ids struct {
-				SourceID int64
-				Data []int `json:"data"`
+				SourceID int64 `json:"sourceid"`
+				TargetID int64 `json:"targetid"`
 			}
 
 			// Declares the variables to store the follower details and handler response
@@ -1147,6 +1147,7 @@ func CloseFriendHandler() http.HandlerFunc {
 			if err != nil {
 				Resp.Success = false
 			}
+			fmt.Println("closefriend: ", followers)
 
 			// ### CONNECT TO DATABASE ###
 
@@ -1154,38 +1155,35 @@ func CloseFriendHandler() http.HandlerFunc {
 
 			query := crud.New(db)
 
-			for _, i := range followers.Data {
-				followerContext := crud.CheckFollowerParams{SourceID: followers.SourceID, TargetID: int64(i)}
+			followerContext := crud.CheckFollowerParams{SourceID: followers.SourceID, TargetID: followers.TargetID}
+			follower, err := query.CheckFollower(context.Background(), followerContext)
+			if err != nil {
+				fmt.Println("Unable to find follower")
+				Resp.Success = false
+			}
 
-				follower, err := query.CheckFollower(context.Background(), followerContext)
-				if err != nil {
-					fmt.Println("Unable to find follower")
-					Resp.Success = false
-				}
+			// ### update FOLLOWER TO DATABASE ###
 
-				// ### update FOLLOWER TO DATABASE ###
+			var newFollower crud.UpdateFollowerParams
 
-				var newFollower crud.UpdateFollowerParams
+			newFollower.ChatNoti = follower.ChatNoti
+			newFollower.LastMsgAt = follower.LastMsgAt
+			newFollower.SourceID = follower.SourceID
+			newFollower.TargetID = follower.TargetID
 
-				newFollower.ChatNoti = follower.ChatNoti
-				newFollower.LastMsgAt = follower.LastMsgAt
-				newFollower.SourceID = follower.SourceID
-				newFollower.TargetID = follower.TargetID
+			if follower.Status == 1 {
+				newFollower.Status = int64(2)
+			} else if follower.Status == 2 {
+				newFollower.Status = int64(1)
+			} else {
+				newFollower.Status = int64(follower.Status)
+			}
 
-				if follower.Status == 1 {
-					newFollower.Status = int64(2)
-				} else if follower.Status == 2 {
-					newFollower.Status = int64(1)
-				} else {
-					newFollower.Status = int64(follower.Status)
-				}
-
-				_, err = query.UpdateFollower(context.Background(), newFollower)
-				fmt.Println("UPDATED CLOSE FRIEND")
-				if err != nil {
-					fmt.Println("Unable to update close friend")
-					Resp.Success = false
-				}
+			_, err = query.UpdateFollower(context.Background(), newFollower)
+			fmt.Println("UPDATED CLOSE FRIEND")
+			if err != nil {
+				fmt.Println("Unable to update close friend")
+				Resp.Success = false
 			}
 
 			// Marshals the response struct to a json object
@@ -1197,10 +1195,10 @@ func CloseFriendHandler() http.HandlerFunc {
 
 			// Sets the http headers and writes the response to the browser
 			WriteHttpHeader(jsonResp, w)
-		default:
-			// Prevents all request types other than POST and GET
-			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
-			return
+			// default:
+			// 	// Prevents all request types other than POST and GET
+			// 	http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
+			// 	return
 		}
 	}
 }
@@ -2628,11 +2626,10 @@ func UserFollowerStatusHandler() http.HandlerFunc {
 			if foundId {
 				// ### GET USER FOLLOWERS ###
 				followers, err := query.GetFollowers(context.Background(), int64(id))
-				var value bool
+				var value string
 				if err != nil {
 					fmt.Println("Unable to find followers")
 				}
-
 				for _, follower := range followers {
 					if err != nil {
 						fmt.Println("Unable to find user")
@@ -2640,10 +2637,25 @@ func UserFollowerStatusHandler() http.HandlerFunc {
 					// w.Header().Set("Content-Type", "application/json")
 					if int(follower.SourceID) == source_id {
 						if follower.Status == 1 {
-							value = false
+							value = "false"
 						} else if follower.Status == 0 {
-							value = true
+							value = "true"
 						}
+					}
+				}
+				followers2, err := query.GetFollowers(context.Background(), int64(source_id))
+				if err != nil {
+					fmt.Println("Unable to find followers")
+				}
+				for _, follower := range followers2 {
+					if err != nil {
+						fmt.Println("Unable to find user")
+					}
+					if int(follower.SourceID) == id {
+						if follower.Status == 2 {
+							value += "closefriend"
+						}
+
 					}
 				}
 				fmt.Fprint(w, value)

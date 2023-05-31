@@ -40,6 +40,7 @@ let statusofcuruser ;
     // console.log("params", userId)
     const [currentlyFollowing, setCurrentlyFollowing] = useState(false);
     const [requestedToFollow, setRequestedToFollow] = useState(false);
+    const [isCloseFriend, setCloseFriend] = useState(false);
 
     useEffect(() => {
         const storedFollowing = JSON.parse(localStorage.getItem("following"));
@@ -149,18 +150,21 @@ let statusofcuruser ;
     fetch(`http://localhost:8080/user-follow-status?tid=${userId}&sid=${currUserId}`)
     .then(response => response.text())
     .then(data => {
-
-        if (data == "true"){
+        console.log("cf: ",data )
+        if (data == "trueclosefriend" || data == "true"){
             setRequestedToFollow(true)
         }else {
             setRequestedToFollow(false)
+        }
+        if (data =="trueclosefriend" || data== "falseclosefriend"){
+            setCloseFriend(true)
         }
    
     }).catch(error => {
                 console.log({error})
     });
     
-    }, []);
+    }, [userId]);
 
 
  
@@ -202,7 +206,7 @@ let statusofcuruser ;
           fetch('http://localhost:8080/user-follower', reqOptions)
             .then(resp => resp.json())
             .then(data => {
-                console.log(data);
+                console.log("user follower data", data);
                 if (data.success) {
                     console.log("followrequest")
                 }
@@ -247,11 +251,41 @@ let statusofcuruser ;
     };
 
     function closeFriendHandler(e) {
-        if (e.target.checked) {
+        if (isCloseFriend){
+            setCloseFriend(false)
 
-        } else {
-
+        }else {
+            setCloseFriend(true)
         }
+        console.log("closefriend event: ",e)
+       
+            const data = {
+                sourceid:parseInt(e.target.id),
+                targetid:  parseInt(currUserId),
+            };
+    console.log("closefriend event: ", data)
+            const cfOptions = {
+                method: "POST",
+                credentials: "include",
+                mode: "cors",
+                headers: {
+                  'Content-Type': 'application/json'
+              },
+                body: JSON.stringify(data)
+              };
+            
+              fetch('http://localhost:8080/close-friend', cfOptions)
+                .then(resp => resp.json())
+                .then(data => {
+                    console.log("closefriend event: ",data);
+                    if (data.success) {
+                        console.log("closefriendchanges")
+                    }
+                })
+                .catch(err => {
+                  console.log("closefriend event: ",err);
+                })
+         
     }
 
 
@@ -268,9 +302,8 @@ let statusofcuruser ;
         } else {
             followButton = <div className={classes.followbtn} id={userId} onClick={followHandler}>+ Follow</div>
         }       
-        messageButton = <GreyButton>Message</GreyButton> 
-        closeFriend = <input type="checkbox" onChange={closeFriendHandler} />
-        
+        messageButton = <GreyButton>Message</GreyButton>
+            closeFriend = <input type="checkbox" id={userId} checked={isCloseFriend} onClick={closeFriendHandler} />        
     }
 
     return <div className={classes.container}>
