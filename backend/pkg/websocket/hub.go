@@ -214,17 +214,41 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 			fmt.Println("Unable to store message to database")
 		}
 
-		// save private chat notification
-
-		_, err = query.CreatePrivateChatItem(context.Background(), crud.CreatePrivateChatItemParams{
-			LastMsgAt: time.Now(),
-			SourceID:  int64(userMsg.SourceId),
-			TargetID:  int64(userMsg.TargetId),
-			ChatNoti:  0,
+		// update private chat item in db if exist
+		fmt.Printf("Checking if private chat item exists, source %d and target %d\n", userMsg.SourceId, userMsg.TargetId)
+		chatItem, err := query.GetOnePrivateChatItem(context.Background(), crud.GetOnePrivateChatItemParams{
+			SourceID: int64(userMsg.SourceId),
+			TargetID: int64(userMsg.TargetId),
 		})
-
-		if err != nil {
-			fmt.Println("Unable to store private chat notification to database")
+		// chatItemRev, err := query.GetOnePrivateChatItem(context.Background(), crud.GetOnePrivateChatItemParams{
+		// 	SourceID: int64(userMsg.TargetId),
+		// 	TargetID: int64(userMsg.SourceId),
+		// })
+		if chatItem != (crud.PrivateChatItem{}) {
+			fmt.Println("Exists")
+			_, err = query.UpdatePrivateChatItem(context.Background(), crud.UpdatePrivateChatItemParams{
+				LastMsgAt: time.Now(),
+				SourceID:  int64(userMsg.SourceId),
+				TargetID:  int64(userMsg.TargetId),
+				ChatNoti:  0, // 0 - not seen, 1 - seen
+			})
+			if err != nil {
+				fmt.Println(err)
+				fmt.Println("Unable to update private chat item in database")
+			}
+		} else {
+			fmt.Println("Not Exists")
+			// save new private chat item if not exist
+			_, err = query.CreatePrivateChatItem(context.Background(), crud.CreatePrivateChatItemParams{
+				LastMsgAt: time.Now(),
+				SourceID:  int64(userMsg.SourceId),
+				TargetID:  int64(userMsg.TargetId),
+				ChatNoti:  0, // 0 - not seen, 1 - seen
+			})
+			if err != nil {
+				fmt.Println(err)
+				fmt.Println("Unable to store private chat item to database")
+			}
 		}
 
 		// Marshals the struct to a json object

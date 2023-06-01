@@ -2459,7 +2459,7 @@ func PrivateChatItemHandler() http.HandlerFunc {
 			if sourceId != "" {
 				foundId = true
 			}
-
+			fmt.Println("urlPrivateChatItem: ", r.URL)
 			fmt.Printf("GET PrivateChatItemHandler %s\n", sourceId)
 
 			// Declares the payload struct
@@ -2473,14 +2473,15 @@ func PrivateChatItemHandler() http.HandlerFunc {
 
 			if foundId {
 				// ### GET CHAT ITEMS WITH SELF ID AS TARGET ID ###
-				privateChatItem, err := query.GetPrivateChatItem(context.Background(), int64(id))
+				privateChatItems, err := query.GetPrivateChatItem(context.Background(), int64(id))
 
 				if err != nil {
+					fmt.Println(err)
 					fmt.Println("Unable to find chat item")
 				}
 
-				for _, item := range privateChatItem {
-					fmt.Println(item)
+				for _, item := range privateChatItems {
+					fmt.Println("chat item: ", item)
 					// form the resp
 
 					// 	user, err := query.GetUserById(context.Background(), item.TargetID)

@@ -10,6 +10,10 @@ RETURNING *;
 SELECT * FROM private_chat_item
 WHERE target_id = ?;
 
+-- name: GetOnePrivateChatItem :one
+SELECT * FROM private_chat_item
+WHERE source_id = ? AND target_id = ?;
+
 -- name: DeletePrivateChatItem :exec
 DELETE FROM private_chat_item
 WHERE source_id = ? AND target_id = ?;

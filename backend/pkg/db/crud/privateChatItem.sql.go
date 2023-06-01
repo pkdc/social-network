@@ -59,6 +59,29 @@ func (q *Queries) DeletePrivateChatItem(ctx context.Context, arg DeletePrivateCh
 	return err
 }
 
+const getOnePrivateChatItem = `-- name: GetOnePrivateChatItem :one
+SELECT id, source_id, target_id, chat_noti, last_msg_at FROM private_chat_item
+WHERE source_id = ? AND target_id = ?
+`
+
+type GetOnePrivateChatItemParams struct {
+	SourceID int64
+	TargetID int64
+}
+
+func (q *Queries) GetOnePrivateChatItem(ctx context.Context, arg GetOnePrivateChatItemParams) (PrivateChatItem, error) {
+	row := q.db.QueryRowContext(ctx, getOnePrivateChatItem, arg.SourceID, arg.TargetID)
+	var i PrivateChatItem
+	err := row.Scan(
+		&i.ID,
+		&i.SourceID,
+		&i.TargetID,
+		&i.ChatNoti,
+		&i.LastMsgAt,
+	)
+	return i, err
+}
+
 const getPrivateChatItem = `-- name: GetPrivateChatItem :many
 SELECT id, source_id, target_id, chat_noti, last_msg_at FROM private_chat_item
 WHERE target_id = ?
