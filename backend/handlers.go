@@ -458,7 +458,7 @@ func Posthandler() http.HandlerFunc {
 			fmt.Printf("post message %s\n", message)
 			fmt.Printf("post image %s\n", image)
 			fmt.Printf("post privacy %d\n", privacy)
-			fmt.Printf("post created at %d\n", createdAt)
+			fmt.Printf("post created at %v\n", createdAt)
 
 			var Resp PostResponse
 			Resp.Success = true

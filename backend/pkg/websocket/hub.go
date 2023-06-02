@@ -7,6 +7,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log"
 	"time"
 )
 
@@ -85,16 +86,26 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 		not.Accepted = msgStruct.Accepted
 		not.CreatedAt = msgStruct.CreatedAt
 		// fmt.Printf("not Struct: %v\n", not)
-	} else if msgStruct.Label == "delete-p-chat-noti" {
-		// db := db.DbConnect()
+	} else if msgStruct.Label == "set-seen-p-chat-noti" {
+		db := db.DbConnect()
 
-		// query := crud.New(db)
-
-		// err := query.DeletePrivateChatNotification(context.Background(), crud.DeletePrivateChatNotificationParams{
-		// 	SourceID: int64(msgStruct.SourceId),
-		// 	TargetID: int64(msgStruct.TargetId),
-		// })
-
+		query := crud.New(db)
+		fmt.Println("set-seen")
+		chatItem, err := query.GetOnePrivateChatItem(context.Background(), crud.GetOnePrivateChatItemParams{
+			SourceID: int64(msgStruct.SourceId),
+			TargetID: int64(msgStruct.TargetId),
+		})
+		if err != nil {
+			log.Println(err)
+		}
+		fmt.Println("Found target item", chatItem)
+		_, err = query.UpdatePrivateChatItem(context.Background(), crud.UpdatePrivateChatItemParams{
+			ChatNoti:  int64(1),
+			LastMsgAt: chatItem.LastMsgAt,
+			SourceID:  int64(msgStruct.SourceId),
+			TargetID:  int64(msgStruct.TargetId),
+		})
+		fmt.Println("Updated chat item")
 		// if err != nil {
 		// 	fmt.Println("Unable to delete private chat notification to database")
 		// }
@@ -226,7 +237,7 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 				LastMsgAt: time.Now(),
 				SourceID:  int64(userMsg.SourceId),
 				TargetID:  int64(userMsg.TargetId),
-				ChatNoti:  0, // 0 - not seen, 1 - seen
+				ChatNoti:  int64(0), // 0 - not seen, 1 - seen
 			})
 			if err != nil {
 				fmt.Println(err)
@@ -239,7 +250,7 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 				LastMsgAt: time.Now(),
 				SourceID:  int64(userMsg.SourceId),
 				TargetID:  int64(userMsg.TargetId),
-				ChatNoti:  0, // 0 - not seen, 1 - seen
+				ChatNoti:  int64(0), // 0 - not seen, 1 - seen
 			})
 			if err != nil {
 				fmt.Println(err)
@@ -272,7 +283,7 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 				LastMsgAt: time.Now(),
 				SourceID:  int64(userMsg.TargetId),
 				TargetID:  int64(userMsg.SourceId),
-				ChatNoti:  1, // 0 - not seen, 1 - seen // no new msg for reverse, so seen
+				ChatNoti:  int64(1), // 0 - not seen, 1 - seen // no new msg for reverse, so seen
 			})
 			if err != nil {
 				fmt.Println(err)

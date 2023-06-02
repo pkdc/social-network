@@ -246,8 +246,8 @@ type NotifStruct struct {
 	Label     string `json:"label"`
 	Id        int    `json:"id"`
 	Type      string `json:"type"`
-	TargetId  int    `json:"targetid"`
 	SourceId  int    `json:"sourceid"`
+	TargetId  int    `json:"targetid"`
 	Accepted  bool   `json:"accepted"`
 	CreatedAt string `json:"createdat"`
 }
@@ -255,8 +255,8 @@ type NotifStruct struct {
 type NotiMessageStruct struct {
 	Label     string `json:"label"`
 	Id        int    `json:"id"`
-	TargetId  int    `json:"targetid"`
 	SourceId  int    `json:"sourceid"`
+	TargetId  int    `json:"targetid"`
 	Message   string `json:"message"`
 	GroupId   int    `json:"groupid"`
 	CreatedAt string `json:"createdat"`
@@ -266,8 +266,8 @@ type NotiMessageStruct struct {
 
 type PrivateChatItemStruct struct {
 	Id        int    `json:"id"`
-	TargetId  int    `json:"targetid"`
 	SourceId  int    `json:"sourceid"`
+	TargetId  int    `json:"targetid"`
 	ChatNoti  int    `json:"chat_noti"`
 	LastMsgAt string `json:"last_msg_at"`
 }

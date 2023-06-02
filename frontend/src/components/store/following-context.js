@@ -111,12 +111,12 @@ export const FollowingContextProvider = (props) => {
                 targetUser["chat_noti"] = false; 
                 console.log("chatbox opened, open=", open);
                 // delete private chat notification from database
-                // const privateChatNotiPayloadObj = {};
-                // privateChatNotiPayloadObj["label"] = "delete-p-chat-noti";
-                // privateChatNotiPayloadObj["sourceid"] = friendId;
-                // privateChatNotiPayloadObj["targetid"] = +selfId;
+                const privateChatNotiPayloadObj = {};
+                privateChatNotiPayloadObj["label"] = "set-seen-p-chat-noti";
+                privateChatNotiPayloadObj["sourceid"] = friendId;
+                privateChatNotiPayloadObj["targetid"] = +selfId;
 
-                // if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(privateChatNotiPayloadObj));
+                if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(privateChatNotiPayloadObj));
             } 
         } else { // if cur user is public and receives a msg coz of that   
             const targetUser = usersCtx.users.find(user => user.id === +friendId);
