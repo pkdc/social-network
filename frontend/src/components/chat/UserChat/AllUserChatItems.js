@@ -56,6 +56,7 @@ const AllUserChatItems = (props) => {
                 console.log("ws receives msg  when chatbox is closed (public, from private): ", wsCtx.newMsgsObj.sourceid);
                 const privateSender = usersCtx.users.find((user) => user.id === wsCtx.newMsgsObj.sourceid);
                 if (privateSender && !followingCtx.otherListedChatUsers.some(chatUser => chatUser.id === privateSender.id)) {
+                    privateSender["chat_noti"] = true;
                     followingCtx.setOtherListedChatUsers((prevList) => [privateSender, ...prevList]);
                 }
             } else {

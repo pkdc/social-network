@@ -120,7 +120,8 @@ export const FollowingContextProvider = (props) => {
 
                 if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(privateChatNotiPayloadObj));
             }
-        } else { // if one of the users is public and can chat coz of that   
+            console.log("after add chat noti target user", targetUser);
+        } else { // if one or both of the users is public and can chat coz of that   
             const targetUser = usersCtx.users.find(user => user.id === +friendId);
             console.log("target user", targetUser);
             setOtherListedChatUsers(prevList => [targetUser, ...prevList.filter(otherChatUser => otherChatUser.id !== +friendId)]);
@@ -139,6 +140,7 @@ export const FollowingContextProvider = (props) => {
 
                 if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(privateChatNotiPayloadObj));
             }
+            console.log("after add chat noti target user", targetUser);
         }
     };
 
