@@ -26,7 +26,10 @@ function UserEvent(props) {
         minute: 'numeric',
     }).format(mills);
 
-    return <Card className={classes.card}>
+    return <>
+    
+    {/* <div className={classes.label}>Your events</div> */}
+    <Card className={classes.card}>
         {/* let [going ,setGoing] = useState */}
         <div id={props.groupid} onClick={handleClick} className={classes.container}>
             <div className={classes.date}>{newDate} </div>
@@ -40,6 +43,7 @@ function UserEvent(props) {
             {/* </div> */}
         </div>
     </Card>
+    </>
 
 }
 

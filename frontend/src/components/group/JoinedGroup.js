@@ -22,30 +22,34 @@ function JoinedGroups() {
         let id = e.target.id
         // console.log("3690",e)
         if (id == "") {
-            id =  e.target.parentElement.parentElement.id
+            id = e.target.parentElement.parentElement.id
         }
-        console.log("3690",id)
+        console.log("3690", id)
         navigate("/groupprofile", { state: { id } })
 
     }
 
-    return <Card>
+    return <>
+
         <div className={classes.label}>
             Groups you've joined
         </div>
-        {/* {data.data && data.data.map((group) => ( */}
-        {jGrpCtx.joinedGrps && jGrpCtx.joinedGrps.map((group) => (
-            <div key={group.id} id={group.id} className={classes.container} onClick={handleClick} >
-                <div className={classes.img}></div>
-                <div>
-                    <div className={classes.title}>{group.title}</div>
+        <Card>
+
+            {/* {data.data && data.data.map((group) => ( */}
+            {jGrpCtx.joinedGrps && jGrpCtx.joinedGrps.map((group) => (
+                <div key={group.id} id={group.id} className={classes.container} onClick={handleClick} >
+                    <div className={classes.img}></div>
+                    <div>
+                        <div className={classes.title}>{group.title}</div>
+                    </div>
+                    {console.log("title jg", group.title)}
+
                 </div>
-                {console.log("title jg", group.title)}
+            ))}
 
-            </div>
-        ))}
-
-    </Card>
+        </Card>
+    </>
 }
 
 export default JoinedGroups;

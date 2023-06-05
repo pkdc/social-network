@@ -63,7 +63,7 @@ function CreateEvent( {groupid} ) {
         <textarea className={classes.content} name="description" id="description" placeholder="Description" value={description} onChange={e => setDescription(e.target.value)}></textarea>
         <input type="datetime-local" name="date" id="date" value={date} onChange={e => setDate(e.target.value)}></input>
         <div className={classes.btn}>
-            <button>Create</button>
+            <SmallButton>Create</SmallButton>
         </div>
     </form>
     </Card>

@@ -59,17 +59,22 @@ const NotificationCentre = (props) => {
     // let description = "follow request";
     return (
         // <div className={styles.overlay} onClick={props.onClose}>
-        <div className={styles.modalContainer} >
-            <div className={styles.label}>
-                <div>Notifications</div>
-                <div onClick={props.onClose} >X</div>
-            </div>
-            {/* <div className={styles["container"]}> */}
-            <AllNotificationItems
-                notiItems={notiArr}
-                onClose={props.onClose}
-            />
-        </div>
+           <>
+           
+           {notiArr[0] && 
+       <div className={styles.modalContainer} >
+           <div className={styles.label}>
+               <div>Notifications</div>
+               <div onClick={props.onClose} >X</div>
+           </div>
+           <AllNotificationItems
+               notiItems={notiArr[0]}
+               onClose={props.onClose}
+           />
+           </div>
+       }
+           </>
+            
         // </div>
     );
 };

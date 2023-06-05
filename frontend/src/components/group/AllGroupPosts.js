@@ -9,16 +9,18 @@ import GroupPost from "./GroupPost";
 
 function AllGroupPosts(props) {
 
-    const { error, isLoaded, data } = useGet(`/group-post?groupid=${props.groupid}`)
+    console.log("4567", props)
 
-    if (!isLoaded) return <div>Loading...</div>
-    if (error) return <div>Error: {error.message}</div>
+    // const { error, isLoaded, data } = useGet(`/group-post?groupid=${props.groupid}`)
+
+    // if (!isLoaded) return <div>Loading...</div>
+    // if (error) return <div>Error: {error.message}</div>
 
 
-    data.data && data.data.sort((a, b) => Date.parse(b.createdat) - Date.parse(a.createdat));
+    // data.data && data.data.sort((a, b) => Date.parse(b.createdat) - Date.parse(a.createdat));
    
     return <div className={classes.container}>
-        {data.data && data.data.map((post, p) => (
+        {props.posts && props.posts.map((post) => (
             <GroupPost
                 key={post.id}
                 id={post.id}

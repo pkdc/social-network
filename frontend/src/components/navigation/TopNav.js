@@ -18,7 +18,7 @@ import NotificationCentre from "../notification/NotificationCentre";
 
 const TopNav = () => {
     const [showNoti, setShowNoti] = useState(false);
-    const [newNoti, setNewNoti] = useState(null);
+    const [newNoti, setNewNoti] = useState([]);
     const [showNotiBadge , setShowNotiBadge] = useState(false)
 
     const navigate = useNavigate();
@@ -55,7 +55,11 @@ const TopNav = () => {
         if (wsCtx.websocket !== null && wsCtx.newNotiObj !== null) {
             console.log("ws receives notiObj (TopNav): ", wsCtx.newNotiObj);
             console.log("ws receives noti type (TopNav): ", wsCtx.newNotiObj.type);
-            setNewNoti(wsCtx.newNotiObj);
+            console.log("before the overwrite: ", newNoti); 
+            if (newNoti){
+                setNewNoti(prevFollowing => [...prevFollowing, wsCtx.newNotiObj]);
+            }else{setNewNoti(wsCtx.newNotiObj)}
+            // setNewNoti(wsCtx.newNotiObj);
             // let onlineNotif =localStorage.getItem("new_notif")
             // if (onlineNotif ==""){
             //     // localStorage.setItem("new_notif", JSON.stringify(Object.values(wsCtx.newNotiObj)))
@@ -64,7 +68,7 @@ const TopNav = () => {
             //     // onlineNotif
             // }
             setShowNotiBadge(true)
-            wsCtx.setNewNotiObj(null);
+            // wsCtx.setNewNotiObj(null);
         }
     } ,[wsCtx.newNotiObj]);
 
@@ -90,25 +94,10 @@ const TopNav = () => {
                     <Link className={styles.lnk} to="/">Home</Link>
                     <Link className={styles.lnk} to="/group">Groups</Link>
                     <Link className={styles.lnk} to="/messanger">Messenger</Link>
-                    {/* <Link className={styles.lnk} to="/profile" id={currUserId} onClick={handleClick}>Profile</Link> */}
-                    {/* <div id={currUserId} className={styles.lnk} onClick={handleClick}> */}
-                    {/* <img src={profile} alt=""/> */}
-                    {/* Profile */}
-                    {/* <Link className={styles.profile} to={`/profile/${userId}`}>
-                    {!avatar && <img className={styles["avatar"]} src={require("../../images/"+`${defaultImagePath}`)} alt="" width={"35px"}/>}
-                    {avatar && <Avatar src={avatar} alt="" width={"35px"}/>}
-                    {nickname ? `${first} ${last} (${nickname})` : `${first} ${last}`}
-                    </Link> */}
-                    {/* </div> */}
                     <Link className={styles.lnk} to={`/profile/${currUserId}`}>Profile</Link>
                 </div>
 
                 </div>
-          
-                     {/* <div id={currUserId} className={styles.profile} onClick={handleClick}>
-                    <img src={profile} alt=""/>
-                    MaddieWesst
-                    </div> */}
 
                 <div className={styles.icons}>
                     <div className={styles.notif}>
@@ -119,7 +108,7 @@ const TopNav = () => {
                             }
                         </div>
                         {/* showNoti &&  */}
-                        {showNoti && <NotificationCentre 
+                        {newNoti&&showNoti && <NotificationCentre 
                             newNoti={newNoti}
                             // onReceivedNewNoti={ReceivedNewNotiHandler}
                             onClose={() => setShowNoti(false)}

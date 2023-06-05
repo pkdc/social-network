@@ -61,6 +61,7 @@ const NotificationItem = (props) => {
     console.log("props.grouptitle (item)", props);
     return (
         <div>
+ 
             {props.type === "follow-req" && <FollowReqNotiItem 
             srcUser={sourceUser}
             targetId={props.targetId}
@@ -75,9 +76,12 @@ const NotificationItem = (props) => {
             targetId={props.targetId}
             groupId={props.groupId}
             />}
-            {props.type === "event-notif" && <EventNotif
+
+            {props.type && props.type.includes("event-notif")  && <EventNotif
             groupId={props.groupId}
+            type = {props.type}
             />}
+        
         </div>
     );
 };

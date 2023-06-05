@@ -101,6 +101,7 @@ type PostResponse struct {
 	Image     string `json:"image"`
 	CreatedAt string `json:"createdat"`
 	Success   bool   `json:"success"`
+	Privacy   int    `json:"privacy"`
 }
 
 type PostPayload struct {
@@ -228,9 +229,9 @@ type GroupPostPayload struct {
 
 type GroupPostCommentStruct struct {
 	Id          int    `json:"id"`
-	Fname     string `json:"fname"`
-	Lname     string `json:"lname"`
-	Nickname  string `json:"nname"`
+	Fname       string `json:"fname"`
+	Lname       string `json:"lname"`
+	Nickname    string `json:"nname"`
 	GroupPostId int    `json:"postid"`
 	Author      int    `json:"userid"`
 	CreatedAt   string `json:"createdat"`

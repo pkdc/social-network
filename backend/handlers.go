@@ -550,6 +550,7 @@ func Posthandler() http.HandlerFunc {
 					newPost.Message = post.Message
 					newPost.CreatedAt = post.CreatedAt.String()
 					newPost.Image = post.Image
+					newPost.Privacy = int(post.Privacy)
 
 					curUser, err := query.GetUserById(context.Background(), post.Author)
 
@@ -2813,7 +2814,7 @@ func offlineNot(userid int) []NotifStruct {
 			var oneNotif NotifStruct
 			oneNotif.Label = "noti"
 			oneNotif.Id = 0
-			oneNotif.Type = "event-notif"
+			oneNotif.Type = "event-notif+" + groupid.Title
 			oneNotif.TargetId = 987
 			oneNotif.SourceId = userid
 			oneNotif.Accepted = false

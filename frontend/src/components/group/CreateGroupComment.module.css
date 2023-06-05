@@ -9,19 +9,23 @@
     width: 80%;
 }
 
-.input::placeholder {   
+.input::placeholder {
     padding: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .functions {
     display: flex;
-    position: absolute;
-    left: 75%;
+    /* position: absolute;
+    left: 75%; */
+    justify-content: flex-end;
+    /* margin-right: 20px; */
+
 }
 
-.attach {
-   
-}
+.attach {}
 
 .send {
     border: none;
