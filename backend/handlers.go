@@ -2444,8 +2444,7 @@ func PrivateChatItemHandler() http.HandlerFunc {
 			return
 		}
 
-		switch r.Method {
-		case http.MethodGet:
+		if r.Method == http.MethodGet {
 			fmt.Printf("GET PrivateChatItemHandler\n")
 			// Checks to find a user id in the url
 			sourceId := r.URL.Query().Get("id")
@@ -2484,32 +2483,24 @@ func PrivateChatItemHandler() http.HandlerFunc {
 					fmt.Println("chat item: ", item)
 					// form the resp
 
-					// 	user, err := query.GetUserById(context.Background(), item.TargetID)
+					if err != nil {
+						fmt.Println("Unable to find item")
+					}
 
-					// 	if err != nil {
-					// 		fmt.Println("Unable to find item")
-					// 	}
-					// 	if item.Status == 1 {
-					// 		var oneUser UserStruct
+					var oneItem PrivateChatItemStruct
 
-					// 		oneUser.Id = int(user.ID)
-					// 		oneUser.Fname = user.FirstName
-					// 		oneUser.Lname = user.LastName
-					// 		oneUser.Nname = user.NickName
-					// 		oneUser.Email = user.Email
-					// 		oneUser.Password = user.Password
-					// 		oneUser.Dob = user.Dob.String()
-					// 		oneUser.Avatar = user.Image
-					// 		oneUser.About = user.About
-					// 		oneUser.Public = int(user.Public)
+					oneItem.Id = int(item.ID)
+					oneItem.SourceId = int(item.SourceID)
+					oneItem.TargetId = int(item.TargetID)
+					oneItem.ChatNoti = int(item.ChatNoti)
+					oneItem.LastMsgAt = item.LastMsgAt.String()
 
-					// 		Resp.Data = append(Resp.Data, oneUser)
-					// 	}
+					Resp.Data = append(Resp.Data, oneItem)
 				}
-
 			}
 
 			// Marshals the response struct to a json object
+			fmt.Println("p chat endpt Resp: ", Resp)
 			jsonResp, err := json.Marshal(Resp)
 			if err != nil {
 				http.Error(w, "500 internal server error", http.StatusInternalServerError)
@@ -2518,48 +2509,8 @@ func PrivateChatItemHandler() http.HandlerFunc {
 
 			// Sets the http headers and writes the response to the browser
 			WriteHttpHeader(jsonResp, w)
-		case http.MethodPost:
-			// Declares the variables to store the follower details and handler response
-			var follower UserFollowerStruct
-			Resp := AuthResponse{Success: true}
-
-			// Decodes the json object to the struct, changing the response to false if it fails
-			err := json.NewDecoder(r.Body).Decode(&follower)
-			if err != nil {
-				Resp.Success = false
-			}
-
-			// ### CONNECT TO DATABASE ###
-
-			db := db.DbConnect()
-
-			query := crud.New(db)
-
-			// ### delete FOLLOWER TO DATABASE ###
-
-			var newFollower crud.DeleteFollowerParams
-
-			newFollower.SourceID = int64(follower.SourceId)
-			newFollower.TargetID = int64(follower.TargetId)
-
-			err = query.DeleteFollower(context.Background(), newFollower)
-			fmt.Println("NEW FOLLOW REQUESTED")
-			if err != nil {
-				fmt.Println("Unable to insert follower")
-				Resp.Success = false
-			}
-
-			// Marshals the response struct to a json object
-			jsonResp, err := json.Marshal(Resp)
-			if err != nil {
-				http.Error(w, "500 internal server error", http.StatusInternalServerError)
-				return
-			}
-
-			// Sets the http headers and writes the response to the browser
-			WriteHttpHeader(jsonResp, w)
-		default:
-			// Prevents all request types other than POST and GET
+		} else {
+			// Prevents all request types other than GET
 			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
 			return
 		}

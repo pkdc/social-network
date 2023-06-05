@@ -46,12 +46,13 @@ export const FollowingContextProvider = (props) => {
     };
 
     const getPrivateChatHandler = () => {
-        // only use this for setting order and noti, not for list
         // private chat notification list after login
         fetch(`http://localhost:8080/private-chat-item?id=${selfId}`)
         .then(resp => resp.json())
         .then(data => {
                 console.log(data);
+                // filter away all following, and set all src userid to the list
+                // const otherChatUids = data.data.filter();
                 // setOtherListedChatUsers();
                 // setFollowing();
         }).catch(err => {
@@ -143,8 +144,9 @@ export const FollowingContextProvider = (props) => {
 
     useEffect(() => {
         getFollowingHandler();
-        // getPrivateChatHandler();
+        getPrivateChatHandler();
         // if (following) {
+            // temp list for testing
             usersCtx.users && setOtherListedChatUsers(usersCtx.users.filter((user) => user.public === 1));
         // }
     // }, [following]);
