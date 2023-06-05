@@ -6,6 +6,8 @@ import { WebSocketContext } from "./websocket-context";
 export const FollowingContext = React.createContext({
     following: [],
     setFollowing: () => {},
+    followingChat: [],
+    setFollowingChat: () => {},
     getFollowing: () => {},
     requestToFollow: (followUser) => {},
     follow: (followUser) => {},
@@ -24,13 +26,14 @@ export const FollowingContextProvider = (props) => {
     const followingUrl = `http://localhost:8080/user-following?id=${selfId}`;
 
     const [following, setFollowing] = useState([]);
+    const [followingChat, setFollowingChat] = useState([]);
     // const [publicChatUsers, setPublicChatUsers] = useState([]);
     const [otherListedChatUsers, setOtherListedChatUsers] = useState([]);
     // const [chatNotiUserArr, setChatNotiUserArr] = useState([]);
     const wsCtx = useContext(WebSocketContext);
     const usersCtx = useContext(UsersContext);
 
-    // get from db
+    // get following from db
     const getFollowingHandler = () => {
         fetch(followingUrl)
         .then(resp => resp.json())
@@ -51,10 +54,22 @@ export const FollowingContextProvider = (props) => {
         .then(resp => resp.json())
         .then(data => {
                 console.log(data);
-                // filter away all following, and set all src userid to the list
+                const [allChatItemArr] = Object.values(data);
+                console.log("allChatItemArr", allChatItemArr);
+
+                // filter following, and set all src userid to the list
+                const filteredFollowingChatItems = allChatItemArr.filter(chatItem => following.some(followingUser => followingUser.id === chatItem.sourceid));
+                console.log("followingChatItems", filteredFollowingChatItems);
+                // get the properties in following
+                const followingChatItems = filteredFollowingChatItems.map(chatItem => {
+                    const matchedFollowing = following.find(followingUser => followingUser.id === chatItem.sourceid);
+                    return {...chatItem, ...matchedFollowing};
+                });
+                setFollowingChat(followingChatItems);
+                // filter away all OtherListedChatUsers, and set all src userid to the list
+                
                 // const otherChatUids = data.data.filter();
                 // setOtherListedChatUsers();
-                // setFollowing();
         }).catch(err => {
             console.log(err);
         })
@@ -75,15 +90,18 @@ export const FollowingContextProvider = (props) => {
     };
 
     const followHandler = (followUser) => {
-        followUser["chat_noti"] = false; // add noti to followUser
         if (following) { // not empty
             setFollowing(prevFollowing => [...prevFollowing, followUser]);
+            followUser["chat_noti"] = false; // add noti to followUser
+            setFollowingChat(prevFollowingChat => [...prevFollowingChat, followUser]);
 
             const storedFollowing = JSON.parse(localStorage.getItem("following"));
             const curFollowing = [...storedFollowing, followUser];
             localStorage.setItem("following", JSON.stringify(curFollowing));
         } else {
             setFollowing([followUser]);
+            followUser["chat_noti"] = false; // add noti to followUser
+            setFollowingChat([followUser]);
             localStorage.setItem("following", JSON.stringify([followUser]));
         }
         console.log("locally stored following (fol)", JSON.parse(localStorage.getItem("following")));
@@ -92,6 +110,7 @@ export const FollowingContextProvider = (props) => {
     const unfollowHandler = (unfollowUser) => {
         console.log("unfollowUser (folctx)", unfollowUser);
         setFollowing(prevFollowing => prevFollowing.filter((followingUser) => followingUser.id !== unfollowUser.id));
+        setFollowingChat(prevFollowingChat => prevFollowingChat.filter((followingChatUser) => followingChatUser.id !== unfollowUser.id));
         const storedFollowing = JSON.parse(localStorage.getItem("following"));
         const curFollowing = storedFollowing.filter((followingUser) => followingUser.id !== unfollowUser.id);
         localStorage.setItem("following", JSON.stringify(curFollowing));
@@ -103,8 +122,6 @@ export const FollowingContextProvider = (props) => {
         if (isFollowing) {
             const targetUser = following.find(followingUser => followingUser.id === +friendId);
             console.log("target user", targetUser);
-            // move userId chat item to the top
-            setFollowing(prevFollowing => [targetUser, ...prevFollowing.filter(followingUser => followingUser.id !== +friendId)]);
             // noti if not open
             if (!open) {
                 console.log("chatbox closed, open=", open);
@@ -120,11 +137,12 @@ export const FollowingContextProvider = (props) => {
 
                 if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(privateChatNotiPayloadObj));
             }
+            // move userId chat item to the top
+            setFollowingChat(prevFollowingChat => [targetUser, ...prevFollowingChat.filter(followingUser => followingUser.id !== +friendId)]);
             console.log("after add chat noti target user", targetUser);
         } else { // if one or both of the users is public and can chat coz of that   
             const targetUser = usersCtx.users.find(user => user.id === +friendId);
             console.log("target user", targetUser);
-            setOtherListedChatUsers(prevList => [targetUser, ...prevList.filter(otherChatUser => otherChatUser.id !== +friendId)]);
             
             if (!open) {
                 console.log("chatbox closed, open=", open);
@@ -140,6 +158,7 @@ export const FollowingContextProvider = (props) => {
 
                 if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(privateChatNotiPayloadObj));
             }
+            setOtherListedChatUsers(prevList => [targetUser, ...prevList.filter(otherChatUser => otherChatUser.id !== +friendId)]);
             console.log("after add chat noti target user", targetUser);
         }
     };
@@ -158,6 +177,8 @@ export const FollowingContextProvider = (props) => {
         <FollowingContext.Provider value={{
             following: following,
             setFollowing: setFollowing,
+            followingChat: followingChat,
+            setFollowingChat: setFollowingChat,
             getFollowing: getFollowingHandler,
             requestToFollow: requestToFollowHandler,
             follow: followHandler,
