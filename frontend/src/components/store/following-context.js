@@ -11,6 +11,8 @@ export const FollowingContext = React.createContext({
     follow: (followUser) => {},
     unfollow: (unfollowUser) => {},
     receiveMsgFollowing: (friendId, open) => {},
+    // publicChatUsers: [],
+    // setPublicChatUsers: () => {},
     otherListedChatUsers: [],
     setOtherListedChatUsers: () => {},
     // chatNotiUserArr: [],
@@ -22,6 +24,7 @@ export const FollowingContextProvider = (props) => {
     const followingUrl = `http://localhost:8080/user-following?id=${selfId}`;
 
     const [following, setFollowing] = useState([]);
+    // const [publicChatUsers, setPublicChatUsers] = useState([]);
     const [otherListedChatUsers, setOtherListedChatUsers] = useState([]);
     // const [chatNotiUserArr, setChatNotiUserArr] = useState([]);
     const wsCtx = useContext(WebSocketContext);
@@ -43,14 +46,16 @@ export const FollowingContextProvider = (props) => {
     };
 
     const getPrivateChatHandler = () => {
+        // only use this for setting order and noti, not for list
         // private chat notification list after login
         fetch(`http://localhost:8080/private-chat-item?id=${selfId}`)
         .then(resp => resp.json())
         .then(data => {
-                console.log(data)
-                // set otherListedChatUsers, filter out following
+                console.log(data);
+                // setOtherListedChatUsers();
+                // setFollowing();
         }).catch(err => {
-            console.log(err)
+            console.log(err);
         })
     }
 
@@ -97,16 +102,31 @@ export const FollowingContextProvider = (props) => {
         if (isFollowing) {
             const targetUser = following.find(followingUser => followingUser.id === +friendId);
             console.log("target user", targetUser);
-            // const tempFollowing = following.filter(followingUser => followingUser.id !== +friendId);
-            // console.log("temp fol (removed)", tempFollowing);
             // move userId chat item to the top
             setFollowing(prevFollowing => [targetUser, ...prevFollowing.filter(followingUser => followingUser.id !== +friendId)]);
             // noti if not open
-            // !open && setChatNotiUserArr(prevArr => [...new Set([targetUser, ...prevArr])]);
             if (!open) {
                 console.log("chatbox closed, open=", open);
                 targetUser["chat_noti"] = true; // set noti field to true to indicate unread
-                // add noti to db, already dealt with in hub.go
+            } else {
+                targetUser["chat_noti"] = false; 
+                console.log("chatbox opened, open=", open);
+
+                const privateChatNotiPayloadObj = {};
+                privateChatNotiPayloadObj["label"] = "set-seen-p-chat-noti";
+                privateChatNotiPayloadObj["sourceid"] = friendId;
+                privateChatNotiPayloadObj["targetid"] = +selfId;
+
+                if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(privateChatNotiPayloadObj));
+            }
+        } else { // if one of the users is public and can chat coz of that   
+            const targetUser = usersCtx.users.find(user => user.id === +friendId);
+            console.log("target user", targetUser);
+            setOtherListedChatUsers(prevList => [targetUser, ...prevList.filter(otherChatUser => otherChatUser.id !== +friendId)]);
+            
+            if (!open) {
+                console.log("chatbox closed, open=", open);
+                targetUser["chat_noti"] = true; // set noti field to true to indicate unread
             } else {
                 targetUser["chat_noti"] = false; 
                 console.log("chatbox opened, open=", open);
@@ -117,28 +137,18 @@ export const FollowingContextProvider = (props) => {
                 privateChatNotiPayloadObj["targetid"] = +selfId;
 
                 if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(privateChatNotiPayloadObj));
-            } 
-        } else { // if cur user is public and receives a msg coz of that   
-            const targetUser = usersCtx.users.find(user => user.id === +friendId);
-            console.log("target user", targetUser);
-            setOtherListedChatUsers(prevList => [targetUser, ...prevList.filter(otherChatUser => otherChatUser.id !== +friendId)]);
-            
-            if (!open) {
-                console.log("chatbox closed, open=", open);
-                targetUser["chat_noti"] = true; // set noti field to true to indicate unread
-                // add noti to db, already dealt with in hub.go
             }
         }
     };
 
     useEffect(() => {
         getFollowingHandler();
-        getPrivateChatHandler();
+        // getPrivateChatHandler();
         // if (following) {
-        //     usersCtx.users && setOtherListedChatUsers(usersCtx.users.filter((user) => user.public === 1));
+            usersCtx.users && setOtherListedChatUsers(usersCtx.users.filter((user) => user.public === 1));
         // }
     // }, [following]);
-    }, []);
+    }, [usersCtx.users]);
 
     return (
         <FollowingContext.Provider value={{
@@ -149,6 +159,8 @@ export const FollowingContextProvider = (props) => {
             follow: followHandler,
             unfollow: unfollowHandler,
             receiveMsgFollowing: receiveMsgHandler,
+            // publicChatUsers: publicChatUsers,
+            // setPublicChatUsers: setPublicChatUsers,
             otherListedChatUsers: otherListedChatUsers,
             setOtherListedChatUsers: setOtherListedChatUsers,
             // chatNotiUserArr: chatNotiUserArr,

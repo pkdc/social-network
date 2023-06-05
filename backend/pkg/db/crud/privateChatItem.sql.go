@@ -85,6 +85,7 @@ func (q *Queries) GetOnePrivateChatItem(ctx context.Context, arg GetOnePrivateCh
 const getPrivateChatItem = `-- name: GetPrivateChatItem :many
 SELECT id, source_id, target_id, chat_noti, last_msg_at FROM private_chat_item
 WHERE target_id = ?
+ORDER BY last_msg_at DESC
 `
 
 func (q *Queries) GetPrivateChatItem(ctx context.Context, targetID int64) ([]PrivateChatItem, error) {

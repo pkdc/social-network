@@ -8,7 +8,8 @@ RETURNING *;
 
 -- name: GetPrivateChatItem :many
 SELECT * FROM private_chat_item
-WHERE target_id = ?;
+WHERE target_id = ?
+ORDER BY last_msg_at DESC;
 
 -- name: GetOnePrivateChatItem :one
 SELECT * FROM private_chat_item
