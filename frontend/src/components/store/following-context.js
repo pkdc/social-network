@@ -54,35 +54,60 @@ export const FollowingContextProvider = (props) => {
         .then(resp => resp.json())
         .then(data => {
                 console.log(data);
+                
                 const [allChatItemArr] = Object.values(data);
                 console.log("followuing", following);
+                console.log("followuingChat", followingChat);
                 console.log("allChatItemArr", allChatItemArr);
+                
+                if (!allChatItemArr) {
+                    setFollowingChat(following);
+                    console.log("no data", data);
+                    return;
+                }
 
                 // filter following
-                const filteredFollowingChatItems = allChatItemArr.filter(chatItem => {
-                    if (!following) return false;
-                    following.some(followingUser => followingUser.id === chatItem.sourceid)
-                });
-                console.log("filteredFollowingChatItems", filteredFollowingChatItems);
-                // merge the properties
-                const followingChatItems = filteredFollowingChatItems.map(chatItem => {
-                    const matchedFollowing = following.find(followingUser => followingUser.id === chatItem.sourceid);
-                    return {...chatItem, ...matchedFollowing};
-                });
-                setFollowingChat(followingChatItems);
-
-                // filter out following, to get all OtherListedChatUsers
-                const filteredOtherChatItems = allChatItemArr.filter(chatItem => {
-                    if (!following) return true;
-                    return !following.every(followingUser => followingUser.id === chatItem.sourceid)
-                });
-                console.log("filteredOtherChatItems", filteredOtherChatItems);
-                // merge the properties
-                const allOtherChatItems = filteredOtherChatItems.map(chatItem => {
-                    const matchedOtherChatItem = usersCtx.users.find(user => user.id === chatItem.sourceid);
-                    return {...chatItem, ...matchedOtherChatItem};
-                });
-                setOtherListedChatUsers(allOtherChatItems);
+                if (allChatItemArr) {
+                    const filteredFollowingChatItems = allChatItemArr.filter(chatItem => {
+                        if (!following) return false;
+                        return following.some(followingUser => followingUser.id === chatItem.sourceid)
+                    });
+                    console.log("filteredFollowingChatItems", filteredFollowingChatItems);
+                    // merge the properties
+                    const followingChatItems = filteredFollowingChatItems.map(chatItem => {
+                        const matchedFollowing = following.find(followingUser => followingUser.id === chatItem.sourceid);
+                        return {...chatItem, ...matchedFollowing};
+                    });
+                    
+                    // Also display following even if there is no chat item
+                    let filteredFollowingWoChatItems;
+                    if (following) {
+                        filteredFollowingWoChatItems = following.filter(followingUser => {
+                            if (!allChatItemArr) return false;
+                            return !allChatItemArr.some(chatItem => followingUser.id === chatItem.sourceid)
+                        });
+                    }
+                    console.log("filteredFollowing Without oChatItems", filteredFollowingWoChatItems);
+                    const finalFollowingChatItems = [...followingChatItems, ...filteredFollowingWoChatItems];
+                    setFollowingChat(finalFollowingChatItems);
+    
+                    // filter out following, to get all OtherListedChatUsers
+                    const filteredOtherChatItems = allChatItemArr.filter(chatItem => {
+                        if (!following) return true;
+                        return !following.every(followingUser => followingUser.id === chatItem.sourceid)
+                    });
+                    console.log("filteredOtherChatItems", filteredOtherChatItems);
+                    // merge the properties
+                    const allOtherChatItems = filteredOtherChatItems.map(chatItem => {
+                        const matchedOtherChatItem = usersCtx.users.find(user => user.id === chatItem.sourceid);
+                        return {...chatItem, ...matchedOtherChatItem};
+                    });
+                    setOtherListedChatUsers(allOtherChatItems);
+    
+                    console.log("followuingChat", followingChat);
+                    // display public users even if there is no chat item 
+                }
+                
 
         }).catch(err => {
             console.log(err);

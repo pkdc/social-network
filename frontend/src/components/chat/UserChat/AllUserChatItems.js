@@ -63,7 +63,7 @@ const AllUserChatItems = (props) => {
                 console.log("Cur user is not following the msg sender nor having a public profile");
             }
         }
-    }, [usersCtx.users, followingCtx.followingChat, wsCtx.newMsgsObj]);
+    }, [usersCtx.users, followingCtx.following, followingCtx.followingChat, wsCtx.newMsgsObj]);
     
     console.log("followingCtx.otherListedChatUsers (chatitems)", followingCtx.otherListedChatUsers);
     
