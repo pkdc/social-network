@@ -55,21 +55,35 @@ export const FollowingContextProvider = (props) => {
         .then(data => {
                 console.log(data);
                 const [allChatItemArr] = Object.values(data);
+                console.log("followuing", following);
                 console.log("allChatItemArr", allChatItemArr);
 
-                // filter following, and set all src userid to the list
-                const filteredFollowingChatItems = allChatItemArr.filter(chatItem => following.some(followingUser => followingUser.id === chatItem.sourceid));
-                console.log("followingChatItems", filteredFollowingChatItems);
-                // get the properties in following
+                // filter following
+                const filteredFollowingChatItems = allChatItemArr.filter(chatItem => {
+                    if (!following) return false;
+                    following.some(followingUser => followingUser.id === chatItem.sourceid)
+                });
+                console.log("filteredFollowingChatItems", filteredFollowingChatItems);
+                // merge the properties
                 const followingChatItems = filteredFollowingChatItems.map(chatItem => {
                     const matchedFollowing = following.find(followingUser => followingUser.id === chatItem.sourceid);
                     return {...chatItem, ...matchedFollowing};
                 });
                 setFollowingChat(followingChatItems);
-                // filter away all OtherListedChatUsers, and set all src userid to the list
-                
-                // const otherChatUids = data.data.filter();
-                // setOtherListedChatUsers();
+
+                // filter out following, to get all OtherListedChatUsers
+                const filteredOtherChatItems = allChatItemArr.filter(chatItem => {
+                    if (!following) return true;
+                    return !following.every(followingUser => followingUser.id === chatItem.sourceid)
+                });
+                console.log("filteredOtherChatItems", filteredOtherChatItems);
+                // merge the properties
+                const allOtherChatItems = filteredOtherChatItems.map(chatItem => {
+                    const matchedOtherChatItem = usersCtx.users.find(user => user.id === chatItem.sourceid);
+                    return {...chatItem, ...matchedOtherChatItem};
+                });
+                setOtherListedChatUsers(allOtherChatItems);
+
         }).catch(err => {
             console.log(err);
         })

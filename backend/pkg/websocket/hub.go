@@ -100,7 +100,7 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 		}
 		fmt.Println("Found target item", chatItem)
 		_, err = query.UpdatePrivateChatItem(context.Background(), crud.UpdatePrivateChatItemParams{
-			ChatNoti:  int64(1),
+			ChatNoti:  int64(0), // 0 - seen, 1 - not seen
 			LastMsgAt: chatItem.LastMsgAt,
 			SourceID:  int64(msgStruct.SourceId),
 			TargetID:  int64(msgStruct.TargetId),
@@ -167,7 +167,6 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 					newFollower.SourceID = int64(not.SourceId)
 					newFollower.TargetID = int64(not.TargetId)
 					newFollower.Status = int64(0)
-					// newFollower.ChatNoti = int64(0)
 					_, err = query.CreateFollower(context.Background(), newFollower)
 					select {
 					case c.send <- sendNoti:
@@ -187,7 +186,6 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 					newFollower.SourceID = int64(not.SourceId)
 					newFollower.TargetID = int64(not.TargetId)
 					newFollower.Status = int64(0)
-					// newFollower.ChatNoti = int64(0)
 					_, err = query.CreateFollower(context.Background(), newFollower)
 				}
 			}
@@ -230,14 +228,14 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 			SourceID: int64(userMsg.SourceId),
 			TargetID: int64(userMsg.TargetId),
 		})
-		// update private chat item in db if exist
+		// update private chat item to not seen in db if exist
 		if chatItem != (crud.PrivateChatItem{}) {
 			fmt.Println("Exists")
 			_, err = query.UpdatePrivateChatItem(context.Background(), crud.UpdatePrivateChatItemParams{
 				LastMsgAt: time.Now(),
 				SourceID:  int64(userMsg.SourceId),
 				TargetID:  int64(userMsg.TargetId),
-				ChatNoti:  int64(0), // 0 - not seen, 1 - seen
+				ChatNoti:  int64(1), // 0 - seen, 1 - not seen
 			})
 			if err != nil {
 				fmt.Println(err)
@@ -245,12 +243,12 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 			}
 		} else {
 			fmt.Println("Not Exists")
-			// save new private chat item if not exist
+			// save new private chat item as not seen if not exist
 			_, err = query.CreatePrivateChatItem(context.Background(), crud.CreatePrivateChatItemParams{
 				LastMsgAt: time.Now(),
 				SourceID:  int64(userMsg.SourceId),
 				TargetID:  int64(userMsg.TargetId),
-				ChatNoti:  int64(0), // 0 - not seen, 1 - seen
+				ChatNoti:  int64(1), // 0 - seen, 1 - not seen
 			})
 			if err != nil {
 				fmt.Println(err)
@@ -283,7 +281,7 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 				LastMsgAt: time.Now(),
 				SourceID:  int64(userMsg.TargetId),
 				TargetID:  int64(userMsg.SourceId),
-				ChatNoti:  int64(1), // 0 - not seen, 1 - seen // no new msg for reverse, so seen
+				ChatNoti:  int64(0), // 0 - seen, 1 - not seen // no new msg for reverse, so seen
 			})
 			if err != nil {
 				fmt.Println(err)
