@@ -49,7 +49,9 @@
     /* justify-content: flex-start; */
 }
 
-
+.follow {
+    cursor: pointer;
+}
 
 
 .count {

@@ -62,10 +62,10 @@ function ProfilePage() {
             <Profile userId={id} ></Profile>
             <AllPosts userId={id} posts={postData} comments={commentData}></AllPosts>
         </div>
-        <div className={classes.right}>
+        {/* <div className={classes.right}>
             <Followers userId={id}></Followers>
             <Following userId={id}></Following>
-        </div>
+        </div> */}
     </div>
 }
 

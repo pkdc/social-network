@@ -10,8 +10,15 @@ import { FollowingContext } from "../store/following-context";
 import { UsersContext } from "../store/users-context";
 import { WebSocketContext } from "../store/websocket-context";
 import classes from './Profile.module.css';
+import FollowerModal from "./followerModal";
+import FollowingModal from "./followingModal";
 function Profile({ userId }) {
     
+    const [ followerOpen, setFollowerOpen ] = useState(false)
+    const [ followingOpen, setFollowingOpen ] = useState(false)
+    const [ followerData, setFollowerData ] = useState([])
+    const [ followingData, setFollowingData ] = useState([])
+    const [ isFollower, setIsFollower ] = useState(false)
     // get stored publicity from localStorage
     // let selfPublicStatus;
     // selfPublicNum === 0 ? selfPublicStatus = false : selfPublicStatus = true;
@@ -48,6 +55,12 @@ let statusofcuruser ;
         // check if the current profile is one of the users in the following array
         followingCtx.following && setCurrentlyFollowing(followingCtx.following.some(followingUser => followingUser.id === +userId))
     }, [followingCtx.following, userId]);
+
+    useEffect(() => {
+        followingData && setIsFollower(followingData.some(follower => follower.id == currUserId))
+    }, [followingData])
+
+    console.log("followingData", followingData)
     
     useEffect(() => {
         if (wsCtx.newNotiFollowReplyObj) {
@@ -146,7 +159,6 @@ let statusofcuruser ;
     
 
     useEffect(() => {
-
     fetch(`http://localhost:8080/user-follow-status?tid=${userId}&sid=${currUserId}`)
     .then(response => response.text())
     .then(data => {
@@ -158,6 +170,8 @@ let statusofcuruser ;
         }
         if (data =="trueclosefriend" || data== "falseclosefriend"){
             setCloseFriend(true)
+        }else { 
+            setCloseFriend(false)
         }
    
     }).catch(error => {
@@ -167,6 +181,29 @@ let statusofcuruser ;
     }, [userId]);
 
 
+    //Get followers
+    useEffect(() => {
+        fetch(`http://localhost:8080/user-follower?id=${userId}`)
+        .then(resp => resp.json())
+        .then(data => {
+          setFollowerData(data.data)
+        })
+        .catch(err => {
+          console.log(err);
+        })
+    }, [userId]);
+
+    //Get following
+    useEffect(() => {
+        fetch(`http://localhost:8080/user-following?id=${userId}`)
+        .then(resp => resp.json())
+        .then(data => {
+          setFollowingData(data.data)
+        })
+        .catch(err => {
+          console.log(err);
+        })
+    }, [userId]);
  
     const { error , isLoaded, data } = useGet(`/user?id=${userId}`)
     if (data.data !== undefined) {
@@ -308,6 +345,16 @@ let statusofcuruser ;
             closeFriend = <input type="checkbox" id={userId} checked={isCloseFriend} onClick={closeFriendHandler} />        
     }
 
+   
+
+    function handleFollowerClick() {
+        setFollowerOpen(true)
+    }
+
+    function handleFollowingClick() {
+        setFollowingOpen(true)
+    }
+
     return <div className={classes.container}>
         <div className={classes.private}>
             {currUserId === userId && !publicity &&
@@ -327,14 +374,14 @@ let statusofcuruser ;
                         <div className={classes.btn}>
                             {followButton}
                             {messageButton}
-                            {closeFriend}
+                            {isFollower && closeFriend}
                         </div>
                     </div>
 
                     <div className={classes.username}>{data.data[0].nname}</div>
                     <div className={classes.followers}>
-                        <div><span className={classes.count}>10k</span> followers</div>
-                        <div><span className={classes.count}>200</span> following</div>
+                        <div className={classes.follow} onClick={handleFollowerClick}><span className={classes.count}>{followerData && followerData.length}{!followerData && 0}</span> followers</div>
+                        <div className={classes.follow} onClick={handleFollowingClick}><span className={classes.count}>{followingData && followingData.length}{!followingData && 0}</span> following</div>
                     </div>
                     <div>{data.data[0].about}</div>
                 </div>
@@ -342,6 +389,19 @@ let statusofcuruser ;
                 <div>
                 </div>
             </div>
+            {followerOpen && followerData &&
+            <FollowerModal 
+            onClose={() => setFollowerOpen(false)}
+            followers={followerData}
+            ></FollowerModal>
+            }
+            {followingOpen && followingData &&
+            <FollowingModal
+            onClose={() => setFollowingOpen(false)}
+            following={followingData}
+            ></FollowingModal>
+            }
+
         </Card>
     </div>
 }

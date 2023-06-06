@@ -53,11 +53,11 @@ const TopNav = () => {
 
     useEffect(() => {
         if (wsCtx.websocket !== null && wsCtx.newNotiObj !== null) {
-            console.log("ws receives notiObj (TopNav): ", wsCtx.newNotiObj);
+            console.log("ws receives notiObj (TopNav): ", typeof(wsCtx.newNotiObj));
             console.log("ws receives noti type (TopNav): ", wsCtx.newNotiObj.type);
             console.log("before the overwrite: ", newNoti); 
             if (newNoti){
-                setNewNoti(prevFollowing => [...prevFollowing, wsCtx.newNotiObj]);
+                setNewNoti(prevNotifications => [...prevNotifications, wsCtx.newNotiObj]);
             }else{setNewNoti(wsCtx.newNotiObj)}
             // setNewNoti(wsCtx.newNotiObj);
             // let onlineNotif =localStorage.getItem("new_notif")

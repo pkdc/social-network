@@ -21,14 +21,6 @@ function Followers({ userId }) {
         navigate(`/profile/${id}`)
 
     }
-
-    function closeFriendHandler(e) {
-        if (e.target.checked) {
-
-        } else {
-
-        }
-    }
     
     return <Card>
         Followers
@@ -41,9 +33,8 @@ function Followers({ userId }) {
                     <div key={follower.id} id={follower.id} onClick={handleClick} className={classes.user}>{follower.fname}</div>
                 </div>
 
-                <div className={classes.right}>
-                    <input className={classes.checkbox} type="checkbox" onChange={closeFriendHandler} />
-                </div>
+                {/* <div className={classes.right}>
+                </div> */}
             </div>
 
         ))}
