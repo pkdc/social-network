@@ -62,6 +62,8 @@ export const FollowingContextProvider = (props) => {
                 
                 if (!allChatItemArr) {
                     setFollowingChat(following);
+                    // filter out following
+                    usersCtx.users && setOtherListedChatUsers(usersCtx.users.filter(user => user.public === 1 && !following.some(followingUser => followingUser.id == user.id)));
                     console.log("no data", data);
                     return;
                 }
@@ -106,6 +108,7 @@ export const FollowingContextProvider = (props) => {
     
                     console.log("followuingChat", followingChat);
                     // display public users even if there is no chat item 
+                    
                 }
                 
 
@@ -207,7 +210,7 @@ export const FollowingContextProvider = (props) => {
         getPrivateChatHandler();
         // if (following) {
             // temp list for testing
-            usersCtx.users && setOtherListedChatUsers(usersCtx.users.filter((user) => user.public === 1));
+            // usersCtx.users && setOtherListedChatUsers(usersCtx.users.filter((user) => user.public === 1));
         // }
     // }, [following]);
     }, [usersCtx.users]);
