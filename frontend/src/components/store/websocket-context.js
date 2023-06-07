@@ -47,6 +47,7 @@ export const WebSocketContextProvider = (props) => {
 
         newSocket.onmessage = (e) => {
             console.log("msg event: ", e);
+            console.log("msg event data : ", e.data, "data finished");
             const msgObj = JSON.parse(e.data);
             console.log("ws receives msgObj: ", msgObj);
 
@@ -119,3 +120,6 @@ export const WebSocketContextProvider = (props) => {
         </WebSocketContext.Provider>
     );
 };
+
+
+

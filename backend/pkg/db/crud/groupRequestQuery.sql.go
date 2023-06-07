@@ -51,6 +51,38 @@ func (q *Queries) DeleteGroupRequest(ctx context.Context, arg DeleteGroupRequest
 	return err
 }
 
+const getAllGroupReq = `-- name: GetAllGroupReq :many
+SELECT id, user_id, group_id, status_ FROM group_request
+`
+
+func (q *Queries) GetAllGroupReq(ctx context.Context) ([]GroupRequest, error) {
+	rows, err := q.db.QueryContext(ctx, getAllGroupReq)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GroupRequest
+	for rows.Next() {
+		var i GroupRequest
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.GroupID,
+			&i.Status,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getAllGroupRequests = `-- name: GetAllGroupRequests :many
 SELECT id, user_id, group_id, status_ FROM group_request
 WHERE group_id = ?

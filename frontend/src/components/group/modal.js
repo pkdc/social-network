@@ -11,7 +11,7 @@ function Modal({ open, onClose, onInvite, currentlyJoined, invitedToJoin }) {
     const jGrpCtx = useContext(JoinedGroupContext);
     const { state } = useLocation();
     const { id } = state; // group id
-    const { error, isLoaded, data } = useGet(`/group-member?groupid=${id}&checknotmembers=${"true"}`)
+    const { error, isLoaded, data } = useGet(`/group-member?groupid=${id}`)
     if (!isLoaded) return <div>Loading...</div>
     if (error) return <div>Error: {error.message}</div>
     if (!open) return null;
@@ -30,7 +30,7 @@ function Modal({ open, onClose, onInvite, currentlyJoined, invitedToJoin }) {
                 <div className={styles.close} onClick={onClose} >X</div>
                 <div className={styles.container}>
 
-                    {data && data.data.map((user) => (
+                    {data && data.notmembers.map((user) => (
 
                         <div key={user.id} id={user.id} className={styles.userContainer}>
                             <div className={styles.img}></div>

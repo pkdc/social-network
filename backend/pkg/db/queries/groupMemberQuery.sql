@@ -2,6 +2,11 @@
 SELECT * FROM group_member
 WHERE group_id = ? AND status_ = ?;
 
+
+-- name: GetGroupMembersByUserId :many
+SELECT * FROM group_member
+WHERE user_id = ? AND status_ = ?;
+
 -- name: CheckIfMember :one
 SELECT COUNT(*) FROM group_member
 WHERE group_id = ? AND user_id = ? AND status_ = ? LIMIT 1;

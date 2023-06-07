@@ -43,6 +43,10 @@
     border-bottom: 1px solid var(--antiflash-white);
 }
 
+.comments:hover {
+    cursor: pointer;
+}
+
 .btn {
     border: none;
     background: none;

@@ -10,11 +10,13 @@ function GroupPage() {
 
 return <div className={classes.container}>
     <div className={classes.mid}>
+    {/* <CreateGroup></CreateGroup> */}
+
             <AllGroups></AllGroups>
     </div>
     <div className={classes.right}>
         <CreateGroup></CreateGroup>
-        <JoinedGroups></JoinedGroups>
+        {/* <JoinedGroups></JoinedGroups> */}
     </div>
 
 </div>

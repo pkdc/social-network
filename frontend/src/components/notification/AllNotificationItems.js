@@ -1,9 +1,35 @@
+import { useEffect, useState } from "react";
 import NotificationItem from "./NotificationItem";
 
+
 const AllNotificationItems = (props) => {
+
+    const storedNotif = JSON.parse(localStorage.getItem("new_notif"));
+    const [notiArr, setNotiArr] = useState([]);
+
+    useEffect(() => {
+        setNotiArr(storedNotif)
+    }, []);
+
+    useEffect(() => {
+        console.log("props.newNoti", props.notiItems);
+        if (props.notiItems.length != 0) {
+            console.log("before the prevarr", notiArr)
+            setNotiArr(prevArr => [... new Set([props.notiItems[0], ...prevArr])]);
+        }
+
+    }, [props.notiItems]);
+
+    useEffect(() => {
+
+            localStorage.setItem("new_notif", JSON.stringify(Object.values(notiArr)))
+    
+    }, [notiArr]);
+
+    console.log("last exit before bridge: ", notiArr)
     return (
         <div>
-            {props.notiItems.map((notiItem) => {
+            {notiArr && notiArr.map((notiItem) => {
                 return (
                     <NotificationItem
                         key={notiItem.id}
@@ -14,8 +40,8 @@ const AllNotificationItems = (props) => {
                         createdAt={notiItem.createdat}
                         groupId={notiItem.groupid}
                     />
-                    );
-                })
+                );
+            })
             }
         </div>
     );

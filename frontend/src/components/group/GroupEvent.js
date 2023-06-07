@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import useGet from '../fetch/useGet';
 import Card from '../UI/Card';
 import GreyButton from '../UI/GreyButton';
@@ -6,17 +7,87 @@ import classes from './GroupEvent.module.css';
 
 
 function GroupEvent(props) {
+    let userid = localStorage.getItem("user_id")
+
+    const [going, setGoing] = useState(false)
+    const [notGoing, setNotGoing] = useState(false)
+    const [eventMemberData, setEventMemberData] = useState([])
+
+    useEffect(() => {
+
+        fetch(`http://localhost:8080/group-event-member?id=${props.id}`)
+            .then(resp => resp.json())
+            .then(data => {
+                setEventMemberData(data.data)
+                
+            })
+            .catch(
+                err => console.log(err)
+            );
+
+
+    }, []);
+
+    useEffect(() => {
+        eventMemberData && eventMemberData.map((member) => {
+            console.log({member})
+            if (member.userid === (parseInt(userid))) {
+                if (member.status == 2) {
+                    setGoing(true)
+                    setNotGoing(false)
+                
+            } else if (member.status == 3) {
+                setNotGoing(true)
+                setGoing(false)
+
+            } else {
+                setNotGoing(false)
+                setGoing(false)
+            }
+        }
+        })
+        
+    }, [eventMemberData]);
+
 
     var myDate = new Date(props.date);
     var mills = myDate.getTime();
-
-
-    const newDate = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: '2-digit',  hour: 'numeric',
-    minute: 'numeric',}).format(mills);
+    const newDate = new Intl.DateTimeFormat('en-GB', {
+        day: 'numeric', month: 'short', year: '2-digit', hour: 'numeric',
+        minute: 'numeric',
+    }).format(mills);
 
     const currUserId = localStorage.getItem("user_id");
 
     function handleNotGoing(e) {
+        setNotGoing(true)
+        setGoing(false)
+        const id = e.target.id;
+        const data = {
+            id: 0,
+            status: 3,
+            userid: parseInt(currUserId),
+            eventid: parseInt(id),
+        };
+
+        fetch('http://localhost:8080/group-event-member',
+            {
+                method: 'POST',
+                credentials: "include",
+                mode: "cors",
+                body: JSON.stringify(data),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(() => {
+                // navigate.replace('/??')
+                console.log("posted")
+            })
+    }
+
+    function handleGoing(e) {
+        setGoing(true)
+        setNotGoing(false)
         const id = e.target.id;
 
         const data = {
@@ -26,44 +97,19 @@ function GroupEvent(props) {
             eventid: parseInt(id),
         };
 
-        fetch('http://localhost:8080/group-event-member', 
-        {
-            method: 'POST',
-            credentials: "include",
-            mode: "cors",
-            body: JSON.stringify(data),
-            headers: { 
-                'Content-Type': 'application/json' 
-            }
-        }).then(() => {
-            // navigate.replace('/??')
-            console.log("posted")
-        })
-    }
-
-    function handleGoing(e) {
-        const id = e.target.id;
-
-        const data = {
-            id: 0,
-            status: 1,
-            userid: parseInt(currUserId),
-            eventid: parseInt(id),
-        };
-
-        fetch('http://localhost:8080/group-event-member', 
-        {
-            method: 'POST',
-            credentials: "include",
-            mode: "cors",
-            body: JSON.stringify(data),
-            headers: { 
-                'Content-Type': 'application/json' 
-            }
-        }).then(() => {
-            // navigate.replace('/??')
-            console.log("posted")
-        })
+        fetch('http://localhost:8080/group-event-member',
+            {
+                method: 'POST',
+                credentials: "include",
+                mode: "cors",
+                body: JSON.stringify(data),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(() => {
+                // navigate.replace('/??')
+                console.log("posted")
+            })
     }
 
     return <Card className={classes.card}>
@@ -73,8 +119,10 @@ function GroupEvent(props) {
             <div className={classes.title}>{props.title}</div>
             <div>{props.description}</div>
             <div className={classes.btnWrapper}>
-                <div id={props.id} className={classes.btn} onClick={handleGoing}>Going</div>
-                <div id={props.id} className={classes.btn} onClick={handleNotGoing}>Not Going</div>
+                {!going && <div id={props.id} className={classes.btn} onClick={handleGoing}>Going</div>}
+                {going && <SmallButton>Going</SmallButton>}
+                {!notGoing && <div id={props.id} className={classes.btn} onClick={handleNotGoing}>Not Going</div>}
+                {notGoing && <SmallButton>Not Going</SmallButton>}
             </div>
         </div>
     </Card>

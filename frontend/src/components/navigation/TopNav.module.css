@@ -100,7 +100,7 @@ nav {
 .badge {
     position: absolute;
     top: 1px;
-    right: 6px;
+    right: 1px;
     padding: 5px 5px;
     border-radius: 50%;
     background: rgb(196, 0, 0);
