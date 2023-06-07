@@ -124,6 +124,7 @@ let statusofcuruser ;
             setPublicity(true); // private
         } else {
             setPublicity(false);
+            // usersCtx.onPrivacyChange(currUserId, 1);
         }
         
         let publicityNum;
@@ -214,7 +215,7 @@ let statusofcuruser ;
             localStorage.setItem('isChecked', false);
         }
     }
-     console.log("user data (profile)", data.data)
+    //  console.log("user data (profile)", data.data)
       if (!isLoaded) return <div>Loading...</div>
       if (error) return <div>Error: {error.message}</div>
     
