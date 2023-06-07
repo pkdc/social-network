@@ -15,8 +15,6 @@ function CreateEvent( {groupid} ) {
         const currUserId = localStorage.getItem("user_id");
 
         const datenow =  Date.now().toString();
-console.log({datenow})
-        const created = new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: '2-digit' }).format(datenow);
 
         const data = {
             id: 0,
@@ -32,7 +30,8 @@ console.log({datenow})
         followPayloadObj.label = "noti";
         followPayloadObj.id = Date.now();
         followPayloadObj.type = "event-notif";
-        followPayloadObj.sourceid = parseInt(groupid);
+        followPayloadObj.sourceid = parseInt(currUserId);
+        followPayloadObj.groupid = parseInt(groupid);
         followPayloadObj.targetid = 987;
         followPayloadObj.createdat = datenow;
         console.log("CREATED AT: ",followPayloadObj.createdat)
@@ -64,7 +63,7 @@ console.log({datenow})
         <textarea className={classes.content} name="description" id="description" placeholder="Description" value={description} onChange={e => setDescription(e.target.value)}></textarea>
         <input type="datetime-local" name="date" id="date" value={date} onChange={e => setDate(e.target.value)}></input>
         <div className={classes.btn}>
-            <button>Create</button>
+            <SmallButton>Create</SmallButton>
         </div>
     </form>
     </Card>

@@ -58,11 +58,13 @@ type UserId struct {
 }
 
 type UserFollowerStruct struct {
-	Id       int    `json:"id"`
-	Action   string `json:"action"`
-	SourceId int    `json:"sourceid"`
-	TargetId int    `json:"targetid"`
-	Status   int    `json:"status"`
+	Id        int    `json:"id"`
+	Action    string `json:"action"`
+	SourceId  int    `json:"sourceid"`
+	TargetId  int    `json:"targetid"`
+	Status    int    `json:"status"`
+	ChatNoti  int    `json:"chat_noti"`
+	LastMsgAt string `json:"last_msg_at"`
 }
 
 type UserMessageStruct struct {
@@ -99,6 +101,7 @@ type PostResponse struct {
 	Image     string `json:"image"`
 	CreatedAt string `json:"createdat"`
 	Success   bool   `json:"success"`
+	Privacy   int    `json:"privacy"`
 }
 
 type PostPayload struct {
@@ -210,6 +213,9 @@ type GroupEventMemberPayload struct {
 
 type GroupPostStruct struct {
 	Id        int    `json:"id"`
+	Fname     string `json:"fname"`
+	Lname     string `json:"lname"`
+	Nickname  string `json:"nname"`
 	Author    int    `json:"author"`
 	GroupId   int    `json:"groupid"`
 	Message   string `json:"message"`
@@ -223,6 +229,9 @@ type GroupPostPayload struct {
 
 type GroupPostCommentStruct struct {
 	Id          int    `json:"id"`
+	Fname       string `json:"fname"`
+	Lname       string `json:"lname"`
+	Nickname    string `json:"nname"`
 	GroupPostId int    `json:"postid"`
 	Author      int    `json:"userid"`
 	CreatedAt   string `json:"createdat"`

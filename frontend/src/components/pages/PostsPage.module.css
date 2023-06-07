@@ -10,10 +10,9 @@
     margin: 2.5rem 12rem;
 }
 
-.create-post {
-
+.label {
+    margin-left: 10px;
+    margin-bottom: -10px;
+    color: grey;
 }
 
-.privacy {
-
-}

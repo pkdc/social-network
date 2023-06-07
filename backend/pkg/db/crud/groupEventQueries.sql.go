@@ -90,7 +90,29 @@ func (q *Queries) GetGroupEvent(ctx context.Context, arg GetGroupEventParams) (G
 	return i, err
 }
 
+const getGroupEventById = `-- name: GetGroupEventById :one
+SELECT id, author, group_id, title, description_, created_at, date_ FROM group_event
+WHERE id = ?
+`
+
+func (q *Queries) GetGroupEventById(ctx context.Context, id int64) (GroupEvent, error) {
+	row := q.db.QueryRowContext(ctx, getGroupEventById, id)
+	var i GroupEvent
+	err := row.Scan(
+		&i.ID,
+		&i.Author,
+		&i.GroupID,
+		&i.Title,
+		&i.Description,
+		&i.CreatedAt,
+		&i.Date,
+	)
+	return i, err
+}
+
 const getGroupEvents = `-- name: GetGroupEvents :many
+;
+
 SELECT id, author, group_id, title, description_, created_at, date_ FROM group_event
 WHERE group_id = ?
 ORDER BY created_at
@@ -98,6 +120,42 @@ ORDER BY created_at
 
 func (q *Queries) GetGroupEvents(ctx context.Context, groupID int64) ([]GroupEvent, error) {
 	rows, err := q.db.QueryContext(ctx, getGroupEvents, groupID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GroupEvent
+	for rows.Next() {
+		var i GroupEvent
+		if err := rows.Scan(
+			&i.ID,
+			&i.Author,
+			&i.GroupID,
+			&i.Title,
+			&i.Description,
+			&i.CreatedAt,
+			&i.Date,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getGroupEventsWithoutId = `-- name: GetGroupEventsWithoutId :many
+SELECT id, author, group_id, title, description_, created_at, date_ FROM group_event
+ORDER BY created_at
+`
+
+func (q *Queries) GetGroupEventsWithoutId(ctx context.Context) ([]GroupEvent, error) {
+	rows, err := q.db.QueryContext(ctx, getGroupEventsWithoutId)
 	if err != nil {
 		return nil, err
 	}

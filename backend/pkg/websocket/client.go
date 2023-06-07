@@ -89,21 +89,21 @@ func (c *Client) writePump() {
 	for {
 		select {
 		case message, ok := <-c.send:
-			fmt.Printf("msg in writePump %v\n", message)
+			// fmt.Printf("msg in writePump %v\n", message)
 			c.conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if !ok {
 				// The hub closed the channel.
-				fmt.Printf("!ok in writePump \n")
+				// fmt.Printf("!ok in writePump \n")
 				c.conn.WriteMessage(websocket.CloseMessage, []byte{})
 				return
 			}
-			fmt.Printf("msg in writePump 2 %v\n", message)
+			// fmt.Printf("msg in writePump 2 %v\n", message)
 			w, err := c.conn.NextWriter(websocket.TextMessage)
 			if err != nil {
 				fmt.Printf("err %v \n", err)
 				return
 			}
-			fmt.Printf("msg in writePump gonna write msg %v\n", message)
+			// fmt.Printf("msg in writePump gonna write msg %v\n", message)
 			w.Write(message)
 			// Add queued chat messages to the current websocket message.
 			n := len(c.send)

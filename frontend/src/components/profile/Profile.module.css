@@ -46,9 +46,12 @@
 .followers {
     display: flex;
     gap: 20px;
+    /* justify-content: flex-start; */
 }
 
-
+.follow {
+    cursor: pointer;
+}
 
 
 .count {

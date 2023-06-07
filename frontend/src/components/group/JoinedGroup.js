@@ -11,37 +11,45 @@ function JoinedGroups() {
     const jGrpCtx = useContext(JoinedGroupContext);
     const currUserId = localStorage.getItem("user_id");
 
-    const { error , isLoaded, data } = useGet(`/group-member?userid=${currUserId}`)
+    const { error, isLoaded, data } = useGet(`/group-member?userid=${currUserId}`)
     // for group members `/group-member?groupid=${groupId}
 
-      if (!isLoaded) return <div>Loading...</div>
-      if (error) return <div>Error: {error.message}</div>
+    if (!isLoaded) return <div>Loading...</div>
+    if (error) return <div>Error: {error.message}</div>
 
 
     function handleClick(e) {
-        const id = e.target.id
-        
+        let id = e.target.id
+        // console.log("3690",e)
+        if (id == "") {
+            id = e.target.parentElement.parentElement.id
+        }
+        console.log("3690", id)
         navigate("/groupprofile", { state: { id } })
-        
+
     }
 
-    return <Card>
+    return <>
+
         <div className={classes.label}>
-        Groups you've joined
+            Groups you've joined
         </div>
-        {/* {data.data && data.data.map((group) => ( */}
-        {jGrpCtx.joinedGrps && jGrpCtx.joinedGrps.map((group) => (
-        <div key={group.id} id={group.id}  className={classes.container} onClick={handleClick} >
-        <div className={classes.img}></div>
-        <div>
-            <div className={classes.title}>{group.title}</div>
-        </div>
-        {console.log("title jg", group.title)}
-    
-        </div>
-        ))}
-     
-    </Card>
+        <Card>
+
+            {/* {data.data && data.data.map((group) => ( */}
+            {jGrpCtx.joinedGrps && jGrpCtx.joinedGrps.map((group) => (
+                <div key={group.id} id={group.id} className={classes.container} onClick={handleClick} >
+                    <div className={classes.img}></div>
+                    <div>
+                        <div className={classes.title}>{group.title}</div>
+                    </div>
+                    {console.log("title jg", group.title)}
+
+                </div>
+            ))}
+
+        </Card>
+    </>
 }
 
 export default JoinedGroups;

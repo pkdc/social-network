@@ -128,7 +128,11 @@ func Loginhandler() http.HandlerFunc {
 
 			fmt.Printf("Email: %s\n", email)
 			fmt.Printf("password: %s\n", pw)
-
+			type NotandAuthResp struct {
+				Resp  AuthResponse  `json:"resp"`
+				Notif []NotifStruct `json:"notif"`
+			}
+			var offlineNotResp NotandAuthResp
 			var Resp AuthResponse
 			Resp.Success = true
 			// ### CONNECT TO DATABASE ###
@@ -223,7 +227,9 @@ func Loginhandler() http.HandlerFunc {
 
 			}
 
-			jsonResp, err := json.Marshal(Resp)
+			offlineNotResp.Resp = Resp
+			offlineNotResp.Notif = offlineNot(offlineNotResp.Resp.UserId)
+			jsonResp, err := json.Marshal(offlineNotResp)
 			fmt.Println(string(jsonResp))
 
 			WriteHttpHeader(jsonResp, w)
@@ -534,7 +540,9 @@ func Posthandler() http.HandlerFunc {
 			}
 			for _, post := range posts {
 				fmt.Println("msg: ", post.Message, "--bool: ", checkFollower(int(post.Author), int_user_id))
-				if post.Privacy == 0 || (post.Privacy == 1 && checkFollower(int(post.Author), int_user_id)) {
+				if post.Privacy == 0 ||
+					(post.Privacy == 1 && checkFollower(int(post.Author), int_user_id) > 0 ||
+						post.Privacy == 2 && checkFollower(int(post.Author), int_user_id) == 2) {
 					var newPost PostResponse
 					newPost.Success = true
 					newPost.Id = int(post.ID)
@@ -542,6 +550,7 @@ func Posthandler() http.HandlerFunc {
 					newPost.Message = post.Message
 					newPost.CreatedAt = post.CreatedAt.String()
 					newPost.Image = post.Image
+					newPost.Privacy = int(post.Privacy)
 
 					curUser, err := query.GetUserById(context.Background(), post.Author)
 
@@ -816,7 +825,7 @@ func UserFollowerHandler() http.HandlerFunc {
 					if err != nil {
 						fmt.Println("Unable to find user")
 					}
-					if follower.Status == 1 {
+					if follower.Status > 0 {
 						var oneUser UserStruct
 						oneUser.Id = int(user.ID)
 						oneUser.Fname = user.FirstName
@@ -857,25 +866,25 @@ func UserFollowerHandler() http.HandlerFunc {
 
 			// ### CONNECT TO DATABASE ###
 
-			db := db.DbConnect()
+			// db := db.DbConnect()
 
-			query := crud.New(db)
+			// query := crud.New(db)
 
 			// ### ADD FOLLOWER TO DATABASE ###
-			var newFollower crud.CreateFollowerParams
+			// var newFollower crud.CreateFollowerParams
 
-			newFollower.SourceID = int64(follower.SourceId)
-			newFollower.TargetID = int64(follower.TargetId)
-			newFollower.Status = int64(follower.Status)
+			// newFollower.SourceID = int64(follower.SourceId)
+			// newFollower.TargetID = int64(follower.TargetId)
+			// newFollower.Status = int64(follower.Status)
 			// newFollower.ChatNoti = int64(follower.ChatNoti)
-			// newFollower.LastMsgAt = follower.LastMsgAt
+			// // newFollower.LastMsgAt = follower.LastMsgAt
 
-			_, err = query.CreateFollower(context.Background(), newFollower)
+			// _, err = query.CreateFollower(context.Background(), newFollower)
 
-			if err != nil {
-				fmt.Println("Unable to insert follower")
-				Resp.Success = false
-			}
+			// if err != nil {
+			// 	fmt.Println("Unable to insert follower")
+			// 	Resp.Success = false
+			// }
 
 		case http.MethodDelete:
 			// Declares the variables to store the follower details and handler response
@@ -973,7 +982,7 @@ func UserFollowingHandler() http.HandlerFunc {
 					if err != nil {
 						fmt.Println("Unable to find user")
 					}
-					if following.Status == 1 {
+					if following.Status == 1 || following.Status == 2 {
 						var oneUser UserStruct
 
 						oneUser.Id = int(user.ID)
@@ -1046,6 +1055,150 @@ func UserFollowingHandler() http.HandlerFunc {
 			// Prevents all request types other than POST and GET
 			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
 			return
+		}
+	}
+}
+
+func CloseFriendHandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		EnableCors(&w)
+		// Prevents the endpoint being called from other url paths
+		if err := UrlPathMatcher(w, r, "/close-friend"); err != nil {
+			return
+		}
+
+		fmt.Println(r.Method)
+		switch r.Method {
+		case http.MethodGet:
+
+			// Checks to find a user id in the url
+			sourceId := r.URL.Query().Get("id")
+			id, err := strconv.Atoi(sourceId)
+			if err != nil {
+				fmt.Println("Unable to convert to int")
+			}
+			foundId := false
+
+			if sourceId != "" {
+				foundId = true
+			}
+
+			// Declares the payload struct
+			var Resp UserPayload
+
+			// ### CONNECT TO DATABASE ###
+
+			db := db.DbConnect()
+
+			query := crud.New(db)
+
+			if foundId {
+				// ### GET USER FOLLOWERS ###
+				followings, err := query.GetFollowings(context.Background(), int64(id))
+
+				if err != nil {
+					fmt.Println("Unable to find followers")
+				}
+
+				for _, following := range followings {
+					user, err := query.GetUserById(context.Background(), following.TargetID)
+
+					if err != nil {
+						fmt.Println("Unable to find user")
+					}
+					if following.Status == 2 {
+						var oneUser UserStruct
+
+						oneUser.Id = int(user.ID)
+						oneUser.Fname = user.FirstName
+						oneUser.Lname = user.LastName
+						oneUser.Nname = user.NickName
+						oneUser.Email = user.Email
+						oneUser.Password = user.Password
+						oneUser.Dob = user.Dob.String()
+						oneUser.Avatar = user.Image
+						oneUser.About = user.About
+						oneUser.Public = int(user.Public)
+
+						Resp.Data = append(Resp.Data, oneUser)
+					}
+				}
+
+			}
+
+			// Marshals the response struct to a json object
+			jsonResp, err := json.Marshal(Resp)
+			if err != nil {
+				http.Error(w, "500 internal server error", http.StatusInternalServerError)
+				return
+			}
+
+			// Sets the http headers and writes the response to the browser
+			WriteHttpHeader(jsonResp, w)
+		case http.MethodPost:
+			type Ids struct {
+				SourceID int64 `json:"sourceid"`
+				TargetID int64 `json:"targetid"`
+			}
+
+			// Declares the variables to store the follower details and handler response
+			var followers Ids
+			Resp := AuthResponse{Success: true}
+
+			// Decodes the json object to the struct, changing the response to false if it fails
+			err := json.NewDecoder(r.Body).Decode(&followers)
+			if err != nil {
+				Resp.Success = false
+			}
+			fmt.Println("closefriend: ", followers)
+
+			// ### CONNECT TO DATABASE ###
+
+			db := db.DbConnect()
+
+			query := crud.New(db)
+
+			followerContext := crud.CheckFollowerParams{SourceID: followers.SourceID, TargetID: followers.TargetID}
+			follower, err := query.CheckFollower(context.Background(), followerContext)
+			if err != nil {
+				fmt.Println("Unable to find follower")
+				Resp.Success = false
+			}
+
+			// ### update FOLLOWER TO DATABASE ###
+
+			var newFollower crud.UpdateFollowerParams
+			newFollower.SourceID = follower.SourceID
+			newFollower.TargetID = follower.TargetID
+
+			if follower.Status == 1 {
+				newFollower.Status = int64(2)
+			} else if follower.Status == 2 {
+				newFollower.Status = int64(1)
+			} else {
+				newFollower.Status = int64(follower.Status)
+			}
+
+			_, err = query.UpdateFollower(context.Background(), newFollower)
+			fmt.Println("UPDATED CLOSE FRIEND")
+			if err != nil {
+				fmt.Println("Unable to update close friend")
+				Resp.Success = false
+			}
+
+			// Marshals the response struct to a json object
+			jsonResp, err := json.Marshal(Resp)
+			if err != nil {
+				http.Error(w, "500 internal server error", http.StatusInternalServerError)
+				return
+			}
+
+			// Sets the http headers and writes the response to the browser
+			WriteHttpHeader(jsonResp, w)
+			// default:
+			// 	// Prevents all request types other than POST and GET
+			// 	http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
+			// 	return
 		}
 	}
 }
@@ -1391,7 +1544,6 @@ func GroupMemberHandler() http.HandlerFunc {
 			// Checks to find a user id in the url
 			userId := r.URL.Query().Get("userid")
 			groupId := r.URL.Query().Get("groupid")
-			notMembers := r.URL.Query().Get("checknotmembers")
 			uId, err := strconv.Atoi(userId)
 
 			if err != nil {
@@ -1406,16 +1558,12 @@ func GroupMemberHandler() http.HandlerFunc {
 
 			foundUserId := false
 			foundGroupId := false
-			foundNotMembers := false
 			if userId != "" {
 				foundUserId = true
 			}
 
 			if groupId != "" {
 				foundGroupId = true
-			}
-			if notMembers != "" {
-				foundNotMembers = true
 			}
 			// ### CONNECT TO DATABASE ###
 
@@ -1457,7 +1605,7 @@ func GroupMemberHandler() http.HandlerFunc {
 			}
 
 			// get all members with the following group id
-			if foundGroupId && !foundNotMembers {
+			if foundGroupId {
 				users, err := query.GetGroupMembersByGroupId(context.Background(), crud.GetGroupMembersByGroupIdParams{
 					GroupID: int64(gId),
 					Status:  1,
@@ -1468,7 +1616,11 @@ func GroupMemberHandler() http.HandlerFunc {
 				}
 
 				// Declares the payload struct
-				var usersResp UserPayload
+				type UserPayload2 struct {
+					Members    []UserStruct `json:"members"`
+					NotMembers []UserStruct `json:"notmembers"`
+				}
+				var usersResp UserPayload2
 
 				for _, user := range users {
 					var oneUser UserStruct
@@ -1484,32 +1636,20 @@ func GroupMemberHandler() http.HandlerFunc {
 					oneUser.About = user.About
 					oneUser.Public = int(user.Public)
 
-					usersResp.Data = append(usersResp.Data, oneUser)
+					usersResp.Members = append(usersResp.Members, oneUser)
 				}
-
-				// Marshals the response struct to a json object
-				jsonResp, err := json.Marshal(usersResp)
-				if err != nil {
-					http.Error(w, "500 internal server error", http.StatusInternalServerError)
-					return
-				}
-
-				// Sets the http headers and writes the response to the browser
-				WriteHttpHeader(jsonResp, w)
-			} else if foundGroupId && foundNotMembers {
-				users, err := query.GetGroupMembersByGroupIdWithoutStatus(context.Background(), int64(gId))
+				users2, err := query.GetGroupMembersByGroupIdWithoutStatus(context.Background(), int64(gId))
 
 				if err != nil {
 					fmt.Println("Unable to get members")
 				}
-				var usersResp UserPayload
 				allUsers, err := query.ListUsers(context.Background())
 				for i := 0; i < len(allUsers); i++ {
 					check := false
-					for k := 0; k < len(users); k++ {
-						if allUsers[i].ID == users[k].ID {
+					for k := 0; k < len(users2); k++ {
+						if allUsers[i].ID == users2[k].ID {
 							check = true
-						} else if k == len(users)-1 && !check {
+						} else if k == len(users2)-1 && !check {
 							var oneUser UserStruct
 
 							oneUser.Id = int(allUsers[i].ID)
@@ -1523,7 +1663,7 @@ func GroupMemberHandler() http.HandlerFunc {
 							oneUser.About = allUsers[i].About
 							oneUser.Public = int(allUsers[i].Public)
 
-							usersResp.Data = append(usersResp.Data, oneUser)
+							usersResp.NotMembers = append(usersResp.NotMembers, oneUser)
 						}
 					}
 				}
@@ -1782,7 +1922,13 @@ func GroupPostHandler() http.HandlerFunc {
 				}
 
 				var onePost GroupPostStruct
-
+				us, err := query.GetUserById(context.Background(), groupPost.Author)
+				if err != nil {
+					log.Fatal(err)
+				}
+				onePost.Fname = us.FirstName
+				onePost.Lname = us.LastName
+				onePost.Nickname = us.NickName
 				onePost.Id = int(groupPost.ID)
 				onePost.GroupId = int(groupPost.GroupID)
 				onePost.Author = int(groupPost.Author)
@@ -1802,7 +1948,13 @@ func GroupPostHandler() http.HandlerFunc {
 
 				for _, post := range groupPosts {
 					var onePost GroupPostStruct
-
+					us, err := query.GetUserById(context.Background(), post.Author)
+					if err != nil {
+						log.Fatal(err)
+					}
+					onePost.Fname = us.FirstName
+					onePost.Lname = us.LastName
+					onePost.Nickname = us.NickName
 					onePost.Id = int(post.ID)
 					onePost.GroupId = int(post.GroupID)
 					onePost.Author = int(post.Author)
@@ -1884,20 +2036,21 @@ func GroupPostCommentHandler() http.HandlerFunc {
 		// ### CHECK USER ID AND GROUP ID MATCH IN GROUP MEMBER TABLE ###
 
 		// Checks to find a post id in the url
-		groupPostId := r.URL.Query().Get("id")
-		gPostId, err := strconv.Atoi(groupPostId)
-
-		if err != nil {
-			fmt.Println("Unable to convert group post ID")
-		}
-
-		if groupPostId == "" {
-			http.Error(w, "400 bad request", http.StatusBadRequest)
-			return
-		}
 
 		switch r.Method {
 		case http.MethodGet:
+			groupPostId := r.URL.Query().Get("id")
+			gPostId, err := strconv.Atoi(groupPostId)
+
+			if err != nil {
+				fmt.Println("Unable to convert group post ID")
+			}
+
+			if groupPostId == "" {
+				http.Error(w, "400 bad request", http.StatusBadRequest)
+				return
+			}
+
 			// Declares the payload struct
 			var Resp GroupPostCommentPayload
 
@@ -1916,8 +2069,14 @@ func GroupPostCommentHandler() http.HandlerFunc {
 			}
 
 			for _, comment := range comments {
+				us, err := query.GetUserById(context.Background(), comment.Author)
+				if err != nil {
+					log.Fatal(err)
+				}
 				var newComment GroupPostCommentStruct
-
+				newComment.Fname = us.FirstName
+				newComment.Lname = us.LastName
+				newComment.Nickname = us.NickName
 				newComment.Id = int(comment.ID)
 				newComment.Author = int(comment.Author)
 				newComment.Message = comment.Message
@@ -1926,7 +2085,7 @@ func GroupPostCommentHandler() http.HandlerFunc {
 
 				Resp.Data = append(Resp.Data, newComment)
 			}
-
+			fmt.Println("Resp: ", Resp.Data, len(Resp.Data))
 			// Marshals the response struct to a json object
 			jsonResp, err := json.Marshal(Resp)
 			if err != nil {
@@ -1997,17 +2156,23 @@ func GroupEventHandler() http.HandlerFunc {
 		case http.MethodGet:
 			// Declares the payload struct
 			groupId := r.URL.Query().Get("id")
-
+			if groupId == "" {
+				http.Error(w, "400 bad request", http.StatusBadRequest)
+				return
+			}
 			gId, err := strconv.Atoi(groupId)
+
+			userid := r.URL.Query().Get("userid")
+			if userid == "" {
+				http.Error(w, "400 bad request", http.StatusBadRequest)
+				return
+			}
+			uid, err := strconv.Atoi(userid)
 
 			if err != nil {
 				fmt.Println("Unable to convert group ID")
 			}
 
-			if groupId == "" {
-				http.Error(w, "400 bad request", http.StatusBadRequest)
-				return
-			}
 			var Resp GroupEventPayload
 
 			// ### CONNECT TO DATABASE ###
@@ -2019,10 +2184,9 @@ func GroupEventHandler() http.HandlerFunc {
 			// ### GET ALL EVENTS FOR THE GROUP ID ###
 
 			events, err := query.GetGroupEvents(context.Background(), int64(gId))
-
 			for _, event := range events {
 				var newEvent GroupEventStruct
-
+				err = query.ExecUpdateGroupEventMember(context.Background(), crud.ExecUpdateGroupEventMemberParams{UserID: int64(uid), EventID: event.ID})
 				newEvent.Id = int(event.ID)
 				newEvent.GroupId = int(event.GroupID)
 				newEvent.Author = int(event.Author)
@@ -2120,22 +2284,22 @@ func GroupEventMemberHandler() http.HandlerFunc {
 		// ### CHECK USER ID AND GROUP ID MATCH IN GROUP MEMBER TABLE ###
 		switch r.Method {
 		case http.MethodGet:
-
+			fmt.Println("url:=", r.URL)
+			var checkforevent bool = true
 			// Checks to find a post id in the url
 			eventId := r.URL.Query().Get("id")
+			fmt.Println("bool:= ", eventId == "", " len:= ", len(eventId))
 			if eventId == "" {
-				http.Error(w, "400 bad request", http.StatusBadRequest)
-				return
+				fmt.Println("checking events by user")
+				checkforevent = false
 			}
-
 			eId, err := strconv.Atoi(eventId)
-
+			userId := r.URL.Query().Get("userid")
+			uId, err := strconv.Atoi(userId)
 			if err != nil {
-				fmt.Println("Unable to convert event ID")
 			}
-			// Declares the payload struct
 			var Resp GroupEventMemberPayload
-
+			var Resp2 GroupEventPayload
 			// ### CONNECT TO DATABASE ###
 
 			db := db.DbConnect()
@@ -2143,34 +2307,66 @@ func GroupEventMemberHandler() http.HandlerFunc {
 			query := crud.New(db)
 
 			// ### GET ALL GROUP EVENT MEMBERS ###
+			if checkforevent {
+				members, err := query.GetGroupEventMembers(context.Background(), int64(eId))
 
-			members, err := query.GetGroupEventMembers(context.Background(), int64(eId))
+				if err != nil {
+					fmt.Println("Unable to get all members")
+				}
 
-			if err != nil {
-				fmt.Println("Unable to get all members")
-			}
+				for _, member := range members {
+					var newMember GroupEventMemberStruct
 
-			for _, member := range members {
-				var newMember GroupEventMemberStruct
+					newMember.Id = int(member.ID)
+					newMember.Status = int(member.Status)
+					newMember.UserId = int(member.UserID)
+					newMember.EventId = int(member.EventID)
 
-				newMember.Id = int(member.ID)
-				newMember.Status = int(member.Status)
-				newMember.UserId = int(member.UserID)
-				newMember.EventId = int(member.EventID)
+					Resp.Data = append(Resp.Data, newMember)
 
-				Resp.Data = append(Resp.Data, newMember)
+				}
+				// Marshals the response struct to a json object
+				jsonResp, err := json.Marshal(Resp)
+				if err != nil {
+					http.Error(w, "500 internal server error", http.StatusInternalServerError)
+					return
+				}
+				WriteHttpHeader(jsonResp, w)
 
-			}
+			} else {
+				acceptedEventsByUser, err := query.GetGroupEventsByUserAccepted(context.Background(), int64(uId))
+				if err != nil {
+					log.Fatal(err)
+				}
+				for _, oneeventId := range acceptedEventsByUser {
+					selectedEvent, err := query.GetGroupEventById(context.Background(), oneeventId.EventID)
+					if err != nil {
+					}
+					// s2, _ := json.MarshalIndent(selectedEvent, "", "\t")
+					// fmt.Print("oneevent:=  ", string(s2))
+					var oneevent GroupEventStruct
+					oneevent.Id = int(oneeventId.EventID)
+					oneevent.Title = selectedEvent.Title
+					oneevent.Description = selectedEvent.Description
+					oneevent.Date = selectedEvent.Date.String()
+					oneevent.GroupId=int(selectedEvent.GroupID)
+					// s, _ := json.MarshalIndent(oneevent, "", "\t")
+					// fmt.Print("oneevent:=  ", string(s))
+					Resp2.Data = append(Resp2.Data, oneevent)
 
-			// Marshals the response struct to a json object
-			jsonResp, err := json.Marshal(Resp)
-			if err != nil {
-				http.Error(w, "500 internal server error", http.StatusInternalServerError)
-				return
+				}
+
+				// Marshals the response struct to a json object
+				jsonResp, err := json.Marshal(Resp2)
+				if err != nil {
+					http.Error(w, "500 internal server error", http.StatusInternalServerError)
+					return
+				}
+				WriteHttpHeader(jsonResp, w)
+
 			}
 
 			// Sets the http headers and writes the response to the browser
-			WriteHttpHeader(jsonResp, w)
 
 		case http.MethodPost:
 			// Declares the variables to store the group event member details and handler response
@@ -2463,11 +2659,10 @@ func UserFollowerStatusHandler() http.HandlerFunc {
 			if foundId {
 				// ### GET USER FOLLOWERS ###
 				followers, err := query.GetFollowers(context.Background(), int64(id))
-				var value bool
+				var value string
 				if err != nil {
 					fmt.Println("Unable to find followers")
 				}
-
 				for _, follower := range followers {
 					if err != nil {
 						fmt.Println("Unable to find user")
@@ -2475,10 +2670,25 @@ func UserFollowerStatusHandler() http.HandlerFunc {
 					// w.Header().Set("Content-Type", "application/json")
 					if int(follower.SourceID) == source_id {
 						if follower.Status == 1 {
-							value = false
+							value = "false"
 						} else if follower.Status == 0 {
-							value = true
+							value = "true"
 						}
+					}
+				}
+				followers2, err := query.GetFollowers(context.Background(), int64(source_id))
+				if err != nil {
+					fmt.Println("Unable to find followers")
+				}
+				for _, follower := range followers2 {
+					if err != nil {
+						fmt.Println("Unable to find user")
+					}
+					if int(follower.SourceID) == id {
+						if follower.Status == 2 {
+							value += "closefriend"
+						}
+
 					}
 				}
 				fmt.Fprint(w, value)
@@ -2487,9 +2697,11 @@ func UserFollowerStatusHandler() http.HandlerFunc {
 		}
 	}
 }
-func checkFollower(sourceid, targetid int) bool {
+func checkFollower(targetid, sourceid int) int {
+	fmt.Printf("checking target: %d and source: %d\n", targetid, sourceid)
 	if sourceid == targetid {
-		return true
+		fmt.Println("OWN PROFILE")
+		return 2
 	}
 	db := db.DbConnect()
 	var query *crud.Queries
@@ -2499,13 +2711,14 @@ func checkFollower(sourceid, targetid int) bool {
 	checkFollower.TargetID = int64(targetid)
 	following, err := query.CheckFollower(context.Background(), checkFollower)
 	if err != nil {
-		return false
+		return 0
 	}
-	fmt.Println("following return value: ", following)
+	s, _ := json.MarshalIndent(following, "", "\t")
+	fmt.Print("following: ", string(s))
 	if following.ID != 0 {
-		return true
+		return int(following.Status)
 	}
-	return false
+	return 0
 }
 
 
@@ -2556,6 +2769,102 @@ func GroupRequestByUserHandler() http.HandlerFunc {
 		}
 	}
 }
+func offlineNot(userid int) []NotifStruct {
+	var ResultArr []NotifStruct
+	db := db.DbConnect()
+
+	query := crud.New(db)
+	requests, err := query.GetAllGroupReq(context.Background())
+	if err != nil {
+		log.Fatal(err)
+	}
+	groups, err := query.GetAllGroups(context.Background())
+	if err != nil {
+		log.Fatal(err)
+	}
+	for _, onegroup := range groups {
+		if onegroup.Creator == int64(userid) {
+			for _, onereq := range requests {
+				if onereq.GroupID == onegroup.ID {
+					var oneNotif NotifStruct
+					oneNotif.Label = "noti"
+					oneNotif.Id = 0
+					oneNotif.Type = "join-req"
+					oneNotif.TargetId = userid
+					oneNotif.SourceId = int(onereq.UserID)
+					oneNotif.Accepted = false
+					oneNotif.CreatedAt = "not now"
+					oneNotif.GroupId = int(onereq.GroupID)
+					ResultArr = append(ResultArr, oneNotif)
+				}
+			}
+		}
+	}
+	events, err := query.GetGroupEventsByUserNoReply(context.Background(), int64(userid))
+	if err != nil {
+		log.Fatal(err)
+	}
+	for _, oneevent := range events {
+		groupid, err := query.GetGroupEventById(context.Background(), oneevent.EventID)
+		if err != nil {
+			log.Fatal(err)
+		}
+		if oneevent.Status == 0 {
+			var oneNotif NotifStruct
+			oneNotif.Label = "noti"
+			oneNotif.Id = 0
+			oneNotif.Type = "event-notif+" + groupid.Title
+			oneNotif.TargetId = 987
+			oneNotif.SourceId = userid
+			oneNotif.Accepted = false
+			oneNotif.CreatedAt = "not now"
+			oneNotif.GroupId = int(groupid.GroupID)
+			ResultArr = append(ResultArr, oneNotif)
+		}
+	}
+	invites, err := query.GetGroupMembersByUserId(context.Background(), crud.GetGroupMembersByUserIdParams{UserID: int64(userid), Status: 0})
+	if err != nil {
+		log.Fatal(err)
+	}
+	for _, oneinvite := range invites {
+		group, err := query.GetGroup(context.Background(), oneinvite.GroupID)
+		if err != nil {
+			log.Fatal(err)
+		}
+		var oneNotif NotifStruct
+		oneNotif.Label = "noti"
+		oneNotif.Id = 0
+		oneNotif.Type = "invitation"
+		oneNotif.TargetId = userid
+		oneNotif.SourceId = int(group.Creator)
+		oneNotif.Accepted = false
+		oneNotif.CreatedAt = "not now"
+		oneNotif.GroupId = int(oneinvite.GroupID)
+		ResultArr = append(ResultArr, oneNotif)
+	}
+	followers, err := query.GetFollowers(context.Background(), int64(userid))
+	if err != nil {
+		log.Fatal(err)
+	}
+	for _, onefollower := range followers {
+		if onefollower.Status == 0 {
+
+			var oneNotif NotifStruct
+			oneNotif.Label = "noti"
+			oneNotif.Id = 0
+			oneNotif.Type = "follow-req"
+			oneNotif.TargetId = userid
+			oneNotif.SourceId = int(onefollower.SourceID)
+			oneNotif.Accepted = false
+			oneNotif.CreatedAt = "not now"
+			oneNotif.GroupId = 0
+			ResultArr = append(ResultArr, oneNotif)
+		}
+	}
+	fmt.Println("Most Important Thing: ", ResultArr)
+	return ResultArr
+}
+
 func PrivateChatItemHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		EnableCors(&w)

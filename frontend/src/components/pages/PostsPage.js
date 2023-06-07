@@ -12,6 +12,8 @@ import Card from "../UI/Card";
 import GroupRequest from "../requests/GroupRequests";
 import useGet from "../fetch/useGet";
 import { Navigate } from "react-router-dom";
+import JoinedGroups from "../group/JoinedGroup";
+import UserEvents from "../posts/UserEvents";
 
 const PostsPage = () => {
     const sessionUrl = "http://localhost:8080/session";
@@ -101,8 +103,7 @@ const PostsPage = () => {
             fetch(postCommentUrl)
             .then(resp => resp.json())
             .then(data => {
-                // console.log("post page raw comment data: ", data)
-                // setCommentData(data);
+    
                 data.sort((a, b) => Date.parse(a.createdat) - Date.parse(b.createdat)); // ascending order
                 console.log("post page sorted comment data: ", data)
                 setCommentData(data);
@@ -113,10 +114,20 @@ const PostsPage = () => {
         }
     };
 
+    // useEffect(() => {
+    //     fetch(`http://localhost:8080/group-event-member?userid=${userId}`)
+    //     .then(resp => resp.json())
+    //     .then(data => {
+            
+    //     })
+    //     .catch(
+    //         err => console.log(err)
+    //     );
+    // }, []);
+
     return ( <div className={styles.container}>
 
         {/* <h1 className={styles["title"]}>Create New Post</h1> */}
-
 
             <div className={styles.mid}>
                 <CreatePost onCreatePost={createPostHandler}/>
@@ -124,7 +135,7 @@ const PostsPage = () => {
             </div>
 
             <div className={styles.right}>
-                <Card className={styles.requests}>
+                {/* <Card className={styles.requests}>
                     <div className={styles.label}>Follow Requests</div>
                     <FollowRequest></FollowRequest>
                     <FollowRequest></FollowRequest>
@@ -134,7 +145,12 @@ const PostsPage = () => {
                     <GroupRequest></GroupRequest>
                     <GroupRequest></GroupRequest>
 
-                </Card>
+                </Card> */}
+                 <div className={styles.label}>Your upcoming events</div>
+                <UserEvents userId={userId}></UserEvents>
+                
+        <JoinedGroups></JoinedGroups>
+
            </div>
 
         </div>

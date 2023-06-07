@@ -33,6 +33,7 @@ func main() {
 	mux.Handle("/user-follower", backend.UserFollowerHandler())
 	mux.Handle("/user-following", backend.UserFollowingHandler())
 	mux.Handle("/user-follow-status", backend.UserFollowerStatusHandler())
+	mux.Handle("/close-friend", backend.CloseFriendHandler())
 	mux.Handle("/user-message", backend.UserMessageHandler())
 	mux.Handle("/post", backend.Posthandler())
 	mux.Handle("/post-comment", backend.PostCommentHandler())

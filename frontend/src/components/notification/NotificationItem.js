@@ -8,6 +8,7 @@ import styles from './NotificationItem.module.css'
 import profile from "../assets/profileSmall.svg";
 import JoinGroupReqNotiItem from "./JoinGroupReqNotiItem";
 import InviteToJoinGroupNotiItem from "./InviteToJoinGroupNotiItem";
+import EventNotif from "./eventNotif";
 
 const NotificationItem = (props) => {
     const navigate = useNavigate();
@@ -57,9 +58,10 @@ const NotificationItem = (props) => {
             
     //     );
     // }
-    console.log("props.grouptitle (item)", props.grouptitle);
+    console.log("props.grouptitle (item)", props);
     return (
         <div>
+ 
             {props.type === "follow-req" && <FollowReqNotiItem 
             srcUser={sourceUser}
             targetId={props.targetId}
@@ -74,6 +76,12 @@ const NotificationItem = (props) => {
             targetId={props.targetId}
             groupId={props.groupId}
             />}
+
+            {props.type && props.type.includes("event-notif")  && <EventNotif
+            groupId={props.groupId}
+            type = {props.type}
+            />}
+        
         </div>
     );
 };

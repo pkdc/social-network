@@ -39,6 +39,7 @@ function AllPosts(props) {
             image={post.image}
             createdat={post.createdat}
             authorId={post.author}
+            privacy= {post.privacy}
             // totalNumPost={props.posts.length}
             postNum={p}
             commentsForThisPost={eachPostCommentsArr[p]}
