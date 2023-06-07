@@ -26,8 +26,11 @@
     cursor: pointer;
 }
 
-.emoji {
-    /* width: 200px; */
+.emoji-ctnr {
+    position: absolute;
+    bottom: -20px;
+    right: 5%;
+    opacity: 0.7;
 }
 
 .show-picker {

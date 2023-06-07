@@ -19,7 +19,6 @@ let statusofcuruser ;
     // self
     const [publicity, setPublicity] = useState(false); // 1 false is public, 0 true is private
     const selfPublicNum = +localStorage.getItem("public");
-    let public1  ; 
     console.log("stored publicity (profile)", selfPublicNum);
     useEffect(() => {
         selfPublicNum ? setPublicity(true) : setPublicity(false);
@@ -111,9 +110,11 @@ let statusofcuruser ;
         console.log("---------------------toggle cur checkbox status", e.target.checked);
         // e.target.defaultChecked && setPublicity(false); // wrong but css working
         if (e.target.checked ){
-            setPublicity(true); // private
+            setPublicity(true);
+            // usersCtx.onPrivacyChange(currUserId, 0);
         }else {
             setPublicity(false);
+            // usersCtx.onPrivacyChange(currUserId, 1);
         }
         
            // wrong but css working
@@ -205,7 +206,7 @@ console.log(requestedToFollow)
             localStorage.setItem('isChecked', false);
         }
     }
-     console.log("user data (profile)", data.data)
+    //  console.log("user data (profile)", data.data)
       if (!isLoaded) return <div>Loading...</div>
       if (error) return <div>Error: {error.message}</div>
 
@@ -285,13 +286,13 @@ console.log(requestedToFollow)
     return <div className={classes.container}>
     <div className={classes.private}>
         {/* label?? friends only/public/private?? */}
-            <ToggleSwitch
-                label={"Private"}
-                value={"Private"}
+            {userId === currUserId && <ToggleSwitch
+                label= {"Private"}
+                value= {"Private"}
                 // onClick={setPublicChangeHandler}
                 // onChange={setPublicChangeHandler}
                 onClick={setPublicityHandler}
-            ></ToggleSwitch>
+            ></ToggleSwitch>}
             {/* } */}
         {/* {currUserId === userId && !publicity && 
             <ToggleSwitch 

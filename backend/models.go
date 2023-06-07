@@ -47,9 +47,9 @@ type UserStruct struct {
 type UserPayload struct {
 	Data []UserStruct `json:"data"`
 }
-type UserPayloadWithStatus struct{
-	Data UserStruct  `json:"data"`
- 	Status int `json:"status"`
+type UserPayloadWithStatus struct {
+	Data   UserStruct `json:"data"`
+	Status int        `json:"status"`
 }
 
 type UserId struct {
@@ -58,13 +58,11 @@ type UserId struct {
 }
 
 type UserFollowerStruct struct {
-	Id        int    `json:"id"`
-	Action    string `json:"action"`
-	SourceId  int    `json:"sourceid"`
-	TargetId  int    `json:"targetid"`
-	Status    int    `json:"status"`
-	ChatNoti  int    `json:"chat_noti"`
-	LastMsgAt string `json:"last_msg_at"`
+	Id       int    `json:"id"`
+	Action   string `json:"action"`
+	SourceId int    `json:"sourceid"`
+	TargetId int    `json:"targetid"`
+	Status   int    `json:"status"`
 }
 
 type UserMessageStruct struct {
@@ -257,8 +255,8 @@ type NotifStruct struct {
 	Label     string `json:"label"`
 	Id        int    `json:"id"`
 	Type      string `json:"type"`
-	TargetId  int    `json:"targetid"`
 	SourceId  int    `json:"sourceid"`
+	TargetId  int    `json:"targetid"`
 	Accepted  bool   `json:"accepted"`
 	CreatedAt string `json:"createdat"`
 	GroupId   int    `json:"groupid"`
@@ -267,12 +265,24 @@ type NotifStruct struct {
 type NotiMessageStruct struct {
 	Label      string `json:"label"`
 	Id         int    `json:"id"`
-	TargetId   int    `json:"targetid"`
 	SourceId   int    `json:"sourceid"`
+	TargetId   int    `json:"targetid"`
 	Message    string `json:"message"`
 	GroupId    int    `json:"groupid"`
 	CreatedAt  string `json:"createdat"`
 	Type       string `json:"type"`
 	Accepted   bool   `json:"accepted"`
 	GroupTitle string `json:"grouptitle"`
+}
+
+type PrivateChatItemStruct struct {
+	Id        int    `json:"id"`
+	SourceId  int    `json:"sourceid"`
+	TargetId  int    `json:"targetid"`
+	ChatNoti  int    `json:"chat_noti"`
+	LastMsgAt string `json:"last_msg_at"`
+}
+
+type PrivateChatItemPayload struct {
+	Data []PrivateChatItemStruct `json:"data"`
 }

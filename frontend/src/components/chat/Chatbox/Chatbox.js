@@ -40,12 +40,19 @@ const Chatbox = (props) => {
     //     };
     
     if (!props.grp) {
-        followingCtx.following.find((followingUser) => followingUser.id === frdOrGrpId)["chat_noti"] = false;
-        console.log("following (chatbox)", followingCtx.following);
+        // followingCtx.following.find((followingUser) => followingUser.id === frdOrGrpId)["chat_noti"] = false;
+        // console.log("following (chatbox)", followingCtx.following);
+
+        // remove noti when following user open chatbox
+        if (followingCtx.following && followingCtx.following.includes((following) => following.id === props.chatboxId)) {
+            followingCtx.following.find((followingUser) => followingUser.id === frdOrGrpId)["chat_noti"] = false;
+            console.log("following (chatbox)", followingCtx.following);
+        }
     }
 
     useEffect(() => {
         if (wsCtx.websocket !== null && wsCtx.newMsgsObj) {
+            // if the new msg should be shown in this chatbox
             if (wsCtx.newMsgsObj.sourceid === frdOrGrpId) {
                 console.log("new Received msg data when chatbox is open", wsCtx.newMsgsObj);
                 console.log("ws receives msg from when chatbox is open: ", wsCtx.newMsgsObj.sourceid);
@@ -53,13 +60,25 @@ const Chatbox = (props) => {
             
                 if (wsCtx.newMsgsObj !== null) wsCtx.setNewMsgsObj(null);
 
-                followingCtx.receiveMsgFollowing(frdOrGrpId, true);
-                
-                setJustUpdated(prev => !prev);
+                // if chatboxId is a user that the cur user is following (not chatting coz of public user)
+                if (followingCtx.following && followingCtx.following.find((following => following.id === props.chatboxId))) {
+                    followingCtx.receiveMsgFollowing(frdOrGrpId, true, true);
+                } else { // public
+                    followingCtx.receiveMsgFollowing(frdOrGrpId, true, false);
+                }
             }
         }
-        // console.log("new");
-    }, [wsCtx.newMsgsObj])
+
+        // clear noti if the chatbox is initilly closed, but then opened
+        if (followingCtx.following && followingCtx.following.find((following => following.id === props.chatboxId))) {
+            followingCtx.receiveMsgFollowing(frdOrGrpId, true, true);
+        } else {
+            followingCtx.receiveMsgFollowing(frdOrGrpId, true, false);
+        }
+        
+        setJustUpdated(prev => !prev);
+        // props.chatboxId is changed when the chatbox is opened
+    }, [wsCtx.newMsgsObj, props.chatboxId]) 
 
     // send msg to ws
     const sendMsgHandler = (msg) => {
@@ -94,7 +113,7 @@ const Chatbox = (props) => {
         if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(chatPayloadObj));
 
         // move friendId chat item to top
-        followingCtx.receiveMsgFollowing(frdOrGrpId, true);
+        followingCtx.receiveMsgFollowing(frdOrGrpId, true); // bug
 
         setJustUpdated(prev => !prev);
     };

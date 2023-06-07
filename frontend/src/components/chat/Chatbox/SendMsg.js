@@ -42,7 +42,7 @@ const SendMsg = (props) => {
 
     return (
         <>
-        {/* {showEmojiPicker && <EmojiPicker onEmojiClick={emojiClickHandler} className={styles["emoji"]} />} */}
+        {showEmojiPicker && <div className={styles["emoji-ctnr"]}><EmojiPicker onEmojiClick={emojiClickHandler} width={250} height={400}/></div>}
         <SendMsgForm onSubmit={sendMsgHandler} className={styles["send-msg"]} style={{top: `${window.innerHeight-205}px`}}>
             <CreateMsgTextarea className={styles["send-msg-input"]} value={enteredMsg} onChange={msgChangeHandler}/>
             <div className={styles["show-picker"]} onClick={showEmojiPickerHandler}>&#9786;</div>

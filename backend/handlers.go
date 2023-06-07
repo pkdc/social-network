@@ -464,7 +464,7 @@ func Posthandler() http.HandlerFunc {
 			fmt.Printf("post message %s\n", message)
 			fmt.Printf("post image %s\n", image)
 			fmt.Printf("post privacy %d\n", privacy)
-			fmt.Printf("post created at %d\n", createdAt)
+			fmt.Printf("post created at %v\n", createdAt)
 
 			var Resp PostResponse
 			Resp.Success = true
@@ -867,7 +867,7 @@ func UserFollowerHandler() http.HandlerFunc {
 			newFollower.SourceID = int64(follower.SourceId)
 			newFollower.TargetID = int64(follower.TargetId)
 			newFollower.Status = int64(follower.Status)
-			newFollower.ChatNoti = int64(follower.ChatNoti)
+			// newFollower.ChatNoti = int64(follower.ChatNoti)
 			// newFollower.LastMsgAt = follower.LastMsgAt
 
 			_, err = query.CreateFollower(context.Background(), newFollower)
@@ -2507,6 +2507,8 @@ func checkFollower(sourceid, targetid int) bool {
 	}
 	return false
 }
+
+
 func GroupRequestByUserHandler() http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -2551,6 +2553,86 @@ func GroupRequestByUserHandler() http.HandlerFunc {
 
 			// Sets the http headers and writes the response to the browser
 			WriteHttpHeader(jsonResp, w)
+		}
+	}
+}
+func PrivateChatItemHandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		EnableCors(&w)
+		// Prevents the endpoint being called from other url paths
+		if err := UrlPathMatcher(w, r, "/private-chat-item"); err != nil {
+			return
+		}
+
+		if r.Method == http.MethodGet {
+			fmt.Printf("GET PrivateChatItemHandler\n")
+			// Checks to find a user id in the url
+			sourceId := r.URL.Query().Get("id")
+			id, err := strconv.Atoi(sourceId)
+			if err != nil {
+				fmt.Println("Unable to convert to int")
+			}
+
+			foundId := false
+
+			if sourceId != "" {
+				foundId = true
+			}
+			fmt.Println("urlPrivateChatItem: ", r.URL)
+			fmt.Printf("GET PrivateChatItemHandler %s\n", sourceId)
+
+			// Declares the payload struct
+			var Resp PrivateChatItemPayload
+
+			// ### CONNECT TO DATABASE ###
+
+			db := db.DbConnect()
+
+			query := crud.New(db)
+
+			if foundId {
+				// ### GET CHAT ITEMS WITH SELF ID AS TARGET ID ###
+				privateChatItems, err := query.GetPrivateChatItem(context.Background(), int64(id))
+
+				if err != nil {
+					fmt.Println(err)
+					fmt.Println("Unable to find chat item")
+				}
+
+				for _, item := range privateChatItems {
+					fmt.Println("chat item: ", item)
+					// form the resp
+
+					if err != nil {
+						fmt.Println("Unable to find item")
+					}
+
+					var oneItem PrivateChatItemStruct
+
+					oneItem.Id = int(item.ID)
+					oneItem.SourceId = int(item.SourceID)
+					oneItem.TargetId = int(item.TargetID)
+					oneItem.ChatNoti = int(item.ChatNoti)
+					oneItem.LastMsgAt = item.LastMsgAt.String()
+
+					Resp.Data = append(Resp.Data, oneItem)
+				}
+			}
+
+			// Marshals the response struct to a json object
+			fmt.Println("p chat endpt Resp: ", Resp)
+			jsonResp, err := json.Marshal(Resp)
+			if err != nil {
+				http.Error(w, "500 internal server error", http.StatusInternalServerError)
+				return
+			}
+
+			// Sets the http headers and writes the response to the browser
+			WriteHttpHeader(jsonResp, w)
+		} else {
+			// Prevents all request types other than GET
+			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
+			return
 		}
 	}
 }

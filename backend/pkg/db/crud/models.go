@@ -96,6 +96,14 @@ type PostMember struct {
 	PostID int64
 }
 
+type PrivateChatItem struct {
+	ID        int64
+	SourceID  int64
+	TargetID  int64
+	ChatNoti  int64
+	LastMsgAt time.Time
+}
+
 type SessionTable struct {
 	SessionToken string
 	UserID       int64
@@ -115,12 +123,10 @@ type User struct {
 }
 
 type UserFollower struct {
-	ID        int64
-	SourceID  int64
-	TargetID  int64
-	Status    int64
-	ChatNoti  int64
-	LastMsgAt time.Time
+	ID       int64
+	SourceID int64
+	TargetID int64
+	Status   int64
 }
 
 type UserMessage struct {
