@@ -63,7 +63,10 @@ export const FollowingContextProvider = (props) => {
                 if (!allChatItemArr) {
                     setFollowingChat(following);
                     // filter out following
-                    usersCtx.users && setOtherListedChatUsers(usersCtx.users.filter(user => user.public === 1 && !following.some(followingUser => followingUser.id == user.id)));
+                    console.log("public and not following",usersCtx.users.filter(user => user.public === 1 && !following.some(followingUser => followingUser.id === user.id)));
+                    usersCtx.users && !following && setOtherListedChatUsers(usersCtx.users.filter(user => user.public === 1)); // takes care if cur user is not following any user
+                    usersCtx.users && following && setOtherListedChatUsers(usersCtx.users.filter(user => user.public === 1 && !following.some(followingUser => followingUser.id === user.id)));
+                    
                     console.log("no data", data);
                     return;
                 }
@@ -82,15 +85,15 @@ export const FollowingContextProvider = (props) => {
                     });
                     
                     // Also display following even if there is no chat item
-                    let filteredFollowingWoChatItems;
+                    let filteredFollowingNoChatItems;
                     if (following) {
-                        filteredFollowingWoChatItems = following.filter(followingUser => {
+                        filteredFollowingNoChatItems = following.filter(followingUser => {
                             if (!allChatItemArr) return false;
-                            return !allChatItemArr.some(chatItem => followingUser.id === chatItem.sourceid)
+                            return !allChatItemArr.some(chatItem => followingUser.id === chatItem.sourceid);
                         });
                     }
-                    console.log("filteredFollowing Without oChatItems", filteredFollowingWoChatItems);
-                    const finalFollowingChatItems = [...followingChatItems, ...filteredFollowingWoChatItems];
+                    console.log("filteredFollowing Without oChatItems", filteredFollowingNoChatItems);
+                    const finalFollowingChatItems = [...followingChatItems, ...filteredFollowingNoChatItems];
                     setFollowingChat(finalFollowingChatItems);
     
                     // filter out following, to get all OtherListedChatUsers
@@ -104,11 +107,21 @@ export const FollowingContextProvider = (props) => {
                         const matchedOtherChatItem = usersCtx.users.find(user => user.id === chatItem.sourceid);
                         return {...chatItem, ...matchedOtherChatItem};
                     });
-                    setOtherListedChatUsers(allOtherChatItems);
     
                     console.log("followuingChat", followingChat);
                     // display public users even if there is no chat item 
-                    
+                    let filteredOtherNoChatItems;
+                    const allPublicUsers = usersCtx.users.filter(user => user.public === 1);
+                    console.log("public users: ", allPublicUsers)
+                    if (allPublicUsers) {
+                        filteredOtherNoChatItems = allPublicUsers.filter(publicUser => {
+                            if (!allChatItemArr) return false;
+                            return !allChatItemArr.some(chatItem => publicUser.id === chatItem.sourceid);
+                        });
+                    }
+                    console.log("filteredOther Without ChatItems", filteredOtherNoChatItems);
+                    const finalOtherNoChatItems = [...allOtherChatItems, ...filteredOtherNoChatItems];
+                    setOtherListedChatUsers(finalOtherNoChatItems);
                 }
                 
 
