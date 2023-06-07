@@ -16,6 +16,7 @@ const NotificationItem = (props) => {
     const sourceUser = usersCtx.users.find((user) => user.id === props.sourceId);
     console.log("src", sourceUser);
     console.log("props.groupid (item)", props.groupId);
+    console.log("new props123 ", props)
 
     // if (props.type == "follow-req") {
         
@@ -75,6 +76,7 @@ const NotificationItem = (props) => {
             srcUser={sourceUser}
             targetId={props.targetId}
             groupId={props.groupId}
+            createdAt={props.createdAt}
             />}
 
             {props.type && props.type.includes("event-notif")  && <EventNotif

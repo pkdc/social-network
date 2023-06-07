@@ -1,8 +1,6 @@
 
 import { useContext, useState, useEffect } from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
-import LogoutButton from "../UI/LogoutButton";
-import NotificationBtn from "../UI/NotificationBtn";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "./TopNav.module.css";
 import logout from "../assets/logout.svg";
 import profile from "../assets/profileSmall.svg";
@@ -58,11 +56,19 @@ const TopNav = () => {
             console.log("before the overwrite: ", newNoti); 
             if (newNoti){
                 setNewNoti(prevNotifications => [...prevNotifications, wsCtx.newNotiObj]);
-            }else{setNewNoti(wsCtx.newNotiObj)}
+                let newarr = [wsCtx.newNotiObj, ...newNoti]
+                localStorage.setItem("new_notif", JSON.stringify(Object.values(newarr)))
+
+            }else{
+                setNewNoti(wsCtx.newNotiObj)
+                localStorage.setItem("new_notif", JSON.stringify(Object.values(wsCtx.newNotiObj)))
+            
+            }
+
             // setNewNoti(wsCtx.newNotiObj);
             // let onlineNotif =localStorage.getItem("new_notif")
             // if (onlineNotif ==""){
-            //     // localStorage.setItem("new_notif", JSON.stringify(Object.values(wsCtx.newNotiObj)))
+                // localStorage.setItem("new_notif", JSON.stringify(Object.values(wsCtx.newNotiObj)))
 
             // } else{
             //     // onlineNotif

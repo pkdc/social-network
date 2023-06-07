@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { WebSocketContext } from "./websocket-context";
-
+import { UsersContext } from "./users-context";
 export const FollowingContext = React.createContext({
     following: [],
     setFollowing: () => {},
@@ -30,7 +30,6 @@ export const FollowingContextProvider = (props) => {
     // const [chatNotiUserArr, setChatNotiUserArr] = useState([]);
     const wsCtx = useContext(WebSocketContext);
     const usersCtx = useContext(UsersContext);
-
     // get following from db
     const getFollowingHandler = () => {
         fetch(followingUrl)

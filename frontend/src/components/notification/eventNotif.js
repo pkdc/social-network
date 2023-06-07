@@ -21,7 +21,12 @@ function EventNotif(props) {
         setIsVisible(false);
         console.log("click")
         const id = e.target.id
+        let notifarr  =JSON.parse(localStorage.getItem("new_notif"))
+       let newarray =  notifarr.filter((obj) => (obj.groupid != id))
+       console.log("newarray ", newarray)
 
+
+    localStorage.setItem("new_notif", JSON.stringify(Object.values(newarray)) )
         navigate("/groupprofile", { state: { id } })
         console.log("5678", id)
     }
