@@ -13,7 +13,7 @@ const AllNotificationItems = (props) => {
 
     useEffect(() => {
         console.log("props.newNoti", props.notiItems);
-        if (props.notiItems.length != 0) {
+        if (props.notiItems.length !== 0) {
             console.log("before the prevarr", notiArr)
             setNotiArr(prevArr => [... new Set([props.notiItems[0], ...prevArr])]);
         }
@@ -21,7 +21,7 @@ const AllNotificationItems = (props) => {
     }, [props.notiItems]);
 
     useEffect(() => {
-
+        if (notiArr.length !== 0)
             localStorage.setItem("new_notif", JSON.stringify(Object.values(notiArr)))
     
     }, [notiArr]);
