@@ -11,10 +11,6 @@ const AllUserChatItems = (props) => {
     console.log("ws in AllUserChatItems: ",wsCtx.websocket);
     console.log("cur user is following (AllUserChatItems)", followingCtx.followingChat);
 
-    // add noti field to users(following) in chatNotiUserArr
-    console.log(" following List (AllUserChatItems)", followingCtx.followingChat);
-    console.log(" following List with noti set (AllUserChatItems)", followingCtx.followingChat);
-
     const usersCtx = useContext(UsersContext);
     console.log("users (chatitems)", usersCtx.users);
     // const [followingUids, setFollowingUids] = useState([]); // in case followingCtx.followingChat is empty
@@ -24,7 +20,6 @@ const AllUserChatItems = (props) => {
     // const publicUsers = usersCtx.users.filter((user) => user.public === 1 && !followingCtx.followingChat.includes(user));
     // let followingCtx.otherListedChatUsers = usersCtx.users.filter((user) => user.public === 1 && !followingUids.includes(user.id));
     useEffect(() => {
-        console.log("public users from ctx", usersCtx.publicUsers);
         let followingUids = [];
         let otherListedChatUsersUids = [];
         if (followingCtx.followingChat) followingUids = followingCtx.followingChat.map((following) => following.id);
@@ -110,7 +105,6 @@ const AllUserChatItems = (props) => {
             })}
         </div>
         </>
-        
     );
 };
 
