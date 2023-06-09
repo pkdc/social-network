@@ -165,7 +165,7 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 		groupMsg.GroupId = msgStruct.GroupId
 		groupMsg.CreatedAt = time.Now().String()
 	} else {
-		// panic
+		log.Println("Label not match")
 	}
 
 	switch t {
@@ -195,8 +195,8 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 					fmt.Println(event)
 					eventId = int(event.ID)
 				}
-			}else {
-				
+			} else {
+
 			}
 			for _, p := range users {
 				fmt.Println("member of group: ", p)

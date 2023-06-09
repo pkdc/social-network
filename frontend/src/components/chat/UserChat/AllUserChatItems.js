@@ -28,28 +28,28 @@ const AllUserChatItems = (props) => {
         console.log("followingCtx.otherListedChatUsers (chatitems)", followingCtx.otherListedChatUsers);
         if (followingCtx.otherListedChatUsers) otherListedChatUsersUids = followingCtx.otherListedChatUsers.map((otherListedChatUser) => otherListedChatUser.id);
         console.log("otherListedChatUsersUids (chatitems)", otherListedChatUsersUids);
-        if (wsCtx.websocket !== null && wsCtx.newMsgsObj) {
-            console.log("sourceid  (chatitems)", wsCtx.newMsgsObj.sourceid);
-            console.log("targetid  (chatitems)", wsCtx.newMsgsObj.targetid);
-            // console.log(followingCtx.followingChat.find((follower) => follower.id === wsCtx.newMsgsObj.sourceid));
+        if (wsCtx.websocket !== null && wsCtx.newPrivateMsgsObj) {
+            console.log("sourceid  (chatitems)", wsCtx.newPrivateMsgsObj.sourceid);
+            console.log("targetid  (chatitems)", wsCtx.newPrivateMsgsObj.targetid);
+            // console.log(followingCtx.followingChat.find((follower) => follower.id === wsCtx.newPrivateMsgsObj.sourceid));
 
-            if (followingCtx.followingChat && followingCtx.followingChat.find((following) => following.id === wsCtx.newMsgsObj.sourceid)) {
+            if (followingCtx.followingChat && followingCtx.followingChat.find((following) => following.id === wsCtx.newPrivateMsgsObj.sourceid)) {
                 // if Cur user is following the sender
-                console.log("new Received msg data when chatbox is closed (following)", wsCtx.newMsgsObj);
-                console.log("ws receives msg from when chatbox is closed (following): ", wsCtx.newMsgsObj.sourceid);
-                wsCtx.newMsgsObj !== null && wsCtx.setNewMsgsObj(null);
-                followingCtx.receiveMsgFollowing(wsCtx.newMsgsObj.sourceid, false, true);
-            } else if (!followingUids.includes(wsCtx.newMsgsObj.sourceid) && otherListedChatUsersUids.includes(wsCtx.newMsgsObj.sourceid)) { 
+                console.log("new Received msg data when chatbox is closed (following)", wsCtx.newPrivateMsgsObj);
+                console.log("ws receives msg from when chatbox is closed (following): ", wsCtx.newPrivateMsgsObj.sourceid);
+                wsCtx.newPrivateMsgsObj !== null && wsCtx.setNewPrivateMsgsObj(null);
+                followingCtx.receiveMsgFollowing(wsCtx.newPrivateMsgsObj.sourceid, false, true);
+            } else if (!followingUids.includes(wsCtx.newPrivateMsgsObj.sourceid) && otherListedChatUsersUids.includes(wsCtx.newPrivateMsgsObj.sourceid)) { 
                 // Cur user is not following the sender, but sender is already on the other users list
-                console.log("new Received msg data when chatbox is closed (public)", wsCtx.newMsgsObj);
-                console.log("ws receives msg from when chatbox is closed (public): ", wsCtx.newMsgsObj.sourceid);
-                wsCtx.newMsgsObj !== null && wsCtx.setNewMsgsObj(null);
-                followingCtx.receiveMsgFollowing(wsCtx.newMsgsObj.sourceid, false, false);
-            } else if (!followingUids.includes(wsCtx.newMsgsObj.sourceid) && !otherListedChatUsersUids.includes(wsCtx.newMsgsObj.sourceid)) {
+                console.log("new Received msg data when chatbox is closed (public)", wsCtx.newPrivateMsgsObj);
+                console.log("ws receives msg from when chatbox is closed (public): ", wsCtx.newPrivateMsgsObj.sourceid);
+                wsCtx.newPrivateMsgsObj !== null && wsCtx.setNewPrivateMsgsObj(null);
+                followingCtx.receiveMsgFollowing(wsCtx.newPrivateMsgsObj.sourceid, false, false);
+            } else if (!followingUids.includes(wsCtx.newPrivateMsgsObj.sourceid) && !otherListedChatUsersUids.includes(wsCtx.newPrivateMsgsObj.sourceid)) {
                 // Cur user is not following the sender, and sender is not on the other users list yet
-                console.log("new Received msg data when chatbox is closed (public, from private)", wsCtx.newMsgsObj);
-                console.log("ws receives msg  when chatbox is closed (public, from private): ", wsCtx.newMsgsObj.sourceid);
-                const privateSender = usersCtx.users.find((user) => user.id === wsCtx.newMsgsObj.sourceid);
+                console.log("new Received msg data when chatbox is closed (public, from private)", wsCtx.newPrivateMsgsObj);
+                console.log("ws receives msg  when chatbox is closed (public, from private): ", wsCtx.newPrivateMsgsObj.sourceid);
+                const privateSender = usersCtx.users.find((user) => user.id === wsCtx.newPrivateMsgsObj.sourceid);
                 if (privateSender && !followingCtx.otherListedChatUsers.some(chatUser => chatUser.id === privateSender.id)) {
                     privateSender["chat_noti"] = true; // since it must have received a new msg from the privateSender to start a
                     followingCtx.setOtherListedChatUsers((prevList) => [privateSender, ...prevList]);
@@ -58,7 +58,7 @@ const AllUserChatItems = (props) => {
                 console.log("Cur user is not following the msg sender nor having a public profile");
             }
         }
-    }, [usersCtx.users, followingCtx.following, followingCtx.followingChat, wsCtx.newMsgsObj]);
+    }, [usersCtx.users, followingCtx.following, followingCtx.followingChat, wsCtx.newPrivateMsgsObj]);
     
     console.log("followingCtx.otherListedChatUsers (chatitems)", followingCtx.otherListedChatUsers);
     
