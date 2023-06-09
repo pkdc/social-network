@@ -9,18 +9,21 @@ const AllNotificationItems = (props) => {
     const [notiArr, setNotiArr] = useState([]);
 
     useEffect(() => {
-        setNotiArr(storedNotif)
+        console.log("first new_notif", storedNotif);
+        storedNotif && setNotiArr(storedNotif.filter(notif => notif !== undefined))
     }, []);
 
     useEffect(() => {
-        // console.log("props.newNoti", props.notiItems);
-        // console.log("notiArr", notiArr);
-        props.notiItems && notiArr.length && setNotiArr(prevArr => [...new Set([props.notiItems[0], ...prevArr])]);
-        props.notiItems && !notiArr.length && setNotiArr([props.notiItems[0]]);
+        console.log("props.newNoti", props.notiItems);
+        if (props.notiItems.length !== 0) {
+            console.log("before the prevarr", notiArr)
+            setNotiArr(prevArr => [... new Set([props.notiItems[0], ...prevArr])]);
+        }
     }, [props.notiItems]);
 
     useEffect(() => {
         if (notiArr.length !== 0)
+        console.log("just before setting ls",notiArr);
             localStorage.setItem("new_notif", JSON.stringify(Object.values(notiArr)))
     }, [notiArr]);
 
