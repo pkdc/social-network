@@ -1,5 +1,6 @@
 import { useEffect, useState, useContext } from "react";
 import AllUserChatItems from "./UserChat/AllUserChatItems";
+import AllGroupChatItems from "./GroupChat/AllGroupChatItems";
 import styles from "./ChatMainArea.module.css";
 // import { AuthContext } from "../store/auth-context";
 import Chatbox from "./Chatbox/Chatbox.js";
@@ -22,8 +23,19 @@ const ChatMainArea = ({grpChat}) => {
     };
 
     const closeUserChatboxHandler = () => {
-        console.log("chatbox open for ", followingOrPublicUserId);
+        console.log("chatbox closed for ", followingOrPublicUserId);
         setPrivChatboxOpen(false);
+    };
+
+    const openGrpChatboxHandler = (groupId) => {
+        console.log("chatbox open for group: ", groupId);
+        setGrpChatboxOpen(true);
+        setGrpId(groupId);
+    };
+
+    const closeGrpChatboxHandler = () => {
+        console.log("chatbox closed for ", grpId);
+        setGrpChatboxOpen(false);
     };
 
     // const receiveNewMsgHandler = (chatboxId) => {
@@ -53,11 +65,16 @@ const ChatMainArea = ({grpChat}) => {
                     grp={grpChat}
                 />
             }
-            {grpChat && !grpChatboxOpen}
+            {grpChat && !grpChatboxOpen && 
+                <AllGroupChatItems
+                    onOpenChatbox={openGrpChatboxHandler}
+                    open={grpChatboxOpen}
+                />
+            }
             {grpChat && grpChatboxOpen && 
                 <Chatbox 
                     chatboxId={grpId} 
-                    onCloseChatbox={closeUserChatboxHandler}
+                    onCloseChatbox={closeGrpChatboxHandler}
                     // onReceiveNewMsg={receiveNewMsgHandler}
                     grp={grpChat}
                 />}

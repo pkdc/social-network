@@ -62,6 +62,7 @@ const AllUserChatItems = (props) => {
     
     console.log("followingCtx.otherListedChatUsers (chatitems)", followingCtx.otherListedChatUsers);
     
+    // middleman, passing followingId from child to parent
     const openUserChatboxHandler = (followingId) => props.onOpenChatbox(followingId);
 
     const curUserId = +localStorage.getItem("user_id");

@@ -3,8 +3,6 @@ import Avatar from "../../UI/Avatar";
 import Card from "../../UI/Card";
 
 const ChatUserItem = (props) => {
-    const defaultImagePath = "default_avatar.jpg";
-    // const onlineStatus = false;
     const openChatboxHandler = () => {
         console.log("user chat item clicked");
         props.onOpenChatbox(props.id);
