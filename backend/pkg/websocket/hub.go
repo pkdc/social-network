@@ -174,6 +174,7 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 		fmt.Println("noti")
 		// Marshals the struct to a json object
 		sendNoti, err := json.Marshal(not)
+
 		if err != nil {
 			panic(err)
 		}
@@ -190,14 +191,19 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 			}
 			events, err := query.GetGroupEventsWithoutId(context.Background())
 			var eventId int
+			var eventTitle string
 			if len(events) != 0 {
 				for _, event := range events {
-					fmt.Println(event)
+					// fmt.Println("eventhere: ", event)
 					eventId = int(event.ID)
+					eventTitle = "+" + event.Title
 				}
-			}else {
-				
+
+			} else {
+
 			}
+			not.Type += eventTitle
+			sendNoti, err = json.Marshal(not)
 			for _, p := range users {
 				fmt.Println("member of group: ", p)
 				if int(p.ID) != not.SourceId {

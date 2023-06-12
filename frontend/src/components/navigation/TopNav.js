@@ -48,22 +48,45 @@ const TopNav = () => {
     };
 
     const wsCtx = useContext(WebSocketContext);
-
+console.log("checkingwebsocket: ",wsCtx.newNotiObj);
     useEffect(() => {
         if (wsCtx.websocket !== null && wsCtx.newNotiObj !== null) {
             console.log("ws receives notiObj (TopNav): ", typeof(wsCtx.newNotiObj));
             console.log("ws receives noti type (TopNav): ", wsCtx.newNotiObj.type);
             console.log("before the overwrite: ", newNoti); 
-            if (newNoti){
-                setNewNoti(prevNotifications => [...prevNotifications, wsCtx.newNotiObj]);
-                let newarr = [wsCtx.newNotiObj, ...newNoti]
-                localStorage.setItem("new_notif", JSON.stringify(Object.values(newarr)))
-
-            }else{
-                setNewNoti(wsCtx.newNotiObj)
-                localStorage.setItem("new_notif", JSON.stringify(Object.values(wsCtx.newNotiObj)))
-            
+            const lastcurrentnotifarr = localStorage.getItem("new_notif");
+            console.log("lastcurrentnotifarr empty ", (lastcurrentnotifarr))
+            if (lastcurrentnotifarr != "[]"){  
+                console.log("new notif not empty1")
+                
+                setNewNoti(JSON.parse(lastcurrentnotifarr))
+                // console.log("lastcurrentnotifarr empty ", JSON.parse(lastcurrentnotifarr), "len ", JSON.parse(lastcurrentnotifarr).length)
+                console.log("empty new noti", newNoti)
+            }else {
+                console.log("new notif empty1")
+                setNewNoti([]);     
             }
+            // console.log("empty console: ", newNoti, "---",newNoti.length)
+            // if (newNoti) {
+            //     console.log("new notif not empty2")
+            //     // setNewNoti(prevNotifications => [...prevNotifications, wsCtx.newNotiObj]);
+            //     let newarr = [wsCtx.newNotiObj, ...newNoti]
+            //     // setNewNoti(newarr)
+
+            //     console.log("newnotthing2 :", newNoti , "lastcurrentnotifarr newarr empty: ", newarr);
+
+            //     localStorage.setItem("new_notif", JSON.stringify(Object.values(newarr)))
+            // }
+            // else{
+            //     console.log("new notif empty2")
+
+            //     // setNewNoti([wsCtx.newNotiObj])
+            //    let x = [];
+            //    x[0]= (wsCtx.newNotiObj)
+            //    console.log("another exit: ", x)
+            //         localStorage.setItem("new_notif",JSON.stringify(x) )
+                
+            // }
 
             // setNewNoti(wsCtx.newNotiObj);
             // let onlineNotif =localStorage.getItem("new_notif")
@@ -77,6 +100,22 @@ const TopNav = () => {
             // wsCtx.setNewNotiObj(null);
         }
     } ,[wsCtx.newNotiObj]);
+
+
+    useEffect(() => {
+        if (newNoti) {
+            console.log("new notif not empty2")
+            // setNewNoti(prevNotifications => [...prevNotifications, wsCtx.newNotiObj]);
+            let newarr = [wsCtx.newNotiObj, ...newNoti]
+            // setNewNoti(newarr)
+
+            console.log("newnotthing2 :", newNoti , "lastcurrentnotifarr newarr empty: ", newarr);
+        if (newarr[0] != null) {
+
+            localStorage.setItem("new_notif", JSON.stringify(Object.values(newarr)))
+        }
+        }
+    }, [newNoti])
 
     console.log("wsCtx.setNewNotiObj before and after getting (TopNav outside): ", wsCtx.newNotiObj);
     console.log("newNoti (TopNav outside): ", newNoti);

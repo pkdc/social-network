@@ -1,20 +1,20 @@
-import React, {useState, useEffect, useContext} from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { UsersContext } from "./users-context";
 
 export const WebSocketContext = React.createContext({
     websocket: null,
     newMsgsObj: null,
-    setNewMsgsObj: () => {},
+    setNewMsgsObj: () => { },
     newNotiObj: null,
-    setNewNotiObj: () => {},
+    setNewNotiObj: () => { },
     newNotiFollowReplyObj: null,
-    setNewNotiFollowReplyObj: () => {},
+    setNewNotiFollowReplyObj: () => { },
     newNotiJoinReplyObj: null,
-    setNewNotiJoinReplyObj: () => {},
+    setNewNotiJoinReplyObj: () => { },
     newNotiInvitationReplyObj: null,
-    setNewNotiInvitationReplyObj: () => {},
+    setNewNotiInvitationReplyObj: () => { },
     newOnlineStatusObj: false,
-    setNewOnlineStatusObj: () => {},
+    setNewOnlineStatusObj: () => { },
 });
 
 export const WebSocketContextProvider = (props) => {
@@ -37,7 +37,7 @@ export const WebSocketContextProvider = (props) => {
             console.log("ws connected");
             setSocket(newSocket);
         };
-        
+
         newSocket.onclose = () => {
             console.log("bye ws");
             setSocket(null);
@@ -65,7 +65,7 @@ export const WebSocketContextProvider = (props) => {
                 // };
                 // setNewMsgsObj(newReceivedMsgObj);
             } else if (msgObj.label === "noti") {
-                if (msgObj.type === "follow-req" || msgObj.type === "event-notif" || msgObj.type === "join-req" || msgObj.type === "invitation") {
+                if (msgObj.type === "follow-req" || msgObj.type.includes("event-notif") || msgObj.type === "join-req" || msgObj.type === "invitation") {
                     console.log("ws receives noti (wsctx): ", msgObj);
                     console.log("ws receives noti type (wsctx): ", msgObj.type);
                     setNewNotiObj(msgObj);
@@ -87,7 +87,7 @@ export const WebSocketContextProvider = (props) => {
                     console.log("ws receives noti invitation-reply type (wsctx): ", msgObj.type);
                     console.log("ws receives noti invitation-reply accepted (wsctx): ", msgObj.accepted);
                     setNewNotiInvitationReplyObj(msgObj);
-                } 
+                }
             } else if (msgObj.label === "online-status") {
                 console.log("ws receives online-status (wsctx): ", msgObj);
                 console.log("ws receives online-status onlineuserids (wsctx): ", msgObj.onlineuserids);
@@ -97,9 +97,9 @@ export const WebSocketContextProvider = (props) => {
 
         return () => {
             newSocket.close();
-        };  
+        };
     }, []);
-         
+
     return (
         <WebSocketContext.Provider value={{
             websocket: socket,

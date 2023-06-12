@@ -3,8 +3,11 @@ import { useContext, useState } from "react";
 import SmallButton from "../UI/SmallButton";
 import { WebSocketContext } from "../store/websocket-context";
 import Avatar from "../UI/Avatar";
+import { useNavigate } from 'react-router-dom';
 
 const FollowReqNotiItem = (props) => {
+    const navigate = useNavigate();
+
     const wsCtx = useContext(WebSocketContext);
     const [isVisible, setIsVisible] = useState(true);
 
@@ -21,6 +24,14 @@ const FollowReqNotiItem = (props) => {
         notiReplyPayloadObj["accepted"] = true;
         console.log("gonna send reply (accept) to fol req : ", notiReplyPayloadObj);
         if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(notiReplyPayloadObj));
+        let notifarr  =JSON.parse(localStorage.getItem("new_notif"))
+        for (let i= 0 ; i < notifarr.length; i++) {
+            if (notifarr[i].sourceid == props.srcUser.id && notifarr[i].type == "follow-req"){
+                notifarr.splice(i, 1);
+                localStorage.setItem("new_notif", JSON.stringify(Object.values(notifarr)) )
+                break
+            }
+        }
 
     };
     const declineFollowReqHandler = () => {
@@ -36,18 +47,35 @@ const FollowReqNotiItem = (props) => {
         notiReplyPayloadObj["accepted"] = false;
         console.log("gonna send reply (decline) to fol req : ", notiReplyPayloadObj);
         if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(notiReplyPayloadObj));
+        let notifarr  =JSON.parse(localStorage.getItem("new_notif"))
+        for (let i= 0 ; i < notifarr.length; i++) {
+            if (notifarr[i].sourceid == props.srcUser.id && notifarr[i].type == "follow-req"){
+                notifarr.splice(i, 1);
+                localStorage.setItem("new_notif", JSON.stringify(Object.values(notifarr)) )
+                break
+            }
+        }
     };
+
+    
+    // function handleClick(e) {
+   
+    //     const id = e.target.id
+
+    //     navigate(`/profile/${id}`)
+    //     console.log("5678", id)
+    // }
 
     return (
         <div>
             {isVisible && (
                 <div>
-                    <div className={styles.container}>
-                        <div className={styles.left}>
+                    <div className={styles.container} id={props.srcUser.id}>
+                        <div className={styles.left} id={props.srcUser.id}>
                             <Avatar height={50} width={50}></Avatar>
                         </div>
-                        <div className={styles.mid}>
-                            <div>{`${props.srcUser.fname} ${props.srcUser.lname} wants to follow you`}</div>
+                        <div className={styles.mid} id={props.srcUser.id}>
+                            <div id={props.srcUser.id}>{`${props.srcUser.fname} ${props.srcUser.lname} wants to follow you`}</div>
                             <div className={styles.btn}>
                                 <SmallButton onClick={acceptFollowReqHandler}>Accept</SmallButton>
                                 <SmallButton onClick={declineFollowReqHandler}>Decline</SmallButton>

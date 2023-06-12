@@ -99,7 +99,7 @@ const RegForm = () => {
     };
 
     return (
-        <>
+        <div className={styles.container}>
             <h1 className={styles["title"]}>Register</h1>
             <Form className={styles["reg-form"]} onSubmit={submitHandler}>
                 <FormLabel className={styles["reg-label"]} htmlFor="email">Email</FormLabel>
@@ -126,7 +126,7 @@ const RegForm = () => {
                 <LgButton className={styles["sub-btn"]} type="submit">Register</LgButton>
                 <p>Already have an account? <Link to="/login">Login</Link></p>
             </Form>
-        </>
+        </div>
         
     )
 };

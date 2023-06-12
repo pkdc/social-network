@@ -6,7 +6,6 @@ import { AuthContext } from "../store/auth-context";
 
 
 const NotificationCentre = (props) => {
-    console.log("localstorage: ", typeof (localStorage.getItem("new_notif")))
     // const authCtx = useContext(AuthContext);
     // console.log("allnotifications: ",authCtx.notif)
 

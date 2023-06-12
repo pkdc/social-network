@@ -3,6 +3,7 @@ import profile from "../assets/profileSmall.svg";
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import useGet from '../fetch/useGet';
+import Avatar from '../UI/Avatar';
 
 
 
@@ -37,7 +38,8 @@ function EventNotif(props) {
 
                 <div className={styles.container}>
                     <div className={styles.left}>
-                        <img className={styles.img} src={profile} alt='' />
+                        {/* <img className={styles.img} src={profile} alt='' /> */}
+                        <Avatar height={50} width={50}></Avatar>
                     </div>
                     <div className={styles.mid}>
                         { data.data && 
@@ -46,7 +48,7 @@ function EventNotif(props) {
                         {/* <div id={props.groupId} onClick={handleClick} className={styles.user}>GroupTitle {props.groupId} added a new event: EventTitle</div>   */}
                     </div>
                     <div className={styles.right}>
-                        <div className={styles.notif}></div>
+                        {/* <div className={styles.notif}></div> */}
                     </div>
                 </div>
             )}

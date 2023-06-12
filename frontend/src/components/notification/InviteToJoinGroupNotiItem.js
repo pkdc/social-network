@@ -34,11 +34,14 @@ const InviteToJoinGroupNotiItem = (props) => {
         jGrpCtx.getFollowing();
 
         let notifarr  =JSON.parse(localStorage.getItem("new_notif"))
-        let newarray =  notifarr.filter((obj) => (obj.sourceid != props.srcUser.id && obj.groupid != props.groupId && obj.type != "invitation"))
-        console.log("newarray ", newarray)
-        console.log("newestarray ", props)
- 
-        localStorage.setItem("new_notif", JSON.stringify(Object.values(newarray)) )
+        // let newarray =  notifarr.filter((obj) => (obj.sourceid != props.srcUser.id && obj.groupid != props.groupId && obj.type != "invitation"))
+        for (let i= 0 ; i < notifarr.length; i++) {
+            if (notifarr[i].sourceid == props.srcUser.id && notifarr[i].groupid == props.groupId && notifarr[i].type == "invitation"){
+            notifarr.splice(i, 1);
+                localStorage.setItem("new_notif", JSON.stringify(Object.values(notifarr)) )
+                break
+            }
+        }
         
     };
     const declineInvitationHandler = () => {
@@ -55,13 +58,14 @@ const InviteToJoinGroupNotiItem = (props) => {
         notiReplyPayloadObj["accepted"] = false;
         console.log("gonna send reply (decline) to Invitation : ", notiReplyPayloadObj);
         if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(notiReplyPayloadObj));
-
         let notifarr  =JSON.parse(localStorage.getItem("new_notif"))
-        let newarray =  notifarr.filter((obj) => (obj.createdAt != props.createdat))
-        console.log("newarray1 ", newarray)
-        // console.log("newarray1", obj.createdAt, "new new", props.createdAt)
- 
-        localStorage.setItem("new_notif", JSON.stringify(Object.values(newarray)) )
+        for (let i= 0 ; i < notifarr.length; i++) {
+            if (notifarr[i].sourceid == props.srcUser.id && notifarr[i].groupid == props.groupId && notifarr[i].type == "invitation"){
+                notifarr.splice(i, 1);
+                localStorage.setItem("new_notif", JSON.stringify(Object.values(notifarr)) )
+                break
+            }
+        }
     };
 
     return (
