@@ -2,7 +2,7 @@ import GroupChatItem from "./GroupChatItem";
 import { useContext, useEffect, useState } from "react";
 import { JoinedGroupContext } from "../../store/joined-group-context";
 import { WebSocketContext } from "../../store/websocket-context";
-import styles from "./AllGroupChatItems.module.css";
+import styles from "../UserChat/AllUserChatItems.module.css";
 
 const AllGroupChatItems = (props) => {
     const joinedGrpCtx = useContext(JoinedGroupContext);

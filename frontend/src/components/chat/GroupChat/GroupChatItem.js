@@ -1,4 +1,4 @@
-import styles from "./GroupChatItem.module.css";
+import styles from "../UserChat/UserChatItem.module.css";
 import Card from "../../UI/Card";
 
 const GroupChatItem = (props) => {
