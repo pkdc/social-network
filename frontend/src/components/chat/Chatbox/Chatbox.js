@@ -1,11 +1,12 @@
 import { useEffect, useContext, useState } from "react";
 import UsersContext from "../../store/users-context";
 import { WebSocketContext } from "../../store/websocket-context";
-import ChatDetailTopBar from "./ChatDetailTopBar";
 import ChatboxMsgArea from "../Chatbox/ChatboxMsgArea";
 import SendMsg from "./SendMsg";
 import { FollowingContext } from "../../store/following-context";
 import { JoinedGroupContext } from "../../store/joined-group-context";
+import UserChatDetailTopBar from "../UserChat/UserChatDetailTopBar";
+import GroupChatDetailTopBar from "../GroupChat/GroupChatDetailTopBar";
 import styles from "./Chatbox.module.css";
 
 const Chatbox = (props) => {
@@ -186,7 +187,8 @@ const Chatbox = (props) => {
     return (
         <div className={styles["container"]}>
             <button onClick={closeChatboxHandler} className={styles["close-btn"]}>X</button>
-            <ChatDetailTopBar />
+            {props.grp && <GroupChatDetailTopBar />}
+            {!props.grp && <UserChatDetailTopBar />}
             {/* <ChatboxMsgArea oldMsgItems={oldMsgData} newMsgItems={newMsgsData}/> */}
             <ChatboxMsgArea oldMsgItems={oldMsgData} newMsgItems={newMsgsData} justUpdated={justUpdated}/>
             <SendMsg onSendMsg={sendMsgHandler}/>            
