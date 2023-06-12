@@ -11,7 +11,7 @@ import InviteToJoinGroupNotiItem from "./InviteToJoinGroupNotiItem";
 import EventNotif from "./eventNotif";
 
 const NotificationItem = (props) => {
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
     const usersCtx = useContext(UsersContext);
     const sourceUser = usersCtx.users.find((user) => user.id === props.sourceId);
     console.log("src", sourceUser);

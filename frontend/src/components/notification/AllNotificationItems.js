@@ -5,10 +5,12 @@ import NotificationItem from "./NotificationItem";
 const AllNotificationItems = (props) => {
 
     const storedNotif = JSON.parse(localStorage.getItem("new_notif"));
+    console.log("new_notif", storedNotif);
     const [notiArr, setNotiArr] = useState([]);
 
     useEffect(() => {
-        setNotiArr(storedNotif)
+        console.log("first new_notif", storedNotif);
+        storedNotif && setNotiArr(storedNotif.filter(notif => notif !== undefined))
     }, []);
 
     useEffect(() => {
@@ -17,13 +19,12 @@ const AllNotificationItems = (props) => {
             console.log("before the prevarr", notiArr)
             setNotiArr(prevArr => [... new Set([props.notiItems[0], ...prevArr])]);
         }
-
     }, [props.notiItems]);
 
     useEffect(() => {
         if (notiArr.length !== 0)
+        console.log("just before setting ls",notiArr);
             localStorage.setItem("new_notif", JSON.stringify(Object.values(notiArr)))
-    
     }, [notiArr]);
 
     console.log("last exit before bridge: ", notiArr)
