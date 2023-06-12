@@ -180,10 +180,11 @@ type GroupRequestPayload struct {
 }
 
 type GroupMemberStruct struct {
-	Id      int `json:"id"`
-	UserId  int `json:"userid"`
-	GroupId int `json:"groupid"`
-	Status  int `json:"status"`
+	Id       int `json:"id"`
+	UserId   int `json:"userid"`
+	GroupId  int `json:"groupid"`
+	Status   int `json:"status"`
+	ChatNoti int `json:"chatnoti"`
 }
 
 type GroupEventStruct struct {
@@ -294,4 +295,14 @@ type PrivateChatItemStruct struct {
 
 type PrivateChatItemPayload struct {
 	Data []PrivateChatItemStruct `json:"data"`
+}
+
+type GroupChatItemStruct struct {
+	Id        int    `json:"id"`
+	GroupId   int    `json:"groupid"`
+	LastMsgAt string `json:"last_msg_at"`
+}
+
+type GroupChatItemPayload struct {
+	Data []GroupChatItemStruct `json:"data"`
 }
