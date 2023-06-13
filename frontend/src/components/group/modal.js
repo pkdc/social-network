@@ -30,7 +30,7 @@ function Modal({ open, onClose, onInvite, currentlyJoined, invitedToJoin }) {
                 <div className={styles.close} onClick={onClose} >X</div>
                 <div className={styles.container}>
 
-                    {data && data.notmembers.map((user) => (
+                    {data && data.notmembers && data.notmembers.map((user) => (
 
                         <div key={user.id} id={user.id} className={styles.userContainer}>
                             <div className={styles.img}></div>

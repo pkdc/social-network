@@ -57,14 +57,6 @@ const FollowReqNotiItem = (props) => {
         }
     };
 
-    
-    // function handleClick(e) {
-   
-    //     const id = e.target.id
-
-    //     navigate(`/profile/${id}`)
-    //     console.log("5678", id)
-    // }
 
     return (
         <div>

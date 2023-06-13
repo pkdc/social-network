@@ -165,7 +165,7 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 		groupMsg.GroupId = msgStruct.GroupId
 		groupMsg.CreatedAt = time.Now().String()
 	} else {
-		log.Println("Label not match")
+		// panic
 	}
 
 	switch t {
@@ -198,6 +198,7 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 					eventId = int(event.ID)
 					eventTitle = "+" + event.Title
 				}
+
 			} else {
 
 			}
