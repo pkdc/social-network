@@ -1,11 +1,24 @@
 @import "../var.css";
 
+
+.container {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
 .title {
     font-size: 3rem;
     display: flex;
     justify-content: center;
     color: var(--ultra-violet, purple);
-    margin: 5rem 0 0 0;
+    /* margin: 5rem 0 0 0; */
+}
+
+.reg-form {
+    width: 50%;
+    min-width: 600px;
+    max-width: 750px;
 }
 
 .reg-input {

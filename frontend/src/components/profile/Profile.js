@@ -331,10 +331,11 @@ let statusofcuruser ;
     let followButton;
     let messageButton;
     let closeFriend;
+    let closeFriendText;
 
     if (currUserId !== userId) {
         if (currentlyFollowing) {
-            followButton = <div className={classes.followbtn} id={userId} onClick={unfollowHandler}>UnFollow</div>
+            followButton = <div className={classes.followbtn} id={userId} onClick={unfollowHandler}>Unfollow</div>
             console.log("currentlyFollowing", currentlyFollowing);
         } else if (requestedToFollow) {
             followButton = <div className={classes.followbtn} id={userId}>Requested</div>
@@ -342,7 +343,9 @@ let statusofcuruser ;
             followButton = <div className={classes.followbtn} id={userId} onClick={followHandler}>+ Follow</div>
         }       
         messageButton = <GreyButton>Message</GreyButton>
-            closeFriend = <input type="checkbox" id={userId} checked={isCloseFriend} onClick={closeFriendHandler} />        
+            closeFriend = <input className={classes.checkbox} type="checkbox" id={userId} checked={isCloseFriend} onClick={closeFriendHandler} />    
+            closeFriendText = <div>close friend</div>    
+            
     }
 
    
@@ -374,7 +377,6 @@ let statusofcuruser ;
                         <div className={classes.btn}>
                             {followButton}
                             {messageButton}
-                            {isFollower && closeFriend}
                         </div>
                     </div>
 
@@ -384,10 +386,17 @@ let statusofcuruser ;
                         <div className={classes.follow} onClick={handleFollowingClick}><span className={classes.count}>{followingData && followingData.length}{!followingData && 0}</span> following</div>
                     </div>
                     <div>{data.data[0].about}</div>
+                <div className={classes.closeFriend}>
+                    {isFollower &&
+                    closeFriendText
+                    }
+                    {isFollower && 
+                    closeFriend}
+
                 </div>
 
-                <div>
                 </div>
+
             </div>
             {followerOpen && followerData &&
             <FollowerModal 

@@ -1,5 +1,14 @@
 @import "../var.css";
 
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+
 .title {
     font-size: 3rem;
     display: flex;
@@ -8,8 +17,15 @@
     margin: 5rem 0 0 0;
 }
 
+.login-form {
+    width: 50%;
+    min-width: 600px;
+    max-width: 750px;
+}
+
 .login-input {
     width: 65%;
+    
 }
 
 .sub-btn {

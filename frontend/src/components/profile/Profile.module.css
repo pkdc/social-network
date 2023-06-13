@@ -15,7 +15,6 @@
     flex-direction: column;
     width: 100%;
     gap: 10px;
-
 }
 
 .row {
@@ -84,6 +83,20 @@
     background-color: var(--ultra-violet, purple);;
 }
 
+.name {
+    font-weight: bold;
+}
+
+.closeFriend {
+    display: flex;
+    justify-content: flex-end;
+    gap: 5px;
+    align-items: center;
+}
+
+.checkbox {
+    accent-color: var(--ultra-violet-0);
+}
 
 /* left-side */
 
@@ -103,3 +116,5 @@
      align-items: center;
     justify-content: center;
 } */
+
+
