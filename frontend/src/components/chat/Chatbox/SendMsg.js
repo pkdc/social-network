@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import EmojiPicker from 'emoji-picker-react';
+// import EmojiPicker from 'emoji-picker-react';
 import Form from "../../UI/Form";
 import send from '../../assets/send.svg';
 import SendMsgForm from "../../UI/SendMsgForm";

@@ -27,9 +27,9 @@ WHERE group_member.user_id = ? AND group_member.status_ = 1;
 
 -- name: CreateGroupMember :one
 INSERT INTO group_member (
-  user_id, group_id, status_, chat_noti
+  user_id, group_id, status_
 ) VALUES (
-  ?, ?, ?, 0
+  ?, ?, ?
 )
 RETURNING *;
 
@@ -42,9 +42,3 @@ RETURNING *;
 -- name: DeleteGroupMember :exec
 DELETE FROM group_member
 WHERE group_id = ? AND user_id = ?;
-
--- name: UpdateGroupMemberChatNoti :one
-UPDATE group_member
-set chat_noti = ?
-WHERE group_id = ? AND user_id = ?
-RETURNING *;

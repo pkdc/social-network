@@ -3,7 +3,6 @@ CREATE TABLE group_member (
   user_id INTEGER NOT NULL,
   group_id INTEGER NOT NULL,
   status_ INTEGER NOT NULL DEFAULT 0,
-  chat_noti INTEGER NOT NULL DEFAULT 0,
   FOREIGN KEY (user_id) REFERENCES user(id),
   FOREIGN KEY (group_id) REFERENCES group_(id)
 );
