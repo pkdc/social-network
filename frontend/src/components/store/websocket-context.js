@@ -3,10 +3,8 @@ import { UsersContext } from "./users-context";
 
 export const WebSocketContext = React.createContext({
     websocket: null,
-    newPrivateMsgsObj: null,
-    setNewPrivateMsgsObj: () => {},
-    // newMsgsObj: null,
-    // setNewMsgsObj: () => {},
+    newMsgsObj: null,
+    setNewMsgsObj: () => { },
     newNotiObj: null,
     setNewNotiObj: () => { },
     newNotiFollowReplyObj: null,
@@ -21,7 +19,7 @@ export const WebSocketContext = React.createContext({
 
 export const WebSocketContextProvider = (props) => {
     const [socket, setSocket] = useState(null);
-    const [newPrivateMsgsObj, setNewPrivateMsgsObj] = useState(null);
+    const [newMsgsObj, setNewMsgsObj] = useState(null);
 
     const [newNotiObj, setNewNotiObj] = useState(null);
     const [newNotiFollowReplyObj, setNewNotiFollowReplyObj] = useState(null);
@@ -55,7 +53,7 @@ export const WebSocketContextProvider = (props) => {
 
             if (msgObj.label === "p-chat") {
                 console.log("ws receives private msg (wsctx): ", msgObj.message);
-                setNewPrivateMsgsObj(msgObj);
+                setNewMsgsObj(msgObj);
             } else if (msgObj.label === "g-chat") {
                 console.log("ws receives grp msg (wsctx): ", msgObj.message);
                 // const newReceivedMsgObj = {
@@ -105,10 +103,8 @@ export const WebSocketContextProvider = (props) => {
     return (
         <WebSocketContext.Provider value={{
             websocket: socket,
-            newPrivateMsgsObj: newPrivateMsgsObj,
-            setNewPrivateMsgsObj: setNewPrivateMsgsObj,
-            // newMsgsObj: null,
-            // setNewMsgsObj: () => {},
+            newMsgsObj: newMsgsObj,
+            setNewMsgsObj: setNewMsgsObj,
             newNotiObj: newNotiObj,
             setNewNotiObj: setNewNotiObj,
             newNotiFollowReplyObj: newNotiFollowReplyObj,
