@@ -62,6 +62,40 @@ let statusofcuruser ;
 
     console.log("followingData", followingData)
     
+        // store follower in db
+        const storeFollow = (targetId) => {
+            console.log("targetid (storeFollow)", targetId)
+    
+            const data = {
+                // id: 0,
+                sourceid: parseInt(currUserId),
+                targetid: parseInt(targetId),
+                status: 1
+            };
+    
+            const reqOptions = {
+                method: "POST",
+                credentials: "include",
+                mode: "cors",
+                headers: {
+                  'Content-Type': 'application/json'
+              },
+                body: JSON.stringify(data)
+              };
+            
+              fetch('http://localhost:8080/user-follower', reqOptions)
+                .then(resp => resp.json())
+                .then(data => {
+                    console.log("user follower data", data);
+                    if (data.success) {
+                        console.log("followrequest")
+                    }
+                })
+                .catch(err => {
+                  console.log(err);
+                })
+        };
+        
     useEffect(() => {
         if (wsCtx.newNotiFollowReplyObj) {
             if (wsCtx.newNotiFollowReplyObj.accepted) {
@@ -218,41 +252,6 @@ let statusofcuruser ;
     //  console.log("user data (profile)", data.data)
       if (!isLoaded) return <div>Loading...</div>
       if (error) return <div>Error: {error.message}</div>
-    
-
-    // store follower in db
-    const storeFollow = (targetId) => {
-        console.log("targetid (storeFollow)", targetId)
-
-        const data = {
-            // id: 0,
-            sourceid: parseInt(currUserId),
-            targetid: parseInt(targetId),
-            status: 1
-        };
-
-        const reqOptions = {
-            method: "POST",
-            credentials: "include",
-            mode: "cors",
-            headers: {
-              'Content-Type': 'application/json'
-          },
-            body: JSON.stringify(data)
-          };
-        
-          fetch('http://localhost:8080/user-follower', reqOptions)
-            .then(resp => resp.json())
-            .then(data => {
-                console.log("user follower data", data);
-                if (data.success) {
-                    console.log("followrequest")
-                }
-            })
-            .catch(err => {
-              console.log(err);
-            })
-    };
     
     // delete follower from db
     const deleteFollow = (targetId) => {
