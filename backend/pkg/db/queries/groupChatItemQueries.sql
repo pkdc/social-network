@@ -1,6 +1,5 @@
 -- name: GetGroupChatNoti :many
 SELECT * FROM group_chat_item
-WHERE group_id = ?
 ORDER BY last_msg_at;
 
 -- name: GetGroupChatNotiByGroupId :one
@@ -13,6 +12,12 @@ INSERT INTO group_chat_item (
 ) VALUES (
   ?, ?
 )
+RETURNING *;
+
+-- name: UpdateGroupChatItem :one
+UPDATE group_chat_item
+set last_msg_at = ?
+WHERE group_id = ?
 RETURNING *;
 
 -- name: DeleteGroupChatItem :exec
