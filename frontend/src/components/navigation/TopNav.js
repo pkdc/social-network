@@ -30,15 +30,7 @@ const TopNav = () => {
         if (authCtx.notif.length != 0) {
             setShowNotiBadge(true)
         }
-    // }, []);
 
-    // const storedNotif = JSON.parse(localStorage.getItem("new_notif"));
-
-    // // useEffect(() => {
-    // //     // console.log("auth notif", authCtx.notif)
-    // //     if (storedNotif.length != 0) {
-    // //         setShowNotiBadge(true)
-    // //     }
     }, [authCtx]);
 
     const onClickingLogout = () => {
@@ -60,44 +52,13 @@ console.log("checkingwebsocket: ",wsCtx.newNotiObj);
                 console.log("new notif not empty1")
                 
                 setNewNoti(JSON.parse(lastcurrentnotifarr))
-                // console.log("lastcurrentnotifarr empty ", JSON.parse(lastcurrentnotifarr), "len ", JSON.parse(lastcurrentnotifarr).length)
                 console.log("empty new noti", newNoti)
             }else {
                 console.log("new notif empty1")
                 setNewNoti([]);     
             }
-            // console.log("empty console: ", newNoti, "---",newNoti.length)
-            // if (newNoti) {
-            //     console.log("new notif not empty2")
-            //     // setNewNoti(prevNotifications => [...prevNotifications, wsCtx.newNotiObj]);
-            //     let newarr = [wsCtx.newNotiObj, ...newNoti]
-            //     // setNewNoti(newarr)
-
-            //     console.log("newnotthing2 :", newNoti , "lastcurrentnotifarr newarr empty: ", newarr);
-
-            //     localStorage.setItem("new_notif", JSON.stringify(Object.values(newarr)))
-            // }
-            // else{
-            //     console.log("new notif empty2")
-
-            //     // setNewNoti([wsCtx.newNotiObj])
-            //    let x = [];
-            //    x[0]= (wsCtx.newNotiObj)
-            //    console.log("another exit: ", x)
-            //         localStorage.setItem("new_notif",JSON.stringify(x) )
-                
-            // }
-
-            // setNewNoti(wsCtx.newNotiObj);
-            // let onlineNotif =localStorage.getItem("new_notif")
-            // if (onlineNotif ==""){
-                // localStorage.setItem("new_notif", JSON.stringify(Object.values(wsCtx.newNotiObj)))
-
-            // } else{
-            //     // onlineNotif
-            // }
+        
             setShowNotiBadge(true)
-            // wsCtx.setNewNotiObj(null);
         }
     } ,[wsCtx.newNotiObj]);
 
