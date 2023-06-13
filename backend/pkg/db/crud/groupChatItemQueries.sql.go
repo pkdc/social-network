@@ -43,12 +43,11 @@ func (q *Queries) DeleteGroupChatItem(ctx context.Context, groupID int64) error 
 
 const getGroupChatNoti = `-- name: GetGroupChatNoti :many
 SELECT id, group_id, last_msg_at FROM group_chat_item
-WHERE group_id = ?
 ORDER BY last_msg_at
 `
 
-func (q *Queries) GetGroupChatNoti(ctx context.Context, groupID int64) ([]GroupChatItem, error) {
-	rows, err := q.db.QueryContext(ctx, getGroupChatNoti, groupID)
+func (q *Queries) GetGroupChatNoti(ctx context.Context) ([]GroupChatItem, error) {
+	rows, err := q.db.QueryContext(ctx, getGroupChatNoti)
 	if err != nil {
 		return nil, err
 	}
@@ -77,6 +76,25 @@ WHERE group_id = ?
 
 func (q *Queries) GetGroupChatNotiByGroupId(ctx context.Context, groupID int64) (GroupChatItem, error) {
 	row := q.db.QueryRowContext(ctx, getGroupChatNotiByGroupId, groupID)
+	var i GroupChatItem
+	err := row.Scan(&i.ID, &i.GroupID, &i.LastMsgAt)
+	return i, err
+}
+
+const updateGroupChatItem = `-- name: UpdateGroupChatItem :one
+UPDATE group_chat_item
+set last_msg_at = ?
+WHERE group_id = ?
+RETURNING id, group_id, last_msg_at
+`
+
+type UpdateGroupChatItemParams struct {
+	LastMsgAt time.Time
+	GroupID   int64
+}
+
+func (q *Queries) UpdateGroupChatItem(ctx context.Context, arg UpdateGroupChatItemParams) (GroupChatItem, error) {
+	row := q.db.QueryRowContext(ctx, updateGroupChatItem, arg.LastMsgAt, arg.GroupID)
 	var i GroupChatItem
 	err := row.Scan(&i.ID, &i.GroupID, &i.LastMsgAt)
 	return i, err

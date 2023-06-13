@@ -6,7 +6,6 @@ import { AuthContext } from "../store/auth-context";
 
 
 const NotificationCentre = (props) => {
-    console.log("localstorage: ", typeof (localStorage.getItem("new_notif")))
     // const authCtx = useContext(AuthContext);
     // console.log("allnotifications: ",authCtx.notif)
 
@@ -52,8 +51,6 @@ const NotificationCentre = (props) => {
     //     setNotiArr(storedNotif2)
     // }, [])
 
-
-
     console.log("noti arr (Notification): ", notiArr);
 
     // const wsCtx = useContext(WebSocketContext);
@@ -63,7 +60,7 @@ const NotificationCentre = (props) => {
         // <div className={styles.overlay} onClick={props.onClose}>
            <>
            
-           {notiArr[0] && 
+           {/* {notiArr[0] && 
        <div className={styles.modalContainer} >
            <div className={styles.label}>
                <div>Notifications</div>
@@ -74,7 +71,7 @@ const NotificationCentre = (props) => {
                onClose={props.onClose}
            />
            </div>
-       }
+       } */}
          {notiArr && 
                  <div className={styles.modalContainer} >
                      <div className={styles.label}>

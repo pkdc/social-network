@@ -2944,3 +2944,161 @@ func PrivateChatItemHandler() http.HandlerFunc {
 		}
 	}
 }
+
+func GroupChatItemHandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		EnableCors(&w)
+		// Prevents the endpoint being called from other url paths
+		if err := UrlPathMatcher(w, r, "/group-chat-item"); err != nil {
+			return
+		}
+
+		switch r.Method {
+		case http.MethodGet:
+			// Declares the payload struct
+			var Resp GroupChatItemPayload
+
+			// ### CONNECT TO DATABASE ###
+
+			db := db.DbConnect()
+
+			query := crud.New(db)
+
+			// ### get all group chat items ###
+
+			chatItems, err := query.GetGroupChatNoti(context.Background())
+
+			if err != nil {
+				fmt.Println("Unable to get group chat items")
+			}
+
+			for _, chatItem := range chatItems {
+				var newChatItem GroupChatItemStruct
+
+				newChatItem.Id = int(chatItem.ID)
+				newChatItem.GroupId = int(chatItem.GroupID)
+				newChatItem.LastMsgAt = chatItem.LastMsgAt.String()
+
+				Resp.Data = append(Resp.Data, newChatItem)
+			}
+
+			// Marshals the response struct to a json object
+			jsonResp, err := json.Marshal(Resp)
+			if err != nil {
+				http.Error(w, "500 internal server error", http.StatusInternalServerError)
+				return
+			}
+
+			// Sets the http headers and writes the response to the browser
+			WriteHttpHeader(jsonResp, w)
+		case http.MethodPost:
+			// Declares the variables to store the group message details and handler response
+			var groupItem GroupChatItemStruct
+
+			// Decodes the json object to the struct, changing the response to false if it fails
+			err := json.NewDecoder(r.Body).Decode(&groupItem)
+			if err != nil {
+				fmt.Println(err.Error())
+			}
+
+			// ### CONNECT TO DATABASE ###
+
+			db := db.DbConnect()
+
+			query := crud.New(db)
+
+			// Check groupChatItem table to see if record exists
+
+			chatItem, err := query.GetGroupChatNotiByGroupId(context.Background(), int64(groupItem.GroupId))
+
+			if chatItem.GroupID != int64(groupItem.GroupId) {
+				// update chatItem last_msg_at column
+
+				_, err = query.UpdateGroupChatItem(context.Background(), crud.UpdateGroupChatItemParams{
+					LastMsgAt: time.Now(),
+					GroupID:   int64(groupItem.GroupId),
+				})
+
+				if err != nil {
+					fmt.Println("Unable to update group chat item")
+					return
+				}
+
+			} else {
+
+				// create group chat item
+
+				_, err = query.CreateGroupChatItem(context.Background(), crud.CreateGroupChatItemParams{
+					GroupID:   int64(groupItem.GroupId),
+					LastMsgAt: time.Now(),
+				})
+
+				if err != nil {
+					fmt.Println("Unable to create group chat item")
+					return
+				}
+			}
+
+			// set chatnoti to 0 (unseen) when chatitem is created or updated
+
+			_, err = query.UpdateGroupMemberChatNotiUnseen(context.Background(), int64(groupItem.GroupId))
+
+			if err != nil {
+				fmt.Println("Unable to update chatnoti for group memebers")
+				return
+			}
+
+		default:
+			// Prevents all request types other than POST and GET
+			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
+	}
+}
+
+func GroupChatSeenHandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		EnableCors(&w)
+		// Prevents the endpoint being called from other url paths
+		if err := UrlPathMatcher(w, r, "/group-chat-seen"); err != nil {
+			return
+		}
+
+		switch r.Method {
+		case http.MethodGet:
+
+		case http.MethodPost:
+			// Declares the variables to store the group message details and handler response
+			var groupMember GroupMemberStruct
+
+			// Decodes the json object to the struct, changing the response to false if it fails
+			err := json.NewDecoder(r.Body).Decode(&groupMember)
+			if err != nil {
+				fmt.Println(err.Error())
+			}
+
+			// ### CONNECT TO DATABASE ###
+
+			db := db.DbConnect()
+
+			query := crud.New(db)
+
+			// set chatnoti to 1 (seen)
+
+			_, err = query.UpdateGroupMemberChatNotiSeen(context.Background(), crud.UpdateGroupMemberChatNotiSeenParams{
+				GroupID: int64(groupMember.GroupId),
+				UserID:  int64(groupMember.UserId),
+			})
+
+			if err != nil {
+				fmt.Println("Unable to update chatnoti for group members")
+				return
+			}
+
+		default:
+			// Prevents all request types other than POST and GET
+			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
+	}
+}

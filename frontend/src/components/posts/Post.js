@@ -58,11 +58,14 @@ function Post(props) {
             <Link to={`/profile/${props.authorId}`}>
                 <Avatar className={classes["post-avatar"]} id={props.authorId} src={props.avatar} alt="" width={"50px"}/>
             </Link>
+            <div className={classes.column}>
+
             <Link to={`/profile/${props.authorId}`}>
-                <div><p className={classes["details"]}>{`${props.fname} ${props.lname} ${props.nname}`}</p></div>
+                <div className={classes["details"]}>{`${props.fname} ${props.lname} ${props.nname}`}</div>
             </Link>
-        </div>
         <div className={classes["create-at"]}>{newDate}</div>
+            </div>
+        </div>
         {/* <div className={classes["create-at"]}>{props.privacy}</div> //privacy */}
         <div className={classes.content}>{props.message}</div>
         {props.image && <div><img src={props.image} alt="" width={"100px"}/></div>}

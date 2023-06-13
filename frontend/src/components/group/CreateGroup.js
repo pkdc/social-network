@@ -68,7 +68,7 @@ function CreateGroup() {
         <input type="text" name="title" id="title" placeholder="Title" value={title} onChange={e => setTitle(e.target.value)}></input>
         <textarea className={classes.content} name="description" id="description" placeholder="Description" value={description} onChange={e => setDescription(e.target.value)}></textarea>
         <div className={classes.btn}>
-            <button>Create</button>
+            <SmallButton>Create</SmallButton> 
         </div>
         
     </form>

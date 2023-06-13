@@ -30,6 +30,14 @@ const JoinGroupReqNotiItem = (props) => {
         notiReplyPayloadObj["accepted"] = true;
         console.log("gonna send reply (accept) to join req : ", notiReplyPayloadObj);
         if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(notiReplyPayloadObj));
+        let notifarr  =JSON.parse(localStorage.getItem("new_notif"))
+        for (let i= 0 ; i < notifarr.length; i++) {
+            if (notifarr[i].sourceid == props.srcUser.id && notifarr[i].groupid == props.groupId && notifarr[i].type == "join-req"){
+                notifarr.splice(i, 1);
+                localStorage.setItem("new_notif", JSON.stringify(Object.values(notifarr)) )
+                break
+            }
+        }
     };
     const declineJoinReqHandler = () => {
         setIsVisible(false);
@@ -44,6 +52,14 @@ const JoinGroupReqNotiItem = (props) => {
         notiReplyPayloadObj["accepted"] = false;
         console.log("gonna send reply (decline) to join req : ", notiReplyPayloadObj);
         if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(notiReplyPayloadObj));
+        let notifarr  =JSON.parse(localStorage.getItem("new_notif"))
+        for (let i= 0 ; i < notifarr.length; i++) {
+            if (notifarr[i].sourceid == props.srcUser.id && notifarr[i].groupid == props.groupId && notifarr[i].type == "join-req"){
+                notifarr.splice(i, 1);
+                localStorage.setItem("new_notif", JSON.stringify(Object.values(notifarr)) )
+                break
+            }
+        }
     };
 
     console.log("props.groupid (join)", props.grouptitle);

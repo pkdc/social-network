@@ -63,7 +63,7 @@ function CreatePost(props) {
             <label htmlFor="title">Title</label>
             <input type='text' required id="title" ref={titleInput}/>
         </div> */}
-        <Card className={classes.container}>
+        <Card>
             <div className={classes["author"]}>
             <Link to={`/profile/${userId}`} >
                 <Avatar className={classes["avatar"]} id={userId} src={avatar} alt="" width={"50px"}/>

@@ -11,7 +11,7 @@ import { JoinedGroupContext } from "../store/joined-group-context";
 import { WebSocketContext } from "../store/websocket-context";
 import { UsersContext } from "../store/users-context";
 
-function GroupProfile( {groupid} ) {
+function GroupProfile({ groupid }) {
 
     const navigate = useNavigate();
 
@@ -42,7 +42,7 @@ function GroupProfile( {groupid} ) {
 
                 console.log("join group id (invited)", wsCtx.newNotiInvitationReplyObj.groupid);
                 console.log("this user (invited) to join the group", UserJoining)
-    
+
                 joinGrpHandler(JoinGroup, UserJoining);
             } else {
                 setCurrentlyJoined(false);
@@ -50,13 +50,13 @@ function GroupProfile( {groupid} ) {
             }
         }
         wsCtx.setNewNotiInvitationReplyObj(null);
-    } , [wsCtx.newNotiInvitationReplyObj]);
+    }, [wsCtx.newNotiInvitationReplyObj]);
 
     const { error, isLoaded, data } = useGet(`/group?id=${groupid}`)
-    const [ open, setOpen ] = useState(false)
+    const [open, setOpen] = useState(false)
 
     console.log("---- group data", data);
-    
+
     const currUserId = localStorage.getItem("user_id");
 
     if (!isLoaded) return <div>Loading...</div>
@@ -69,7 +69,7 @@ function GroupProfile( {groupid} ) {
         setOpen(true)
 
         navigate("/groupprofile", { state: { id } })
-    
+
     }
 
     const joinGrpHandler = (grp, user) => {
@@ -83,39 +83,39 @@ function GroupProfile( {groupid} ) {
         if (invited) {
             setInvitedToJoin(true);
             setCurrentlyJoined(false);
-        }else {
+        } else {
             setInvitedToJoin(false)
         }
-        
+
     };
 
     return <Card className={classes.container}>
-           {data.data && data.data.map((group) => (
+        {data.data && data.data.map((group) => (
             <div className={classes.groupContainer} key={group.id} id={group.id}>
-        <div className={classes.img}></div>
-        <div className={classes.wrapper}>
-            <div className={classes.row}>
-                <div className={classes.groupname}>{group.title}</div>
-             
+                <div className={classes.img}></div>
+                <div className={classes.wrapper}>
+                    <div className={classes.row}>
+                        <div className={classes.groupname}>{group.title}</div>
 
-                <div className={classes.btnWrapper}>
-                    <div id={group.id} className={classes.btn} onClick={handleClick}>+ Invite</div>
-                    <GreyButton>Message</GreyButton>
+
+                        <div className={classes.btnWrapper}>
+                            <div id={group.id} className={classes.btn} onClick={handleClick}>+ Invite</div>
+                            <GreyButton>Message</GreyButton>
+                        </div>
+                    </div>
+
+                    <div className={classes.description}>{group.description}</div>
+                    {/* <div className={classes.members}>Members</div> */}
                 </div>
+                <Modal
+                    open={open}
+                    onClose={() => setOpen(false)}
+                    onInvite={invitedHandler}
+                    currentlyJoined={currentlyJoined}
+                    invitedToJoin={invitedToJoin}
+                ></Modal>
             </div>
-         
-            <div className={classes.description}>{group.description}</div>
-            {/* <div className={classes.members}>Members</div> */}
-        </div>
-        <Modal 
-        open={open} 
-        onClose={() => setOpen(false)} 
-        onInvite={invitedHandler}
-        currentlyJoined={currentlyJoined}
-        invitedToJoin={invitedToJoin}
-        ></Modal>
-        </div>
-     ))}
+        ))}
     </Card>
 }
 

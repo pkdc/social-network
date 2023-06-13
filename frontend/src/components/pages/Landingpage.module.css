@@ -1,11 +1,19 @@
 @import "../var.css";
 
+.wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;    
+
+}
+
 .container {
     display: flex;
     flex-direction: column;
     align-items: auto;
-    margin: 5rem 0;
-    width: 100%;
+    /* margin: 5rem 0; */
+    width: 50%;
+    min-width: 600px;
 }
 
 .title {

@@ -36,7 +36,7 @@ const LoginForm = () => {
     };
 
     return (
-        <>
+        <div className={styles.container}>
             <h1 className={styles["title"]}>Login</h1>
             <Form className={styles["login-form"]} onSubmit={submitHandler}>
                 <FormLabel htmlFor="email">Email</FormLabel>
@@ -46,7 +46,7 @@ const LoginForm = () => {
                 <LgButton className={styles["sub-btn"]} type="submit">Login</LgButton>
                 <p>Don't have an account? <Link to={"/reg"}>Register</Link></p>
             </Form>
-        </>
+        </div>
 
     )
 };
