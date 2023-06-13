@@ -319,6 +319,31 @@ func (q *Queries) UpdateGroupMemberChatNoti(ctx context.Context, arg UpdateGroup
 	return i, err
 }
 
+const updateGroupMemberChatNotiSeen = `-- name: UpdateGroupMemberChatNotiSeen :one
+UPDATE group_member
+set chat_noti = 1
+WHERE group_id = ? and user_id = ?
+RETURNING id, user_id, group_id, status_, chat_noti
+`
+
+type UpdateGroupMemberChatNotiSeenParams struct {
+	GroupID int64
+	UserID  int64
+}
+
+func (q *Queries) UpdateGroupMemberChatNotiSeen(ctx context.Context, arg UpdateGroupMemberChatNotiSeenParams) (GroupMember, error) {
+	row := q.db.QueryRowContext(ctx, updateGroupMemberChatNotiSeen, arg.GroupID, arg.UserID)
+	var i GroupMember
+	err := row.Scan(
+		&i.ID,
+		&i.UserID,
+		&i.GroupID,
+		&i.Status,
+		&i.ChatNoti,
+	)
+	return i, err
+}
+
 const updateGroupMemberChatNotiUnseen = `-- name: UpdateGroupMemberChatNotiUnseen :many
 UPDATE group_member
 set chat_noti = 0

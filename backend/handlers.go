@@ -3057,3 +3057,50 @@ func GroupChatItemHandler() http.HandlerFunc {
 		}
 	}
 }
+
+func GroupChatSeenHandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		EnableCors(&w)
+		// Prevents the endpoint being called from other url paths
+		if err := UrlPathMatcher(w, r, "/group-chat-seen"); err != nil {
+			return
+		}
+
+		switch r.Method {
+		case http.MethodGet:
+
+		case http.MethodPost:
+			// Declares the variables to store the group message details and handler response
+			var groupMember GroupMemberStruct
+
+			// Decodes the json object to the struct, changing the response to false if it fails
+			err := json.NewDecoder(r.Body).Decode(&groupMember)
+			if err != nil {
+				fmt.Println(err.Error())
+			}
+
+			// ### CONNECT TO DATABASE ###
+
+			db := db.DbConnect()
+
+			query := crud.New(db)
+
+			// set chatnoti to 1 (seen)
+
+			_, err = query.UpdateGroupMemberChatNotiSeen(context.Background(), crud.UpdateGroupMemberChatNotiSeenParams{
+				GroupID: int64(groupMember.GroupId),
+				UserID:  int64(groupMember.UserId),
+			})
+
+			if err != nil {
+				fmt.Println("Unable to update chatnoti for group members")
+				return
+			}
+
+		default:
+			// Prevents all request types other than POST and GET
+			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
+	}
+}
