@@ -3023,6 +3023,7 @@ func GroupChatItemHandler() http.HandlerFunc {
 
 				if err != nil {
 					fmt.Println("Unable to update group chat item")
+					return
 				}
 
 			} else {
@@ -3036,7 +3037,17 @@ func GroupChatItemHandler() http.HandlerFunc {
 
 				if err != nil {
 					fmt.Println("Unable to create group chat item")
+					return
 				}
+			}
+
+			// set chatnoti to 0 (unseen) when chatitem is created or updated
+
+			_, err = query.UpdateGroupMemberChatNotiUnseen(context.Background(), int64(groupItem.GroupId))
+
+			if err != nil {
+				fmt.Println("Unable to update chatnoti for group memebers")
+				return
 			}
 
 		default:

@@ -318,3 +318,39 @@ func (q *Queries) UpdateGroupMemberChatNoti(ctx context.Context, arg UpdateGroup
 	)
 	return i, err
 }
+
+const updateGroupMemberChatNotiUnseen = `-- name: UpdateGroupMemberChatNotiUnseen :many
+UPDATE group_member
+set chat_noti = 0
+WHERE group_id = ?
+RETURNING id, user_id, group_id, status_, chat_noti
+`
+
+func (q *Queries) UpdateGroupMemberChatNotiUnseen(ctx context.Context, groupID int64) ([]GroupMember, error) {
+	rows, err := q.db.QueryContext(ctx, updateGroupMemberChatNotiUnseen, groupID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []GroupMember
+	for rows.Next() {
+		var i GroupMember
+		if err := rows.Scan(
+			&i.ID,
+			&i.UserID,
+			&i.GroupID,
+			&i.Status,
+			&i.ChatNoti,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
