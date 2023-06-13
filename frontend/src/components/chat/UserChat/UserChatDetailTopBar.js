@@ -1,5 +1,5 @@
 import Card from "../../UI/Card";
-import styles from "./ChatDetailTopBar.module.css";
+import styles from "../ChatDetailTopBar.module.css";
 const UserChatDetailTopBar = (props) => {
 
     return (
