@@ -54,3 +54,9 @@ UPDATE group_member
 set chat_noti = 0
 WHERE group_id = ?
 RETURNING *;
+
+-- name: UpdateGroupMemberChatNotiSeen :one
+UPDATE group_member
+set chat_noti = 1
+WHERE group_id = ? and user_id = ?
+RETURNING *;
