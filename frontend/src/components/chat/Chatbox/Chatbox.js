@@ -104,7 +104,7 @@ const Chatbox = (props) => {
         if (followingCtx.following && followingCtx.following.find((following => following.id === props.chatboxId))) {
             followingCtx.receiveMsgFollowing(frdOrGrpId, true, true);
         } else {
-            followingCtx.receiveMsgFollowing(frdOrGrpId, true, false);
+            // joinedGrpCtx.receiveMsgGroup(frdOrGrpId, true);
         }
         
         setJustUpdated(prev => !prev);
@@ -119,7 +119,7 @@ const Chatbox = (props) => {
             chatPayloadObj["targetid"] = frdOrGrpId;
         } else {
             chatPayloadObj["label"] = "group" ;
-            // privateChatPayloadObj["groupid"] = grpid;
+            chatPayloadObj["groupid"] = frdOrGrpId;
         }      
         chatPayloadObj["id"] = Date.now();
         chatPayloadObj["sourceid"] = selfId;
@@ -131,7 +131,7 @@ const Chatbox = (props) => {
         if (!props.grp) {
             selfNewMsgObject["targetid"] = frdOrGrpId;  
         } else {
-            // selfNewMsgObject["groupid"] = grpid;
+            selfNewMsgObject["groupid"] = frdOrGrpId;
         }  
         selfNewMsgObject["id"] = Date.now();
         selfNewMsgObject["sourceid"] = selfId;
@@ -144,7 +144,7 @@ const Chatbox = (props) => {
         if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(chatPayloadObj));
 
         // move friendId chat item to top
-        followingCtx.receiveMsgFollowing(frdOrGrpId, true); // bug
+        // props.grp ? joinedGrpCtx.receiveMsgGroup() : followingCtx.receiveMsgFollowing(frdOrGrpId, true);
 
         setJustUpdated(prev => !prev);
     };

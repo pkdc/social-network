@@ -11,7 +11,7 @@ export const FollowingContext = React.createContext({
     requestToFollow: (followUser) => {},
     follow: (followUser) => {},
     unfollow: (unfollowUser) => {},
-    receiveMsgFollowing: (friendId, open) => {},
+    receiveMsgFollowing: (open, isFollowing) => {},
     // publicChatUsers: [],
     // setPublicChatUsers: () => {},
     otherListedChatUsers: [],

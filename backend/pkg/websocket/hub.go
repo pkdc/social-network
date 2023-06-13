@@ -390,7 +390,7 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 		// 	fmt.Println("Unable to convert to date")
 		// }
 
-		// create private chat noti in db
+		// create private chat msg in db
 		var message crud.CreateMessageParams
 		message.CreatedAt = time.Now()
 		message.Message = userMsg.Message
@@ -496,6 +496,22 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 	case 3:
 		// GROUP MESSAGE
 		fmt.Println("group")
+
+		// create group chat msg in db
+		var message crud.CreateGroupMessageParams
+		message.CreatedAt = time.Now()
+		message.Message = groupMsg.Message
+		message.SourceID = int64(groupMsg.SourceId)
+		message.GroupID = int64(groupMsg.GroupId)
+		fmt.Printf("message.SourceID %d\n", message.SourceID)
+		fmt.Printf("message.GroupID %d\n", message.GroupID)
+
+		_, err := query.CreateGroupMessage(context.Background(), message)
+
+		if err != nil {
+			fmt.Println("Unable to store group message to database")
+		}
+
 		// Marshals the struct to a json object
 		sendMsg, err := json.Marshal(groupMsg)
 		if err != nil {
