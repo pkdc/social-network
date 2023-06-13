@@ -48,7 +48,7 @@ func main() {
 	mux.Handle("/group-request-by-user", backend.GroupRequestByUserHandler())
 
 	mux.Handle("/private-chat-item", backend.PrivateChatItemHandler())
-
+	mux.Handle("/group-chat-item", backend.GroupChatItemHandler())
 	mux.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
 		websocket.ServeWs(hub, w, r)
 	})
