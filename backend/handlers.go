@@ -2955,44 +2955,42 @@ func GroupChatItemHandler() http.HandlerFunc {
 
 		switch r.Method {
 		case http.MethodGet:
-			// // Declares the payload struct
-			// var Resp GroupMessagePayload
+			// Declares the payload struct
+			var Resp GroupChatItemPayload
 
-			// // ### CONNECT TO DATABASE ###
+			// ### CONNECT TO DATABASE ###
 
-			// db := db.DbConnect()
+			db := db.DbConnect()
 
-			// query := crud.New(db)
+			query := crud.New(db)
 
-			// // ### GET ALL MESSAGES FOR THE GROUP ID ###
+			// ### get all group chat items ###
 
-			// messages, err := query.GetGroupMessages(context.Background(), int64(gId))
+			chatItems, err := query.GetGroupChatNoti(context.Background())
 
-			// if err != nil {
-			// 	fmt.Println("Unable to get group messages")
-			// }
+			if err != nil {
+				fmt.Println("Unable to get group chat items")
+			}
 
-			// for _, message := range messages {
-			// 	var newMessage GroupMessageStruct
+			for _, chatItem := range chatItems {
+				var newChatItem GroupChatItemStruct
 
-			// 	newMessage.Id = int(message.ID)
-			// 	newMessage.Message = message.Message
-			// 	newMessage.SourceId = int(message.SourceID)
-			// 	newMessage.GroupId = int(message.GroupID)
-			// 	newMessage.CreatedAt = message.CreatedAt.String()
+				newChatItem.Id = int(chatItem.ID)
+				newChatItem.GroupId = int(chatItem.GroupID)
+				newChatItem.LastMsgAt = chatItem.LastMsgAt.String()
 
-			// 	Resp.Data = append(Resp.Data, newMessage)
-			// }
+				Resp.Data = append(Resp.Data, newChatItem)
+			}
 
-			// // Marshals the response struct to a json object
-			// jsonResp, err := json.Marshal(Resp)
-			// if err != nil {
-			// 	http.Error(w, "500 internal server error", http.StatusInternalServerError)
-			// 	return
-			// }
+			// Marshals the response struct to a json object
+			jsonResp, err := json.Marshal(Resp)
+			if err != nil {
+				http.Error(w, "500 internal server error", http.StatusInternalServerError)
+				return
+			}
 
-			// // Sets the http headers and writes the response to the browser
-			// WriteHttpHeader(jsonResp, w)
+			// Sets the http headers and writes the response to the browser
+			WriteHttpHeader(jsonResp, w)
 		case http.MethodPost:
 			// Declares the variables to store the group message details and handler response
 			var groupItem GroupChatItemStruct
