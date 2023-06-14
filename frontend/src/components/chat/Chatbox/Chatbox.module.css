@@ -1,7 +1,12 @@
 .container {
     position: relative;
-    display: block;
+    /* display: block; */
     /* justify-content: center; */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    
+
 }
 
 .close-btn {

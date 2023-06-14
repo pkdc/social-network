@@ -50,7 +50,7 @@ export const FollowingContextProvider = (props) => {
         fetch(`http://localhost:8080/private-chat-item?id=${selfId}`)
         .then(resp => resp.json())
         .then(data => {
-                console.log(data);
+                console.log("zxcvbn",data);
 
                 const [allChatItemArr] = Object.values(data);
                 console.log("followuing", following);
@@ -119,6 +119,7 @@ export const FollowingContextProvider = (props) => {
                     console.log("filteredOther Without ChatItems", filteredOtherNoChatItems);
                     const finalOtherNoChatItems = [...allOtherChatItems, ...filteredOtherNoChatItems];
                     setOtherListedChatUsers(finalOtherNoChatItems);
+        
                 }
 
 

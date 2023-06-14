@@ -2552,14 +2552,13 @@ func GroupMessageHandler() http.HandlerFunc {
 		}
 	}
 }
-
 func PrivacyHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		EnableCors(&w)
 		fmt.Println(r.Method)
 		if r.Method == "POST" {
 			fmt.Println("its arrived")
 
-			EnableCors(&w)
 			// Prevents the endpoint being called from other url paths
 			if err := UrlPathMatcher(w, r, "/privacy"); err != nil {
 				return

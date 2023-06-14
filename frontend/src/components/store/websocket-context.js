@@ -30,7 +30,7 @@ export const WebSocketContextProvider = (props) => {
 
     const [newOnlineStatusObj, setNewOnlineStatusObj] = useState(false);
 
-    // const usersCtx = useContext(UsersContext);
+    const usersCtx = useContext(UsersContext);
 
     useEffect(() => {
         const newSocket = new WebSocket("ws://localhost:8080/ws")
@@ -94,6 +94,7 @@ export const WebSocketContextProvider = (props) => {
                 console.log("ws receives online-status (wsctx): ", msgObj);
                 console.log("ws receives online-status onlineuserids (wsctx): ", msgObj.onlineuserids);
                 setNewOnlineStatusObj(msgObj);
+                usersCtx.onNewUserReg();
             }
         };
 

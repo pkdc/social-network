@@ -4,6 +4,8 @@ import AllGroupChatItems from "./GroupChat/AllGroupChatItems";
 import styles from "./ChatMainArea.module.css";
 // import { AuthContext } from "../store/auth-context";
 import Chatbox from "./Chatbox/Chatbox.js";
+import UserChatDetailTopBar from "./UserChat/UserChatDetailTopBar";
+import GroupChatDetailTopBar from "./GroupChat/GroupChatDetailTopBar";
 
 const ChatMainArea = ({grpChat}) => {
     // console.log("user chat followers in chatarea", followersList);
@@ -50,6 +52,7 @@ const ChatMainArea = ({grpChat}) => {
         className={styles["list"]}
         style={{height: window.innerHeight -110}}
         >
+
             {!grpChat && !privChatboxOpen &&
                 <AllUserChatItems 
                     onOpenChatbox={openUserChatboxHandler}
@@ -77,7 +80,9 @@ const ChatMainArea = ({grpChat}) => {
                     onCloseChatbox={closeGrpChatboxHandler}
                     // onReceiveNewMsg={receiveNewMsgHandler}
                     grp={grpChat}
-                />}
+                /> 
+             
+                }
         </div>
     );
 };

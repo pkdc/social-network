@@ -1,0 +1,20 @@
+
+
+.container {
+    width: 80%;
+    /* background-color: rgba(128, 128, 128, 0.295); */
+    margin: 0.8rem 1rem;
+}
+
+.chatdetails {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+
+.lnk {
+    text-decoration: none;
+    color: var(--eerie-black);
+    font-weight: bold;
+}
