@@ -11,6 +11,8 @@ import styles from "./Chatbox.module.css";
 
 const Chatbox = (props) => {
 
+    console.log("chatbox props", props)
+
     const userMsgUrl = "http://localhost:8080/user-message";
 
     const [oldMsgData, setOldMsgData] = useState([]);
@@ -187,8 +189,8 @@ const Chatbox = (props) => {
     return (
         <div className={styles["container"]}>
             <button onClick={closeChatboxHandler} className={styles["close-btn"]}>X</button>
-            {props.grp && <GroupChatDetailTopBar />}
-            {!props.grp && <UserChatDetailTopBar />}
+            {props.grp && <GroupChatDetailTopBar groupId={props.chatboxId} />} 
+             {!props.grp && <UserChatDetailTopBar userId={props.chatboxId} />}
             {/* <ChatboxMsgArea oldMsgItems={oldMsgData} newMsgItems={newMsgsData}/> */}
             <ChatboxMsgArea oldMsgItems={oldMsgData} newMsgItems={newMsgsData} justUpdated={justUpdated}/>
             <SendMsg onSendMsg={sendMsgHandler}/>            

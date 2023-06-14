@@ -3,6 +3,7 @@ import Card from "../../UI/Card";
 import AllOldMsgItems from "./AllOldMsgItems";
 import AllNewMsgItems from "./AllNewMsgItems";
 import styles from "./ChatboxMsgArea.module.css";
+import GroupChatDetailTopBar from "../GroupChat/GroupChatDetailTopBar";
 
 const ChatboxMsgArea = (props) => {
     const msgAreaRef = useRef();
@@ -10,20 +11,21 @@ const ChatboxMsgArea = (props) => {
 
     const scrollBottom = () => msgAreaRef.current.scrollTop = msgAreaRef.current.scrollHeight - msgAreaRef.current.clientHeight;
 
-    useEffect(() => {msgAreaRef.current && scrollBottom();}, [msgAreaRef.current, props.justUpdated]);
-    
+    useEffect(() => { msgAreaRef.current && scrollBottom(); }, [msgAreaRef.current, props.justUpdated]);
+
     // props.justUpdated && msgAreaRef.current && scrollBottom();
 
     return (
-        <div 
-            className={styles["msg-area"]} 
-            style={{height: `${window.innerHeight-316}px`}} 
+        <div
+            className={styles["msg-area"]}
+            style={{ height: `${window.innerHeight - 400}px` }}
             ref={msgAreaRef}
-            // scrolltop={}
-            // onScroll={scrollHandler}
+        // scrolltop={}
+        // onScroll={scrollHandler}
         >
-            <AllOldMsgItems oldMsgItems={props.oldMsgItems}/>
-            <AllNewMsgItems newMsgItems={props.newMsgItems}/>
+            {/* <GroupChatDetailTopBar/> */}
+            <AllOldMsgItems oldMsgItems={props.oldMsgItems} />
+            <AllNewMsgItems newMsgItems={props.newMsgItems} />
         </div>
     );
 };

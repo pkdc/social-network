@@ -4,7 +4,9 @@
     height: 100%;
     width: 380px;
     right: -365px;
-    background-color: var(--ultra-violet);
+    /* background-color: var(--ultra-violet); */
+    background-color: #584F97;
+
     opacity: 30%;
     z-index: 997;
     transition: background-color 0.3s ease;
@@ -27,7 +29,9 @@
     outline: none;
     text-align: center;
     justify-content: center;
-    background-color: var(--ultra-violet);
+    /* background-color: var(--ultra-violet); */
+    background-color: #584F97;
+
     color: var(--seasalt);
     border-radius: 1.2rem 0 0 1.2rem;
     border: none;
@@ -43,7 +47,8 @@
 }
 
 .sidebar.show-chat {
-    opacity: 90%;
+    /* background-color: #584F97; */
+    opacity: 1;
     /* right +205px */
     right: 0px;
 }

@@ -55,7 +55,6 @@ function GroupProfile({ groupid }) {
     const { error, isLoaded, data } = useGet(`/group?id=${groupid}`)
     const [open, setOpen] = useState(false)
 
-    console.log("---- group data", data);
 
     const currUserId = localStorage.getItem("user_id");
 

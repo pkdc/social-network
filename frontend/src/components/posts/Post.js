@@ -69,7 +69,7 @@ function Post(props) {
         {/* <div className={classes["create-at"]}>{props.privacy}</div> //privacy */}
         <div className={classes.content}>{props.message}</div>
         {props.image && <div><img src={props.image} alt="" width={"100px"}/></div>}
-        <div className={classes.comments} onClick={showCommentsHandler}>Comments</div>
+        <div className={classes.comments} onClick={showCommentsHandler}>{props.commentsForThisPost.length} Comments</div>
         {/* {props.commentsForThisPost.length}  */}
         {showComments && 
             <>
