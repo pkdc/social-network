@@ -14,6 +14,7 @@ const Chatbox = (props) => {
     console.log("chatbox props", props)
 
     const userMsgUrl = "http://localhost:8080/user-message";
+    const groupMsgUrl = "http://localhost:8080/group-message";
 
     const [oldMsgData, setOldMsgData] = useState([]);
     const [newMsgsData, setNewMsgs] = useState([]);
@@ -165,28 +166,24 @@ const Chatbox = (props) => {
 
     // get old msgsdata.data.push()
     // const AllMsgsToAndFrom = [];
-    useEffect(() => {
-        if (!props.grp) {
-            // fetch old pri msg
-            fetch(`${userMsgUrl}?targetid=${selfId}&sourceid=${frdOrGrpId}`)
-            .then(resp => resp.json())
-            .then(data => {
-                console.log("old msg data: ", data);
-                if (data.data) {
-                    const [oldMsgArr] = Object.values(data);
-                    oldMsgArr.sort((b, a) => Date.parse(b.createdat) - Date.parse(a.createdat));
-                    console.log("soreted old msg data", oldMsgArr);
-                    setOldMsgData(oldMsgArr);
-                }
-            })
-            .catch(
-                err => console.log(err)
-            );
-        } else {
-            // fetch old grp msg
 
+    const fetchOldMsg = async (url) => {
+        const resp = await fetch(url);
+        const data = await resp.json();
+        console.log("old msg data: ", data);
+        if (data.data) {
+            const [oldMsgArr] = Object.values(data);
+            oldMsgArr.sort((b, a) => Date.parse(b.createdat) - Date.parse(a.createdat));
+            console.log("soreted old msg data", oldMsgArr);
+            setOldMsgData(oldMsgArr);
         }
-        
+    };
+
+    useEffect(() => {
+        // fetch old pri msg
+        !props.grp && fetchOldMsg(`${userMsgUrl}?targetid=${selfId}&sourceid=${frdOrGrpId}`);
+        // fetch old grp msg
+        props.grp && fetchOldMsg(`${groupMsgUrl}?id=${frdOrGrpId}`);        
     }, []);
 
     return (
