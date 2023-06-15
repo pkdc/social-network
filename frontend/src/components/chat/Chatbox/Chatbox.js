@@ -175,7 +175,7 @@ const Chatbox = (props) => {
             const [oldMsgArr] = Object.values(data);
             oldMsgArr.sort((b, a) => Date.parse(b.createdat) - Date.parse(a.createdat));
             console.log("soreted old msg data", oldMsgArr);
-            setOldMsgData(oldMsgArr);
+            setOldMsgData([...new Set(oldMsgArr)]);
         }
     };
 
