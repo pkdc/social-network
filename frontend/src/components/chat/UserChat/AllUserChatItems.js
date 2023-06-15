@@ -85,11 +85,11 @@ const AllUserChatItems = (props) => {
                 }
             })}
         </div>
-        <div><h3 className={styles["description"]}>1- 
-        Your recent conversations <br/>        2-
-        Public users you might want to talk 
-        3-
-       currently private account you already received message :</h3></div>
+        <div><h3 className={styles["description"]}>
+        1- Your recent conversations <br/>        
+        2- Public users you might want to talk <br/>
+        3- Current or previous private users you have already received message from (if u r are public)<br/>
+       Summary: Other Users:</h3></div>
         <div>
             {followingCtx.otherListedChatUsers && followingCtx.otherListedChatUsers.map((publicUser) => {
                 // console.log("each following", following);
