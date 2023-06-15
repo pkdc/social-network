@@ -65,14 +65,14 @@ const Chatbox = (props) => {
 
     useEffect(() => {
         // private chat
-        if (wsCtx.websocket !== null && wsCtx.newPrivateMsgsObj) {
+        if (wsCtx.websocket !== null && wsCtx.newGroupMsgsObj) {
             // if the new msg should be shown in this chatbox
-            if (wsCtx.newPrivateMsgsObj.sourceid === frdOrGrpId) {
-                console.log("new Received msg data when chatbox is open", wsCtx.newPrivateMsgsObj);
-                console.log("ws receives msg from when chatbox is open: ", wsCtx.newPrivateMsgsObj.sourceid);
-                setNewMsgs((prevNewMsgs) => [...new Set([...prevNewMsgs, wsCtx.newPrivateMsgsObj])]);
+            if (wsCtx.newGroupMsgsObj.sourceid === frdOrGrpId) {
+                console.log("new Received msg data when chatbox is open", wsCtx.newGroupMsgsObj);
+                console.log("ws receives msg from when chatbox is open: ", wsCtx.newGroupMsgsObj.sourceid);
+                setNewMsgs((prevNewMsgs) => [...new Set([...prevNewMsgs, wsCtx.newGroupMsgsObj])]);
             
-                if (wsCtx.newPrivateMsgsObj !== null) wsCtx.setNewPrivateMsgsObj(null);
+                if (wsCtx.newGroupMsgsObj !== null) wsCtx.setNewPrivateMsgsObj(null);
 
                 // if chatboxId is a user that the cur user is following (not chatting coz of public user)
                 if (followingCtx.following && followingCtx.following.find((following => following.id === props.chatboxId))) {
@@ -83,35 +83,38 @@ const Chatbox = (props) => {
             }
         }
 
-        // group chat
-        // if (wsCtx.websocket !== null && wsCtx.newPrivateMsgsObj) {
-        //     // if the new msg should be shown in this chatbox
-        //     if (wsCtx.newPrivateMsgsObj.sourceid === frdOrGrpId) {
-        //         console.log("new Received msg data when chatbox is open", wsCtx.newPrivateMsgsObj);
-        //         console.log("ws receives msg from when chatbox is open: ", wsCtx.newPrivateMsgsObj.sourceid);
-        //         setNewMsgs((prevNewMsgs) => [...new Set([...prevNewMsgs, wsCtx.newPrivateMsgsObj])]);
-            
-        //         if (wsCtx.newPrivateMsgsObj !== null) wsCtx.setNewPrivateMsgsObj(null);
-
-        //         // if chatboxId is a user that the cur user is following (not chatting coz of public user)
-        //         if (followingCtx.following && followingCtx.following.find((following => following.id === props.chatboxId))) {
-        //             followingCtx.receiveMsgFollowing(frdOrGrpId, true, true);
-        //         } else { // public
-        //             followingCtx.receiveMsgFollowing(frdOrGrpId, true, false);
-        //         }
-        //     }
-        // }
-
         // clear noti if the chatbox is initilly closed, but then opened
+        // here is why opening a chatbox will move it to the top!!!
         if (followingCtx.following && followingCtx.following.find((following => following.id === props.chatboxId))) {
             followingCtx.receiveMsgFollowing(frdOrGrpId, true, true);
-        } else {
-            // joinedGrpCtx.receiveMsgGroup(frdOrGrpId, true);
         }
         
         setJustUpdated(prev => !prev);
         // props.chatboxId is changed when the chatbox is opened
-    }, [wsCtx.newPrivateMsgsObj, props.chatboxId]) 
+    }, [wsCtx.newGroupMsgsObj, props.chatboxId]) 
+
+    useEffect(() => {
+        // group chat
+        if (wsCtx.websocket !== null && wsCtx.newGroupMsgsObj) {
+            // if the new msg should be shown in this chatbox
+            if (wsCtx.newGroupMsgsObj.groupid === frdOrGrpId) {
+                console.log("new Received msg data when chatbox is open", wsCtx.newGroupMsgsObj);
+                console.log("ws receives msg for group when chatbox is open: ", wsCtx.newGroupMsgsObj.groupid);
+                setNewMsgs((prevNewMsgs) => [...new Set([...prevNewMsgs, wsCtx.newGroupMsgsObj])]);
+            
+                if (wsCtx.newGroupMsgsObj !== null) wsCtx.setNewGroupMsgsObj(null);
+
+                // joinedGrpCtx.receiveMsgGroup(frdOrGrpId, true);   
+            }
+        }
+
+        // clear noti if the chatbox is initilly closed, but then opened
+        // here is why opening a chatbox will move it to the top!!!
+        // joinedGrpCtx.receiveMsgGroup(frdOrGrpId, true);
+        
+        setJustUpdated(prev => !prev);
+        // props.chatboxId is changed when the chatbox is opened
+    }, [wsCtx.newGroupMsgsObj, props.chatboxId]) 
 
     // send msg to ws
     const sendMsgHandler = (msg) => {

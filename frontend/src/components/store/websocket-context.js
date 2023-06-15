@@ -3,10 +3,10 @@ import { UsersContext } from "./users-context";
 
 export const WebSocketContext = React.createContext({
     websocket: null,
-    newPrivateMsgsObj: null,
+    newGroupMsgsObj: null,
     setNewPrivateMsgsObj: () => {},
-    // newMsgsObj: null,
-    // setNewMsgsObj: () => {},
+    newGroupMsgsObj: null,
+    setNewGroupMsgsObj: () => {},
     newNotiObj: null,
     setNewNotiObj: () => { },
     newNotiFollowReplyObj: null,
@@ -22,6 +22,7 @@ export const WebSocketContext = React.createContext({
 export const WebSocketContextProvider = (props) => {
     const [socket, setSocket] = useState(null);
     const [newPrivateMsgsObj, setNewPrivateMsgsObj] = useState(null);
+    const [newGroupMsgsObj, setNewGroupMsgsObj] = useState(null);
 
     const [newNotiObj, setNewNotiObj] = useState(null);
     const [newNotiFollowReplyObj, setNewNotiFollowReplyObj] = useState(null);
@@ -58,14 +59,7 @@ export const WebSocketContextProvider = (props) => {
                 setNewPrivateMsgsObj(msgObj);
             } else if (msgObj.label === "g-chat") {
                 console.log("ws receives grp msg (wsctx): ", msgObj.message);
-                // const newReceivedMsgObj = {
-                //     id: msgObj.id,
-                //     targetid: msgObj.targetid,
-                //     sourceid: msgObj.sourceid,
-                //     message: msgObj.message,
-                //     createdat: msgObj.createdat,
-                // };
-                // setNewMsgsObj(newReceivedMsgObj);
+                setNewGroupMsgsObj(msgObj);
             } else if (msgObj.label === "noti") {
                 if (msgObj.type === "follow-req" || msgObj.type.includes("event-notif") || msgObj.type === "join-req" || msgObj.type === "invitation") {
                     console.log("ws receives noti (wsctx): ", msgObj);
@@ -106,10 +100,10 @@ export const WebSocketContextProvider = (props) => {
     return (
         <WebSocketContext.Provider value={{
             websocket: socket,
-            newPrivateMsgsObj: newPrivateMsgsObj,
+            newGroupMsgsObj: newPrivateMsgsObj,
             setNewPrivateMsgsObj: setNewPrivateMsgsObj,
-            // newMsgsObj: null,
-            // setNewMsgsObj: () => {},
+            newGroupMsgsObj: newGroupMsgsObj,
+            setNewGroupMsgsObj: setNewGroupMsgsObj,
             newNotiObj: newNotiObj,
             setNewNotiObj: setNewNotiObj,
             newNotiFollowReplyObj: newNotiFollowReplyObj,

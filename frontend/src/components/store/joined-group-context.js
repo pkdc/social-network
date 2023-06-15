@@ -11,7 +11,7 @@ export const JoinedGroupContext = React.createContext({
     join: (toJoinGrp, user) => {},
     // leave: (toLeaveGrp, user) => {},
     storeGroupMember: (userId, groupId) => {},
-    // receiveMsgFollowing: (friendId, open) => {},
+    // receiveMsgGroup: (groupId, open) => {},
     // chatNotiUserArr: [],
     // setChatNotiUserArr: () => {},
 });
@@ -142,7 +142,7 @@ const requestedGroupUrl = `http://localhost:8080/group-request-by-user?id=${self
             join: joinHandler,
             // leave: leaveHandler,
             storeGroupMember: storeGroupMemberHandler,
-            // receiveMsgFollowing: receiveMsgHandler,
+            // receiveMsgGroup: receiveMsgHandler,
             // chatNotiUserArr: chatNotiUserArr,
             // setChatNotiUserArr: setChatNotiUserArr,
         }}>
