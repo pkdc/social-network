@@ -3,7 +3,7 @@ import { UsersContext } from "./users-context";
 
 export const WebSocketContext = React.createContext({
     websocket: null,
-    newGroupMsgsObj: null,
+    newPrivateMsgsObj: null,
     setNewPrivateMsgsObj: () => {},
     newGroupMsgsObj: null,
     setNewGroupMsgsObj: () => {},
@@ -100,7 +100,7 @@ export const WebSocketContextProvider = (props) => {
     return (
         <WebSocketContext.Provider value={{
             websocket: socket,
-            newGroupMsgsObj: newPrivateMsgsObj,
+            newPrivateMsgsObj: newPrivateMsgsObj,
             setNewPrivateMsgsObj: setNewPrivateMsgsObj,
             newGroupMsgsObj: newGroupMsgsObj,
             setNewGroupMsgsObj: setNewGroupMsgsObj,

@@ -14,10 +14,9 @@ const ChatUserItem = (props) => {
         <div className={styles["item"]} onClick={openChatboxHandler}>
             {Boolean(props.noti) && <div className={`${styles["noti"]} ${styles["active"]}`}></div>}
             {Boolean(!props.noti) && <div className={styles["noti"]}></div>}
-            <Avatar className={styles["chat-avatar"]} src={props.avatar} alt="" height={"50px"} width={"50px"}/>
+            <Avatar className={styles["chat-avatar"]} id={props.id} src={props.avatar} alt="" height={"50px"} width={"50px"}/>
             <div><p className={styles["details"]}>{`${props.fname} ${props.lname} ${props.nname}`}</p></div>
         </div>
     );
 };
-
 export default ChatUserItem;
