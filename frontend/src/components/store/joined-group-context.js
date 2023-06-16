@@ -11,9 +11,10 @@ export const JoinedGroupContext = React.createContext({
     join: (toJoinGrp, user) => {},
     // leave: (toLeaveGrp, user) => {},
     storeGroupMember: (userId, groupId) => {},
-    // receiveMsgGroup: (groupId, open) => {},
+    receiveMsgGroup: (groupId, open) => {},
     // chatNotiUserArr: [],
     // setChatNotiUserArr: () => {},
+    chatboxOpenedGroup:(groupId) => {},
 });
 
 export const JoinedGroupContextProvider = (props) => {
@@ -23,7 +24,7 @@ export const JoinedGroupContextProvider = (props) => {
     const [joinedGrps, setJoinedGrps] = useState([]);
     const [requestedGroups, setRequestedGroups] = useState([]);
     const joinedGroupingUrl = `http://localhost:8080/group-member?userid=${selfId}`;
-const requestedGroupUrl = `http://localhost:8080/group-request-by-user?id=${selfId}`;
+    const requestedGroupUrl = `http://localhost:8080/group-request-by-user?id=${selfId}`;
     const wsCtx = useContext(WebSocketContext);
 
     // get from db
@@ -34,7 +35,7 @@ const requestedGroupUrl = `http://localhost:8080/group-request-by-user?id=${self
             console.log("joinedGroupsArr (context): ", data);
             let [joinedGroupsArr] = Object.values(data); 
             setJoinedGrps(joinedGroupsArr);
-            localStorage.setItem("joinedGroups", JSON.stringify(joinedGroupsArr));
+            localStorage.setjoinedGrpsItem("joinedGroups", JSON.stringify(joinedGroupsArr));
         })
         .catch(
             err => console.log(err)
@@ -125,6 +126,44 @@ const requestedGroupUrl = `http://localhost:8080/group-request-by-user?id=${self
         // store the new member to group member db table
     };
 
+    const receiveMsgHandler = (groupId, open) => {
+        const targetGroup = joinedGrps.find(group => group.id === +groupId);
+        console.log("target group", targetGroup);
+        // noti if not open
+        if (!open) {
+            console.log("group chatbox closed, open=", open);
+            targetGroup["chat_noti"] = true; // set noti field to true to indicate unread
+        } else {
+            targetGroup["chat_noti"] = false;
+            console.log("group chatbox opened, open=", open);
+
+            const groupChatNotiPayloadObj = {};
+            groupChatNotiPayloadObj["label"] = "set-seen-g-chat-noti";
+            groupChatNotiPayloadObj["sourceid"] = +selfId;
+            groupChatNotiPayloadObj["groupid"] = groupId;
+
+            if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(groupChatNotiPayloadObj));
+        }
+        // move userId chat item to the top
+        setJoinedGrps(prevJoinedGrps => [targetGroup, ...prevJoinedGrps.filter(joinedGrp => joinedGrp.id !== +groupId)]);
+        console.log("after add chat noti target group", targetGroup);
+        
+    };
+
+    const openGroupChatboxHandler = (groupId) => {
+        const targetGroup = joinedGrps.find(group => group.id === +groupId);
+        console.log("targetGroup open box", targetGroup);
+
+        targetGroup["chat_noti"] = false;
+
+        const groupChatNotiPayloadObj = {};
+        groupChatNotiPayloadObj["label"] = "set-seen-g-chat-noti";
+        groupChatNotiPayloadObj["sourceid"] = +selfId;
+        groupChatNotiPayloadObj["groupid"] = +groupId;
+
+        if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(groupChatNotiPayloadObj));
+    };
+
     useEffect(() => getJoinedGrpsHandler(), []);
 
     useEffect(() => getRequestedGrpsHandler(), []);
@@ -142,9 +181,10 @@ const requestedGroupUrl = `http://localhost:8080/group-request-by-user?id=${self
             join: joinHandler,
             // leave: leaveHandler,
             storeGroupMember: storeGroupMemberHandler,
-            // receiveMsgGroup: receiveMsgHandler,
+            receiveMsgGroup: receiveMsgHandler,
             // chatNotiUserArr: chatNotiUserArr,
             // setChatNotiUserArr: setChatNotiUserArr,
+            chatboxOpenedGroup: openGroupChatboxHandler,
         }}>
             {props.children}
         </JoinedGroupContext.Provider>

@@ -82,17 +82,9 @@ const Chatbox = (props) => {
                     followingCtx.receiveMsgFollowing(frdOrGrpId, true, false);
                 }
             }
-        }
-
-        // clear noti if the chatbox is initilly closed, but then opened
-        // here is why opening a chatbox will move it to the top!!!
-        if (followingCtx.following && followingCtx.following.find((following => following.id === props.chatboxId))) {
-            followingCtx.receiveMsgFollowing(frdOrGrpId, true, true);
-        }
-        
+        }       
         setJustUpdated(prev => !prev);
-        // props.chatboxId is changed when the chatbox is opened
-    }, [wsCtx.newPrivateMsgsObj, props.chatboxId]) 
+    }, [wsCtx.newPrivateMsgsObj]) 
 
     useEffect(() => {
         // group chat
@@ -105,17 +97,27 @@ const Chatbox = (props) => {
             
                 if (wsCtx.newGroupMsgsObj !== null) wsCtx.setNewGroupMsgsObj(null);
 
-                // joinedGrpCtx.receiveMsgGroup(frdOrGrpId, true);   
+                joinedGrpCtx.receiveMsgGroup(frdOrGrpId, true);   
             }
         }
-
-        // clear noti if the chatbox is initilly closed, but then opened
-        // here is why opening a chatbox will move it to the top!!!
-        // joinedGrpCtx.receiveMsgGroup(frdOrGrpId, true);
         
         setJustUpdated(prev => !prev);
-        // props.chatboxId is changed when the chatbox is opened
-    }, [wsCtx.newGroupMsgsObj, props.chatboxId]) 
+    }, [wsCtx.newGroupMsgsObj]) 
+
+    useEffect(() => {
+        // clear noti if the chatbox is initilly closed, but then opened
+        if (!props.grp) {
+            // here is why opening a chatbox will move it to the top!!!
+            if (followingCtx.following && followingCtx.following.find((following => following.id === props.chatboxId))) {
+                followingCtx.chatboxOpenedFollowing(frdOrGrpId, true);
+            } else {
+                followingCtx.chatboxOpenedFollowing(frdOrGrpId, false);
+            }
+        } else {
+            joinedGrpCtx.chatboxOpenedGroup(frdOrGrpId, true);
+        }
+    // props.chatboxId is changed when the chatbox is opened
+    }, [props.chatboxId]);
 
     // send msg to ws
     const sendMsgHandler = (msg) => {
