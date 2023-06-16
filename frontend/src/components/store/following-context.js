@@ -60,7 +60,7 @@ export const FollowingContextProvider = (props) => {
                 if (!allChatItemArr) {
                     setFollowingChat(following);
                     // filter out following
-                    // console.log("public and not following",usersCtx.users.filter(user => user.public === 1 && !following.some(followingUser => followingUser.id === user.id)));
+                    console.log("public and not following",usersCtx.users.filter(user => user.public === 1 && !following.some(followingUser => followingUser.id === user.id)));
                     usersCtx.users && !following && setOtherListedChatUsers(usersCtx.users.filter(user => user.public === 1)); // takes care if cur user is not following any user
                     usersCtx.users && following && setOtherListedChatUsers(usersCtx.users.filter(user => user.public === 1 && !following.some(followingUser => followingUser.id === user.id)));
 
@@ -96,7 +96,7 @@ export const FollowingContextProvider = (props) => {
                     // filter out following, to get all OtherListedChatUsers
                     const filteredOtherChatItems = allChatItemArr.filter(chatItem => {
                         if (!following) return true;
-                        return !following.every(followingUser => followingUser.id === chatItem.sourceid)
+                        return following.every(followingUser => followingUser.id !== chatItem.sourceid);
                     });
                     console.log("filteredOtherChatItems", filteredOtherChatItems);
                     // merge the properties

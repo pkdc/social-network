@@ -14,6 +14,7 @@ const Chatbox = (props) => {
     console.log("chatbox props", props)
 
     const userMsgUrl = "http://localhost:8080/user-message";
+    const groupMsgUrl = "http://localhost:8080/group-message";
 
     const [oldMsgData, setOldMsgData] = useState([]);
     const [newMsgsData, setNewMsgs] = useState([]);
@@ -83,35 +84,38 @@ const Chatbox = (props) => {
             }
         }
 
-        // group chat
-        // if (wsCtx.websocket !== null && wsCtx.newPrivateMsgsObj) {
-        //     // if the new msg should be shown in this chatbox
-        //     if (wsCtx.newPrivateMsgsObj.sourceid === frdOrGrpId) {
-        //         console.log("new Received msg data when chatbox is open", wsCtx.newPrivateMsgsObj);
-        //         console.log("ws receives msg from when chatbox is open: ", wsCtx.newPrivateMsgsObj.sourceid);
-        //         setNewMsgs((prevNewMsgs) => [...new Set([...prevNewMsgs, wsCtx.newPrivateMsgsObj])]);
-            
-        //         if (wsCtx.newPrivateMsgsObj !== null) wsCtx.setNewPrivateMsgsObj(null);
-
-        //         // if chatboxId is a user that the cur user is following (not chatting coz of public user)
-        //         if (followingCtx.following && followingCtx.following.find((following => following.id === props.chatboxId))) {
-        //             followingCtx.receiveMsgFollowing(frdOrGrpId, true, true);
-        //         } else { // public
-        //             followingCtx.receiveMsgFollowing(frdOrGrpId, true, false);
-        //         }
-        //     }
-        // }
-
         // clear noti if the chatbox is initilly closed, but then opened
+        // here is why opening a chatbox will move it to the top!!!
         if (followingCtx.following && followingCtx.following.find((following => following.id === props.chatboxId))) {
             followingCtx.receiveMsgFollowing(frdOrGrpId, true, true);
-        } else {
-            // joinedGrpCtx.receiveMsgGroup(frdOrGrpId, true);
         }
         
         setJustUpdated(prev => !prev);
         // props.chatboxId is changed when the chatbox is opened
     }, [wsCtx.newPrivateMsgsObj, props.chatboxId]) 
+
+    useEffect(() => {
+        // group chat
+        if (wsCtx.websocket !== null && wsCtx.newGroupMsgsObj) {
+            // if the new msg should be shown in this chatbox
+            if (wsCtx.newGroupMsgsObj.groupid === frdOrGrpId) {
+                console.log("new Received msg data when chatbox is open", wsCtx.newGroupMsgsObj);
+                console.log("ws receives msg for group when chatbox is open: ", wsCtx.newGroupMsgsObj.groupid);
+                setNewMsgs((prevNewMsgs) => [...new Set([...prevNewMsgs, wsCtx.newGroupMsgsObj])]);
+            
+                if (wsCtx.newGroupMsgsObj !== null) wsCtx.setNewGroupMsgsObj(null);
+
+                // joinedGrpCtx.receiveMsgGroup(frdOrGrpId, true);   
+            }
+        }
+
+        // clear noti if the chatbox is initilly closed, but then opened
+        // here is why opening a chatbox will move it to the top!!!
+        // joinedGrpCtx.receiveMsgGroup(frdOrGrpId, true);
+        
+        setJustUpdated(prev => !prev);
+        // props.chatboxId is changed when the chatbox is opened
+    }, [wsCtx.newGroupMsgsObj, props.chatboxId]) 
 
     // send msg to ws
     const sendMsgHandler = (msg) => {
@@ -162,28 +166,24 @@ const Chatbox = (props) => {
 
     // get old msgsdata.data.push()
     // const AllMsgsToAndFrom = [];
-    useEffect(() => {
-        if (!props.grp) {
-            // fetch old pri msg
-            fetch(`${userMsgUrl}?targetid=${selfId}&sourceid=${frdOrGrpId}`)
-            .then(resp => resp.json())
-            .then(data => {
-                console.log("old msg data: ", data);
-                if (data.data) {
-                    const [oldMsgArr] = Object.values(data);
-                    oldMsgArr.sort((b, a) => Date.parse(b.createdat) - Date.parse(a.createdat));
-                    console.log("soreted old msg data", oldMsgArr);
-                    setOldMsgData(oldMsgArr);
-                }
-            })
-            .catch(
-                err => console.log(err)
-            );
-        } else {
-            // fetch old grp msg
 
+    const fetchOldMsg = async (url) => {
+        const resp = await fetch(url);
+        const data = await resp.json();
+        console.log("old msg data: ", data);
+        if (data.data) {
+            const [oldMsgArr] = Object.values(data);
+            oldMsgArr.sort((b, a) => Date.parse(b.createdat) - Date.parse(a.createdat));
+            console.log("soreted old msg data", oldMsgArr);
+            setOldMsgData([...new Set(oldMsgArr)]);
         }
-        
+    };
+
+    useEffect(() => {
+        // fetch old pri msg
+        !props.grp && fetchOldMsg(`${userMsgUrl}?targetid=${selfId}&sourceid=${frdOrGrpId}`);
+        // fetch old grp msg
+        props.grp && fetchOldMsg(`${groupMsgUrl}?id=${frdOrGrpId}`);        
     }, []);
 
     return (

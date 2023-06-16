@@ -158,8 +158,8 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 		userMsg.CreatedAt = time.Now().String()
 	} else if msgStruct.Label == "group" {
 		t = 3
-		userMsg.Label = "g-chat"
-		userMsg.Id = msgStruct.Id
+		groupMsg.Label = "g-chat"
+		groupMsg.Id = msgStruct.Id
 		groupMsg.Message = msgStruct.Message
 		groupMsg.SourceId = msgStruct.SourceId
 		groupMsg.GroupId = msgStruct.GroupId
