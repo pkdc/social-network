@@ -66,14 +66,14 @@ const Chatbox = (props) => {
 
     useEffect(() => {
         // private chat
-        if (wsCtx.websocket !== null && wsCtx.newGroupMsgsObj) {
+        if (wsCtx.websocket !== null && wsCtx.newPrivateMsgsObj) {
             // if the new msg should be shown in this chatbox
-            if (wsCtx.newGroupMsgsObj.sourceid === frdOrGrpId) {
-                console.log("new Received msg data when chatbox is open", wsCtx.newGroupMsgsObj);
-                console.log("ws receives msg from when chatbox is open: ", wsCtx.newGroupMsgsObj.sourceid);
-                setNewMsgs((prevNewMsgs) => [...new Set([...prevNewMsgs, wsCtx.newGroupMsgsObj])]);
+            if (wsCtx.newPrivateMsgsObj.sourceid === frdOrGrpId) {
+                console.log("new Received msg data when chatbox is open", wsCtx.newPrivateMsgsObj);
+                console.log("ws receives msg from when chatbox is open: ", wsCtx.newPrivateMsgsObj.sourceid);
+                setNewMsgs((prevNewMsgs) => [...new Set([...prevNewMsgs, wsCtx.newPrivateMsgsObj])]);
             
-                if (wsCtx.newGroupMsgsObj !== null) wsCtx.setNewPrivateMsgsObj(null);
+                if (wsCtx.newPrivateMsgsObj !== null) wsCtx.setNewPrivateMsgsObj(null);
 
                 // if chatboxId is a user that the cur user is following (not chatting coz of public user)
                 if (followingCtx.following && followingCtx.following.find((following => following.id === props.chatboxId))) {
@@ -92,7 +92,7 @@ const Chatbox = (props) => {
         
         setJustUpdated(prev => !prev);
         // props.chatboxId is changed when the chatbox is opened
-    }, [wsCtx.newGroupMsgsObj, props.chatboxId]) 
+    }, [wsCtx.newPrivateMsgsObj, props.chatboxId]) 
 
     useEffect(() => {
         // group chat

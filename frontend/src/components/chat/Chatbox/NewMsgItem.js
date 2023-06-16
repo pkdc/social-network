@@ -31,9 +31,9 @@ const NewMsgItem = (props) => {
                 {props.msg}
             </div>
         </div>
-        {self &&
+        {/* {self &&
             <SmallAvatar height={30} width={30}></SmallAvatar>
-        }
+        } */}
     </div>
     );
 };
