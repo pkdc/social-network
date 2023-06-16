@@ -11,22 +11,22 @@ const AllGroupChatItems = (props) => {
     console.log("cur user has joined these groups (AllGrpChatItems): ", joinedGrpCtx.joinedGrps);
 
     useEffect(() => {
-        if (wsCtx.websocket !== null && wsCtx.newMsgsObj) {
-            console.log("sourceid  (chatitems)", wsCtx.newMsgsObj.sourceid);
-            console.log("grpid  (chatitems)", wsCtx.newMsgsObj.groupid);
-            // console.log(followingCtx.followingChat.find((follower) => follower.id === wsCtx.newMsgsObj.sourceid));
+        if (wsCtx.websocket !== null && wsCtx.newGroupMsgsObj) {
+            console.log("sourceid  (chatitems)", wsCtx.newGroupMsgsObj.sourceid);
+            console.log("grpid  (chatitems)", wsCtx.newGroupMsgsObj.groupid);
+            // console.log(followingCtx.followingChat.find((follower) => follower.id === wsCtx.newGroupMsgsObj.sourceid));
 
-            if (joinedGrpCtx.joinedGrps && joinedGrpCtx.joinedGrps.find((grp) => grp.id === wsCtx.newMsgsObj.groupid)) {
+            if (joinedGrpCtx.joinedGrps && joinedGrpCtx.joinedGrps.find((grp) => grp.id === wsCtx.newGroupMsgsObj.groupid)) {
                 // if Cur user is the sender
-                console.log("new Received msg data when chatbox is closed (grp)", wsCtx.newMsgsObj);
-                console.log("ws receives msg from when chatbox is closed (grp): ", wsCtx.newMsgsObj.groupid);
-                wsCtx.newMsgsObj !== null && wsCtx.setNewMsgsObj(null);
-                // joinedGrpCtx.receiveMsgFollowing(wsCtx.newMsgsObj.sourceid, false, true);
+                console.log("new Received msg data when chatbox is closed (grp)", wsCtx.newGroupMsgsObj);
+                console.log("ws receives msg from when chatbox is closed (grp): ", wsCtx.newGroupMsgsObj.groupid);
+                wsCtx.newGroupMsgsObj !== null && wsCtx.setNewGroupMsgsObj(null);
+                joinedGrpCtx.receiveMsgGroup(wsCtx.newGroupMsgsObj.groupid, false);
             } else {
                 console.log("Cur user is not in the group");
             }
         }
-    }, [joinedGrpCtx.joinedGrps, wsCtx.newMsgsObj]);
+    }, [joinedGrpCtx.joinedGrps, wsCtx.newGroupMsgsObj]);
 
     // middleman, passing grpId from child to parent
     const openGroupChatboxHandler = (grpId) => props.onOpenChatbox(grpId);
