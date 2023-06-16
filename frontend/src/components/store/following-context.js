@@ -10,13 +10,14 @@ export const FollowingContext = React.createContext({
     requestToFollow: (followUser) => {},
     follow: (followUser) => {},
     unfollow: (unfollowUser) => {},
-    receiveMsgFollowing: (open, isFollowing) => {},
+    receiveMsgFollowing: (frdId, open, isFollowing) => {},
     // publicChatUsers: [],
     // setPublicChatUsers: () => {},
     otherListedChatUsers: [],
     setOtherListedChatUsers: () => {},
     // chatNotiUserArr: [],
     // setChatNotiUserArr: () => {},
+    chatboxOpenedFollowing: (frdId, isFollowing) => {},
 });
 
 export const FollowingContextProvider = (props) => {
@@ -121,8 +122,6 @@ export const FollowingContextProvider = (props) => {
                     setOtherListedChatUsers(finalOtherNoChatItems);
         
                 }
-
-
         }).catch(err => {
             console.log(err);
         })
@@ -216,6 +215,28 @@ export const FollowingContextProvider = (props) => {
         }
     };
 
+    const openFollowingChatboxHandler = (friendId, isFollowing) => {
+        let targetUser = null;
+        // separated coz the chatlist is reading chat_noti from following for following
+        // and users for public or other users
+        if (isFollowing) {
+            targetUser = following.find(followingUser => followingUser.id === +friendId);
+        } else {
+            targetUser = usersCtx.users.find(user => user.id === +friendId);
+        }
+        
+        console.log("target user open box", targetUser);
+
+        targetUser["chat_noti"] = false;
+
+        const privateChatNotiPayloadObj = {};
+        privateChatNotiPayloadObj["label"] = "set-seen-p-chat-noti";
+        privateChatNotiPayloadObj["sourceid"] = friendId;
+        privateChatNotiPayloadObj["targetid"] = +selfId;
+
+        if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(privateChatNotiPayloadObj));
+    };
+
     useEffect(() => {
         getFollowingHandler();
         getPrivateChatHandler();
@@ -243,6 +264,7 @@ export const FollowingContextProvider = (props) => {
             setOtherListedChatUsers: setOtherListedChatUsers,
             // chatNotiUserArr: chatNotiUserArr,
             // setChatNotiUserArr: setChatNotiUserArr,
+            chatboxOpenedFollowing: openFollowingChatboxHandler,
         }}>
             {props.children}
         </FollowingContext.Provider>
