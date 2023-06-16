@@ -97,7 +97,7 @@ const Chatbox = (props) => {
             
                 if (wsCtx.newGroupMsgsObj !== null) wsCtx.setNewGroupMsgsObj(null);
 
-                // joinedGrpCtx.receiveMsgGroup(frdOrGrpId, true);   
+                joinedGrpCtx.receiveMsgGroup(frdOrGrpId, true);   
             }
         }
         
@@ -114,9 +114,7 @@ const Chatbox = (props) => {
                 followingCtx.chatboxOpenedFollowing(frdOrGrpId, false);
             }
         } else {
-            // clear noti if the chatbox is initilly closed, but then opened
-            // here is why opening a chatbox will move it to the top!!!
-            // joinedGrpCtx.chatboxOpenedGroup(frdOrGrpId, true);
+            joinedGrpCtx.chatboxOpenedGroup(frdOrGrpId, true);
         }
     // props.chatboxId is changed when the chatbox is opened
     }, [props.chatboxId]);
