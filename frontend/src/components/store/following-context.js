@@ -48,10 +48,11 @@ export const FollowingContextProvider = (props) => {
 
     const getPrivateChatHandler = () => {
         // private chat notification list after login
+        // no need to sort coz the db is already returning items ordered by last-msg-time 
         fetch(`http://localhost:8080/private-chat-item?id=${selfId}`)
         .then(resp => resp.json())
         .then(data => {
-                console.log("zxcvbn",data);
+                console.log("pri chat item data",data);
 
                 const [allChatItemArr] = Object.values(data);
                 console.log("followuing", following);

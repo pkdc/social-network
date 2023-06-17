@@ -170,14 +170,18 @@ const Chatbox = (props) => {
     // const AllMsgsToAndFrom = [];
 
     const fetchOldMsg = async (url) => {
-        const resp = await fetch(url);
-        const data = await resp.json();
-        console.log("old msg data: ", data);
-        if (data.data) {
-            const [oldMsgArr] = Object.values(data);
-            oldMsgArr.sort((b, a) => Date.parse(b.createdat) - Date.parse(a.createdat));
-            console.log("soreted old msg data", oldMsgArr);
-            setOldMsgData([...new Set(oldMsgArr)]);
+        try {
+            const resp = await fetch(url);
+            const data = await resp.json();
+            console.log("old msg data: ", data);
+            if (data.data) {
+                const [oldMsgArr] = Object.values(data);
+                oldMsgArr.sort((b, a) => Date.parse(b.createdat) - Date.parse(a.createdat));
+                console.log("soreted old msg data", oldMsgArr);
+                setOldMsgData([...new Set(oldMsgArr)]);
+            }
+        } catch(err) {
+            console.log(`${err} occurred while fetching old msgs`);
         }
     };
 

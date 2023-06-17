@@ -55,6 +55,23 @@ export const JoinedGroupContextProvider = (props) => {
             err => console.log(err)
         );
     };
+
+    const fetchGroupChatNoti = async (url) => {
+        // no need to sort coz the db is already returning items ordered by last-msg-time 
+        const resp = await fetch(url);
+        const data = await resp.json();
+        const [notiArr] = Object.values(data);
+        console.log("grp chat noti Arr", notiArr);
+        return notiArr;
+    };
+
+    const getGroupChatHandler = () => {
+        (async function() {
+            const grpChatNotiArr = await fetchGroupChatNoti(`http://localhost:8080/group-member?userid=${selfId}`)
+            console.log("grp chat noti data", grpChatNotiArr);
+        }())
+    };
+
     const requestToJoinHandler = (joinGrpId) => {
         getRequestedGrpsHandler()
         console.log("request to join user (context): ", +selfId);
@@ -164,8 +181,10 @@ export const JoinedGroupContextProvider = (props) => {
         if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(groupChatNotiPayloadObj));
     };
 
-    useEffect(() => getJoinedGrpsHandler(), []);
-
+    useEffect(() => {
+        getJoinedGrpsHandler();
+        getGroupChatHandler();
+    }, []);
     useEffect(() => getRequestedGrpsHandler(), []);
 
     return (
