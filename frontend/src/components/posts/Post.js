@@ -9,7 +9,14 @@ import Card from '../UI/Card';
 
 function Post(props) {
     const [showComments, setShowComments] = useState(false);
+    const [ postPrivacy, setPostPrivacy ] = useState();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (props != undefined) {
+            setPostPrivacy(props.postPrivacy)
+        }
+    }, [props])
 
     // console.log("comment for post: ", props.postNum, " comments: ", props.commentsForThisPost)
     // const onlineStatus = false;
@@ -53,6 +60,14 @@ function Post(props) {
         minute: 'numeric',
     }).format(mills);
 
+
+    let privacy;
+    if (props.privacy == 1) {
+        privacy = <div>only followers</div>
+    } else if (props.privacy == 2) {
+        privacy = <div>close friends </div>
+    }
+
     return <Card className={classes.container} >
         <div className={classes["author"]}>
             <Link to={`/profile/${props.authorId}`}>
@@ -61,13 +76,15 @@ function Post(props) {
             <div className={classes.column}>
 
             <Link to={`/profile/${props.authorId}`}>
-                <div className={classes["details"]}>{`${props.fname} ${props.lname} ${props.nname}`}</div>
+                <div className={classes["details"]}>{`${props.fname} ${props.lname}`}</div>
             </Link>
         <div className={classes["create-at"]}>{newDate}</div>
+            {privacy}
             </div>
         </div>
         {/* <div className={classes["create-at"]}>{props.privacy}</div> //privacy */}
         <div className={classes.content}>{props.message}</div>
+
         {props.image && <div><img src={props.image} alt="" width={"100px"}/></div>}
         <div className={classes.comments} onClick={showCommentsHandler}>{props.commentsForThisPost.length} Comments</div>
         {/* {props.commentsForThisPost.length}  */}

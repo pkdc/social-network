@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import useGet from "../fetch/useGet";
 import UserEvent from "./UserEvent";
 
-function UserEvents({ userId }) {
+function UserEvents({ userId, refresh }) {
 
     const [eventData, setEventData] = useState([])
 
@@ -10,13 +10,13 @@ function UserEvents({ userId }) {
         fetch(`http://localhost:8080/group-event-member?userid=${userId}`)
             .then(resp => resp.json())
             .then(data => {
-                console.log("user event data", data)
+                console.log("showtime", data)
                 setEventData(data.data)
             })
             .catch(
                 err => console.log(err)
             );
-    }, []);
+    }, [refresh]);
 
 
     // console.log("data test", data.data)

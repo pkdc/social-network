@@ -33,7 +33,7 @@ function CreateGroupComment(props) {
         <Link to={`/profile/${userId}`} className={classes["author"]}>
             <Avatar className={classes["avatar"]} src={props.avatar} alt="" width={"50px"} />
         </Link>
-        <textarea className={classes.input} placeholder="Write a comment" ref={commentInput} />
+        <textarea className={classes.input} placeholder="Write a comment" ref={commentInput} required/>
         <div className={classes["functions"]}>
             <button className={classes.send}>
                 <img src={send} alt='' />

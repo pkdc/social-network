@@ -1,3 +1,4 @@
+import { useState } from "react";
 import AllGroups from "../group/AllGroups";
 import AllJoinedGroups from "../group/AllJoinedGroups";
 import CreateGroup from "../group/CreateGroup";
@@ -7,19 +8,24 @@ import JoinedGroups from "../group/JoinedGroup";
 import classes from './layout.module.css';
 
 function GroupPage() {
+    const [refresh, setRefresh] = useState(true)
+    
+    function creategroupupdate() {
+        refresh ? setRefresh(false) : setRefresh(true)
+    }
 
-return <div className={classes.container}>
-    <div className={classes.mid}>
-    {/* <CreateGroup></CreateGroup> */}
+    return <div className={classes.container}>
+        <div className={classes.mid}>
+            {/* <CreateGroup></CreateGroup> */}
 
-            <AllGroups></AllGroups>
+            <AllGroups refresh={refresh}></AllGroups>
+        </div>
+        <div className={classes.right}>
+            <CreateGroup onnewgroup={creategroupupdate}  ></CreateGroup>
+            {/* <JoinedGroups></JoinedGroups> */}
+        </div>
+
     </div>
-    <div className={classes.right}>
-        <CreateGroup></CreateGroup>
-        {/* <JoinedGroups></JoinedGroups> */}
-    </div>
-
-</div>
 
 }
 

@@ -26,7 +26,18 @@ let statusofcuruser ;
     // self
     const [publicity, setPublicity] = useState(true); // 1 true is public, 0 false is private
     const selfPublicNum = +localStorage.getItem("public");
+    const [pubCheck, setPubCheck] = useState(false)
 
+    useEffect(() => {
+        const targetUser = usersCtx.users.find(user => user.id === +userId);
+        console.log("checkingTargetUser", targetUser);
+        if (targetUser != undefined) {
+            if (targetUser.public!= 0 ) {
+    setPubCheck(true)
+            }
+
+        }
+    }, [userId]);
     console.log("stored publicity (profile)", selfPublicNum);
     useEffect(() => {
         selfPublicNum ? setPublicity(true) : setPublicity(false);
@@ -38,7 +49,7 @@ let statusofcuruser ;
     const wsCtx = useContext(WebSocketContext);
 
     const currUserId = localStorage.getItem("user_id");
-  
+
     // const wsCtx = useContext(WebSocketContext);
     // console.log("ws in profile: ",wsCtx.websocket);
     // wsCtx.websocket.onopen = function (){alert("ws is open")}
@@ -375,6 +386,9 @@ let statusofcuruser ;
                 <div className={classes.column}>
                     <div className={classes.row}>
                         <div className={classes.name}>{data.data[0].fname} {data.data[0].lname}</div>
+                        { !pubCheck && 
+               <div className={classes.privateeeeeee}>private</div> 
+               }
                         <div className={classes.btn}>
                             {followButton}
                             {messageButton}
@@ -420,35 +434,3 @@ let statusofcuruser ;
 export default Profile;
 
 
-
-
-
-//Left_panel
-// function Profile() {
-
-//     return <Card className={classes.container}> 
-
-//             <div className={classes.img}></div>
-//         <div className={classes.wrapper}>
-
-//         <div className={classes.username}>@username</div>
-//         <div className={classes.followers}>
-//             <div className={classes.follow}><span className={classes.count}>10k</span> followers</div>
-//             <div className={classes.follow}><span className={classes.count}>200</span> following</div>
-//         </div>
-//         </div>
- 
-
-
-//         {/* <div> */}
-//         <SmallButton>+ Follow</SmallButton>
-//         {/* <SmallButton>+ Message</SmallButton> */}
-//         {/* </div> */}
-      
-
-//     </Card>
-
-// }
-
-
-// export default Profile;

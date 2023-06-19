@@ -119,7 +119,7 @@ const RegForm = () => {
                 </figure>
                 <ImgUpload className={styles["reg-input"]} name="avatar" id="avatar" accept=".jpg, .jpeg, .png, .gif" text="Upload Image" onChange={avatarHandler}/>
                 <FormLabel className={styles["reg-label"]} htmlFor="nname">Nickname (Optional)</FormLabel>
-                <FormInput className={styles["reg-input"]} type="text" name="nname" id="nname" placeholder="Pikachu" value={enteredNickname} onChange={nicknameChangeHandler}/>
+                <input className={styles["reg-input"]} type="text" name="nname" id="nname" placeholder="Pikachu" value={enteredNickname} onChange={nicknameChangeHandler}/>
                 <FormLabel className={styles["reg-label"]} htmlFor="about">About Me (Optional)</FormLabel>
                 {/* <EmojiPicker /> */}
                 <FormTextarea className={styles["reg-input"]} name="about" id="about" placeholder="About me..." rows={5} value={enteredAbout} onChange={aboutChangeHandler}/>

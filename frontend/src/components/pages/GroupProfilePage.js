@@ -14,6 +14,8 @@ function GroupProfilePage() {
     const { state } = useLocation();
     const { id } = state; 
     const [ postData, setPostData ] = useState([])
+    const [refreshState, setRefreshState] = useState(false)
+    
 
     useEffect(() => {
         fetch(`http://localhost:8080/group-post?groupid=${id}`)
@@ -23,23 +25,16 @@ function GroupProfilePage() {
             .then(data => {
         
                 data.data.sort((a, b) => Date.parse(b.createdat) - Date.parse(a.createdat));
-                console.log("sorted post data: ", data);
                 setPostData(data.data)
             })
             .catch(
                 err => console.log(err)
             );
-    }, []);
+    }, [refreshState]);
 
-
-    // const { error, isLoaded, data } = useGet(`/group-post?groupid=${id}`)
-
-    // if (!isLoaded) return <div>Loading...</div>
-    // if (error) return <div>Error: {error.message}</div>
-
-    // data.data && data.data.sort((a, b) => Date.parse(b.createdat) - Date.parse(a.createdat));
-
-    // setPostData(data.data)
+    function refresh() {
+        refreshState ? setRefreshState(false) : setRefreshState(true) 
+    }
 
     function onCreatePostHandler(postData) {
 
@@ -62,7 +57,6 @@ function GroupProfilePage() {
                 .then(data => {
             
                     data.data.sort((a, b) => Date.parse(b.createdat) - Date.parse(a.createdat));
-                    console.log("sorted post data: ", data);
                     setPostData(data.data)
                 })
                 .catch(
@@ -77,15 +71,17 @@ function GroupProfilePage() {
     <div className={classes.container}>
         <div className={classes.mid}>
             <GroupProfile groupid={id}></GroupProfile>
-            <CreateGroupPost groupid={id} onCreatePost={onCreatePostHandler}/>
+            <CreateGroupPost   groupid={id} onCreatePost={onCreatePostHandler}/>
+            <button onClick={refresh}>refresh</button>
+            
             {postData && 
             <AllGroupPosts groupid={id} posts={postData}/>
             }
       
         </div>
         <div className={classes.right}>
-        <CreateEvent groupid={id}></CreateEvent>
-        <AllEvents groupid={id}></AllEvents>
+        <CreateEvent groupid={id} newEvent={refresh} ></CreateEvent>
+        <AllEvents groupid={id} refresh={refreshState}></AllEvents>
         </div>
     </div>
   

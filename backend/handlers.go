@@ -866,25 +866,24 @@ func UserFollowerHandler() http.HandlerFunc {
 
 			// ### CONNECT TO DATABASE ###
 
-			// db := db.DbConnect()
+			db := db.DbConnect()
 
-			// query := crud.New(db)
+			query := crud.New(db)
 
 			// ### ADD FOLLOWER TO DATABASE ###
-			// var newFollower crud.CreateFollowerParams
+			var newFollower crud.CreateFollowerParams
 
-			// newFollower.SourceID = int64(follower.SourceId)
-			// newFollower.TargetID = int64(follower.TargetId)
-			// newFollower.Status = int64(follower.Status)
-			// newFollower.ChatNoti = int64(follower.ChatNoti)
-			// // newFollower.LastMsgAt = follower.LastMsgAt
+			newFollower.SourceID = int64(follower.SourceId)
+			newFollower.TargetID = int64(follower.TargetId)
+			newFollower.Status = int64(follower.Status)
+			// newFollower.LastMsgAt = follower.LastMsgAt
 
-			// _, err = query.CreateFollower(context.Background(), newFollower)
+			_, err = query.CreateFollower(context.Background(), newFollower)
 
-			// if err != nil {
-			// 	fmt.Println("Unable to insert follower")
-			// 	Resp.Success = false
-			// }
+			if err != nil {
+				fmt.Println("Unable to insert follower")
+				Resp.Success = false
+			}
 
 		case http.MethodDelete:
 			// Declares the variables to store the follower details and handler response

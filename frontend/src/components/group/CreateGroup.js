@@ -6,7 +6,7 @@ import SmallButton from "../UI/SmallButton";
 
 import classes from './CreateGroup.module.css';
 
-function CreateGroup() {
+function CreateGroup(props) {
 
     const currUserId = localStorage.getItem("user_id");
     const currId = parseInt(currUserId);
@@ -56,6 +56,7 @@ function CreateGroup() {
                     console.log("created grp resp: ", data.success);
                     grpCtx.onNewGroupCreated();
                     jgrpCtx.join(data.createdid, data.creator);
+                    props.onnewgroup()
                 }
             })
             .catch(err => console.log(err))     
@@ -65,8 +66,8 @@ function CreateGroup() {
     return <Card className={classes.card}>
         Create Group
             <form className={classes.container} onSubmit={submitHandler}>
-        <input type="text" name="title" id="title" placeholder="Title" value={title} onChange={e => setTitle(e.target.value)}></input>
-        <textarea className={classes.content} name="description" id="description" placeholder="Description" value={description} onChange={e => setDescription(e.target.value)}></textarea>
+        <input type="text" name="title" id="title" placeholder="Title" value={title} onChange={e => setTitle(e.target.value)} required></input>
+        <textarea className={classes.content} name="description" id="description" placeholder="Description" value={description} onChange={e => setDescription(e.target.value)} ></textarea>
         <div className={classes.btn}>
             <SmallButton>Create</SmallButton> 
         </div>

@@ -16,14 +16,12 @@ function CreatePost(props) {
     const avatar = localStorage.getItem("avatar");
 
     const [uploadedImg, setUploadedImg] = useState("");
-    // const titleInput = useRef();
+   
     const contentInput = useRef();
     const privacyInputRef = useRef();
 
     function SubmitHandler(event) {
         event.preventDefault();
-        // console.log(contentInput.current.value);
-        // console.log(privacyInputRef.current.value);
 
         const enteredContent = contentInput.current.value
         const chosenPrivacy = +privacyInputRef.current.value;
@@ -52,24 +50,22 @@ function CreatePost(props) {
             setUploadedImg(reader.result);
         })
     };
+
     const privacyOptions = [
-        {value: 0, text: "Public"},
-        {value: 1, text: "Private"},
-        {value: 2, text: "Almost Private"}
+        {value: 0, text:  "Public Post"},
+        {value: 1, text: `Private Post`},
+        {value: 2, text: "Close Friends"}
     ];
 
     return <form className={classes.container} onSubmit={SubmitHandler}>
-        {/* <div>
-            <label htmlFor="title">Title</label>
-            <input type='text' required id="title" ref={titleInput}/>
-        </div> */}
+
         <Card>
             <div className={classes["author"]}>
             <Link to={`/profile/${userId}`} >
                 <Avatar className={classes["avatar"]} id={userId} src={avatar} alt="" width={"50px"}/>
             </Link> 
             <Link to={`/profile/${userId}`} className={classes["author"]}>
-                <div><p className={classes["details"]}>{`${first} ${last} (${nickname})`}</p></div>
+                <div className={classes["details"]}>{`${first} ${last}`}</div>
             </Link>
             </div>
             <div className={classes["content-container"]}>
