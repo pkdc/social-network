@@ -55,6 +55,39 @@ export const JoinedGroupContextProvider = (props) => {
             err => console.log(err)
         );
     };
+
+    const fetchGroupChatData = async (url) => {
+        // no need to sort coz the db is already returning items ordered by last-msg-time 
+        const resp = await fetch(url);
+        const data = await resp.json();
+        const [dataArr] = Object.values(data);
+        console.log(" data Arr", dataArr);
+        return dataArr;
+    };
+
+    const getGroupChatHandler = () => {
+        // (async function() {
+        //     const grpChatNotiArr = await fetchGroupChatNoti(`http://localhost:8080/group-member?userid=${selfId}`)
+        //     console.log("grp chat noti data", grpChatNotiArr);
+        // }())
+        (async function() {
+            try {
+                const grpChatNotiArr = await fetchGroupChatData(`http://localhost:8080/group-member?userid=${selfId}`);
+                console.log("grp chat noti Arr", grpChatNotiArr);
+
+                const grpChatItemArr = await fetchGroupChatData(`http://localhost:8080/group-chat-item`);
+                console.log("grp chat noti Arr", grpChatItemArr);
+                
+                // problem, need a different approach, since the returned data is a list of cur user joined groups
+                // and it's not right to store chat_noti in group
+                // maybe store everything in group chat item?
+
+            } catch(err) {
+                console.log(`${err} occurred during fetch`);
+            }
+        }());
+    };
+
     const requestToJoinHandler = (joinGrpId) => {
         getRequestedGrpsHandler()
         console.log("request to join user (context): ", +selfId);
@@ -164,8 +197,10 @@ export const JoinedGroupContextProvider = (props) => {
         if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(groupChatNotiPayloadObj));
     };
 
-    useEffect(() => getJoinedGrpsHandler(), []);
-
+    useEffect(() => {
+        getJoinedGrpsHandler();
+        getGroupChatHandler();
+    }, []);
     useEffect(() => getRequestedGrpsHandler(), []);
 
     return (
@@ -190,3 +225,4 @@ export const JoinedGroupContextProvider = (props) => {
         </JoinedGroupContext.Provider>
     );
 };
+
