@@ -19,6 +19,7 @@ const [groupData, setGroupData] = useState([])
         try {
           const response = await fetch(`http://localhost:8080/group`);
           const data = await response.json();
+          console.log("fklgkdlf",data.data)
           setGroupData(data.data);
         } catch (error) {
           console.log(error);

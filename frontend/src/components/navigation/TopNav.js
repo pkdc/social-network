@@ -43,6 +43,11 @@ const TopNav = () => {
 console.log("checkingwebsocket: ",wsCtx.newNotiObj);
     useEffect(() => {
         if (wsCtx.websocket !== null && wsCtx.newNotiObj !== null) {
+            let check = false
+            if (showNoti && !check){
+                setShowNoti(false)
+                check=true
+            }
             console.log("ws receives notiObj (TopNav): ", typeof(wsCtx.newNotiObj));
             console.log("ws receives noti type (TopNav): ", wsCtx.newNotiObj.type);
             console.log("before the overwrite: ", newNoti); 
@@ -65,31 +70,19 @@ console.log("checkingwebsocket: ",wsCtx.newNotiObj);
 
     useEffect(() => {
         if (newNoti) {
-            console.log("new notif not empty2")
-            // setNewNoti(prevNotifications => [...prevNotifications, wsCtx.newNotiObj]);
             let newarr = [wsCtx.newNotiObj, ...newNoti]
-            // setNewNoti(newarr)
-
-            console.log("newnotthing2 :", newNoti , "lastcurrentnotifarr newarr empty: ", newarr);
         if (newarr[0] != null) {
-
             localStorage.setItem("new_notif", JSON.stringify(Object.values(newarr)))
         }
         }
-    }, [newNoti])
+    }, [newNoti, showNotiBadge])
 
-    console.log("wsCtx.setNewNotiObj before and after getting (TopNav outside): ", wsCtx.newNotiObj);
-    console.log("newNoti (TopNav outside): ", newNoti);
     
     const onShowNoti = () => {
-        console.log("noti toggled!");
         setShowNoti(prev => !prev);
-        // setOpen(true)
         setShowNotiBadge(false)
         };
-    // const ReceivedNewNotiHandler = () => setNewNoti(null);
 
-    console.log("show noti centre", showNoti);
     
     return (
         <nav>
@@ -115,7 +108,7 @@ console.log("checkingwebsocket: ",wsCtx.newNotiObj);
                         </div>
                         {/* showNoti &&  */}
                         {newNoti&&showNoti && <NotificationCentre 
-                            newNoti={newNoti}
+                            // newNoti={newNoti}
                             // onReceivedNewNoti={ReceivedNewNotiHandler}
                             onClose={() => setShowNoti(false)}
                             />
