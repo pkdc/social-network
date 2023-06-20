@@ -64,12 +64,21 @@ nav {
 
 .lnk:hover, .lnk:focus {
     color: var(--ultra-violet-0);
+    border-top: 3px solid var(--ultra-violet-0);
+    margin-top: -3px;
 }
 
 .lnk:hover, .menu .lnk.active {
     color: var(--ultra-violet-0);
     border-top: 3px solid var(--ultra-violet-0);
     margin-top: -3px;
+}
+
+.active {
+    color: var(--ultra-violet-0);
+    border-top: 3px solid var(--ultra-violet-0);
+    margin-top: -3px;
+
 }
 
 .icons {

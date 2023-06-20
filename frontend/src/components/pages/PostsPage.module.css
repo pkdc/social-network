@@ -16,3 +16,9 @@
     color: grey;
 }
 
+.refresh {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+}

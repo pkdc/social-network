@@ -15,6 +15,7 @@ import { Navigate } from "react-router-dom";
 import JoinedGroups from "../group/JoinedGroup";
 import UserEvents from "../posts/UserEvents";
 import AllUsers from "../posts/allUsers";
+import refreshImg from "../assets/refresh.svg"
 
 const PostsPage = () => {
     const sessionUrl = "http://localhost:8080/session";
@@ -135,7 +136,7 @@ console.log("data23434re:",refreshState )
 
         <div className={styles.mid}>
             <CreatePost onCreatePost={createPostHandler} />
-            <button onClick={refresh}>refresh</button>
+            <div className={styles.refresh} onClick={refresh}><img src={refreshImg} alt=""></img></div>
             <AllPosts posts={postData} comments={commentData} onCreateCommentSuccessful={createCommentSuccessHandler} />
         </div>
 

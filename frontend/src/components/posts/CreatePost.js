@@ -7,6 +7,7 @@ import FormPostSelect from "../UI/FormPostSelect";
 import ImgUpload from "../UI/ImgUpload";
 import Avatar from "../UI/Avatar";
 import classes from './CreatePost.module.css';
+import img1 from '../assets/img.svg'
 
 function CreatePost(props) {
     const userId = +localStorage.getItem("user_id");
@@ -84,6 +85,7 @@ function CreatePost(props) {
             </div>
         
             <div className={classes.btn}>
+            
             <SmallButton>Post</SmallButton>
          </div>
         </Card>

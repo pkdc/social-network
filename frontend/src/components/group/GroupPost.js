@@ -5,6 +5,7 @@ import { useState } from 'react';
 import AllComments from '../posts/comments/AllComments';
 import CreateGroupComment from './CreateGroupComment';
 import { Link, useNavigate } from 'react-router-dom';
+import Avatar from '../UI/Avatar';
 
 function GroupPost(props) {
 
@@ -73,7 +74,8 @@ function GroupPost(props) {
 
     return <Card className={classes.container} >
         <div className={classes.user}>
-            <img src={profile} alt='' />
+            {/* <img src={profile} alt='' /> */}
+            <Avatar height={40}></Avatar>
             <div>
                 <Link to={`/profile/${props.author}`} className={classes.username}>{props.fname} {props.lname}</Link>
                 <div className={classes.date}>{created}</div>

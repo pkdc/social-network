@@ -31,3 +31,15 @@
 
 }
 
+.refresh {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    margin-top: 20px;
+    margin-right: 20px;
+    margin-bottom: -10px;
+
+    cursor: pointer;
+}

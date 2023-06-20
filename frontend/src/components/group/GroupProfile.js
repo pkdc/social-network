@@ -10,6 +10,7 @@ import { GroupsContext } from "../store/groups-context";
 import { JoinedGroupContext } from "../store/joined-group-context";
 import { WebSocketContext } from "../store/websocket-context";
 import { UsersContext } from "../store/users-context";
+import groupimg from '../assets/groupimg.jpg'
 
 function GroupProfile({ groupid }) {
 
@@ -91,7 +92,8 @@ function GroupProfile({ groupid }) {
     return <Card className={classes.container}>
         {data.data && data.data.map((group) => (
             <div className={classes.groupContainer} key={group.id} id={group.id}>
-                <div className={classes.img}></div>
+                <div className={classes.img}> <img src={groupimg} ></img> </div>
+
                 <div className={classes.wrapper}>
                     <div className={classes.row}>
                         <div className={classes.groupname}>{group.title}</div>

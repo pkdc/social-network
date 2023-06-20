@@ -8,6 +8,7 @@ import CreateGroupPost from "../group/CreateGroupPost";
 import GroupEvent from "../group/GroupEvent";
 import GroupProfile from "../group/GroupProfile";
 import classes from './layout.module.css';
+import refreshImg from "../assets/refresh.svg"
 import useGet from "../fetch/useGet";
 
 function GroupProfilePage() {
@@ -72,7 +73,8 @@ function GroupProfilePage() {
         <div className={classes.mid}>
             <GroupProfile groupid={id}></GroupProfile>
             <CreateGroupPost   groupid={id} onCreatePost={onCreatePostHandler}/>
-            <button onClick={refresh}>refresh</button>
+            <div className={classes.refresh} onClick={refresh}><img src={refreshImg} alt=""></img></div>
+
             
             {postData && 
             <AllGroupPosts groupid={id} posts={postData}/>

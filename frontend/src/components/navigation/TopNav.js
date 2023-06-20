@@ -7,9 +7,6 @@ import profile from "../assets/profileSmall.svg";
 import notif from "../assets/notifications5.svg";
 import chatIcon from "../assets/chat5.svg";
 import Avatar from "../UI/Avatar";
-// import AuthContext from "../store/auth-context";
-// import Modal from "../group/modal";
-// import NotifModal from "./NotifModal";
 import { AuthContext } from "../store/auth-context";
 import { WebSocketContext } from "../store/websocket-context";
 import NotificationCentre from "../notification/NotificationCentre";
@@ -18,6 +15,7 @@ const TopNav = () => {
     const [showNoti, setShowNoti] = useState(false);
     const [newNoti, setNewNoti] = useState([]);
     const [showNotiBadge , setShowNotiBadge] = useState(false)
+    const [ active, setActive ] = useState()
 
     const navigate = useNavigate();
 
@@ -82,8 +80,6 @@ console.log("checkingwebsocket: ",wsCtx.newNotiObj);
         setShowNoti(prev => !prev);
         setShowNotiBadge(false)
         };
-
-    
     return (
         <nav>
             <div className={styles["top-nav"]}>
@@ -92,7 +88,7 @@ console.log("checkingwebsocket: ",wsCtx.newNotiObj);
                 <div className={styles.menu}>
                     <Link className={styles.lnk} to="/">Home</Link>
                     <Link className={styles.lnk} to="/group">Groups</Link>
-                    <Link className={styles.lnk} to="/messanger">Messenger</Link>
+                    {/* <Link className={styles.lnk} to="/messenger">Messenger</Link> */}
                     <Link className={styles.lnk} to={`/profile/${currUserId}`}>Profile</Link>
                 </div>
 

@@ -31,7 +31,7 @@ function CreateGroupComment(props) {
 
     return <form className={classes.inputWrapper} onSubmit={SubmitHandler}>
         <Link to={`/profile/${userId}`} className={classes["author"]}>
-            <Avatar className={classes["avatar"]} src={props.avatar} alt="" width={"50px"} />
+            <Avatar className={classes["avatar"]} src={props.avatar} alt="" width={"35px"} />
         </Link>
         <textarea className={classes.input} placeholder="Write a comment" ref={commentInput} required/>
         <div className={classes["functions"]}>

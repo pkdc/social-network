@@ -42,7 +42,10 @@
     display: flex;
     justify-content: flex-end;
     padding-bottom: 10px;
-    border-bottom: 1px solid var(--antiflash-white);
+    border-bottom: 1px solid rgba(128, 128, 128, 0.153);
+
+    font-size: 14px;
+    color: grey;
 }
 
 .comments:hover {
