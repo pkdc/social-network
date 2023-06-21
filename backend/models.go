@@ -300,6 +300,9 @@ type PrivateChatItemPayload struct {
 type GroupChatItemStruct struct {
 	Id        int    `json:"id"`
 	GroupId   int    `json:"groupid"`
+	SourceId  int    `json:"sourceid"`
+	TargetId  int    `json:"targetid"`
+	ChatNoti  int    `json:"chat_noti"`
 	LastMsgAt string `json:"last_msg_at"`
 }
 
