@@ -2349,7 +2349,7 @@ func GroupEventMemberHandler() http.HandlerFunc {
 					oneevent.Title = selectedEvent.Title
 					oneevent.Description = selectedEvent.Description
 					oneevent.Date = selectedEvent.Date.String()
-					oneevent.GroupId=int(selectedEvent.GroupID)
+					oneevent.GroupId = int(selectedEvent.GroupID)
 					// s, _ := json.MarshalIndent(oneevent, "", "\t")
 					// fmt.Print("oneevent:=  ", string(s))
 					Resp2.Data = append(Resp2.Data, oneevent)
@@ -2720,7 +2720,6 @@ func checkFollower(targetid, sourceid int) int {
 	return 0
 }
 
-
 func GroupRequestByUserHandler() http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -2977,6 +2976,9 @@ func GroupChatItemHandler() http.HandlerFunc {
 
 				newChatItem.Id = int(chatItem.ID)
 				newChatItem.GroupId = int(chatItem.GroupID)
+				newChatItem.SourceId = int(chatItem.SourceID)
+				newChatItem.TargetId = int(chatItem.TargetID)
+				newChatItem.ChatNoti = int(chatItem.ChatNoti)
 				newChatItem.LastMsgAt = chatItem.LastMsgAt.String()
 
 				Resp.Data = append(Resp.Data, newChatItem)

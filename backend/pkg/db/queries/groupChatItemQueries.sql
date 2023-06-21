@@ -16,7 +16,7 @@ RETURNING *;
 
 -- name: UpdateGroupChatItem :one
 UPDATE group_chat_item
-set last_msg_at = ?
+set last_msg_at = ? AND source_id = ? AND target_id = ? 
 WHERE group_id = ?
 RETURNING *;
 
