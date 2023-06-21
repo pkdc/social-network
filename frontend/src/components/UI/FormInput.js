@@ -5,7 +5,7 @@ const FormInput = (props) => {
     
     return (
         <div className={styles["input-container"]}>
-           <input className={classes}
+           <input required className={classes}
                     onChange={props.onChange}
                     id={props.id}
                     type={props.type}

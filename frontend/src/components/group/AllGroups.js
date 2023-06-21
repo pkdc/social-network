@@ -2,20 +2,35 @@ import Group from "./Group";
 
 import classes from './AllGroups.module.css';
 import useGet from "../fetch/useGet";
+import { useEffect, useState } from "react";
 
-function AllGroups() {
+function AllGroups({refresh}) {
 
   const currUserId = localStorage.getItem("user_id");
-
+const [groupData, setGroupData] = useState([])
     // const { error , isLoaded, data } = useGet(`/group?userid=${currUserId}`)
-    const { error , isLoaded, data } = useGet(`/group`)
+    // const { error , isLoaded, data } = useGet(`/group`)
 
 
-      if (!isLoaded) return <div>Loading...</div>
-      if (error) return <div>Error: {error.message}</div>
+    //   if (!isLoaded) return <div>Loading...</div>
+    //   if (error) return <div>Error: {error.message}</div>
+    useEffect(() => {
+      async function fetchData() {
+        try {
+          const response = await fetch(`http://localhost:8080/group`);
+          const data = await response.json();
+          console.log("fklgkdlf",data.data)
+          setGroupData(data.data);
+        } catch (error) {
+          console.log(error);
+        }
+      }
+    
+      fetchData();
+    }, [refresh]);
 
     return <div className={classes.container}>
-        {data.data && data.data.map((group) => (
+        {groupData && groupData.map((group) => (
          <Group
         key={group.id}
         grpid={group.id}

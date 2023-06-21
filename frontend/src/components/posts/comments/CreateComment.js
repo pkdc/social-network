@@ -50,25 +50,24 @@ function CreateComment(props) {
 
     return <form className={classes.inputWrapper} onSubmit={SubmitHandler}>
         <Link to={`/profile/${userId}`} className={classes["author"]}>
-            <Avatar className={classes["avatar"]} id={userId} src={props.avatar} alt="" width={"50px"}/>
+            <Avatar className={classes["avatar"]} id={userId} src={props.avatar} alt="" width={"35px"} />
         </Link>
-        <textarea className={classes.input} placeholder="Write a comment" ref={commentInput}/>      
+        <textarea className={classes.input} placeholder="Write a comment" ref={commentInput} required />
         <div className={classes["functions"]}>
             <div className={classes["attach"]}>
-            {!uploadedCommentImg && <ImgUpload name={`comment-image-${props.pid}`} id={`comment-image-${props.pid}`} accept=".jpg, .jpeg, .png, .gif" text="Attach" onChange={CommentImgUploadHandler}/>}
+                {!uploadedCommentImg && <ImgUpload name={`comment-image-${props.pid}`} id={`comment-image-${props.pid}`} accept=".jpg, .jpeg, .png, .gif" text="Attach" onChange={CommentImgUploadHandler} />}
             </div>
             <button className={classes.send}>
                 <img src={send} alt='' />
             </button>
         </div>
-        
-        {uploadedCommentImg && 
+
+        {uploadedCommentImg &&
             <figure className={classes["comment-img-preview"]}>
-                <img src={uploadedCommentImg} height={"35px"}/>
+                <img src={uploadedCommentImg} height={"35px"} />
             </figure>
         }
     </form>
- }
+}
 
- export default CreateComment;
- 
+export default CreateComment;

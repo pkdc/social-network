@@ -12,21 +12,35 @@ import { WebSocketContext } from "../store/websocket-context";
 import classes from './Profile.module.css';
 import FollowerModal from "./followerModal";
 import FollowingModal from "./followingModal";
+import lock from '../assets/lock7.svg'
+import Avatar from "../UI/Avatar";
+import SmallAvatar from "../UI/SmallAvatar";
 function Profile({ userId }) {
-    
-    const [ followerOpen, setFollowerOpen ] = useState(false)
-    const [ followingOpen, setFollowingOpen ] = useState(false)
-    const [ followerData, setFollowerData ] = useState([])
-    const [ followingData, setFollowingData ] = useState([])
-    const [ isFollower, setIsFollower ] = useState(false)
+
+    const [followerOpen, setFollowerOpen] = useState(false)
+    const [followingOpen, setFollowingOpen] = useState(false)
+    const [followerData, setFollowerData] = useState([])
+    const [followingData, setFollowingData] = useState([])
+    const [isFollower, setIsFollower] = useState(false)
     // get stored publicity from localStorage
     // let selfPublicStatus;
     // selfPublicNum === 0 ? selfPublicStatus = false : selfPublicStatus = true;
-let statusofcuruser ;
+    let statusofcuruser;
     // self
     const [publicity, setPublicity] = useState(true); // 1 true is public, 0 false is private
     const selfPublicNum = +localStorage.getItem("public");
+    const [pubCheck, setPubCheck] = useState(false)
 
+    useEffect(() => {
+        const targetUser = usersCtx.users.find(user => user.id === +userId);
+        console.log("checkingTargetUser", targetUser);
+        if (targetUser != undefined) {
+            if (targetUser.public != 0) {
+                setPubCheck(true)
+            }
+
+        }
+    }, [userId]);
     console.log("stored publicity (profile)", selfPublicNum);
     useEffect(() => {
         selfPublicNum ? setPublicity(true) : setPublicity(false);
@@ -38,7 +52,7 @@ let statusofcuruser ;
     const wsCtx = useContext(WebSocketContext);
 
     const currUserId = localStorage.getItem("user_id");
-  
+
     // const wsCtx = useContext(WebSocketContext);
     // console.log("ws in profile: ",wsCtx.websocket);
     // wsCtx.websocket.onopen = function (){alert("ws is open")}
@@ -77,12 +91,12 @@ let statusofcuruser ;
             credentials: "include",
             mode: "cors",
             headers: {
-              'Content-Type': 'application/json'
-          },
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify(data)
-          };
-        
-          fetch('http://localhost:8080/user-follower', reqOptions)
+        };
+
+        fetch('http://localhost:8080/user-follower', reqOptions)
             .then(resp => resp.json())
             .then(data => {
                 console.log("user follower data", data);
@@ -91,10 +105,10 @@ let statusofcuruser ;
                 }
             })
             .catch(err => {
-              console.log(err);
+                console.log(err);
             })
     };
-    
+
     useEffect(() => {
         if (wsCtx.newNotiFollowReplyObj) {
             if (wsCtx.newNotiFollowReplyObj.accepted) {
@@ -107,10 +121,10 @@ let statusofcuruser ;
 
                 console.log("follow user id", wsCtx.newNotiFollowReplyObj.sourceid);
                 console.log("cur user is following (profile)", followingCtx.following);
-                const targetId =  wsCtx.newNotiFollowReplyObj.sourceid;
+                const targetId = wsCtx.newNotiFollowReplyObj.sourceid;
                 console.log("targetid", targetId)
                 console.log("current user", currUserId)
-    
+
                 storeFollow(targetId);
             } else {
                 setCurrentlyFollowing(false);
@@ -118,7 +132,7 @@ let statusofcuruser ;
             }
         }
         wsCtx.setNewNotiFollowReplyObj(null);
-    } , [wsCtx.newNotiFollowReplyObj]);
+    }, [wsCtx.newNotiFollowReplyObj]);
 
     const followHandler = (e) => {
         const followUser = usersCtx.users.find(user => user.id === +e.target.id);
@@ -152,108 +166,108 @@ let statusofcuruser ;
     };
 
     const setPublicityHandler = (e) => {
-   
-        if (e.target.checked ){
+
+        if (e.target.checked) {
             setPublicity(false); // private
         } else {
             setPublicity(true);
             // usersCtx.onPrivacyChange(currUserId, 1);
         }
-        
+
         let publicityNum;
-        if (e.target.checked ){
+        if (e.target.checked) {
             publicityNum = 0
         } else {
             publicityNum = 1;
         }
-        console.log({publicityNum})
+        console.log({ publicityNum })
         localStorage.setItem("public", publicityNum);
 
         // post to store publicity to db
-        const data = { 
+        const data = {
             // Define the data to send in the request body
             targetid: parseInt(userId),
-            public : publicityNum,
+            public: publicityNum,
         };
-        
-        fetch('http://localhost:8080/privacy', 
-        {
-            method: 'POST',
-            credentials: "include",
-            mode: 'cors',
-            body: JSON.stringify(data),
-            headers: { 
-                'Content-Type': 'application/json' 
-            }
-        }).then(() => {
-            console.log("privacy changed")
-        })
+
+        fetch('http://localhost:8080/privacy',
+            {
+                method: 'POST',
+                credentials: "include",
+                mode: 'cors',
+                body: JSON.stringify(data),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            }).then(() => {
+                console.log("privacy changed")
+            })
     };
-    
+
 
     useEffect(() => {
-    fetch(`http://localhost:8080/user-follow-status?tid=${userId}&sid=${currUserId}`)
-    .then(response => response.text())
-    .then(data => {
-        console.log("cf: ",data )
-        if (data == "trueclosefriend" || data == "true"){
-            setRequestedToFollow(true)
-        }else {
-            setRequestedToFollow(false)
-        }
-        if (data =="trueclosefriend" || data== "falseclosefriend"){
-            setCloseFriend(true)
-        }else { 
-            setCloseFriend(false)
-        }
-   
-    }).catch(error => {
-                console.log({error})
-    });
-    
+        fetch(`http://localhost:8080/user-follow-status?tid=${userId}&sid=${currUserId}`)
+            .then(response => response.text())
+            .then(data => {
+                console.log("cf: ", data)
+                if (data == "trueclosefriend" || data == "true") {
+                    setRequestedToFollow(true)
+                } else {
+                    setRequestedToFollow(false)
+                }
+                if (data == "trueclosefriend" || data == "falseclosefriend") {
+                    setCloseFriend(true)
+                } else {
+                    setCloseFriend(false)
+                }
+
+            }).catch(error => {
+                console.log({ error })
+            });
+
     }, [userId]);
 
 
     //Get followers
     useEffect(() => {
         fetch(`http://localhost:8080/user-follower?id=${userId}`)
-        .then(resp => resp.json())
-        .then(data => {
-          setFollowerData(data.data)
-        })
-        .catch(err => {
-          console.log(err);
-        })
+            .then(resp => resp.json())
+            .then(data => {
+                setFollowerData(data.data)
+            })
+            .catch(err => {
+                console.log(err);
+            })
     }, [userId]);
 
     //Get following
     useEffect(() => {
         fetch(`http://localhost:8080/user-following?id=${userId}`)
-        .then(resp => resp.json())
-        .then(data => {
-          setFollowingData(data.data)
-        })
-        .catch(err => {
-          console.log(err);
-        })
+            .then(resp => resp.json())
+            .then(data => {
+                setFollowingData(data.data)
+            })
+            .catch(err => {
+                console.log(err);
+            })
     }, [userId]);
- 
-    const { error , isLoaded, data } = useGet(`/user?id=${userId}`)
+
+    const { error, isLoaded, data } = useGet(`/user?id=${userId}`)
     if (data.data !== undefined) {
 
-        if( data.data[0].public == 0 ){
+        if (data.data[0].public == 0) {
             localStorage.setItem('isChecked', true);
-        }else {
+        } else {
             localStorage.setItem('isChecked', false);
         }
     }
     //  console.log("user data (profile)", data.data)
-      if (!isLoaded) return <div>Loading...</div>
-      if (error) return <div>Error: {error.message}</div>
-    
+    if (!isLoaded) return <div>Loading...</div>
+    if (error) return <div>Error: {error.message}</div>
 
-    
-    
+
+
+
     // delete follower from db
     const deleteFollow = (targetId) => {
         console.log("targetid (deleteFollow)", targetId)
@@ -270,12 +284,12 @@ let statusofcuruser ;
             credentials: "include",
             mode: "cors",
             headers: {
-              'Content-Type': 'application/json'
-          },
+                'Content-Type': 'application/json'
+            },
             body: JSON.stringify(data)
-          };
-        
-          fetch('http://localhost:8080/user-follower', reqOptions)
+        };
+
+        fetch('http://localhost:8080/user-follower', reqOptions)
             .then(resp => resp.json())
             .then(data => {
                 console.log(data);
@@ -284,46 +298,46 @@ let statusofcuruser ;
                 }
             })
             .catch(err => {
-              console.log(err);
+                console.log(err);
             })
     };
 
     function closeFriendHandler(e) {
-        if (isCloseFriend){
+        if (isCloseFriend) {
             setCloseFriend(false)
 
-        }else {
+        } else {
             setCloseFriend(true)
         }
-        console.log("closefriend event: ",e)
-       
-            const data = {
-                sourceid:parseInt(e.target.id),
-                targetid:  parseInt(currUserId),
-            };
-    console.log("closefriend event: ", data)
-            const cfOptions = {
-                method: "POST",
-                credentials: "include",
-                mode: "cors",
-                headers: {
-                  'Content-Type': 'application/json'
-              },
-                body: JSON.stringify(data)
-              };
-            
-              fetch('http://localhost:8080/close-friend', cfOptions)
-                .then(resp => resp.json())
-                .then(data => {
-                    console.log("closefriend event: ",data);
-                    if (data.success) {
-                        console.log("closefriendchanges")
-                    }
-                })
-                .catch(err => {
-                  console.log("closefriend event: ",err);
-                })
-         
+        console.log("closefriend event: ", e)
+
+        const data = {
+            sourceid: parseInt(e.target.id),
+            targetid: parseInt(currUserId),
+        };
+        console.log("closefriend event: ", data)
+        const cfOptions = {
+            method: "POST",
+            credentials: "include",
+            mode: "cors",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        };
+
+        fetch('http://localhost:8080/close-friend', cfOptions)
+            .then(resp => resp.json())
+            .then(data => {
+                console.log("closefriend event: ", data);
+                if (data.success) {
+                    console.log("closefriendchanges")
+                }
+            })
+            .catch(err => {
+                console.log("closefriend event: ", err);
+            })
+
     }
 
 
@@ -342,14 +356,14 @@ let statusofcuruser ;
             followButton = <div className={classes.followbtn} id={userId}>Requested</div>
         } else {
             followButton = <div className={classes.followbtn} id={userId} onClick={followHandler}>+ Follow</div>
-        }       
+        }
         messageButton = <GreyButton>Message</GreyButton>
-            closeFriend = <input className={classes.checkbox} type="checkbox" id={userId} checked={isCloseFriend} onClick={closeFriendHandler} />    
-            closeFriendText = <div>close friend</div>    
-            
+        closeFriend = <input className={classes.checkbox} type="checkbox" id={userId} checked={isCloseFriend} onClick={closeFriendHandler} />
+        closeFriendText = <div>close friend</div>
+
     }
 
-   
+
 
     function handleFollowerClick() {
         setFollowerOpen(true)
@@ -361,7 +375,7 @@ let statusofcuruser ;
 
     return <div className={classes.container}>
         <div className={classes.private}>
-            {currUserId === userId  && data&&
+            {currUserId === userId && data &&
                 <ToggleSwitch
                     label={"Private"}
                     value={"Private"}
@@ -371,10 +385,17 @@ let statusofcuruser ;
         </div>
         <Card>
             <div className={classes.wrapper}>
-                <div className={classes.img}></div>
+                {/* <div className={classes.img}></div> */}
+                {/* <Avatar height={100}></Avatar> */}
+                <SmallAvatar height={100}></SmallAvatar>
                 <div className={classes.column}>
                     <div className={classes.row}>
+                        <div className={classes.row}>
                         <div className={classes.name}>{data.data[0].fname} {data.data[0].lname}</div>
+                        {!pubCheck &&
+                            <div><img src={lock} alt=''></img> </div>
+                        }
+                        </div>
                         <div className={classes.btn}>
                             {followButton}
                             {messageButton}
@@ -387,29 +408,29 @@ let statusofcuruser ;
                         <div className={classes.follow} onClick={handleFollowingClick}><span className={classes.count}>{followingData && followingData.length}{!followingData && 0}</span> following</div>
                     </div>
                     <div>{data.data[0].about}</div>
-                <div className={classes.closeFriend}>
-                    {isFollower &&
-                    closeFriendText
-                    }
-                    {isFollower && 
-                    closeFriend}
+                    <div className={classes.closeFriend}>
+                        {isFollower &&
+                            closeFriendText
+                        }
+                        {isFollower &&
+                            closeFriend}
 
-                </div>
+                    </div>
 
                 </div>
 
             </div>
             {followerOpen && followerData &&
-            <FollowerModal 
-            onClose={() => setFollowerOpen(false)}
-            followers={followerData}
-            ></FollowerModal>
+                <FollowerModal
+                    onClose={() => setFollowerOpen(false)}
+                    followers={followerData}
+                ></FollowerModal>
             }
             {followingOpen && followingData &&
-            <FollowingModal
-            onClose={() => setFollowingOpen(false)}
-            following={followingData}
-            ></FollowingModal>
+                <FollowingModal
+                    onClose={() => setFollowingOpen(false)}
+                    following={followingData}
+                ></FollowingModal>
             }
 
         </Card>
@@ -420,35 +441,3 @@ let statusofcuruser ;
 export default Profile;
 
 
-
-
-
-//Left_panel
-// function Profile() {
-
-//     return <Card className={classes.container}> 
-
-//             <div className={classes.img}></div>
-//         <div className={classes.wrapper}>
-
-//         <div className={classes.username}>@username</div>
-//         <div className={classes.followers}>
-//             <div className={classes.follow}><span className={classes.count}>10k</span> followers</div>
-//             <div className={classes.follow}><span className={classes.count}>200</span> following</div>
-//         </div>
-//         </div>
- 
-
-
-//         {/* <div> */}
-//         <SmallButton>+ Follow</SmallButton>
-//         {/* <SmallButton>+ Message</SmallButton> */}
-//         {/* </div> */}
-      
-
-//     </Card>
-
-// }
-
-
-// export default Profile;

@@ -26,3 +26,10 @@
     /* border: 1px solid black;
     border-radius: 20px; */
 }
+
+.refresh {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+}

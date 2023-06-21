@@ -9,7 +9,7 @@ import ImgUpload from "../UI/ImgUpload";
 import { AuthContext } from "../store/auth-context";
 import styles from "./RegForm.module.css";
 
-const RegForm = () => {    
+const RegForm = () => {
     const imageSrc = "../../images/";
     let defaultImagePath = "default_avatar.jpg";
 
@@ -23,13 +23,19 @@ const RegForm = () => {
     const [uploadedImg, setUploadedImg] = useState("");
     const [enteredNickname, setEnteredNickname] = useState("");
     const [enteredAbout, setEnteredAbout] = useState("");
+    const [regErrMsg, setRegErrMsg] = useState("");
 
     const navigate = useNavigate();
 
     useEffect(() => {
-        ctx.regSuccess && navigate("/login", {replace: true})
+        ctx.regSuccess && navigate("/login", { replace: true })
     }, [ctx.regSuccess]);
-    
+
+    useEffect(() => {
+        setRegErrMsg(ctx.errMsg);
+        // navigate("/reg", { replace: true });
+    }, [ctx.errMsg]);
+
     const emailChangeHandler = (e) => {
         setEnteredEmail(e.target.value);
         console.log(enteredEmail);
@@ -70,7 +76,7 @@ const RegForm = () => {
         setEnteredAbout(e.target.value);
         console.log(enteredAbout);
     };
-        
+
     const submitHandler = (e) => {
         e.preventDefault();
         const regPayloadObj = {
@@ -86,7 +92,7 @@ const RegForm = () => {
         console.log(regPayloadObj);
 
         ctx.onReg(regPayloadObj);
-        
+
         setEnteredEmail("");
         setEnteredPw("");
         setEnteredFName("");
@@ -96,38 +102,41 @@ const RegForm = () => {
         setEnteredNickname("");
         setEnteredAbout("");
         // navigate("/login", {replace: true});
+
+        ctx.setErrMsg("");
     };
 
     return (
         <div className={styles.container}>
             <h1 className={styles["title"]}>Register</h1>
+            <h2>{regErrMsg}</h2>
             <Form className={styles["reg-form"]} onSubmit={submitHandler}>
                 <FormLabel className={styles["reg-label"]} htmlFor="email">Email</FormLabel>
-                <FormInput className={styles["reg-input"]} type="email" name="email" id="email" placeholder="abc@mail.com" value={enteredEmail} onChange={emailChangeHandler}/>
+                <FormInput className={styles["reg-input"]} type="email" name="email" id="email" placeholder="abc@mail.com" value={enteredEmail} onChange={emailChangeHandler} />
                 <FormLabel className={styles["reg-label"]} htmlFor="password">Password</FormLabel>
-                <FormInput className={styles["reg-input"]} type="password" name="password" id="password" placeholder="Password" value={enteredPw} onChange={pwChangeHandler}/>
+                <FormInput className={styles["reg-input"]} type="password" name="password" id="password" placeholder="Password" value={enteredPw} onChange={pwChangeHandler} />
                 <FormLabel className={styles["reg-label"]} htmlFor="fname">First Name</FormLabel>
-                <FormInput className={styles["reg-input"]} type="text" name="fname" id="fname" placeholder="John" value={enteredFName} onChange={fNameChangeHandler}/>
+                <FormInput className={styles["reg-input"]} type="text" name="fname" id="fname" placeholder="John" value={enteredFName} onChange={fNameChangeHandler} />
                 <FormLabel className={styles["reg-label"]} htmlFor="lname">Last Name</FormLabel>
-                <FormInput className={styles["reg-input"]} type="text" name="lname" id="lname" placeholder="Smith" value={enteredLName} onChange={lNameChangeHandler}/>
+                <FormInput className={styles["reg-input"]} type="text" name="lname" id="lname" placeholder="Smith" value={enteredLName} onChange={lNameChangeHandler} />
                 <FormLabel className={styles["reg-label"]} htmlFor="Dob">Date of Birth</FormLabel>
-                <FormInput className={styles["reg-input"]} type="date" name="Dob" id="Dob" value={enteredDob} onChange={dobChangeHandler}/>
+                <FormInput className={styles["reg-input"]} type="date" name="Dob" id="Dob" value={enteredDob} onChange={dobChangeHandler} />
                 <FormLabel className={styles["reg-label"]} >Avatar (Optional)</FormLabel>
                 <figure>
-                    {!uploadedImg && <img src={require("../../images/"+`${defaultImagePath}`)} alt="Default Image" className={styles["img-preview"]} width={"250px"}/>}
-                    {uploadedImg && <img src={uploadedImg} className={styles["img-preview"]} width={"250px"}/>}
+                    {!uploadedImg && <img src={require("../../images/" + `${defaultImagePath}`)} alt="Default Image" className={styles["img-preview"]} width={"250px"} />}
+                    {uploadedImg && <img src={uploadedImg} className={styles["img-preview"]} width={"250px"} />}
                 </figure>
-                <ImgUpload className={styles["reg-input"]} name="avatar" id="avatar" accept=".jpg, .jpeg, .png, .gif" text="Upload Image" onChange={avatarHandler}/>
+                <ImgUpload className={styles["reg-input"]} name="avatar" id="avatar" accept=".jpg, .jpeg, .png, .gif" text="Upload Image" onChange={avatarHandler} />
                 <FormLabel className={styles["reg-label"]} htmlFor="nname">Nickname (Optional)</FormLabel>
-                <FormInput className={styles["reg-input"]} type="text" name="nname" id="nname" placeholder="Pikachu" value={enteredNickname} onChange={nicknameChangeHandler}/>
+                <input className={styles["reg-input"]} type="text" name="nname" id="nname" placeholder="Pikachu" value={enteredNickname} onChange={nicknameChangeHandler} />
                 <FormLabel className={styles["reg-label"]} htmlFor="about">About Me (Optional)</FormLabel>
                 {/* <EmojiPicker /> */}
-                <FormTextarea className={styles["reg-input"]} name="about" id="about" placeholder="About me..." rows={5} value={enteredAbout} onChange={aboutChangeHandler}/>
+                <FormTextarea className={styles["reg-input"]} name="about" id="about" placeholder="About me..." rows={5} value={enteredAbout} onChange={aboutChangeHandler} />
                 <LgButton className={styles["sub-btn"]} type="submit">Register</LgButton>
                 <p>Already have an account? <Link to="/login">Login</Link></p>
             </Form>
         </div>
-        
+
     )
 };
 

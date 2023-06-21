@@ -72,3 +72,10 @@
 .btn:hover {
     background-color: var(--ultra-violet, purple);
 }
+
+
+.img img {
+    height: 100px;
+    /* width: 100px; */
+    border-radius: 50%;
+}

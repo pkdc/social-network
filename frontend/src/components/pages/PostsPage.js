@@ -1,4 +1,4 @@
-import React, { useParams,useEffect, useState } from "react";
+import React, { useParams, useEffect, useState } from "react";
 import FormLabel from "../UI/FormLabel";
 import FormInput from "../UI/FormInput";
 import FormTextarea from "../UI/FormTextarea";
@@ -14,6 +14,8 @@ import useGet from "../fetch/useGet";
 import { Navigate } from "react-router-dom";
 import JoinedGroups from "../group/JoinedGroup";
 import UserEvents from "../posts/UserEvents";
+import AllUsers from "../posts/allUsers";
+import refreshImg from "../assets/refresh.svg"
 
 const PostsPage = () => {
     const sessionUrl = "http://localhost:8080/session";
@@ -21,45 +23,38 @@ const PostsPage = () => {
     const postCommentUrl = "http://localhost:8080/post-comment";
     const [postData, setPostData] = useState([]);
     const [commentData, setCommentData] = useState([]);
-
-    // useGet(sessionUrl);
+    const [refreshState, setRefreshState] = useState(false)
 
     // get posts
     let userId = localStorage.getItem("user_id")
     console.log(userId)
     useEffect(() => {
         fetch(`http://localhost:8080/post?id=${userId}`)
-        .then(resp => resp.json())
-        .then(data => {
-            // console.log("post data: ", data)
-            // setPostData(data) // no need to sort
-            // console.log("parsed 0", Date.parse(data[0].createdat));
-            // console.log("parsed 1", Date.parse(data[1].createdat));
-            data.sort((a, b) => Date.parse(b.createdat) - Date.parse(a.createdat));
-            // console.log("sorted post data: ", data);
-            setPostData(data);
-        })
-        .catch(
-            err => console.log(err)
-        );
-    }, []);
+            .then(resp => resp.json())
+            .then(data => {
+                console.log("data23434re: ", data)
+              
+                data.sort((a, b) => Date.parse(b.createdat) - Date.parse(a.createdat));
+                setPostData(data);
+            })
+            .catch(
+                err => console.log(err)
+            );
+    }, [refreshState]);
 
     // get comments
     useEffect(() => {
         fetch(postCommentUrl)
-        .then(resp => resp.json())
-        .then(data => {
-            // console.log("post page raw comment data: ", data)
-            // setCommentData(data);
-            data.sort((a, b) => Date.parse(a.createdat) - Date.parse(b.createdat)); // ascending order
-            // console.log("post page sorted comment data: ", data)
-            setCommentData(data);
-        })
-        .catch(
-            err => console.log(err)
-        );
-    }, []);
-    // console.log("post page commentData (outside)", commentData);
+            .then(resp => resp.json())
+            .then(data => {
+             
+                data.sort((a, b) => Date.parse(a.createdat) - Date.parse(b.createdat)); // ascending order
+                setCommentData(data);
+            })
+            .catch(
+                err => console.log(err)
+            );
+    }, [refreshState]);
 
     // create post
     const createPostHandler = (createPostPayloadObj) => {
@@ -69,91 +64,77 @@ const PostsPage = () => {
             body: JSON.stringify(createPostPayloadObj)
         };
         fetch(`http://localhost:8080/post`, reqOptions)
-        .then(resp => resp.json())
-        .then(data => {
-            console.log("post success", data.success);
-            if (data.success) {
-                // render all posts
-                fetch(`http://localhost:8080/post?id=${userId}`)
-                .then(resp => {
-                    return resp.json();
-                })
-                .then(data => {
-                    // console.log("post data: ", data)
-                    // setPostData(data) // no need to sort
-                    // console.log("parsed 0", Date.parse(data[0].createdat));
-                    // console.log("parsed 1", Date.parse(data[1].createdat));
-                    data.sort((a, b) => Date.parse(b.createdat) - Date.parse(a.createdat));
-                    console.log("sorted post data: ", data);
-                    setPostData(data);
-                })
-                .catch(
-                    err => console.log(err)
-                );
-            }
-        })
-        .catch(err => {
-            console.log(err);
-        })
+            .then(resp => resp.json())
+            .then(data => {
+                console.log("post success", data.success);
+                if (data.success) {
+                    // render all posts
+                    fetch(`http://localhost:8080/post?id=${userId}`)
+                        .then(resp => {
+                            return resp.json();
+                        })
+                        .then(data => {
+                            // console.log("post data: ", data)
+                            // setPostData(data) // no need to sort
+                            // console.log("parsed 0", Date.parse(data[0].createdat));
+                            // console.log("parsed 1", Date.parse(data[1].createdat));
+                            data.sort((a, b) => Date.parse(b.createdat) - Date.parse(a.createdat));
+                            console.log("sorted post data: ", data);
+                            setPostData(data);
+                        })
+                        .catch(
+                            err => console.log(err)
+                        );
+                }
+            })
+            .catch(err => {
+                console.log(err);
+            })
     };
 
     const createCommentSuccessHandler = (createCommentSuccessful) => {
         // fetch comment
         if (createCommentSuccessful) {
             fetch(postCommentUrl)
-            .then(resp => resp.json())
-            .then(data => {
-    
-                data.sort((a, b) => Date.parse(a.createdat) - Date.parse(b.createdat)); // ascending order
-                console.log("post page sorted comment data: ", data)
-                setCommentData(data);
-            })
-            .catch(
-                err => console.log(err)
-            );
+                .then(resp => resp.json())
+                .then(data => {
+
+                    data.sort((a, b) => Date.parse(a.createdat) - Date.parse(b.createdat)); // ascending order
+                    console.log("post page sorted comment data: ", data)
+                    setCommentData(data);
+                })
+                .catch(
+                    err => console.log(err)
+                );
         }
     };
 
-    // useEffect(() => {
-    //     fetch(`http://localhost:8080/group-event-member?userid=${userId}`)
-    //     .then(resp => resp.json())
-    //     .then(data => {
-            
-    //     })
-    //     .catch(
-    //         err => console.log(err)
-    //     );
-    // }, []);
+    function refresh() {
+        refreshState ? setRefreshState(false) : setRefreshState(true) 
+    }
 
-    return ( <div className={styles.container}>
+    return (<div className={styles.container}>
 
-        {/* <h1 className={styles["title"]}>Create New Post</h1> */}
 
-            <div className={styles.mid}>
-                <CreatePost onCreatePost={createPostHandler}/>
-                <AllPosts posts={postData} comments={commentData} onCreateCommentSuccessful={createCommentSuccessHandler}/>
+        <div className={styles.mid}>
+            <CreatePost onCreatePost={createPostHandler} />
+            <div className={styles.refreshContainer}>
+
+            <button className={styles.refresh} onClick={refresh}><img src={refreshImg} alt=""></img></button>
             </div>
+            <AllPosts posts={postData} comments={commentData} onCreateCommentSuccessful={createCommentSuccessHandler} />
+        </div>
 
-            <div className={styles.right}>
-                {/* <Card className={styles.requests}>
-                    <div className={styles.label}>Follow Requests</div>
-                    <FollowRequest></FollowRequest>
-                    <FollowRequest></FollowRequest>
-                </Card>
-                <Card className={styles.requests}>
-                    <div className={styles.label}>Group Requests</div>
-                    <GroupRequest></GroupRequest>
-                    <GroupRequest></GroupRequest>
+        <div className={styles.right}>
+      
+            <UserEvents userId={userId} refresh={refreshState}></UserEvents>
+            <JoinedGroups refresh={refreshState}></JoinedGroups>
+            <AllUsers></AllUsers>
 
-                </Card> */}
-                 <div className={styles.label}>Your upcoming events</div>
-                <UserEvents userId={userId}></UserEvents>
-                
-        <JoinedGroups></JoinedGroups>
-
-           </div>
 
         </div>
+
+    </div>
     )
 };
 

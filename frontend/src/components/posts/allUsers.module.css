@@ -1,14 +1,11 @@
-.joinedGroupCard {
-    margin-bottom: 10px;
-}
-
 .container {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 10px;
+    gap: 20px;
+    padding: 15px;
     margin: 0px -10px 0px -10px;
     /* justify-content: space-between; */
+    /* font-weight: 600; */
 }
 
 .label {
@@ -16,6 +13,7 @@
 
     margin-left: 10px;
     margin-bottom: 10px;
+    margin-top: 10px;
     color: grey;
 
 }
@@ -26,16 +24,7 @@
     cursor: pointer;
 }
 
-.img {
-    padding: 25px;
-    border-radius: 30%;
-    /* margin-left: 8px; */
-    background: var(--antiflash-white);
-}
-
-.btn {
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.title {
+    /* font-weight: 500; */
+    /* color: grey; */
 }

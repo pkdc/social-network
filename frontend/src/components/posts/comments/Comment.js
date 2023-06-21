@@ -16,20 +16,35 @@ function Comment(props) {
        console.log("created ", created)
 
     return (
-    <>
+    <div className={classes.container}>
         <div className={classes["author"]}>
         <Link to={`/profile/${props.authorId}`} >
-            <Avatar className={classes["comment-avatar"]} id={props.authorId} src={props.avatar} alt="" width={"50px"}/>
+            <Avatar className={classes["comment-avatar"]} id={props.authorId} src={props.avatar} alt="" width={"30px"}/>
         </Link>
-        <Link to={`/profile/${props.authorId}`} >
-            <div><p className={classes["details"]}>{`${props.fname} ${props.lname} ${props.nname}`}</p></div>
-        </Link>
+
+        <div className={classes.column}>
+                <div className={classes.row}>
+                    <Link to={`/profile/${props.authorId}`}>
+                        <div className={classes["details"]}>{`${props.fname} ${props.lname}`}</div>
+                    </Link>
+              
+                </div>
+
+                <div className={classes["create-at"]}>{created}</div>
+
+            </div>
+
         </div>
-        <div className={classes["create-at"]}>{created}</div>
-        {/* {props.createdAt.split(".")[0]} */}
+
+        
         <div className={classes.content}>{props.message}</div>
         {props.image && <div><img src={props.image} alt="" width={"100px"}/></div>}
-    </>
+
+
+
+
+     
+    </div>
     );
 }
 

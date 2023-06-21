@@ -23,14 +23,25 @@ function Group(props) {
     const usersCtx = useContext(UsersContext);
 
     useEffect(() => {
-        const storedJoinedGrps = JSON.parse(localStorage.getItem("joined-grps"));
-        console.log("stored joined-grps (group)", storedJoinedGrps);
+        jGrpCtx.getFollowing()
+    }, [])
+    useEffect(() => {
+        // const storedJoinedGrps = JSON.parse(localStorage.getItem("joined-grps"));
+        // console.log("stored joined-grps (group)", storedJoinedGrps);
         // check if the current group item is one of the joined Grps in the joinedGrps array
+        // jGrpCtx.getJoinedGrps()
+
+
         jGrpCtx.joinedGrps && setCurrentlyJoined(jGrpCtx.joinedGrps.some(joinedGrp => joinedGrp.id === +props.grpid))
+        console.log("fklglfl", jGrpCtx.joinedGrps)
     }, [jGrpCtx.joinedGrps, props.grpid])
 
     useEffect(() => {
-        const reqGroups = JSON.parse(localStorage.getItem("requestedGroups"));
+        jGrpCtx.requestLocalStrg()
+    }, [])
+    useEffect(() => {
+        // const reqGroups = JSON.parse(localStorage.getItem("requestedGroups"));
+const reqGroups = jGrpCtx.requestedGroups
         console.log("stored req-grps (group)", reqGroups);
         if (reqGroups != null) {
             reqGroups.forEach(element => {
@@ -38,8 +49,9 @@ function Group(props) {
                     setRequestedToJoin(true)
                 }
             }
-    )}
-    }, [jGrpCtx.requestedGroups,props.grpid])
+            )
+        }
+    }, [jGrpCtx.requestedGroups, props.grpid])
 
     useEffect(() => {
         if (wsCtx.newNotiInvitationReplyObj) {
@@ -108,9 +120,9 @@ function Group(props) {
 
     function handleClick(e) {
         const id = e.target.id
-        
+
         navigate("/groupprofile", { state: { id } })
-        
+
     }
 
     return <Card>

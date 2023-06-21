@@ -4,6 +4,7 @@ import { GroupsContext } from "./groups-context";
 
 export const JoinedGroupContext = React.createContext({
     joinedGrps: [],
+    // requestedGrps: [],
     setJoinedGrps: () => {},
     getJoinedGrps: () => {},
     requestToJoin: (joinGrpId) => {},
@@ -32,10 +33,12 @@ export const JoinedGroupContextProvider = (props) => {
         fetch(joinedGroupingUrl)
         .then(resp => resp.json())
         .then(data => {
-            console.log("joinedGroupsArr (context): ", data);
+            console.log("joinedGroupsArr (context) ", data);
             let [joinedGroupsArr] = Object.values(data); 
             setJoinedGrps(joinedGroupsArr);
-            localStorage.setjoinedGrpsItem("joinedGroups", JSON.stringify(joinedGroupsArr));
+            // localStorage.setjoinedGrpsItem("joinedGroups", JSON.stringify(joinedGroupsArr));
+            localStorage.setItem("joinedGroups", JSON.stringify(joinedGroupsArr));
+
         })
         .catch(
             err => console.log(err)

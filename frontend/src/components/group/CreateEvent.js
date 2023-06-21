@@ -3,7 +3,7 @@ import Card from "../UI/Card";
 import SmallButton from "../UI/SmallButton";
 import { WebSocketContext } from "../store/websocket-context";
 import classes from './CreateEvent.module.css';
-function CreateEvent( {groupid} ) {
+function CreateEvent( {groupid, newEvent} ) {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [date, setDate] = useState('');
@@ -51,7 +51,7 @@ function CreateEvent( {groupid} ) {
                 'Content-Type': 'application/json' 
             }
         }).then(() => {
-            // navigate.replace('/??')
+            newEvent()
             console.log("event posted")
         })
     }
@@ -59,9 +59,9 @@ function CreateEvent( {groupid} ) {
     return <Card className={classes.card}>
         Create Event
             <form className={classes.container} onSubmit={SubmitHandler}>
-        <input type="text" name="title" id="title" placeholder="Title" value={title} onChange={e => setTitle(e.target.value)}></input>
-        <textarea className={classes.content} name="description" id="description" placeholder="Description" value={description} onChange={e => setDescription(e.target.value)}></textarea>
-        <input type="datetime-local" name="date" id="date" value={date} onChange={e => setDate(e.target.value)}></input>
+        <input type="text" name="title" id="title" placeholder="Title" value={title} onChange={e => setTitle(e.target.value)} required></input>
+        <textarea className={classes.content} name="description" id="description" placeholder="Description" value={description} onChange={e => setDescription(e.target.value)} required></textarea>
+        <input type="datetime-local" name="date" id="date" value={date} onChange={e => setDate(e.target.value)} required></input>
         <div className={classes.btn}>
             <SmallButton>Create</SmallButton>
         </div>

@@ -4,7 +4,7 @@ const CreateMsgTextarea = (props) => {
     const classes = `${styles["textarea"]} ${props.className || ""}`
     return (
         <div>
-            <textarea 
+            <textarea required
                 className={classes} 
                 name={props.name} 
                 id={props.id} 

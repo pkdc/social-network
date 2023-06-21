@@ -12,6 +12,7 @@
     margin: 20px 0px 20px 0px;
     /* background-color: var(--seasalt);  */
 
+
 }
 
 .author {
@@ -35,6 +36,11 @@
     margin-right: 0.5rem;
 }
 
+.row {
+    display: flex ;
+    justify-content: space-between;
+}
+
 .fname {
 }
 .lname {
@@ -47,11 +53,13 @@
 .create-at {
     /* margin: 0 10px; */
     color: grey;
+    font-size: small;
+
 
 }
 
 .details {
-    font-weight: bold;
+    font-weight: 600;
 }
 
 .content {
@@ -64,6 +72,9 @@
     justify-content: flex-end;
     cursor: pointer;
     padding-bottom: 10px;
+
+    font-size: 14px;
+    color: grey;
 }
 
 .comments:hover {
@@ -74,4 +85,5 @@
 .column {
     display: flex;
     flex-direction: column;
+    width: 100%;
 }

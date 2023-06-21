@@ -5,11 +5,20 @@ import AllComments from "./comments/AllComments";
 import CreateComment from './comments/CreateComment';
 import Avatar from '../UI/Avatar';
 import Card from '../UI/Card';
+import lock from '../assets/lock2.svg'
+import lockCF from '../assets/lock6.svg'
 
 
 function Post(props) {
     const [showComments, setShowComments] = useState(false);
+    const [postPrivacy, setPostPrivacy] = useState();
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (props != undefined) {
+            setPostPrivacy(props.postPrivacy)
+        }
+    }, [props])
 
     // console.log("comment for post: ", props.postNum, " comments: ", props.commentsForThisPost)
     // const onlineStatus = false;
@@ -24,19 +33,19 @@ function Post(props) {
 
     const createCommentHandler = (createCommentPayloadObj) => {
         console.log("create comment for Post", createCommentPayloadObj)
-        
+
         const reqOptions = {
             method: "POST",
             body: JSON.stringify(createCommentPayloadObj),
         }
         fetch(postCommentUrl, reqOptions)
-        .then(resp => resp.json())
-        .then(data => {
-            props.onCreateCommentSuccessful(data.success); // lift it up to PostPage
-        })
-        .catch(err => {
-            console.log(err);
-        })
+            .then(resp => resp.json())
+            .then(data => {
+                props.onCreateCommentSuccessful(data.success); // lift it up to PostPage
+            })
+            .catch(err => {
+                console.log(err);
+            })
     };
 
     function handleClick(e) {
@@ -53,28 +62,41 @@ function Post(props) {
         minute: 'numeric',
     }).format(mills);
 
+
+    let privacy;
+    if (props.privacy == 1) {
+        privacy = <div> <img src={lock} alt=''></img> </div>
+    } else if (props.privacy == 2) {
+        privacy = <div> <img src={lockCF} alt=''></img> </div>
+    }
+
     return <Card className={classes.container} >
         <div className={classes["author"]}>
             <Link to={`/profile/${props.authorId}`}>
-                <Avatar className={classes["post-avatar"]} id={props.authorId} src={props.avatar} alt="" width={"50px"}/>
+                <Avatar className={classes["post-avatar"]} id={props.authorId} src={props.avatar} alt="" width={"50px"} />
             </Link>
             <div className={classes.column}>
+                <div className={classes.row}>
+                    <Link to={`/profile/${props.authorId}`}>
+                        <div className={classes["details"]}>{`${props.fname} ${props.lname}`}</div>
+                    </Link>
+                    {privacy}
+                </div>
 
-            <Link to={`/profile/${props.authorId}`}>
-                <div className={classes["details"]}>{`${props.fname} ${props.lname} ${props.nname}`}</div>
-            </Link>
-        <div className={classes["create-at"]}>{newDate}</div>
+                <div className={classes["create-at"]}>{newDate}</div>
+
             </div>
         </div>
         {/* <div className={classes["create-at"]}>{props.privacy}</div> //privacy */}
         <div className={classes.content}>{props.message}</div>
-        {props.image && <div><img src={props.image} alt="" width={"100px"}/></div>}
-        <div className={classes.comments} onClick={showCommentsHandler}>{props.commentsForThisPost.length} Comments</div>
+
+        {props.image && <div><img src={props.image} alt="" width={"100px"} /></div>}
+        <div className={classes.comments} onClick={showCommentsHandler}>{props.commentsForThisPost.length} comments</div>
         {/* {props.commentsForThisPost.length}  */}
-        {showComments && 
+        {showComments &&
             <>
-                <CreateComment pid={props.id} onCreateComment={createCommentHandler}/> 
-                <AllComments comments={props.commentsForThisPost}/>
+                <CreateComment pid={props.id} onCreateComment={createCommentHandler} />
+                <AllComments comments={props.commentsForThisPost} />
             </>
         }
     </Card>
