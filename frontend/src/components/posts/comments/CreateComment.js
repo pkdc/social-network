@@ -1,6 +1,8 @@
 import { useState, useRef } from 'react'
 import { Link } from "react-router-dom";
 import send from '../../assets/send.svg'
+// import send from '../../assets/send2.svg'
+
 import profile from '../../assets/profile.svg'
 import ImgUpload from '../../UI/ImgUpload'
 import classes from './CreateComment.module.css'

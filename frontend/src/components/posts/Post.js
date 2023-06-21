@@ -95,8 +95,8 @@ function Post(props) {
         {/* {props.commentsForThisPost.length}  */}
         {showComments &&
             <>
-                <CreateComment pid={props.id} onCreateComment={createCommentHandler} />
                 <AllComments comments={props.commentsForThisPost} />
+                <CreateComment pid={props.id} onCreateComment={createCommentHandler} />
             </>
         }
     </Card>

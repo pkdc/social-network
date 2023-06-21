@@ -43,7 +43,7 @@ function AllUsers() {
                     {/* <Avatar height={40} width={40}></Avatar> */}
                     <SmallAvatar height={35}></SmallAvatar>
                     <div>
-                        <div className={classes.title}>{user.fname}{user.lname}</div>
+                        <div className={classes.title}>{user.fname} {user.lname}</div>
                     </div>
 
                 </div>
