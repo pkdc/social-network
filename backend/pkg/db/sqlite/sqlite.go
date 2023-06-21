@@ -60,7 +60,7 @@ func RunMigration() *migrate.Migrate {
 // remove migrations
 
 func RemoveMigration(m *migrate.Migrate) {
-	m.Down()
+	m.Migrate(16)
 }
 
 // connect to database
