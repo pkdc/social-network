@@ -8,12 +8,15 @@ export const AuthContext = React.createContext({
   onLogout: () => { },
   regSuccess: false,
   notif: [],
+  errMsg: "",
+  setErrMsg: () => { },
 });
 
 export const AuthContextProvider = (props) => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [regSuccess, setRegSuccess] = useState(false);
   const [notif, setNotif] = useState([])
+  const [errMsg, setErrMsg] = useState("");
   const loginURL = "http://localhost:8080/login";
   const regURL = "http://localhost:8080/reg";
   const logoutURL = "http://localhost:8080/logout";
@@ -51,7 +54,8 @@ export const AuthContextProvider = (props) => {
           //   data.about && localStorage.setItem("about", data.about);
         } else {
           setRegSuccess(false);
-          alert(data.fname)
+          // alert(data.fname)
+          setErrMsg(data.fname)
         }
       })
       .catch(err => {
@@ -94,7 +98,8 @@ export const AuthContextProvider = (props) => {
 
         } else {
           setLoggedIn(false)
-          alert("ERROR - Please check your credentials")
+          // alert("ERROR - Please check your credentials")
+          setErrMsg("ERROR - Please check your credentials")
         }
       })
       .catch(err => {
@@ -136,6 +141,8 @@ export const AuthContextProvider = (props) => {
         onLogout: logoutHandler,
         regSuccess: regSuccess,
         notif: notif,
+        errMsg: errMsg,
+        setErrMsg: setErrMsg,
       }}
     >
       {props.children}

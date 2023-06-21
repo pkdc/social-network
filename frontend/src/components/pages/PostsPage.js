@@ -25,8 +25,6 @@ const PostsPage = () => {
     const [commentData, setCommentData] = useState([]);
     const [refreshState, setRefreshState] = useState(false)
 
-    // useGet(sessionUrl);
-
     // get posts
     let userId = localStorage.getItem("user_id")
     console.log(userId)
@@ -49,17 +47,14 @@ const PostsPage = () => {
         fetch(postCommentUrl)
             .then(resp => resp.json())
             .then(data => {
-                // console.log("post page raw comment data: ", data)
-                // setCommentData(data);
+             
                 data.sort((a, b) => Date.parse(a.createdat) - Date.parse(b.createdat)); // ascending order
-                // console.log("post page sorted comment data: ", data)
                 setCommentData(data);
             })
             .catch(
                 err => console.log(err)
             );
     }, [refreshState]);
-    // console.log("post page commentData (outside)", commentData);
 
     // create post
     const createPostHandler = (createPostPayloadObj) => {
@@ -114,36 +109,25 @@ const PostsPage = () => {
         }
     };
 
-    // useEffect(() => {
-    //     fetch(`http://localhost:8080/group-event-member?userid=${userId}`)
-    //     .then(resp => resp.json())
-    //     .then(data => {
-
-    //     })
-    //     .catch(
-    //         err => console.log(err)
-    //     );
-    // }, []);
-
     function refresh() {
         refreshState ? setRefreshState(false) : setRefreshState(true) 
-        // setRefreshState(+1)
     }
-console.log("data23434re:",refreshState )
+
     return (<div className={styles.container}>
 
-        {/* <h1 className={styles["title"]}>Create New Post</h1> */}
 
         <div className={styles.mid}>
             <CreatePost onCreatePost={createPostHandler} />
-            <div className={styles.refresh} onClick={refresh}><img src={refreshImg} alt=""></img></div>
+            <div className={styles.refreshContainer}>
+
+            <button className={styles.refresh} onClick={refresh}><img src={refreshImg} alt=""></img></button>
+            </div>
             <AllPosts posts={postData} comments={commentData} onCreateCommentSuccessful={createCommentSuccessHandler} />
         </div>
 
         <div className={styles.right}>
-            <div className={styles.label}>Your upcoming events</div>
+      
             <UserEvents userId={userId} refresh={refreshState}></UserEvents>
-
             <JoinedGroups refresh={refreshState}></JoinedGroups>
             <AllUsers></AllUsers>
 

@@ -14,6 +14,7 @@ import FollowerModal from "./followerModal";
 import FollowingModal from "./followingModal";
 import lock from '../assets/lock7.svg'
 import Avatar from "../UI/Avatar";
+import SmallAvatar from "../UI/SmallAvatar";
 function Profile({ userId }) {
 
     const [followerOpen, setFollowerOpen] = useState(false)
@@ -385,7 +386,8 @@ function Profile({ userId }) {
         <Card>
             <div className={classes.wrapper}>
                 {/* <div className={classes.img}></div> */}
-                <Avatar height={100}></Avatar>
+                {/* <Avatar height={100}></Avatar> */}
+                <SmallAvatar height={100}></SmallAvatar>
                 <div className={classes.column}>
                     <div className={classes.row}>
                         <div className={classes.row}>

@@ -35,7 +35,7 @@ function JoinedGroups( {refresh}) {
         <div className={classes.label}>
             Groups you've joined
         </div>
-        <Card>
+        <Card className={classes.joinedGroupCard}>
 
             {/* {data.data && data.data.map((group) => ( */}
             {jGrpCtx.joinedGrps && jGrpCtx.joinedGrps.map((group) => (

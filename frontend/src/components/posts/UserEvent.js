@@ -28,7 +28,6 @@ function UserEvent(props) {
 
     return <>
     
-    {/* <div className={classes.label}>Your events</div> */}
     <Card className={classes.card}>
         {/* let [going ,setGoing] = useState */}
         <div id={props.groupid} onClick={handleClick} className={classes.container}>

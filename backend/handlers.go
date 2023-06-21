@@ -210,7 +210,6 @@ func Loginhandler() http.HandlerFunc {
 					session.SessionToken = cookie.SessionToken
 					session.UserID = int64(cookie.UserId)
 					_, err = query.CreateSession(context.Background(), session)
-
 					if err != nil {
 						fmt.Println("Unable to create session!")
 					}

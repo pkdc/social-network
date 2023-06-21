@@ -41,7 +41,7 @@ function AllUsers() {
                 <div key={user.id} id={user.id} className={classes.container} onClick={handleClick} >
                     {/* <div className={classes.img}></div> */}
                     {/* <Avatar height={40} width={40}></Avatar> */}
-                    <SmallAvatar></SmallAvatar>
+                    <SmallAvatar height={35}></SmallAvatar>
                     <div>
                         <div className={classes.title}>{user.fname}{user.lname}</div>
                     </div>

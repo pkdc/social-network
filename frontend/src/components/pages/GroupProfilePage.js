@@ -36,7 +36,7 @@ function GroupProfilePage() {
     function refresh() {
         refreshState ? setRefreshState(false) : setRefreshState(true) 
     }
-
+    
     function onCreatePostHandler(postData) {
 
         fetch('http://localhost:8080/group-post', 
@@ -73,7 +73,10 @@ function GroupProfilePage() {
         <div className={classes.mid}>
             <GroupProfile groupid={id}></GroupProfile>
             <CreateGroupPost   groupid={id} onCreatePost={onCreatePostHandler}/>
+            <div className={classes.refreshContainer}> 
+
             <div className={classes.refresh} onClick={refresh}><img src={refreshImg} alt=""></img></div>
+            </div>
 
             
             {postData && 

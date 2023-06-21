@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import useGet from "../fetch/useGet";
 import UserEvent from "./UserEvent";
+import styles from './UserEvent.module.css'
 
 function UserEvents({ userId, refresh }) {
 
@@ -22,6 +23,12 @@ function UserEvents({ userId, refresh }) {
     // console.log("data test", data.data)
 
     return <div>
+        { eventData &&
+
+            <div className={styles.label}>Your upcoming events</div>
+
+        }
+        
         {eventData && eventData.map((event) => (
             <UserEvent
                 key={event.id}
