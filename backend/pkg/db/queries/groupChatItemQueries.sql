@@ -2,9 +2,13 @@
 SELECT * FROM group_chat_item
 ORDER BY last_msg_at DESC;
 
--- name: GetGroupChatNotiByGroupId :one
+-- name: GetOneGroupChatItemBySourceId :one
 SELECT * FROM group_chat_item
-WHERE group_id = ?;
+WHERE group_id = ? AND source_id = ?;
+
+-- name: GetOneGroupChatItemByTargetId :one
+SELECT * FROM group_chat_item
+WHERE group_id = ? AND target_id = ?;
 
 -- name: CreateGroupChatItem :one
 INSERT INTO group_chat_item (
@@ -20,6 +24,10 @@ SET chat_noti = ?,
 last_msg_at = ?
 WHERE group_id = ? AND source_id = ? AND target_id = ?
 RETURNING *;
+
+-- name: DeleteOneGroupChatItem :exec
+DELETE FROM group_chat_item
+WHERE group_id = ? AND source_id = ? AND target_id = ?;
 
 -- name: DeleteGroupChatItem :exec
 DELETE FROM group_chat_item
