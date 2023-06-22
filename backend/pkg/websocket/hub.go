@@ -518,11 +518,11 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 			fmt.Println("Unable to store group message to database")
 		}
 
-		fmt.Printf("Checking if group chat item exists for that group, source (not important tho) %d and group %d\n", groupMsg.SourceId, groupMsg.GroupId)
-		chatItem, err := query.GetGroupChatNotiByGroupId(context.Background(), int64(groupMsg.GroupId))
-
-		// Query the group member table
-		// LOOP THRU ALL GROUP MEMBERS and check if an item exists FOR EACH OF THEM
+		fmt.Printf("Checking if group chat item exists for that group for sender, source %d and group %d\n", groupMsg.SourceId, groupMsg.GroupId)
+		chatItem, err := query.GetOneGroupChatItemBySourceId(context.Background(), crud.GetOneGroupChatItemBySourceIdParams{
+			GroupID:  message.GroupID,
+			SourceID: message.SourceID,
+		})
 
 		// update group chat item to not seen in db if exist
 		if chatItem != (crud.GroupChatItem{}) {
@@ -531,20 +531,22 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 				LastMsgAt: time.Now(),
 				GroupID:   int64(groupMsg.GroupId),
 				SourceID:  int64(groupMsg.SourceId),
-				ChatNoti:  int64(1), // 0 - seen, 1 - not seen
+				TargetID:  int64(0),
+				ChatNoti:  int64(0), // 0 - seen, 1 - not seen
 			})
 			if err != nil {
 				fmt.Println(err)
-				fmt.Println("Unable to update private chat item in database")
+				fmt.Println("Unable to update group chat item in database")
 			}
 		} else {
 			fmt.Println("Not Exists")
 			// save new group chat item as not seen if not exist
-			_, err = query.CreatePrivateChatItem(context.Background(), crud.CreatePrivateChatItemParams{
+			_, err = query.CreateGroupChatItem(context.Background(), crud.CreateGroupChatItemParams{
 				LastMsgAt: time.Now(),
-				SourceID:  int64(userMsg.SourceId),
-				TargetID:  int64(userMsg.TargetId),
-				ChatNoti:  int64(1), // 0 - seen, 1 - not seen
+				GroupID:   int64(groupMsg.GroupId),
+				SourceID:  int64(groupMsg.SourceId),
+				TargetID:  int64(0),
+				ChatNoti:  int64(0), // 0 - seen, 1 - not seen
 			})
 			if err != nil {
 				fmt.Println(err)
@@ -552,36 +554,52 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 			}
 		}
 
-		fmt.Printf("Checking if reverse order group chat item exists, target %d and source %d\n", userMsg.TargetId, userMsg.SourceId)
-		chatItemRev, err := query.GetOnePrivateChatItem(context.Background(), crud.GetOnePrivateChatItemParams{
-			SourceID: int64(userMsg.TargetId),
-			TargetID: int64(userMsg.SourceId),
-		})
-		// only update last_msg_time in group chat item for reverse
-		if chatItemRev != (crud.PrivateChatItem{}) {
-			fmt.Println("Exists")
-			_, err = query.UpdatePrivateChatItem(context.Background(), crud.UpdatePrivateChatItemParams{
-				LastMsgAt: time.Now(),
-				SourceID:  int64(userMsg.TargetId),
-				TargetID:  int64(userMsg.SourceId),
-				ChatNoti:  chatItemRev.ChatNoti, // 0 - not seen, 1 - seen // no need to change in reverse
+		// ### SEARCH FOR GROUP MEMBERS ###
+
+		var group crud.GetGroupMembersByGroupIdParams
+
+		group.GroupID = int64(groupMsg.GroupId)
+		group.Status = 1
+
+		groupMembers, err := query.GetGroupMembersByGroupId(context.Background(), group)
+
+		if err != nil {
+			fmt.Println("Could not get user list")
+		}
+		// --------------
+		// LOOP THRU ALL GROUP MEMBERS and check if an item exists FOR EACH OF THEM
+		for _, groupMember := range groupMembers {
+			fmt.Printf("Checking if group chat item exists for receivers, Group member %d in group %d\n", groupMember, message.GroupID)
+			chatItemRev, err := query.GetOnePrivateChatItem(context.Background(), crud.GetOnePrivateChatItemParams{
+				SourceID: int64(userMsg.TargetId),
+				TargetID: int64(userMsg.SourceId),
 			})
-			if err != nil {
-				fmt.Println(err)
-				fmt.Println("Unable to update rev group chat item in database")
-			}
-		} else {
-			fmt.Println("Not Exists")
-			// save new group chat item if not exist
-			_, err = query.CreatePrivateChatItem(context.Background(), crud.CreatePrivateChatItemParams{
-				LastMsgAt: time.Now(),
-				SourceID:  int64(userMsg.TargetId),
-				TargetID:  int64(userMsg.SourceId),
-				ChatNoti:  int64(0), // 0 - seen, 1 - not seen // no new msg for reverse, so seen
-			})
-			if err != nil {
-				fmt.Println(err)
-				fmt.Println("Unable to store rev group chat item to database")
+			// only update last_msg_time in group chat item for reverse
+			if chatItemRev != (crud.PrivateChatItem{}) {
+				fmt.Println("Exists")
+				_, err = query.UpdatePrivateChatItem(context.Background(), crud.UpdatePrivateChatItemParams{
+					LastMsgAt: time.Now(),
+					SourceID:  int64(userMsg.TargetId),
+					TargetID:  int64(userMsg.SourceId),
+					ChatNoti:  int64(0), // 0 - not seen, 1 - seen // no need to change in reverse
+				})
+				if err != nil {
+					fmt.Println(err)
+					fmt.Println("Unable to update rev group chat item in database")
+				}
+			} else {
+				fmt.Println("Not Exists")
+				// save new group chat item if not exist
+				_, err = query.CreatePrivateChatItem(context.Background(), crud.CreatePrivateChatItemParams{
+					LastMsgAt: time.Now(),
+					SourceID:  int64(userMsg.TargetId),
+					TargetID:  int64(userMsg.SourceId),
+					ChatNoti:  int64(0), // 0 - seen, 1 - not seen // no new msg for reverse, so seen
+				})
+				if err != nil {
+					fmt.Println(err)
+					fmt.Println("Unable to store rev group chat item to database")
+				}
 			}
 		}
 
@@ -594,22 +612,9 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 		// Variable to store the group members
 		// var members []backend.GroupMemberStruct
 
-		// ### SEARCH FOR GROUP MEMBERS ###
-
-		var group crud.GetGroupMembersByGroupIdParams
-
-		group.GroupID = int64(groupMsg.GroupId)
-		group.Status = 1
-
-		users, err := query.GetGroupMembersByGroupId(context.Background(), group)
-
-		if err != nil {
-			fmt.Println("Could not get user list")
-		}
-
 		// Loops through the clients and sends to the other group members
 		for _, c := range h.clients {
-			if IsMember(users, c.userID) && c.userID != groupMsg.SourceId {
+			if IsMember(groupMembers, c.userID) && c.userID != groupMsg.SourceId {
 				select {
 				case c.send <- sendMsg:
 				default:
