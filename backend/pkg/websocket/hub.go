@@ -520,14 +520,17 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 
 		fmt.Printf("Checking if group chat item exists for that group, source (not important tho) %d and group %d\n", groupMsg.SourceId, groupMsg.GroupId)
 		chatItem, err := query.GetGroupChatNotiByGroupId(context.Background(), int64(groupMsg.GroupId))
+
+		// Query the group member table
+		// LOOP THRU ALL GROUP MEMBERS and check if an item exists FOR EACH OF THEM
+
 		// update group chat item to not seen in db if exist
 		if chatItem != (crud.GroupChatItem{}) {
 			fmt.Println("Exists")
-			// loop thru all members
 			_, err = query.UpdateGroupChatItem(context.Background(), crud.UpdateGroupChatItemParams{
 				LastMsgAt: time.Now(),
-				SourceID:  int64(userMsg.SourceId),
-				TargetID:  int64(userMsg.TargetId),
+				GroupID:   int64(groupMsg.GroupId),
+				SourceID:  int64(groupMsg.SourceId),
 				ChatNoti:  int64(1), // 0 - seen, 1 - not seen
 			})
 			if err != nil {
