@@ -456,7 +456,7 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 				LastMsgAt: time.Now(),
 				SourceID:  int64(userMsg.TargetId),
 				TargetID:  int64(userMsg.SourceId),
-				ChatNoti:  chatItemRev.ChatNoti, // 0 - not seen, 1 - seen // no need to change in reverse
+				ChatNoti:  chatItemRev.ChatNoti, // 0 - seen, 1 - not seen // no need to change in reverse
 			})
 			if err != nil {
 				fmt.Println(err)
@@ -518,29 +518,29 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 			fmt.Println("Unable to store group message to database")
 		}
 
-		fmt.Printf("Checking if group chat item exists for that group for sender, source %d and group %d\n", groupMsg.SourceId, groupMsg.GroupId)
-		chatItem, err := query.GetOneGroupChatItemBySourceId(context.Background(), crud.GetOneGroupChatItemBySourceIdParams{
+		// sender
+		fmt.Printf("Checking if group chat item exists for that group for the sender, source %d and group %d\n", groupMsg.SourceId, groupMsg.GroupId)
+		chatItemSender, err := query.GetOneGroupChatItemBySourceId(context.Background(), crud.GetOneGroupChatItemBySourceIdParams{
 			GroupID:  message.GroupID,
 			SourceID: message.SourceID,
 		})
-
-		// update group chat item to not seen in db if exist
-		if chatItem != (crud.GroupChatItem{}) {
-			fmt.Println("Exists")
+		// update group chat item LastMsgAt in db if exist
+		if chatItemSender != (crud.GroupChatItem{}) {
+			fmt.Println("G Sender Exists")
 			_, err = query.UpdateGroupChatItem(context.Background(), crud.UpdateGroupChatItemParams{
 				LastMsgAt: time.Now(),
-				GroupID:   int64(groupMsg.GroupId),
-				SourceID:  int64(groupMsg.SourceId),
-				TargetID:  int64(0),
+				GroupID:   chatItemSender.GroupID,
+				SourceID:  chatItemSender.SourceID,
+				TargetID:  chatItemSender.TargetID,
 				ChatNoti:  int64(0), // 0 - seen, 1 - not seen
 			})
 			if err != nil {
 				fmt.Println(err)
-				fmt.Println("Unable to update group chat item in database")
+				fmt.Println("Unable to update G Sender group chat item in database")
 			}
 		} else {
-			fmt.Println("Not Exists")
-			// save new group chat item as not seen if not exist
+			fmt.Println("G Sender Not Exists")
+			// save new group chat item as seen if not exist
 			_, err = query.CreateGroupChatItem(context.Background(), crud.CreateGroupChatItemParams{
 				LastMsgAt: time.Now(),
 				GroupID:   int64(groupMsg.GroupId),
@@ -550,55 +550,55 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 			})
 			if err != nil {
 				fmt.Println(err)
-				fmt.Println("Unable to store group chat item to database")
+				fmt.Println("Unable to store G Sender group chat item to database")
 			}
 		}
 
 		// ### SEARCH FOR GROUP MEMBERS ###
-
+		// receivers
 		var group crud.GetGroupMembersByGroupIdParams
-
 		group.GroupID = int64(groupMsg.GroupId)
 		group.Status = 1
 
 		groupMembers, err := query.GetGroupMembersByGroupId(context.Background(), group)
-
 		if err != nil {
-			fmt.Println("Could not get user list")
+			fmt.Println("Could not get groupMembers list")
 		}
-		// --------------
+
 		// LOOP THRU ALL GROUP MEMBERS and check if an item exists FOR EACH OF THEM
 		for _, groupMember := range groupMembers {
-			fmt.Printf("Checking if group chat item exists for receivers, Group member %d in group %d\n", groupMember, message.GroupID)
-			chatItemRev, err := query.GetOnePrivateChatItem(context.Background(), crud.GetOnePrivateChatItemParams{
-				SourceID: int64(userMsg.TargetId),
-				TargetID: int64(userMsg.SourceId),
+			fmt.Printf("Checking if group chat item exists for receivers, Group member %v in group %d\n", groupMember, message.GroupID)
+			chatItemReceiver, err := query.GetOneGroupChatItemByTargetId(context.Background(), crud.GetOneGroupChatItemByTargetIdParams{
+				GroupID:  int64(message.GroupID),
+				TargetID: int64(groupMember.ID),
 			})
-			// only update last_msg_time in group chat item for reverse
-			if chatItemRev != (crud.PrivateChatItem{}) {
-				fmt.Println("Exists")
-				_, err = query.UpdatePrivateChatItem(context.Background(), crud.UpdatePrivateChatItemParams{
+			// only update last_msg_time in group chat item for receiver
+			if chatItemReceiver != (crud.GroupChatItem{}) {
+				fmt.Printf("G Receiver item Exists %v\n", chatItemReceiver)
+				_, err = query.UpdateGroupChatItem(context.Background(), crud.UpdateGroupChatItemParams{
 					LastMsgAt: time.Now(),
-					SourceID:  int64(userMsg.TargetId),
-					TargetID:  int64(userMsg.SourceId),
-					ChatNoti:  int64(0), // 0 - not seen, 1 - seen // no need to change in reverse
+					SourceID:  chatItemReceiver.SourceID,
+					TargetID:  chatItemReceiver.TargetID,
+					GroupID:   chatItemReceiver.GroupID,
+					ChatNoti:  int64(1), // 0 - seen, 1 - not seen
 				})
 				if err != nil {
 					fmt.Println(err)
-					fmt.Println("Unable to update rev group chat item in database")
+					fmt.Println("Unable to update G Receiver group chat item in database")
 				}
 			} else {
-				fmt.Println("Not Exists")
+				fmt.Println("G Receiver Not Exists")
 				// save new group chat item if not exist
-				_, err = query.CreatePrivateChatItem(context.Background(), crud.CreatePrivateChatItemParams{
+				_, err = query.CreateGroupChatItem(context.Background(), crud.CreateGroupChatItemParams{
 					LastMsgAt: time.Now(),
-					SourceID:  int64(userMsg.TargetId),
-					TargetID:  int64(userMsg.SourceId),
-					ChatNoti:  int64(0), // 0 - seen, 1 - not seen // no new msg for reverse, so seen
+					SourceID:  int64(0),
+					TargetID:  groupMember.ID,
+					GroupID:   message.GroupID,
+					ChatNoti:  int64(1), // 0 - seen, 1 - not seen // no new msg for reverse, so seen
 				})
 				if err != nil {
 					fmt.Println(err)
-					fmt.Println("Unable to store rev group chat item to database")
+					fmt.Println("Unable to store G Receiver group chat item to database")
 				}
 			}
 		}

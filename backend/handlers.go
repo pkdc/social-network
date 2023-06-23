@@ -2993,67 +2993,67 @@ func GroupChatItemHandler() http.HandlerFunc {
 
 			// Sets the http headers and writes the response to the browser
 			WriteHttpHeader(jsonResp, w)
-		case http.MethodPost:
-			// Declares the variables to store the group message details and handler response
-			var groupItem GroupChatItemStruct
+			// case http.MethodPost:
+			// 	// Declares the variables to store the group message details and handler response
+			// 	var groupItem GroupChatItemStruct
 
-			// Decodes the json object to the struct, changing the response to false if it fails
-			err := json.NewDecoder(r.Body).Decode(&groupItem)
-			if err != nil {
-				fmt.Println(err.Error())
-			}
+			// 	// Decodes the json object to the struct, changing the response to false if it fails
+			// 	err := json.NewDecoder(r.Body).Decode(&groupItem)
+			// 	if err != nil {
+			// 		fmt.Println(err.Error())
+			// 	}
 
-			// ### CONNECT TO DATABASE ###
+			// 	// ### CONNECT TO DATABASE ###
 
-			db := db.DbConnect()
+			// 	db := db.DbConnect()
 
-			query := crud.New(db)
+			// 	query := crud.New(db)
 
-			// Check groupChatItem table to see if record exists
+			// 	// Check groupChatItem table to see if record exists
 
-			chatItem, err := query.GetGroupChatNotiByGroupId(context.Background(), int64(groupItem.GroupId))
+			// 	chatItem, err := query.GetGroupChatNotiByGroupId(context.Background(), int64(groupItem.GroupId))
 
-			if chatItem.GroupID != int64(groupItem.GroupId) {
-				// update chatItem last_msg_at column
+			// 	if chatItem.GroupID != int64(groupItem.GroupId) {
+			// 		// update chatItem last_msg_at column
 
-				_, err = query.UpdateGroupChatItem(context.Background(), crud.UpdateGroupChatItemParams{
-					LastMsgAt: time.Now(),
-					GroupID:   int64(groupItem.GroupId),
-				})
+			// 		_, err = query.UpdateGroupChatItem(context.Background(), crud.UpdateGroupChatItemParams{
+			// 			LastMsgAt: time.Now(),
+			// 			GroupID:   int64(groupItem.GroupId),
+			// 		})
 
-				if err != nil {
-					fmt.Println("Unable to update group chat item")
-					return
-				}
+			// 		if err != nil {
+			// 			fmt.Println("Unable to update group chat item")
+			// 			return
+			// 		}
 
-			} else {
+			// 	} else {
 
-				// create group chat item
+			// 		// create group chat item
 
-				_, err = query.CreateGroupChatItem(context.Background(), crud.CreateGroupChatItemParams{
-					GroupID:   int64(groupItem.GroupId),
-					LastMsgAt: time.Now(),
-				})
+			// 		_, err = query.CreateGroupChatItem(context.Background(), crud.CreateGroupChatItemParams{
+			// 			GroupID:   int64(groupItem.GroupId),
+			// 			LastMsgAt: time.Now(),
+			// 		})
 
-				if err != nil {
-					fmt.Println("Unable to create group chat item")
-					return
-				}
-			}
+			// 		if err != nil {
+			// 			fmt.Println("Unable to create group chat item")
+			// 			return
+			// 		}
+			// 	}
 
-			// set chatnoti to 0 (unseen) when chatitem is created or updated
+			// 	// set chatnoti to 0 (unseen) when chatitem is created or updated
 
-			_, err = query.UpdateGroupMemberChatNotiUnseen(context.Background(), int64(groupItem.GroupId))
+			// 	_, err = query.UpdateGroupMemberChatNotiUnseen(context.Background(), int64(groupItem.GroupId))
 
-			if err != nil {
-				fmt.Println("Unable to update chatnoti for group memebers")
-				return
-			}
+			// 	if err != nil {
+			// 		fmt.Println("Unable to update chatnoti for group memebers")
+			// 		return
+			// 	}
 
-		default:
-			// Prevents all request types other than POST and GET
-			http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
-			return
+			// default:
+			// 	// Prevents all request types other than POST and GET
+			// 	http.Error(w, "405 method not allowed", http.StatusMethodNotAllowed)
+			// 	return
 		}
 	}
 }
