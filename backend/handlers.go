@@ -2976,8 +2976,7 @@ func GroupChatItemHandler() http.HandlerFunc {
 
 				newChatItem.Id = int(chatItem.ID)
 				newChatItem.GroupId = int(chatItem.GroupID)
-				newChatItem.SourceId = int(chatItem.SourceID)
-				newChatItem.TargetId = int(chatItem.TargetID)
+				newChatItem.UserId = int(chatItem.UserID)
 				newChatItem.ChatNoti = int(chatItem.ChatNoti)
 				newChatItem.LastMsgAt = chatItem.LastMsgAt.String()
 
