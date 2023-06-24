@@ -128,7 +128,7 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 		// fmt.Printf("not Struct: %v\n", not)
 	} else if msgStruct.Label == "set-seen-p-chat-noti" {
 		query := crud.New(db)
-		fmt.Println("set-seen")
+		fmt.Println("set-p-seen")
 		chatItem, err := query.GetOnePrivateChatItem(context.Background(), crud.GetOnePrivateChatItemParams{
 			SourceID: int64(msgStruct.SourceId),
 			TargetID: int64(msgStruct.TargetId),
@@ -136,14 +136,14 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 		if err != nil {
 			log.Println(err)
 		}
-		fmt.Println("Found target item", chatItem)
+		fmt.Println("Found target p item", chatItem)
 		_, err = query.UpdatePrivateChatItem(context.Background(), crud.UpdatePrivateChatItemParams{
 			ChatNoti:  int64(0), // 0 - seen, 1 - not seen
 			LastMsgAt: chatItem.LastMsgAt,
 			SourceID:  int64(msgStruct.SourceId),
 			TargetID:  int64(msgStruct.TargetId),
 		})
-		fmt.Println("Updated chat item")
+		fmt.Println("Updated p chat item")
 		// if err != nil {
 		// 	fmt.Println("Unable to delete private chat notification to database")
 		// }
@@ -164,8 +164,27 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 		groupMsg.SourceId = msgStruct.SourceId
 		groupMsg.GroupId = msgStruct.GroupId
 		groupMsg.CreatedAt = time.Now().String()
+	} else if msgStruct.Label == "set-seen-g-chat-noti" {
+		query := crud.New(db)
+		fmt.Println("set-g-seen")
+		chatItem, err := query.GetOneGroupChatItemByUserId(context.Background(), crud.GetOneGroupChatItemByUserIdParams{
+			GroupID: int64(msgStruct.GroupId),
+			UserID:  int64(msgStruct.SourceId),
+		})
+		if err != nil {
+			log.Println(err)
+		}
+		fmt.Println("Found target g item", chatItem)
+		_, err = query.UpdateGroupChatItem(context.Background(), crud.UpdateGroupChatItemParams{
+			ChatNoti:  int64(0), // 0 - seen, 1 - not seen
+			LastMsgAt: chatItem.LastMsgAt,
+			GroupID:   int64(msgStruct.GroupId),
+			UserID:    int64(msgStruct.SourceId),
+		})
+		fmt.Println("Updated g chat item")
 	} else {
 		// panic
+		log.Println("Error finding the right label")
 	}
 
 	switch t {
