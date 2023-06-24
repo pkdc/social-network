@@ -12,17 +12,16 @@ import (
 
 const createGroupChatItem = `-- name: CreateGroupChatItem :one
 INSERT INTO group_chat_item (
-  group_id, source_id, target_id, last_msg_at, chat_noti
+  group_id, user_id, last_msg_at, chat_noti
 ) VALUES (
-  ?, ?, ?, ?, ?
+  ?, ?, ?, ?
 )
-RETURNING id, group_id, source_id, target_id, chat_noti, last_msg_at
+RETURNING id, group_id, user_id, chat_noti, last_msg_at
 `
 
 type CreateGroupChatItemParams struct {
 	GroupID   int64
-	SourceID  int64
-	TargetID  int64
+	UserID    int64
 	LastMsgAt time.Time
 	ChatNoti  int64
 }
@@ -30,8 +29,7 @@ type CreateGroupChatItemParams struct {
 func (q *Queries) CreateGroupChatItem(ctx context.Context, arg CreateGroupChatItemParams) (GroupChatItem, error) {
 	row := q.db.QueryRowContext(ctx, createGroupChatItem,
 		arg.GroupID,
-		arg.SourceID,
-		arg.TargetID,
+		arg.UserID,
 		arg.LastMsgAt,
 		arg.ChatNoti,
 	)
@@ -39,8 +37,7 @@ func (q *Queries) CreateGroupChatItem(ctx context.Context, arg CreateGroupChatIt
 	err := row.Scan(
 		&i.ID,
 		&i.GroupID,
-		&i.SourceID,
-		&i.TargetID,
+		&i.UserID,
 		&i.ChatNoti,
 		&i.LastMsgAt,
 	)
@@ -59,22 +56,16 @@ func (q *Queries) DeleteGroupChatItem(ctx context.Context, groupID int64) error 
 
 const deleteOneGroupChatItem = `-- name: DeleteOneGroupChatItem :exec
 DELETE FROM group_chat_item
-WHERE group_id = ? AND source_id = ? AND target_id = ?
+WHERE group_id = ? AND user_id
 `
 
-type DeleteOneGroupChatItemParams struct {
-	GroupID  int64
-	SourceID int64
-	TargetID int64
-}
-
-func (q *Queries) DeleteOneGroupChatItem(ctx context.Context, arg DeleteOneGroupChatItemParams) error {
-	_, err := q.db.ExecContext(ctx, deleteOneGroupChatItem, arg.GroupID, arg.SourceID, arg.TargetID)
+func (q *Queries) DeleteOneGroupChatItem(ctx context.Context, groupID int64) error {
+	_, err := q.db.ExecContext(ctx, deleteOneGroupChatItem, groupID)
 	return err
 }
 
 const getGroupChatNoti = `-- name: GetGroupChatNoti :many
-SELECT id, group_id, source_id, target_id, chat_noti, last_msg_at FROM group_chat_item
+SELECT id, group_id, user_id, chat_noti, last_msg_at FROM group_chat_item
 ORDER BY last_msg_at DESC
 `
 
@@ -90,8 +81,7 @@ func (q *Queries) GetGroupChatNoti(ctx context.Context) ([]GroupChatItem, error)
 		if err := rows.Scan(
 			&i.ID,
 			&i.GroupID,
-			&i.SourceID,
-			&i.TargetID,
+			&i.UserID,
 			&i.ChatNoti,
 			&i.LastMsgAt,
 		); err != nil {
@@ -108,48 +98,23 @@ func (q *Queries) GetGroupChatNoti(ctx context.Context) ([]GroupChatItem, error)
 	return items, nil
 }
 
-const getOneGroupChatItemBySourceId = `-- name: GetOneGroupChatItemBySourceId :one
-SELECT id, group_id, source_id, target_id, chat_noti, last_msg_at FROM group_chat_item
-WHERE group_id = ? AND source_id = ?
+const getOneGroupChatItemByUserId = `-- name: GetOneGroupChatItemByUserId :one
+SELECT id, group_id, user_id, chat_noti, last_msg_at FROM group_chat_item
+WHERE group_id = ? AND user_id = ?
 `
 
-type GetOneGroupChatItemBySourceIdParams struct {
-	GroupID  int64
-	SourceID int64
+type GetOneGroupChatItemByUserIdParams struct {
+	GroupID int64
+	UserID  int64
 }
 
-func (q *Queries) GetOneGroupChatItemBySourceId(ctx context.Context, arg GetOneGroupChatItemBySourceIdParams) (GroupChatItem, error) {
-	row := q.db.QueryRowContext(ctx, getOneGroupChatItemBySourceId, arg.GroupID, arg.SourceID)
+func (q *Queries) GetOneGroupChatItemByUserId(ctx context.Context, arg GetOneGroupChatItemByUserIdParams) (GroupChatItem, error) {
+	row := q.db.QueryRowContext(ctx, getOneGroupChatItemByUserId, arg.GroupID, arg.UserID)
 	var i GroupChatItem
 	err := row.Scan(
 		&i.ID,
 		&i.GroupID,
-		&i.SourceID,
-		&i.TargetID,
-		&i.ChatNoti,
-		&i.LastMsgAt,
-	)
-	return i, err
-}
-
-const getOneGroupChatItemByTargetId = `-- name: GetOneGroupChatItemByTargetId :one
-SELECT id, group_id, source_id, target_id, chat_noti, last_msg_at FROM group_chat_item
-WHERE group_id = ? AND target_id = ?
-`
-
-type GetOneGroupChatItemByTargetIdParams struct {
-	GroupID  int64
-	TargetID int64
-}
-
-func (q *Queries) GetOneGroupChatItemByTargetId(ctx context.Context, arg GetOneGroupChatItemByTargetIdParams) (GroupChatItem, error) {
-	row := q.db.QueryRowContext(ctx, getOneGroupChatItemByTargetId, arg.GroupID, arg.TargetID)
-	var i GroupChatItem
-	err := row.Scan(
-		&i.ID,
-		&i.GroupID,
-		&i.SourceID,
-		&i.TargetID,
+		&i.UserID,
 		&i.ChatNoti,
 		&i.LastMsgAt,
 	)
@@ -160,16 +125,15 @@ const updateGroupChatItem = `-- name: UpdateGroupChatItem :one
 UPDATE group_chat_item
 SET chat_noti = ?,
 last_msg_at = ?
-WHERE group_id = ? AND source_id = ? AND target_id = ?
-RETURNING id, group_id, source_id, target_id, chat_noti, last_msg_at
+WHERE group_id = ? AND user_id = ?
+RETURNING id, group_id, user_id, chat_noti, last_msg_at
 `
 
 type UpdateGroupChatItemParams struct {
 	ChatNoti  int64
 	LastMsgAt time.Time
 	GroupID   int64
-	SourceID  int64
-	TargetID  int64
+	UserID    int64
 }
 
 func (q *Queries) UpdateGroupChatItem(ctx context.Context, arg UpdateGroupChatItemParams) (GroupChatItem, error) {
@@ -177,15 +141,13 @@ func (q *Queries) UpdateGroupChatItem(ctx context.Context, arg UpdateGroupChatIt
 		arg.ChatNoti,
 		arg.LastMsgAt,
 		arg.GroupID,
-		arg.SourceID,
-		arg.TargetID,
+		arg.UserID,
 	)
 	var i GroupChatItem
 	err := row.Scan(
 		&i.ID,
 		&i.GroupID,
-		&i.SourceID,
-		&i.TargetID,
+		&i.UserID,
 		&i.ChatNoti,
 		&i.LastMsgAt,
 	)
