@@ -12,22 +12,35 @@ import (
 
 const createGroupChatItem = `-- name: CreateGroupChatItem :one
 INSERT INTO group_chat_item (
-  group_id, last_msg_at
+  group_id, user_id, last_msg_at, chat_noti
 ) VALUES (
-  ?, ?
+  ?, ?, ?, ?
 )
-RETURNING id, group_id, last_msg_at
+RETURNING id, group_id, user_id, chat_noti, last_msg_at
 `
 
 type CreateGroupChatItemParams struct {
 	GroupID   int64
+	UserID    int64
 	LastMsgAt time.Time
+	ChatNoti  int64
 }
 
 func (q *Queries) CreateGroupChatItem(ctx context.Context, arg CreateGroupChatItemParams) (GroupChatItem, error) {
-	row := q.db.QueryRowContext(ctx, createGroupChatItem, arg.GroupID, arg.LastMsgAt)
+	row := q.db.QueryRowContext(ctx, createGroupChatItem,
+		arg.GroupID,
+		arg.UserID,
+		arg.LastMsgAt,
+		arg.ChatNoti,
+	)
 	var i GroupChatItem
-	err := row.Scan(&i.ID, &i.GroupID, &i.LastMsgAt)
+	err := row.Scan(
+		&i.ID,
+		&i.GroupID,
+		&i.UserID,
+		&i.ChatNoti,
+		&i.LastMsgAt,
+	)
 	return i, err
 }
 
@@ -41,9 +54,19 @@ func (q *Queries) DeleteGroupChatItem(ctx context.Context, groupID int64) error 
 	return err
 }
 
+const deleteOneGroupChatItem = `-- name: DeleteOneGroupChatItem :exec
+DELETE FROM group_chat_item
+WHERE group_id = ? AND user_id
+`
+
+func (q *Queries) DeleteOneGroupChatItem(ctx context.Context, groupID int64) error {
+	_, err := q.db.ExecContext(ctx, deleteOneGroupChatItem, groupID)
+	return err
+}
+
 const getGroupChatNoti = `-- name: GetGroupChatNoti :many
-SELECT id, group_id, last_msg_at FROM group_chat_item
-ORDER BY last_msg_at
+SELECT id, group_id, user_id, chat_noti, last_msg_at FROM group_chat_item
+ORDER BY last_msg_at DESC
 `
 
 func (q *Queries) GetGroupChatNoti(ctx context.Context) ([]GroupChatItem, error) {
@@ -55,7 +78,13 @@ func (q *Queries) GetGroupChatNoti(ctx context.Context) ([]GroupChatItem, error)
 	var items []GroupChatItem
 	for rows.Next() {
 		var i GroupChatItem
-		if err := rows.Scan(&i.ID, &i.GroupID, &i.LastMsgAt); err != nil {
+		if err := rows.Scan(
+			&i.ID,
+			&i.GroupID,
+			&i.UserID,
+			&i.ChatNoti,
+			&i.LastMsgAt,
+		); err != nil {
 			return nil, err
 		}
 		items = append(items, i)
@@ -69,33 +98,58 @@ func (q *Queries) GetGroupChatNoti(ctx context.Context) ([]GroupChatItem, error)
 	return items, nil
 }
 
-const getGroupChatNotiByGroupId = `-- name: GetGroupChatNotiByGroupId :one
-SELECT id, group_id, last_msg_at FROM group_chat_item
-WHERE group_id = ?
+const getOneGroupChatItemByUserId = `-- name: GetOneGroupChatItemByUserId :one
+SELECT id, group_id, user_id, chat_noti, last_msg_at FROM group_chat_item
+WHERE group_id = ? AND user_id = ?
 `
 
-func (q *Queries) GetGroupChatNotiByGroupId(ctx context.Context, groupID int64) (GroupChatItem, error) {
-	row := q.db.QueryRowContext(ctx, getGroupChatNotiByGroupId, groupID)
+type GetOneGroupChatItemByUserIdParams struct {
+	GroupID int64
+	UserID  int64
+}
+
+func (q *Queries) GetOneGroupChatItemByUserId(ctx context.Context, arg GetOneGroupChatItemByUserIdParams) (GroupChatItem, error) {
+	row := q.db.QueryRowContext(ctx, getOneGroupChatItemByUserId, arg.GroupID, arg.UserID)
 	var i GroupChatItem
-	err := row.Scan(&i.ID, &i.GroupID, &i.LastMsgAt)
+	err := row.Scan(
+		&i.ID,
+		&i.GroupID,
+		&i.UserID,
+		&i.ChatNoti,
+		&i.LastMsgAt,
+	)
 	return i, err
 }
 
 const updateGroupChatItem = `-- name: UpdateGroupChatItem :one
 UPDATE group_chat_item
-set last_msg_at = ?
-WHERE group_id = ?
-RETURNING id, group_id, last_msg_at
+SET chat_noti = ?,
+last_msg_at = ?
+WHERE group_id = ? AND user_id = ?
+RETURNING id, group_id, user_id, chat_noti, last_msg_at
 `
 
 type UpdateGroupChatItemParams struct {
+	ChatNoti  int64
 	LastMsgAt time.Time
 	GroupID   int64
+	UserID    int64
 }
 
 func (q *Queries) UpdateGroupChatItem(ctx context.Context, arg UpdateGroupChatItemParams) (GroupChatItem, error) {
-	row := q.db.QueryRowContext(ctx, updateGroupChatItem, arg.LastMsgAt, arg.GroupID)
+	row := q.db.QueryRowContext(ctx, updateGroupChatItem,
+		arg.ChatNoti,
+		arg.LastMsgAt,
+		arg.GroupID,
+		arg.UserID,
+	)
 	var i GroupChatItem
-	err := row.Scan(&i.ID, &i.GroupID, &i.LastMsgAt)
+	err := row.Scan(
+		&i.ID,
+		&i.GroupID,
+		&i.UserID,
+		&i.ChatNoti,
+		&i.LastMsgAt,
+	)
 	return i, err
 }

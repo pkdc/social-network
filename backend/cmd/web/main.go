@@ -47,7 +47,6 @@ func main() {
 	mux.Handle("/group-message", backend.GroupMessageHandler())
 	mux.Handle("/group-request-by-user", backend.GroupRequestByUserHandler())
 
-
 	mux.Handle("/private-chat-item", backend.PrivateChatItemHandler())
 	mux.Handle("/group-chat-item", backend.GroupChatItemHandler())
 	mux.Handle("/group-chat-seen", backend.GroupChatSeenHandler())

@@ -29,9 +29,9 @@ func (q *Queries) CheckIfMember(ctx context.Context, arg CheckIfMemberParams) (i
 
 const createGroupMember = `-- name: CreateGroupMember :one
 INSERT INTO group_member (
-  user_id, group_id, status_, chat_noti
+  user_id, group_id, status_
 ) VALUES (
-  ?, ?, ?, 0
+  ?, ?, ?
 )
 RETURNING id, user_id, group_id, status_, chat_noti
 `

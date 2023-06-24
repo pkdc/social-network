@@ -19,6 +19,8 @@ type Group struct {
 type GroupChatItem struct {
 	ID        int64
 	GroupID   int64
+	UserID    int64
+	ChatNoti  int64
 	LastMsgAt time.Time
 }
 

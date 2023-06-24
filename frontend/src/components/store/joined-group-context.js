@@ -69,22 +69,19 @@ export const JoinedGroupContextProvider = (props) => {
     };
 
     const getGroupChatHandler = () => {
-        // (async function() {
-        //     const grpChatNotiArr = await fetchGroupChatNoti(`http://localhost:8080/group-member?userid=${selfId}`)
-        //     console.log("grp chat noti data", grpChatNotiArr);
-        // }())
         (async function() {
             try {
-                const grpChatNotiArr = await fetchGroupChatData(`http://localhost:8080/group-member?userid=${selfId}`);
-                console.log("grp chat noti Arr", grpChatNotiArr);
-
-                const grpChatItemArr = await fetchGroupChatData(`http://localhost:8080/group-chat-item`);
-                console.log("grp chat noti Arr", grpChatItemArr);
+                const promises = [
+                    fetchGroupChatData(`http://localhost:8080/group-member?userid=${selfId}`),
+                    fetchGroupChatData(`http://localhost:8080/group-chat-item`),
+                ];
+                const result = await Promise.all(promises);
                 
-                // problem, need a different approach, since the returned data is a list of cur user joined groups
-                // and it's not right to store chat_noti in group
-                // maybe store everything in group chat item?
+                const memberOfGrpArr = result[0];
+                console.log("memberOfGrpArr", memberOfGrpArr);
 
+                const grpChatItemArr = result[1];
+                console.log("grp chat item Arr", grpChatItemArr);
             } catch(err) {
                 console.log(`${err} occurred during fetch`);
             }
@@ -228,4 +225,3 @@ export const JoinedGroupContextProvider = (props) => {
         </JoinedGroupContext.Provider>
     );
 };
-
