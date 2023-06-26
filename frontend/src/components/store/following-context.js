@@ -126,7 +126,7 @@ export const FollowingContextProvider = (props) => {
         }).catch(err => {
             console.log(err);
         })
-    }
+    };
 
     const requestToFollowHandler = (followUser) => {
         console.log("request to follow (context): ", followUser.id);
