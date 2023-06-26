@@ -115,7 +115,18 @@ export const JoinedGroupContextProvider = (props) => {
                         const matchedGroups = joinedGroupsArr.find(grp => grp.id === chatItem.groupid);
                         return {...chatItem, ...matchedGroups};
                     });
-                    setJoinedGrps(groupChatItems);
+
+                    // Also display groups even if there is no chat item
+                    let filteredGroupsNoChatItems;
+                    if (joinedGroupsArr) {
+                        filteredGroupsNoChatItems = joinedGroupsArr.filter(grp => {
+                            if (!allGrpChatItemArr) return false;
+                            return !allGrpChatItemArr.some(chatItem => grp.id === chatItem.groupid);
+                        });
+                    }
+                    console.log("filteredFollowing Without oChatItems", filteredGroupsNoChatItems);
+                    const finalGroupChatItems = [...groupChatItems, ...filteredGroupsNoChatItems];
+                    setJoinedGrps(finalGroupChatItems);
                 }
                 
                 
