@@ -85,6 +85,7 @@ export const JoinedGroupContextProvider = (props) => {
                 if (!joinedGroupsArr) {
                     setJoinedGrps([]);
                     console.log("user hasn't joined any group");
+                    return;
                 } else {
                     setJoinedGrps(joinedGroupsArr);
                     console.log("user has joined groups", joinedGroupsArr);
@@ -97,16 +98,12 @@ export const JoinedGroupContextProvider = (props) => {
                     console.log("no grp chat record", allGrpChatItemArr);
                 } else if (allGrpChatItemArr) {
                     const filteredGroupChatItems = allGrpChatItemArr.filter(chatItem => {
-                        if (!joinedGroupsArr) {
-                            console.log("not join any grp");
-                            return false;
-                        }
-                        console.log("joinedGroupsArr length", joinedGroupsArr.length);
-                        for (let grp of joinedGroupsArr) {
-                            console.log("grp id", grp.id);
-                        }
-                        console.log("returned", joinedGroupsArr.some(grp => grp.id == chatItem.groupid));
-                        return joinedGroupsArr.some(grp => grp.id === chatItem.groupid);
+                        // console.log("joinedGroupsArr length", joinedGroupsArr.length);
+                        // for (let grp of joinedGroupsArr) {
+                        //     console.log("grp id", grp.id);
+                        // }
+                        console.log("returned", joinedGroupsArr.some(grp => grp.id == chatItem.groupid && +selfId === chatItem.userid));
+                        return joinedGroupsArr.some(grp => grp.id === chatItem.groupid && +selfId === chatItem.userid);
                     });
                     console.log("filteredGroupChatItems", filteredGroupChatItems);
                     
@@ -115,13 +112,13 @@ export const JoinedGroupContextProvider = (props) => {
                         const matchedGroups = joinedGroupsArr.find(grp => grp.id === chatItem.groupid);
                         return {...chatItem, ...matchedGroups};
                     });
-
+                    //  === chatItem.groupid && +selfId === chatItem.userId
                     // Also display groups even if there is no chat item
                     let filteredGroupsNoChatItems;
                     if (joinedGroupsArr) {
                         filteredGroupsNoChatItems = joinedGroupsArr.filter(grp => {
                             if (!allGrpChatItemArr) return false;
-                            return !allGrpChatItemArr.some(chatItem => grp.id === chatItem.groupid);
+                            return !allGrpChatItemArr.some(chatItem => grp.id);
                         });
                     }
                     console.log("filteredFollowing Without oChatItems", filteredGroupsNoChatItems);
