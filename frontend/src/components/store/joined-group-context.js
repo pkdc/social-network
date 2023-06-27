@@ -76,7 +76,7 @@ export const JoinedGroupContextProvider = (props) => {
             try {
                 const promises = [
                     fetchGroupChatData(joinedGroupingUrl),
-                    fetchGroupChatData(`http://localhost:8080/group-chat-item`),
+                    fetchGroupChatData(`http://localhost:8080/group-chat-item?userid=${selfId}`),
                 ];
                 const result = await Promise.all(promises);
                 
