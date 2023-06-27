@@ -1,5 +1,6 @@
 -- name: GetGroupChatNoti :many
 SELECT * FROM group_chat_item
+WHERE user_id = ?
 ORDER BY last_msg_at DESC;
 
 -- name: GetOneGroupChatItemByUserId :one

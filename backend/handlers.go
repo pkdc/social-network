@@ -2950,6 +2950,18 @@ func GroupChatItemHandler() http.HandlerFunc {
 			return
 		}
 
+		userId := r.URL.Query().Get("userid")
+		if userId == "" {
+			http.Error(w, "400 bad request", http.StatusBadRequest)
+			return
+		}
+
+		uId, err := strconv.Atoi(userId)
+
+		if err != nil {
+			fmt.Println("Unable to convert user ID")
+		}
+
 		switch r.Method {
 		case http.MethodGet:
 			// Declares the payload struct
@@ -2963,7 +2975,7 @@ func GroupChatItemHandler() http.HandlerFunc {
 
 			// ### get all group chat items ###
 
-			chatItems, err := query.GetGroupChatNoti(context.Background())
+			chatItems, err := query.GetGroupChatNoti(context.Background(), int64(uId))
 
 			if err != nil {
 				fmt.Println("Unable to get group chat items")

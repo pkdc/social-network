@@ -66,11 +66,12 @@ func (q *Queries) DeleteOneGroupChatItem(ctx context.Context, groupID int64) err
 
 const getGroupChatNoti = `-- name: GetGroupChatNoti :many
 SELECT id, group_id, user_id, chat_noti, last_msg_at FROM group_chat_item
+WHERE user_id = ?
 ORDER BY last_msg_at DESC
 `
 
-func (q *Queries) GetGroupChatNoti(ctx context.Context) ([]GroupChatItem, error) {
-	rows, err := q.db.QueryContext(ctx, getGroupChatNoti)
+func (q *Queries) GetGroupChatNoti(ctx context.Context, userID int64) ([]GroupChatItem, error) {
+	rows, err := q.db.QueryContext(ctx, getGroupChatNoti, userID)
 	if err != nil {
 		return nil, err
 	}

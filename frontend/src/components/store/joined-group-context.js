@@ -6,6 +6,8 @@ export const JoinedGroupContext = React.createContext({
     joinedGrps: [],
     // requestedGrps: [],
     setJoinedGrps: () => {},
+    // joinedGrpsChat: [],
+    // setJoinedGrpsChat: () => {},
     getJoinedGrps: () => {},
     requestToJoin: (joinGrpId) => {},
     InviteToJoin: (grp, InvitedUser) => {},
@@ -23,27 +25,28 @@ export const JoinedGroupContextProvider = (props) => {
     const grpCtx = useContext(GroupsContext);
 
     const [joinedGrps, setJoinedGrps] = useState([]);
+    // const [joinedGrpsChat, setJoinedGrpsChat] = useState([]);
     const [requestedGroups, setRequestedGroups] = useState([]);
     const joinedGroupingUrl = `http://localhost:8080/group-member?userid=${selfId}`;
     const requestedGroupUrl = `http://localhost:8080/group-request-by-user?id=${selfId}`;
     const wsCtx = useContext(WebSocketContext);
 
     // get from db
-    const getJoinedGrpsHandler = () => {
-        fetch(joinedGroupingUrl)
-        .then(resp => resp.json())
-        .then(data => {
-            console.log("joinedGroupsArr (context) ", data);
-            let [joinedGroupsArr] = Object.values(data); 
-            setJoinedGrps(joinedGroupsArr);
-            // localStorage.setjoinedGrpsItem("joinedGroups", JSON.stringify(joinedGroupsArr));
-            localStorage.setItem("joinedGroups", JSON.stringify(joinedGroupsArr));
+    // const getJoinedGrpsHandler = () => {
+    //     fetch(joinedGroupingUrl)
+    //     .then(resp => resp.json())
+    //     .then(data => {
+    //         console.log("joinedGroupsArr (context) ", data);
+    //         let [joinedGroupsArr] = Object.values(data); 
+    //         setJoinedGrps(joinedGroupsArr);
+    //         // localStorage.setjoinedGrpsItem("joinedGroups", JSON.stringify(joinedGroupsArr));
+    //         localStorage.setItem("joinedGroups", JSON.stringify(joinedGroupsArr));
 
-        })
-        .catch(
-            err => console.log(err)
-        );
-    };
+    //     })
+    //     .catch(
+    //         err => console.log(err)
+    //     );
+    // };
     const getRequestedGrpsHandler = () => {
         console.log("RUNNNING")
         fetch(requestedGroupUrl)
@@ -72,16 +75,61 @@ export const JoinedGroupContextProvider = (props) => {
         (async function() {
             try {
                 const promises = [
-                    fetchGroupChatData(`http://localhost:8080/group-member?userid=${selfId}`),
-                    fetchGroupChatData(`http://localhost:8080/group-chat-item`),
+                    fetchGroupChatData(joinedGroupingUrl),
+                    fetchGroupChatData(`http://localhost:8080/group-chat-item?userid=${selfId}`),
                 ];
                 const result = await Promise.all(promises);
                 
-                const memberOfGrpArr = result[0];
-                console.log("memberOfGrpArr", memberOfGrpArr);
+                const joinedGroupsArr = result[0];
+                console.log("memberOfGrpArr", joinedGroupsArr);
+                if (!joinedGroupsArr) {
+                    setJoinedGrps([]);
+                    console.log("user hasn't joined any group");
+                    return;
+                } else {
+                    setJoinedGrps(joinedGroupsArr);
+                    console.log("user has joined groups", joinedGroupsArr);
+                }
+                localStorage.setItem("joinedGroups", JSON.stringify(joinedGroupsArr));
 
-                const grpChatItemArr = result[1];
-                console.log("grp chat item Arr", grpChatItemArr);
+                const allGrpChatItemArr = result[1];
+                console.log("grp chat item Arr", allGrpChatItemArr);
+                if (!allGrpChatItemArr) {
+                    console.log("no grp chat record", allGrpChatItemArr);
+                } else if (allGrpChatItemArr) {
+                    const filteredGroupChatItems = allGrpChatItemArr.filter(chatItem => {
+                        // console.log("joinedGroupsArr length", joinedGroupsArr.length);
+                        // for (let grp of joinedGroupsArr) {
+                        //     console.log("grp id", grp.id);
+                        // }
+                        console.log("returned", joinedGroupsArr.some(grp => grp.id == chatItem.groupid && +selfId === chatItem.userid));
+                        return joinedGroupsArr.some(grp => grp.id === chatItem.groupid && +selfId === chatItem.userid);
+                    });
+                    console.log("filteredGroupChatItems", filteredGroupChatItems);
+                    
+                     // merge the properties
+                     const groupChatItems = filteredGroupChatItems.map(chatItem => {
+                        const matchedGroups = joinedGroupsArr.find(grp => grp.id === chatItem.groupid);
+                        return {...chatItem, ...matchedGroups};
+                    });
+                    //  === chatItem.groupid && +selfId === chatItem.userId
+                    // Also display groups even if there is no chat item
+                    let filteredGroupsNoChatItems;
+                    if (joinedGroupsArr) {
+                        filteredGroupsNoChatItems = joinedGroupsArr.filter(grp => {
+                            if (!allGrpChatItemArr) return false;
+                            return !allGrpChatItemArr.some(chatItem => grp.id);
+                        });
+                    }
+                    console.log("filteredFollowing Without oChatItems", filteredGroupsNoChatItems);
+                    const finalGroupChatItems = [...groupChatItems, ...filteredGroupsNoChatItems];
+                    setJoinedGrps(finalGroupChatItems);
+                }
+                
+                
+
+                 // Also display joined groups even if there is no chat item
+
             } catch(err) {
                 console.log(`${err} occurred during fetch`);
             }
@@ -198,7 +246,7 @@ export const JoinedGroupContextProvider = (props) => {
     };
 
     useEffect(() => {
-        getJoinedGrpsHandler();
+        // getJoinedGrpsHandler();
         getGroupChatHandler();
     }, []);
     useEffect(() => getRequestedGrpsHandler(), []);
@@ -207,7 +255,9 @@ export const JoinedGroupContextProvider = (props) => {
         <JoinedGroupContext.Provider value={{
             joinedGrps: joinedGrps,
             setJoinedGrps: setJoinedGrps,
-            getFollowing: getJoinedGrpsHandler, // implement
+            // joinedGrpsChat: joinedGrpsChat,
+            // setJoinedGrpsChat, setJoinedGrpsChat,
+            // getFollowing: getJoinedGrpsHandler, // implement
             requestToJoin: requestToJoinHandler,
             InviteToJoin: InviteToJoinHandler,
             requestLocalStrg: getRequestedGrpsHandler,
