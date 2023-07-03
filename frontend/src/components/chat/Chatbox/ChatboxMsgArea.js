@@ -18,7 +18,7 @@ const ChatboxMsgArea = (props) => {
     return (
         <div
             className={styles["msg-area"]}
-            style={{ height: `${window.innerHeight - 400}px` }}
+            style={{ height: `${window.innerHeight - 370}px` }}
             ref={msgAreaRef}
         // scrolltop={}
         // onScroll={scrollHandler}
