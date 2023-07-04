@@ -18,7 +18,9 @@ const OldMsgItem = (props) => {
     let targetUsers;
     // usersCtx.users.find((user) => user.id === wsCtx.newPrivateMsgsObj.sourceid);
     // assume usersCtx.users sorted by user id
-    console.log(usersCtx.users)
+    console.log(usersCtx.users);
+    console.log(props.targetid);
+    console.log(props.sourceid);
     // if (!props.groupid) {
     //     targetUsers = [usersCtx.users.find(user => user.id === props.targetid)];
     // }  else {
@@ -38,7 +40,7 @@ const OldMsgItem = (props) => {
                 <SmallAvatar height={30} width={30}></SmallAvatar>
             }
             <div className={styles.wrapper}>
-                <div className={`${self ? styles["self-username"] : styles["frd-username"]}`}>{usersCtx.users[props.targetid].fname} {usersCtx.users[props.targetid].lname}</div>
+                <div className={`${self ? styles["self-username"] : styles["frd-username"]}`}>{usersCtx.users[props.targetid-1].fname} {usersCtx.users[props.targetid-1].lname}</div>
                 <div className={`${self ? styles["chat-bubble-self"] : styles["chat-bubble-frd"]}`}>
                     {props.msg}
                 </div>

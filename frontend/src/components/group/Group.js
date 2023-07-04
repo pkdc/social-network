@@ -23,9 +23,6 @@ function Group(props) {
     const usersCtx = useContext(UsersContext);
 
     useEffect(() => {
-        jGrpCtx.getFollowing()
-    }, [])
-    useEffect(() => {
         // const storedJoinedGrps = JSON.parse(localStorage.getItem("joined-grps"));
         // console.log("stored joined-grps (group)", storedJoinedGrps);
         // check if the current group item is one of the joined Grps in the joinedGrps array

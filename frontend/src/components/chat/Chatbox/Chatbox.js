@@ -180,7 +180,7 @@ const Chatbox = (props) => {
                     for (let i = 0; i < oldMsgArr.length; i++) {
                         if (oldMsgArr[i].hasOwnProperty("sourceid")) {
                             oldMsgArr[i]["targetid"] = oldMsgArr[i]["sourceid"];
-                            delete oldMsgArr[i]["sourceid"];
+                            // delete oldMsgArr[i]["sourceid"]; // need this to id self
                         }
                     }
                     console.log("old msg arr for grp: ", oldMsgArr);
