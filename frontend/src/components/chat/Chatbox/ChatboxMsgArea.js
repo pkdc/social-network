@@ -10,10 +10,10 @@ const ChatboxMsgArea = (props) => {
     // const [areaScrollTop, setAreaScrollTop] = useState();  
 
     const scrollBottom = () => {
-        // if (msgAreaRef.current) {
-            // setTimeout(() => msgAreaRef.current.scrollTop = msgAreaRef.current.scrollHeight - msgAreaRef.current.clientHeight, 50)
-            msgAreaRef.current.scrollTop = msgAreaRef.current.scrollHeight - msgAreaRef.current.clientHeight;
-        // }
+        if (msgAreaRef.current) {
+            setTimeout(() => msgAreaRef.current.scrollTop = msgAreaRef.current.scrollHeight - msgAreaRef.current.clientHeight, 50)
+            // msgAreaRef.current.scrollTop = msgAreaRef.current.scrollHeight - msgAreaRef.current.clientHeight;
+        }
     };
     // useEffect(() => { scrollBottom(); }, []);
     useEffect(() => { scrollBottom(); }, [props.justUpdated]);

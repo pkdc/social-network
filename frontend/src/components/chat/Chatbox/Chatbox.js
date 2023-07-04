@@ -100,7 +100,6 @@ const Chatbox = (props) => {
                 joinedGrpCtx.receiveMsgGroup(frdOrGrpId, true);   
             }
         }
-        
         setJustUpdated(prev => !prev);
     }, [wsCtx.newGroupMsgsObj]) 
 
@@ -140,6 +139,7 @@ const Chatbox = (props) => {
             selfNewMsgObject["targetid"] = frdOrGrpId;  
         } else {
             selfNewMsgObject["groupid"] = frdOrGrpId;
+            selfNewMsgObject["targetid"] = selfId;
         }  
         selfNewMsgObject["id"] = Date.now();
         selfNewMsgObject["sourceid"] = selfId;
