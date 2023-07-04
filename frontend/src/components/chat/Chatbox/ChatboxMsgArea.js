@@ -11,7 +11,7 @@ const ChatboxMsgArea = (props) => {
 
     const scrollBottom = () => {
         if (msgAreaRef.current) {
-            setTimeout(() => msgAreaRef.current.scrollTop = msgAreaRef.current.scrollHeight - msgAreaRef.current.clientHeight, 1000)
+            setTimeout(() => msgAreaRef.current.scrollTop = msgAreaRef.current.scrollHeight - msgAreaRef.current.clientHeight, 50)
         }
     };
     // useEffect(() => { scrollBottom(); }, []);
