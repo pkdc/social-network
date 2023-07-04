@@ -41,8 +41,9 @@ const OldMsgItem = (props) => {
             }
             <div className={styles.wrapper}>
                 {/* caused by mixed up of targetid and sourceid for group chat item*/}
-                {props.groupid && <div className={`${self ? styles["self-username"] : styles["frd-username"]}`}>{usersCtx.users[props.targetid-1].fname} {usersCtx.users[props.targetid-1].lname}</div>}
-                {!props.groupid && <div className={`${self ? styles["self-username"] : styles["frd-username"]}`}>{usersCtx.users[props.sourceid-1].fname} {usersCtx.users[props.sourceid-1].lname}</div>}
+                {/* {props.groupid && <div className={`${self ? styles["self-username"] : styles["frd-username"]}`}>{usersCtx.users[props.targetid-1].fname} {usersCtx.users[props.targetid-1].lname}</div>}
+                {!props.groupid && <div className={`${self ? styles["self-username"] : styles["frd-username"]}`}>{usersCtx.users[props.sourceid-1].fname} {usersCtx.users[props.sourceid-1].lname}</div>} */}
+                <div className={`${self ? styles["self-username"] : styles["frd-username"]}`}>{usersCtx.users[props.sourceid-1].fname} {usersCtx.users[props.sourceid-1].lname}</div>
                 <div className={`${self ? styles["chat-bubble-self"] : styles["chat-bubble-frd"]}`}>
                     {props.msg}
                 </div>
