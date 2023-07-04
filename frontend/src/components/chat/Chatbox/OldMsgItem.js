@@ -14,8 +14,16 @@ const OldMsgItem = (props) => {
     useEffect(() => {
         setSelf(props.sourceid === selfId)
     }, [props])
+
+    let targetUsers;
     // usersCtx.users.find((user) => user.id === wsCtx.newPrivateMsgsObj.sourceid);
-    const targetUser = usersCtx.users.find(user => user.id === props.targetid);
+    // assume usersCtx.users sorted by user id
+    console.log(usersCtx.users)
+    // if (!props.groupid) {
+    //     targetUsers = [usersCtx.users.find(user => user.id === props.targetid)];
+    // }  else {
+    //     // targetUsers = usersCtx.users.find(user => user.id === props.targetid);
+    // }
     // const { error, isLoaded, data } = useGet(`/user?id=${props.sourceid}`);
 
     // if (!isLoaded) return <div>Loading...</div>
@@ -30,7 +38,7 @@ const OldMsgItem = (props) => {
                 <SmallAvatar height={30} width={30}></SmallAvatar>
             }
             <div className={styles.wrapper}>
-                <div className={`${self ? styles["self-username"] : styles["frd-username"]}`}>{targetUser.fname} {targetUser.lname}</div>
+                <div className={`${self ? styles["self-username"] : styles["frd-username"]}`}>{usersCtx.users[props.targetid].fname} {usersCtx.users[props.targetid].lname}</div>
                 <div className={`${self ? styles["chat-bubble-self"] : styles["chat-bubble-frd"]}`}>
                     {props.msg}
                 </div>

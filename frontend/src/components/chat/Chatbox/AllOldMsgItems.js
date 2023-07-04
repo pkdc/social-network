@@ -11,6 +11,7 @@ const AllOldMsgItems = (props) => {
                 id={oldMsg.id}
                 targetid={oldMsg.targetid}
                 sourceid={oldMsg.sourceid}
+                groupid={oldMsg.groupid}
                 msg={oldMsg.message}
                 createdat={oldMsg.createdat}
             />

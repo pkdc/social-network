@@ -176,6 +176,15 @@ const Chatbox = (props) => {
             console.log("old msg data: ", data);
             if (data.data) {
                 const [oldMsgArr] = Object.values(data);
+                if (props.grp) { // changing the prop name from sourceid to targetid if group
+                    for (let i = 0; i < oldMsgArr.length; i++) {
+                        if (oldMsgArr[i].hasOwnProperty("sourceid")) {
+                            oldMsgArr[i]["targetid"] = oldMsgArr[i]["sourceid"];
+                            delete oldMsgArr[i]["sourceid"];
+                        }
+                    }
+                    console.log("old msg arr for grp: ", oldMsgArr);
+                }
                 oldMsgArr.sort((b, a) => Date.parse(b.createdat) - Date.parse(a.createdat));
                 console.log("soreted old msg data", oldMsgArr);
                 setOldMsgData([...new Set(oldMsgArr)]);
