@@ -18,13 +18,13 @@ function AllGroupPosts(props) {
 
 
     // data.data && data.data.sort((a, b) => Date.parse(b.createdat) - Date.parse(a.createdat));
-   
+   console.log(props.post, "postprrops")
     return <div className={classes.container}>
         {props.posts && props.posts.map((post) => (
             <GroupPost
                 key={post.id}
                 id={post.id}
-                avatar={post.avatar}
+                avatar={post.image}
                 author={post.author}
                 fname={post.fname}
                 lname={post.lname}
@@ -74,7 +74,7 @@ export default AllGroupPosts;
 //         author={post.author}
 //         message={post.message}
 //         image={post.image}
-//         createdat={post.createdat} 
+//         createdat={post.createdat}
 //         />
 //         ))}
 //     </div>

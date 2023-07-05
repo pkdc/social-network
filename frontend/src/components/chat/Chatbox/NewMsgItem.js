@@ -21,9 +21,9 @@ const NewMsgItem = (props) => {
 
     return (
         <div className={`${self ? styles["self-msg"] : styles["frd-msg"]}`}>
-            
+
         {!self &&
-            <SmallAvatar height={30} width={30}></SmallAvatar>
+            <SmallAvatar src={data.data[0].avatar}height={30} width={30}></SmallAvatar>
         }
         <div className={styles.wrapper}>
             <div className={`${self ? styles["self-username"] : styles["frd-username"]}`}>{data.data[0].fname} {data.data[0].lname}</div>

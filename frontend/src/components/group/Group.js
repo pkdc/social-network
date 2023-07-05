@@ -120,7 +120,7 @@ const reqGroups = jGrpCtx.requestedGroups
 
     function handleClick(e) {
         const id = e.target.id
-
+console.log(id, "1234536546")
         navigate("/groupprofile", { state: { id } })
 
     }
@@ -146,4 +146,4 @@ const reqGroups = jGrpCtx.requestedGroups
     </Card>
 }
 
-export default Group; 
+export default Group;

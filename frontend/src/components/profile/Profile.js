@@ -56,8 +56,8 @@ function Profile({ userId }) {
     // const wsCtx = useContext(WebSocketContext);
     // console.log("ws in profile: ",wsCtx.websocket);
     // wsCtx.websocket.onopen = function (){alert("ws is open")}
-    // let params = useParams();   
-    // let userId = params.productId 
+    // let params = useParams();
+    // let userId = params.productId
     // console.log("params", userId)
     const [currentlyFollowing, setCurrentlyFollowing] = useState(false);
     const [requestedToFollow, setRequestedToFollow] = useState(false);
@@ -387,7 +387,8 @@ function Profile({ userId }) {
             <div className={classes.wrapper}>
                 {/* <div className={classes.img}></div> */}
                 {/* <Avatar height={100}></Avatar> */}
-                <SmallAvatar height={100}></SmallAvatar>
+                <SmallAvatar  src={data.data[0].avatar}height={100}></SmallAvatar>
+
                 <div className={classes.column}>
                     <div className={classes.row}>
                         <div className={classes.row}>
@@ -439,5 +440,3 @@ function Profile({ userId }) {
 
 
 export default Profile;
-
-

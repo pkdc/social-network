@@ -20,21 +20,21 @@ function  CreateGroupPost(props) {
             author: parseInt(currUserId),
             groupid: parseInt(props.groupid),
             message: message,
-            image: '',
+            image: localStorage.getItem("avatar"),
             createdat: Date.now(),
         };
 
         props.onCreatePost(data)
 
-    
-        // fetch('http://localhost:8080/group-post', 
+
+        // fetch('http://localhost:8080/group-post',
         // {
         //     method: 'POST',
         //     credentials: "include",
         //     mode: "cors",
         //     body: JSON.stringify(data),
-        //     headers: { 
-        //         'Content-Type': 'application/json' 
+        //     headers: {
+        //         'Content-Type': 'application/json'
         //     }
         // }).then(() => {
         //     // navigate.replace('/??')
@@ -68,14 +68,14 @@ return <form className={classes.container} onSubmit={SubmitHandler}>
         <Card>
             <div className={classes.row}>
                 {/* <img src={profile} alt='' /> */}
-                <Avatar height={40} width={40}></Avatar>
+                <Avatar src={localStorage.getItem("avatar")}height={40} width={40}></Avatar>
                 <textarea className={classes.content} placeholder="What's on your mind?" rows="1" value={message} onChange={e => setMessage(e.target.value)} required/>
             </div>
-      
+
         <div className={classes.btn}>
             <SmallButton>Post</SmallButton>
         </div>
-        </Card>     
+        </Card>
     </form>
 }
 

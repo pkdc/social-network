@@ -2080,7 +2080,7 @@ func GroupPostCommentHandler() http.HandlerFunc {
 				newComment.Message = comment.Message
 				newComment.GroupPostId = int(comment.GroupPostID)
 				newComment.CreatedAt = comment.CreatedAt.String()
-
+				newComment.AuthorAvatar =us.Image
 				Resp.Data = append(Resp.Data, newComment)
 			}
 			fmt.Println("Resp: ", Resp.Data, len(Resp.Data))

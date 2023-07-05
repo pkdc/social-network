@@ -27,7 +27,7 @@ function UserEvent(props) {
     }).format(mills);
 
     return <>
-    
+
     <Card className={classes.card}>
         {/* let [going ,setGoing] = useState */}
         <div id={props.groupid} onClick={handleClick} className={classes.container}>

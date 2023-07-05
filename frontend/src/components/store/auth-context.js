@@ -87,9 +87,9 @@ export const AuthContextProvider = (props) => {
           localStorage.setItem("fname", data.resp.fname);
           localStorage.setItem("lname", data.resp.lname);
           localStorage.setItem("dob", data.resp.dob);
-          data.nname && localStorage.setItem("nname", data.resp.nname);
-          data.avatar && localStorage.setItem("avatar", data.resp.avatar);
-          data.about && localStorage.setItem("about", data.resp.about);
+          data.resp.nname && localStorage.setItem("nname", data.resp.nname);
+          data.resp.avatar && localStorage.setItem("avatar", data.resp.avatar);
+          data.resp.about && localStorage.setItem("about", data.resp.about);
           localStorage.setItem("public", data.resp.public);
           localStorage.setItem("new_notif", "[]");
 

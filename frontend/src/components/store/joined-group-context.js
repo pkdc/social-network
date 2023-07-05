@@ -32,28 +32,28 @@ export const JoinedGroupContextProvider = (props) => {
     const wsCtx = useContext(WebSocketContext);
 
     // get from db
-    // const getJoinedGrpsHandler = () => {
-    //     fetch(joinedGroupingUrl)
-    //     .then(resp => resp.json())
-    //     .then(data => {
-    //         console.log("joinedGroupsArr (context) ", data);
-    //         let [joinedGroupsArr] = Object.values(data); 
-    //         setJoinedGrps(joinedGroupsArr);
-    //         // localStorage.setjoinedGrpsItem("joinedGroups", JSON.stringify(joinedGroupsArr));
-    //         localStorage.setItem("joinedGroups", JSON.stringify(joinedGroupsArr));
+    const getJoinedGrpsHandler = () => {
+        fetch(joinedGroupingUrl)
+        .then(resp => resp.json())
+        .then(data => {
+            console.log("joinedGroupsArr (context) ", data);
+            let [joinedGroupsArr] = Object.values(data);
+            setJoinedGrps(joinedGroupsArr);
+            // localStorage.setjoinedGrpsItem("joinedGroups", JSON.stringify(joinedGroupsArr));
+            localStorage.setItem("joinedGroups", JSON.stringify(joinedGroupsArr));
 
-    //     })
-    //     .catch(
-    //         err => console.log(err)
-    //     );
-    // };
+        })
+        .catch(
+            err => console.log(err)
+        );
+    };
     const getRequestedGrpsHandler = () => {
         console.log("RUNNNING")
         fetch(requestedGroupUrl)
         .then(resp => resp.json())
         .then(data => {
             console.log("requestedGroup (context): ", data);
-            let [requestedGroupsArr] = Object.values(data); 
+            let [requestedGroupsArr] = Object.values(data);
             setRequestedGroups(requestedGroupsArr);
             localStorage.setItem("requestedGroups", JSON.stringify(requestedGroupsArr));
         })
@@ -63,7 +63,7 @@ export const JoinedGroupContextProvider = (props) => {
     };
 
     const fetchGroupChatData = async (url) => {
-        // no need to sort coz the db is already returning items ordered by last-msg-time 
+        // no need to sort coz the db is already returning items ordered by last-msg-time
         const resp = await fetch(url);
         const data = await resp.json();
         const [dataArr] = Object.values(data);
@@ -79,7 +79,7 @@ export const JoinedGroupContextProvider = (props) => {
                     fetchGroupChatData(`http://localhost:8080/group-chat-item?userid=${selfId}`),
                 ];
                 const result = await Promise.all(promises);
-                
+
                 const joinedGroupsArr = result[0];
                 console.log("memberOfGrpArr", joinedGroupsArr);
                 if (!joinedGroupsArr) {
@@ -106,7 +106,7 @@ export const JoinedGroupContextProvider = (props) => {
                         return joinedGroupsArr.some(grp => grp.id === chatItem.groupid && +selfId === chatItem.userid);
                     });
                     console.log("filteredGroupChatItems", filteredGroupChatItems);
-                    
+
                      // merge the properties
                      const groupChatItems = filteredGroupChatItems.map(chatItem => {
                         const matchedGroups = joinedGroupsArr.find(grp => grp.id === chatItem.groupid);
@@ -125,8 +125,8 @@ export const JoinedGroupContextProvider = (props) => {
                     const finalGroupChatItems = [...groupChatItems, ...filteredGroupsNoChatItems];
                     setJoinedGrps(finalGroupChatItems);
                 }
-                
-                
+
+
 
                  // Also display joined groups even if there is no chat item
 
@@ -228,7 +228,7 @@ export const JoinedGroupContextProvider = (props) => {
         // move userId chat item to the top
         setJoinedGrps(prevJoinedGrps => [targetGroup, ...prevJoinedGrps.filter(joinedGrp => joinedGrp.id !== +groupId)]);
         console.log("after add chat noti target group", targetGroup);
-        
+
     };
 
     const openGroupChatboxHandler = (groupId) => {
@@ -257,7 +257,7 @@ export const JoinedGroupContextProvider = (props) => {
             setJoinedGrps: setJoinedGrps,
             // joinedGrpsChat: joinedGrpsChat,
             // setJoinedGrpsChat, setJoinedGrpsChat,
-            // getFollowing: getJoinedGrpsHandler, // implement
+            getFollowing: getJoinedGrpsHandler, // implement
             requestToJoin: requestToJoinHandler,
             InviteToJoin: InviteToJoinHandler,
             requestLocalStrg: getRequestedGrpsHandler,

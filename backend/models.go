@@ -237,6 +237,7 @@ type GroupPostCommentStruct struct {
 	Author      int    `json:"userid"`
 	CreatedAt   string `json:"createdat"`
 	Message     string `json:"message"`
+	AuthorAvatar string `json:"avatar"`
 }
 
 type GroupPostCommentPayload struct {

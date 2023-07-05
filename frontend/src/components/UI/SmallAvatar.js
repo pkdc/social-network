@@ -21,8 +21,11 @@ const SmallAvatar = (props) => {
     },[wsCtx.newOnlineStatusObj.onlineuserids]);
 
     console.log("Avatar online status for user", props.id, onlineStatus);
-    
-    const defaultImagePath = "default_avatar.jpg";
+
+    let defaultImagePath = "default_avatar.jpg";
+    if (props.avatar!= null){
+        defaultImagePath = props.avatar
+    }
     const classes = `${styles["avatar"]} ${props.className || ""}`;
     return (
         <div className={styles["small-wrapper"]}>
@@ -30,7 +33,7 @@ const SmallAvatar = (props) => {
             {!onlineStatus && <div className={styles["small-offline-status-dot"]}></div>} */}
             {props.src && <img className={classes} src={props.src} alt={props.alt} height={props.height} width={props.width}/>}
             {!props.src && <img className={classes} src={require("../../images/"+`${defaultImagePath}`)} alt={props.alt} height={props.height} width={props.width}/>}
-        </div>    
+        </div>
     )
 };
 

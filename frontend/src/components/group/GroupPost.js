@@ -14,7 +14,7 @@ function GroupPost(props) {
 
     const showCommentsHandler = (e) => {
         console.log("props id target: ", e.target.id)
-  
+
         !showComments && setShowComments(true);
         showComments && setShowComments(false);
 
@@ -54,7 +54,7 @@ function GroupPost(props) {
             .then(resp => resp.json())
             .then(data => {
                 console.log("post page raw comment data: ", data.data)
-        
+
                 setCommentData(data.data);
             })
             .catch(
@@ -69,13 +69,13 @@ function GroupPost(props) {
         year: '2-digit',
         hour: 'numeric',
         minute: 'numeric'
-      }).format(new Date(props.createdat));    
+      }).format(new Date(props.createdat));
        console.log("created ", created)
-
+console.log(props, "porpos.avatar")
     return <Card className={classes.container} >
         <div className={classes.user}>
             {/* <img src={profile} alt='' /> */}
-            <Avatar height={40}></Avatar>
+            <Avatar src={props.avatar} height={40}></Avatar>
             <div>
                 <Link to={`/profile/${props.author}`} className={classes.username}>{props.fname} {props.lname}</Link>
                 <div className={classes.date}>{created}</div>
@@ -90,7 +90,7 @@ function GroupPost(props) {
                 {commentData &&
                   <AllComments comments={commentData} />
                    }
-              
+
                 <CreateGroupComment pid={props.id} onCreateComment={createCommentHandler} />
             </>
         }
