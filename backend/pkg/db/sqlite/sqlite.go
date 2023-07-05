@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"runtime"
 	"strconv"
 
 	"github.com/golang-migrate/migrate/v4"
@@ -66,14 +67,19 @@ func RemoveMigration(m *migrate.Migrate) {
 // connect to database
 
 func DbConnect() *sql.DB {
-
-	db, err := sql.Open("sqlite3", "../../pkg/db/database.db")
-
-	if err != nil {
-		log.Fatal(err)
+	if runtime.GOOS == "darwin" {
+		db, err := sql.Open("sqlite3", "../../pkg/db/database.db")
+		if err != nil {
+			log.Fatal(err)
+		}
+		return db
+	} else  {
+		db, err := sql.Open("sqlite3", "pkg/db/database.db")
+		if err != nil {
+			log.Fatal(err)
+		}
+		return db
 	}
-
-	return db
 }
 
 // insert mock user data
