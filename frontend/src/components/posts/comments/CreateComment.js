@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useCallback } from 'react'
 import { Link } from "react-router-dom";
 import send from '../../assets/send.svg'
 // import send from '../../assets/send2.svg'
@@ -20,7 +20,7 @@ function CreateComment(props) {
     const commentInput = useRef();
     // const [commentMsg, setCommentMsg] = useState("");
 
-    function SubmitHandler(event) {
+    const SubmitHandler = useCallback((event) => {
         event.preventDefault();
 
         const enteredContent = commentInput.current.value
@@ -38,9 +38,9 @@ function CreateComment(props) {
 
         commentInput.current.value = "";
         setUploadedCommentImg("");
-    }
+    }, [props.pid, props.onCreateComment])
 
-    const CommentImgUploadHandler = (e) => {
+    const CommentImgUploadHandler = useCallback((e) => {
         const file = e.target.files[0];
         const reader = new FileReader();
         reader.readAsDataURL(file);
@@ -48,7 +48,7 @@ function CreateComment(props) {
             console.log("comment img", reader.result);
             setUploadedCommentImg(reader.result);
         });
-    };
+    }, []);
 
     return <form className={classes.inputWrapper} onSubmit={SubmitHandler}>
         <Link to={`/profile/${userId}`} className={classes["author"]}>
