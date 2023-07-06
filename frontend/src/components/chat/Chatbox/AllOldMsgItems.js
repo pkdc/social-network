@@ -1,3 +1,4 @@
+import React from "react";
 import OldMsgItem from "./OldMsgItem";
 
 const AllOldMsgItems = (props) => {
@@ -19,4 +20,4 @@ const AllOldMsgItems = (props) => {
     );
 }
 
-export default AllOldMsgItems;
+export default React.memo(AllOldMsgItems);
