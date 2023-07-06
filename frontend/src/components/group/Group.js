@@ -109,7 +109,7 @@ const reqGroups = jGrpCtx.requestedGroups
 
     const joinGrpHandler = (grp, user) => {
         console.log("user joining group (group)", grp);
-        jGrpCtx.storeGroupMember(grp, user);
+        // jGrpCtx.storeGroupMember(grp, user);
         setCurrentlyJoined(true);
         setRequestedToJoin(false);
     };
