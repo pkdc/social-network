@@ -1,4 +1,4 @@
-import React, { useParams, useEffect, useState } from "react";
+import React, { useParams, useEffect, useState, useCallback } from "react";
 import FormLabel from "../UI/FormLabel";
 import FormInput from "../UI/FormInput";
 import FormTextarea from "../UI/FormTextarea";
@@ -57,7 +57,7 @@ const PostsPage = () => {
     }, [refreshState]);
 
     // create post
-    const createPostHandler = (createPostPayloadObj) => {
+    const createPostHandler = useCallback((createPostPayloadObj) => {
         console.log("postpage create post", createPostPayloadObj);
         const reqOptions = {
             method: "POST",
@@ -90,9 +90,9 @@ const PostsPage = () => {
             .catch(err => {
                 console.log(err);
             })
-    };
+    }, []);
 
-    const createCommentSuccessHandler = (createCommentSuccessful) => {
+    const createCommentSuccessHandler = useCallback((createCommentSuccessful) => {
         // fetch comment
         if (createCommentSuccessful) {
             fetch(postCommentUrl)
@@ -107,7 +107,7 @@ const PostsPage = () => {
                     err => console.log(err)
                 );
         }
-    };
+    }, []);
 
     function refresh() {
         refreshState ? setRefreshState(false) : setRefreshState(true) 

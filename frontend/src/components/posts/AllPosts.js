@@ -2,7 +2,7 @@ import Post from "./Post";
 
 import classes from './AllPosts.module.css'
 import useGet from "../fetch/useGet";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 
 function AllPosts(props) {
 
@@ -21,10 +21,10 @@ function AllPosts(props) {
     }
     // console.log("eachPostComments", eachPostCommentsArr);
  
-    const createCommentSuccessHandler = (createCommentSuccessful) => {
+    const createCommentSuccessHandler = useCallback((createCommentSuccessful) => {
         // lift it up to PostPage
         props.onCreateCommentSuccessful(createCommentSuccessful)
-    };
+    },[props.onCreateCommentSuccessful]);
 
     return <div className={classes.container}>
         {props.posts.map((post, p) => (

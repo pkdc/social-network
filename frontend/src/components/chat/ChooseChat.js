@@ -9,7 +9,6 @@ const ChooseChat = (props) => {
     const showUserListHandler = () => {
         console.log("User list");
         setGrpActive(false);
-
     };
 
     const showGrpListHandler = () => {

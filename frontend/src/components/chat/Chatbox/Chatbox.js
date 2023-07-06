@@ -1,4 +1,4 @@
-import { useEffect, useContext, useState } from "react";
+import { useEffect, useContext, useState, useCallback } from "react";
 import UsersContext from "../../store/users-context";
 import { WebSocketContext } from "../../store/websocket-context";
 import ChatboxMsgArea from "../Chatbox/ChatboxMsgArea";
@@ -119,7 +119,7 @@ const Chatbox = (props) => {
     }, [props.chatboxId]);
 
     // send msg to ws
-    const sendMsgHandler = (msg) => {
+    const sendMsgHandler = useCallback((msg) => {
         let chatPayloadObj = {};
         if (!props.grp) {
             chatPayloadObj["label"] = "private";
@@ -163,16 +163,16 @@ const Chatbox = (props) => {
         } 
 
         setJustUpdated(prev => !prev);
-    };
+    }, [props.grp, frdOrGrpId, followingCtx.following, wsCtx.websocket, joinedGrpCtx.receiveMsgGroup, followingCtx.receiveMsgFollowing, props.chatboxId]);
 
     // const scrolledBottom = (scrolled) => {
     //     scrolled && setJustSent(false);
     // };
     // console.log("new msg data (outside)", newMsgsData);
 
-    const closeChatboxHandler = () => {
+    const closeChatboxHandler = useCallback(() => {
         props.onCloseChatbox();
-    };
+    }, []);
 
     // get old msgsdata.data.push()
     // const AllMsgsToAndFrom = [];

@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import EmojiPicker from 'emoji-picker-react';
 import Form from "../../UI/Form";
 import send from '../../assets/send.svg';
@@ -12,12 +12,12 @@ const SendMsg = (props) => {
     const [enteredMsg, setEnteredMsg] = useState("");
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
-    const msgChangeHandler = (e) => {
+    const msgChangeHandler = useCallback((e) => {
         console.log("currently entered msg", e.target.value);
         setEnteredMsg(e.target.value);
-    };
+    }, []);
 
-    const sendMsgHandler = (e) => {
+    const sendMsgHandler = useCallback((e) => {
         e.preventDefault();
         // console.log("user sent msg: ", msgRef.current.value);
         // props.onSendMsg(msgRef.current.value);
@@ -25,13 +25,13 @@ const SendMsg = (props) => {
         console.log("submit entered msg", e.target.value);
         props.onSendMsg(enteredMsg);
         setEnteredMsg("");
-    }
+    }, [props.onSendMsg, enteredMsg]);
 
-    const showEmojiPickerHandler = (e) => {
+    const showEmojiPickerHandler = useCallback((e) => {
         e.preventDefault();
         console.log("toggle emoji picker");
         setShowEmojiPicker(val => !val);
-    };
+    }, []);
 
     const emojiClickHandler = (emojiObj) => {
         setEnteredMsg((prevInput) => {
