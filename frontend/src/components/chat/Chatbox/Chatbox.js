@@ -152,7 +152,15 @@ const Chatbox = (props) => {
         if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(chatPayloadObj));
 
         // move friendId chat item to top
-        // props.grp ? joinedGrpCtx.receiveMsgGroup() : followingCtx.receiveMsgFollowing(frdOrGrpId, true);
+        if (props.grp) {
+            joinedGrpCtx.receiveMsgGroup(frdOrGrpId, true);
+        } else {
+            if (followingCtx.following && followingCtx.following.find((following => following.id === props.chatboxId))) {
+                followingCtx.receiveMsgFollowing(frdOrGrpId, true, true);
+            } else {
+                followingCtx.receiveMsgFollowing(frdOrGrpId, true, false);
+            }
+        } 
 
         setJustUpdated(prev => !prev);
     };
