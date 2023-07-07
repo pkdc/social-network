@@ -25,7 +25,7 @@ const SendMsg = (props) => {
         console.log("submit entered msg", e.target.value);
         props.onSendMsg(enteredMsg);
         setEnteredMsg("");
-    }, [props.onSendMsg, enteredMsg, setEnteredMsg]);
+    }, [props.onSendMsg, enteredMsg]);
 
     const showEmojiPickerHandler = useCallback((e) => {
         e.preventDefault();

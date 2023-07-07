@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { WebSocketContext } from "./websocket-context";
 import { GroupsContext } from "./groups-context";
 
@@ -47,7 +47,7 @@ export const JoinedGroupContextProvider = (props) => {
     //         err => console.log(err)
     //     );
     // };
-    const getRequestedGrpsHandler = useCallback(() => {
+    const getRequestedGrpsHandler = () => {
         console.log("RUNNNING")
         fetch(requestedGroupUrl)
         .then(resp => resp.json())
@@ -60,18 +60,18 @@ export const JoinedGroupContextProvider = (props) => {
         .catch(
             err => console.log(err)
         );
-    }, [wsCtx.websocket]);
+    };
 
-    const fetchGroupChatData = useCallback(async (url) => {
+    const fetchGroupChatData = async (url) => {
         // no need to sort coz the db is already returning items ordered by last-msg-time 
         const resp = await fetch(url);
         const data = await resp.json();
         const [dataArr] = Object.values(data);
         console.log(" data Arr", dataArr);
         return dataArr;
-    }, []);
+    };
 
-    const getGroupChatHandler = useCallback(() => {
+    const getGroupChatHandler = () => {
         (async function() {
             try {
                 const promises = [
@@ -134,9 +134,9 @@ export const JoinedGroupContextProvider = (props) => {
                 console.log(`${err} occurred during fetch`);
             }
         }());
-    }, [joinedGroupingUrl, selfId]);
+    };
 
-    const requestToJoinHandler = useCallback((joinGrpId) => {
+    const requestToJoinHandler = (joinGrpId) => {
         getRequestedGrpsHandler()
         console.log("request to join user (context): ", +selfId);
         console.log("request to join grp (context): ", joinGrpId);
@@ -155,9 +155,9 @@ export const JoinedGroupContextProvider = (props) => {
         joinGrpPayloadObj["createdat"] = Date.now().toString();
         console.log("gonna send join grp req : ", joinGrpPayloadObj);
         if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(joinGrpPayloadObj));
-    }, [getRequestedGrpsHandler, wsCtx.websocket, grpCtx.groups]);
+    };
 
-    const InviteToJoinHandler = useCallback((grpid, InvitedUserId) => {
+    const InviteToJoinHandler = (grpid, InvitedUserId) => {
         console.log("Invite to join user (context): ", InvitedUserId);
         console.log("Invite to join grp (context): ", grpid);
 
@@ -176,9 +176,9 @@ export const JoinedGroupContextProvider = (props) => {
         InviteToJoinPayloadObj["createdat"] = Date.now().toString();
         console.log("gonna send invite : ", InviteToJoinPayloadObj);
         if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(InviteToJoinPayloadObj));
-    }, [grpCtx.groups]);
+    };
 
-    const joinHandler = useCallback((toJoinGrp, user) => {
+    const joinHandler = (toJoinGrp, user) => {
         console.log("toJoinGrp (jg ctx)", toJoinGrp);
         console.log("user (jg ctx)", user);
         if (joinedGrps) { // not empty
@@ -191,7 +191,7 @@ export const JoinedGroupContextProvider = (props) => {
             localStorage.setItem("joined-grps", JSON.stringify([toJoinGrp]));
         }
         console.log("locally stored joined grp (jg ctx)", JSON.parse(localStorage.getItem("joined-grps")));
-    }, [joinedGrps]);
+    };
 
     // const leaveHandler = (toLeaveGrp, user) => {
     //     console.log("user (leaveHandler)", user);
@@ -207,7 +207,7 @@ export const JoinedGroupContextProvider = (props) => {
         // store the new member to group member db table
     // };
 
-    const receiveMsgHandler = useCallback((groupId, open) => {
+    const receiveMsgHandler = (groupId, open) => {
         const targetGroup = joinedGrps.find(group => group.id === +groupId);
         console.log("target group", targetGroup);
         // noti if not open
@@ -229,9 +229,9 @@ export const JoinedGroupContextProvider = (props) => {
         setJoinedGrps(prevJoinedGrps => [targetGroup, ...prevJoinedGrps.filter(joinedGrp => joinedGrp.id !== +groupId)]);
         console.log("after add chat noti target group", targetGroup);
         
-    }, [joinedGrps, wsCtx.websocket, selfId]);
+    };
 
-    const openGroupChatboxHandler = useCallback((groupId) => {
+    const openGroupChatboxHandler = (groupId) => {
         const targetGroup = joinedGrps.find(group => group.id === +groupId);
         console.log("targetGroup open box", targetGroup);
 
@@ -243,7 +243,7 @@ export const JoinedGroupContextProvider = (props) => {
         groupChatNotiPayloadObj["groupid"] = +groupId;
 
         if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(groupChatNotiPayloadObj));
-    }, [joinedGrps, wsCtx.websocket, selfId]);
+    };
 
     useEffect(() => {
         // getJoinedGrpsHandler();
