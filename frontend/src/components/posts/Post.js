@@ -31,7 +31,7 @@ function Post(props) {
         showComments && setShowComments(false);
     },[]);
 
-    const createCommentHandler = useCallback((createCommentPayloadObj) => {
+    const createCommentHandler = (createCommentPayloadObj) => {
         console.log("create comment for Post", createCommentPayloadObj)
 
         const reqOptions = {
@@ -46,7 +46,14 @@ function Post(props) {
             .catch(err => {
                 console.log(err);
             })
-    }, [props.onCreateCommentSuccessful]);
+    };
+
+    function handleClick(e) {
+        const id = e.target.id
+
+        console.log("id: ", id)
+        navigate("/profile", { state: { id } })
+    }
 
     var myDate = new Date(props.createdat);
     var mills = myDate.getTime();

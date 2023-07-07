@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import Card from "../UI/Card";
 import CreatePostTextarea from "../UI/CreatePostTextarea";
@@ -21,7 +21,7 @@ function CreatePost(props) {
     const contentInput = useRef();
     const privacyInputRef = useRef();
 
-    const SubmitHandler = useCallback((event) => {
+    function SubmitHandler(event) {
         event.preventDefault();
 
         const enteredContent = contentInput.current.value
@@ -41,8 +41,8 @@ function CreatePost(props) {
         contentInput.current.value = "";
         privacyInputRef.current.value = 0;
         setUploadedImg("");
-    }, [])
-    const imgUploadHandler = useCallback((e) => {
+    }
+    const imgUploadHandler = (e) => {
         const file = e.target.files[0];
         const reader = new FileReader();
         reader.readAsDataURL(file);
@@ -50,7 +50,7 @@ function CreatePost(props) {
             console.log(reader.result);
             setUploadedImg(reader.result);
         })
-    }, []);
+    };
 
     const privacyOptions = [
         {value: 0, text:  "Public Post"},
