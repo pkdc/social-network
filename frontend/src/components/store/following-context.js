@@ -59,19 +59,19 @@ export const FollowingContextProvider = (props) => {
                 console.log("followuingChat", followingChat);
                 console.log("allChatItemArr", allChatItemArr);
 
-                if (!allChatItemArr) {
+                if (!allChatItemArr || allChatItemArr.length === 0) {
                     setFollowingChat(following);
                     // filter out following
                     // console.log("public and not following",usersCtx.users.filter(user => user.public === 1));
-                    usersCtx.users && !following && setOtherListedChatUsers(usersCtx.users.filter(user => user.public === 1)); // takes care if cur user is not following any user
-                    usersCtx.users && following && setOtherListedChatUsers(usersCtx.users.filter(user => user.public === 1 && !following.some(followingUser => followingUser.id === user.id)));
+                    usersCtx.users && usersCtx.users.length !== 0 && !following && setOtherListedChatUsers(usersCtx.users.filter(user => user.public === 1)); // takes care if cur user is not following any user
+                    usersCtx.users && usersCtx.users.length !== 0 && following && setOtherListedChatUsers(usersCtx.users.filter(user => user.public === 1 && !following.some(followingUser => followingUser.id === user.id)));
 
                     console.log("no data", data);
                     return;
                 }
 
                 // filter following
-                if (allChatItemArr) {                    
+                if (allChatItemArr && allChatItemArr.length !== 0) {                    
                     if (!following || following.length === 0) {
                         console.log("no following, have chat item");
                         setFollowingChat([]);
