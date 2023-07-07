@@ -13,7 +13,7 @@ export const JoinedGroupContext = React.createContext({
     InviteToJoin: (grp, InvitedUser) => {},
     join: (toJoinGrp, user) => {},
     // leave: (toLeaveGrp, user) => {},
-    storeGroupMember: (userId, groupId) => {},
+    // storeGroupMember: (userId, groupId) => {},
     receiveMsgGroup: (groupId, open) => {},
     // chatNotiUserArr: [],
     // setChatNotiUserArr: () => {},
@@ -203,9 +203,9 @@ export const JoinedGroupContextProvider = (props) => {
     //     console.log("locally stored joined-grps (leaveHandler)", JSON.parse(localStorage.getItem("joined-grps")));
     // };
 
-    const storeGroupMemberHandler = () => {
+    // const storeGroupMemberHandler = () => {
         // store the new member to group member db table
-    };
+    // };
 
     const receiveMsgHandler = (groupId, open) => {
         const targetGroup = joinedGrps.find(group => group.id === +groupId);
@@ -262,10 +262,10 @@ export const JoinedGroupContextProvider = (props) => {
             InviteToJoin: InviteToJoinHandler,
             requestLocalStrg: getRequestedGrpsHandler,
             requestedGroups:requestedGroups,
-            // getFollowing : getRequestedGrpsHandler,
+            getFollowing : getRequestedGrpsHandler,
             join: joinHandler,
             // leave: leaveHandler,
-            storeGroupMember: storeGroupMemberHandler,
+            // storeGroupMember: storeGroupMemberHandler,
             receiveMsgGroup: receiveMsgHandler,
             // chatNotiUserArr: chatNotiUserArr,
             // setChatNotiUserArr: setChatNotiUserArr,

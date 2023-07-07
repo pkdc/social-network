@@ -62,7 +62,7 @@ export const FollowingContextProvider = (props) => {
                 if (!allChatItemArr) {
                     setFollowingChat(following);
                     // filter out following
-                    console.log("public and not following",usersCtx.users.filter(user => user.public === 1 && !following.some(followingUser => followingUser.id === user.id)));
+                    // console.log("public and not following",usersCtx.users.filter(user => user.public === 1));
                     usersCtx.users && !following && setOtherListedChatUsers(usersCtx.users.filter(user => user.public === 1)); // takes care if cur user is not following any user
                     usersCtx.users && following && setOtherListedChatUsers(usersCtx.users.filter(user => user.public === 1 && !following.some(followingUser => followingUser.id === user.id)));
 

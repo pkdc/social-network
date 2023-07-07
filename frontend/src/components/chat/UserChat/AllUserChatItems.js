@@ -1,5 +1,5 @@
 import UserChatItem from "./UserChatItem";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { FollowingContext } from "../../store/following-context";
 import { WebSocketContext } from "../../store/websocket-context";
 import { UsersContext } from "../../store/users-context";
@@ -63,7 +63,7 @@ const AllUserChatItems = (props) => {
     console.log("followingCtx.otherListedChatUsers (chatitems)", followingCtx.otherListedChatUsers);
     
     // middleman, passing followingId from child to parent
-    const openUserChatboxHandler = (followingId) => props.onOpenChatbox(followingId);
+    const openUserChatboxHandler = useCallback((followingId) => props.onOpenChatbox(followingId),[props.onOpenChatbox]);
 
     const curUserId = +localStorage.getItem("user_id");
     return (

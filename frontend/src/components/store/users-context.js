@@ -24,7 +24,8 @@ export const UsersContextProvider = (props) => {
         .then(resp => resp.json())
         .then(data => {
             console.log("user (context): ", data);
-            let [usersArr] = Object.values(data); 
+            let [usersArr] = Object.values(data);
+            usersArr.sort((a,b) => a.id - b.id);
             setUsersList(usersArr);
         })
         .catch(

@@ -1,4 +1,4 @@
-import { useEffect, useContext, useState } from "react";
+import { useEffect, useContext, useState, useCallback } from "react";
 import UsersContext from "../../store/users-context";
 import { WebSocketContext } from "../../store/websocket-context";
 import ChatboxMsgArea from "../Chatbox/ChatboxMsgArea";
@@ -100,7 +100,6 @@ const Chatbox = (props) => {
                 joinedGrpCtx.receiveMsgGroup(frdOrGrpId, true);   
             }
         }
-        
         setJustUpdated(prev => !prev);
     }, [wsCtx.newGroupMsgsObj]) 
 
@@ -120,7 +119,7 @@ const Chatbox = (props) => {
     }, [props.chatboxId]);
 
     // send msg to ws
-    const sendMsgHandler = (msg) => {
+    const sendMsgHandler = useCallback((msg) => {
         let chatPayloadObj = {};
         if (!props.grp) {
             chatPayloadObj["label"] = "private";
@@ -140,6 +139,7 @@ const Chatbox = (props) => {
             selfNewMsgObject["targetid"] = frdOrGrpId;  
         } else {
             selfNewMsgObject["groupid"] = frdOrGrpId;
+            selfNewMsgObject["targetid"] = selfId;
         }  
         selfNewMsgObject["id"] = Date.now();
         selfNewMsgObject["sourceid"] = selfId;
@@ -152,19 +152,27 @@ const Chatbox = (props) => {
         if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(chatPayloadObj));
 
         // move friendId chat item to top
-        // props.grp ? joinedGrpCtx.receiveMsgGroup() : followingCtx.receiveMsgFollowing(frdOrGrpId, true);
+        if (props.grp) {
+            joinedGrpCtx.receiveMsgGroup(frdOrGrpId, true);
+        } else {
+            if (followingCtx.following && followingCtx.following.find((following => following.id === props.chatboxId))) {
+                followingCtx.receiveMsgFollowing(frdOrGrpId, true, true);
+            } else {
+                followingCtx.receiveMsgFollowing(frdOrGrpId, true, false);
+            }
+        } 
 
         setJustUpdated(prev => !prev);
-    };
+    }, [props.grp, frdOrGrpId, followingCtx.following, wsCtx.websocket, joinedGrpCtx.receiveMsgGroup, followingCtx.receiveMsgFollowing, props.chatboxId]);
 
     // const scrolledBottom = (scrolled) => {
     //     scrolled && setJustSent(false);
     // };
     // console.log("new msg data (outside)", newMsgsData);
 
-    const closeChatboxHandler = () => {
+    const closeChatboxHandler = useCallback(() => {
         props.onCloseChatbox();
-    };
+    }, []);
 
     // get old msgsdata.data.push()
     // const AllMsgsToAndFrom = [];
@@ -176,6 +184,15 @@ const Chatbox = (props) => {
             console.log("old msg data: ", data);
             if (data.data) {
                 const [oldMsgArr] = Object.values(data);
+                if (props.grp) { // changing the prop name from sourceid to targetid if group
+                    for (let i = 0; i < oldMsgArr.length; i++) {
+                        if (oldMsgArr[i].hasOwnProperty("sourceid")) {
+                            oldMsgArr[i]["targetid"] = oldMsgArr[i]["sourceid"];
+                            // delete oldMsgArr[i]["sourceid"]; // need this to id self
+                        }
+                    }
+                    console.log("old msg arr for grp: ", oldMsgArr);
+                }
                 oldMsgArr.sort((b, a) => Date.parse(b.createdat) - Date.parse(a.createdat));
                 console.log("soreted old msg data", oldMsgArr);
                 setOldMsgData([...new Set(oldMsgArr)]);

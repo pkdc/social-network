@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import classes from './Post.module.css'
 import AllComments from "./comments/AllComments";
@@ -25,11 +25,11 @@ function Post(props) {
     const postCommentUrl = "http://localhost:8080/post-comment";
 
     // return <div className={classes.container}>
-    const showCommentsHandler = () => {
+    const showCommentsHandler = useCallback(() => {
         console.log(showComments);
         !showComments && setShowComments(true);
         showComments && setShowComments(false);
-    };
+    },[]);
 
     const createCommentHandler = (createCommentPayloadObj) => {
         console.log("create comment for Post", createCommentPayloadObj)

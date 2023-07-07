@@ -1,5 +1,5 @@
 import GroupChatItem from "./GroupChatItem";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { JoinedGroupContext } from "../../store/joined-group-context";
 import { WebSocketContext } from "../../store/websocket-context";
 import styles from "../UserChat/AllUserChatItems.module.css";
@@ -29,7 +29,7 @@ const AllGroupChatItems = (props) => {
     }, [joinedGrpCtx.joinedGrps, wsCtx.newGroupMsgsObj]);
 
     // middleman, passing grpId from child to parent
-    const openGroupChatboxHandler = (grpId) => props.onOpenChatbox(grpId);
+    const openGroupChatboxHandler = useCallback((grpId) => props.onOpenChatbox(grpId), [props.onOpenChatbox]);
 
     return (
         <>

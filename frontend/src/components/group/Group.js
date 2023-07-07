@@ -23,9 +23,6 @@ function Group(props) {
     const usersCtx = useContext(UsersContext);
 
     useEffect(() => {
-        jGrpCtx.getFollowing()
-    }, [])
-    useEffect(() => {
         // const storedJoinedGrps = JSON.parse(localStorage.getItem("joined-grps"));
         // console.log("stored joined-grps (group)", storedJoinedGrps);
         // check if the current group item is one of the joined Grps in the joinedGrps array
@@ -112,7 +109,7 @@ const reqGroups = jGrpCtx.requestedGroups
 
     const joinGrpHandler = (grp, user) => {
         console.log("user joining group (group)", grp);
-        jGrpCtx.storeGroupMember(grp, user);
+        // jGrpCtx.storeGroupMember(grp, user);
         setCurrentlyJoined(true);
         setRequestedToJoin(false);
     };
