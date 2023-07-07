@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { WebSocketContext } from "./websocket-context";
 import { UsersContext } from "./users-context";
 export const FollowingContext = React.createContext({
@@ -32,7 +32,7 @@ export const FollowingContextProvider = (props) => {
     const wsCtx = useContext(WebSocketContext);
     const usersCtx = useContext(UsersContext);
     // get following from db
-    const getFollowingHandler = () => {
+    const getFollowingHandler = useCallback(() => {
         fetch(followingUrl)
         .then(resp => resp.json())
         .then(data => {
@@ -44,9 +44,9 @@ export const FollowingContextProvider = (props) => {
         .catch(
             err => console.log(err)
         );
-    };
+    }, [followingUrl]);
 
-    const getPrivateChatHandler = () => {
+    const getPrivateChatHandler = useCallback(() => {
         // private chat notification list after login
         // no need to sort coz the db is already returning items ordered by last-msg-time 
         fetch(`http://localhost:8080/private-chat-item?id=${selfId}`)
@@ -126,9 +126,9 @@ export const FollowingContextProvider = (props) => {
         }).catch(err => {
             console.log(err);
         })
-    };
+    }, [selfId, following, usersCtx.users]);
 
-    const requestToFollowHandler = (followUser) => {
+    const requestToFollowHandler = useCallback((followUser) => {
         console.log("request to follow (context): ", followUser.id);
 
         const followPayloadObj = {};
@@ -140,9 +140,9 @@ export const FollowingContextProvider = (props) => {
         followPayloadObj["createdat"] = Date.now().toString();
         console.log("gonna send fol req : ", followPayloadObj);
         if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(followPayloadObj));
-    };
+    }, [wsCtx.websocket]);
 
-    const followHandler = (followUser) => {
+    const followHandler = useCallback((followUser) => {
         if (following) { // not empty
             setFollowing(prevFollowing => [...prevFollowing, followUser]);
             followUser["chat_noti"] = false; // add noti to followUser
@@ -158,9 +158,9 @@ export const FollowingContextProvider = (props) => {
             localStorage.setItem("following", JSON.stringify([followUser]));
         }
         console.log("locally stored following (fol)", JSON.parse(localStorage.getItem("following")));
-    };
+    },[following]);
 
-    const unfollowHandler = (unfollowUser) => {
+    const unfollowHandler = useCallback((unfollowUser) => {
         console.log("unfollowUser (folctx)", unfollowUser);
         setFollowing(prevFollowing => prevFollowing.filter((followingUser) => followingUser.id !== unfollowUser.id));
         setFollowingChat(prevFollowingChat => prevFollowingChat.filter((followingChatUser) => followingChatUser.id !== unfollowUser.id));
@@ -168,10 +168,10 @@ export const FollowingContextProvider = (props) => {
         const curFollowing = storedFollowing.filter((followingUser) => followingUser.id !== unfollowUser.id);
         localStorage.setItem("following", JSON.stringify(curFollowing));
         console.log("locally stored following (unfol)", JSON.parse(localStorage.getItem("following")));
-    };
+    },[]);
 
     // receiveMsgHandler is not only for following, but also for public user chat
-    const receiveMsgHandler = (friendId, open, isFollowing) => {
+    const receiveMsgHandler = useCallback((friendId, open, isFollowing) => {
         if (isFollowing) {
             const targetUser = following.find(followingUser => followingUser.id === +friendId);
             console.log("target user", targetUser);
@@ -214,9 +214,9 @@ export const FollowingContextProvider = (props) => {
             setOtherListedChatUsers(prevList => [targetUser, ...prevList.filter(otherChatUser => otherChatUser.id !== +friendId)]);
             console.log("after add chat noti target user", targetUser);
         }
-    };
+    },[]);
 
-    const openFollowingChatboxHandler = (friendId, isFollowing) => {
+    const openFollowingChatboxHandler = useCallback((friendId, isFollowing) => {
         let targetUser = null;
         // separated coz the chatlist is reading chat_noti from following for following
         // and users for public or other users
@@ -236,7 +236,7 @@ export const FollowingContextProvider = (props) => {
         privateChatNotiPayloadObj["targetid"] = +selfId;
 
         if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(privateChatNotiPayloadObj));
-    };
+    }, [following, usersCtx.users, selfId, wsCtx.websocket]);
 
     useEffect(() => {
         getFollowingHandler();
