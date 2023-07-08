@@ -18,14 +18,12 @@ const OldMsgItem = (props) => {
     let targetUsers;
     // usersCtx.users.find((user) => user.id === wsCtx.newPrivateMsgsObj.sourceid);
     // assume usersCtx.users sorted by user id
-    console.log(usersCtx.users);
-    console.log(props.targetid);
-    console.log(props.sourceid);
-    // if (!props.groupid) {
-    //     targetUsers = [usersCtx.users.find(user => user.id === props.targetid)];
-    // }  else {
-    //     // targetUsers = usersCtx.users.find(user => user.id === props.targetid);
-    // }
+    // console.log(usersCtx.users);
+    // console.log(props.targetid);
+    // console.log(props.sourceid);
+
+    const msgUser = usersCtx.users.find(user => user.id === props.sourceid);
+
     // const { error, isLoaded, data } = useGet(`/user?id=${props.sourceid}`);
 
     // if (!isLoaded) return <div>Loading...</div>
@@ -37,13 +35,10 @@ const OldMsgItem = (props) => {
         <div className={`${self ? styles["self-msg"] : styles["frd-msg"]}`}>
 
             {!self &&
-                <SmallAvatar src={usersCtx.users[props.sourceid-1].avatar}height={30} width={30}></SmallAvatar>
+                <SmallAvatar src={msgUser.avatar}height={30} width={30}></SmallAvatar>
             }
             <div className={styles.wrapper}>
-                {/* caused by mixed up of targetid and sourceid for group chat item*/}
-                {/* {props.groupid && <div className={`${self ? styles["self-username"] : styles["frd-username"]}`}>{usersCtx.users[props.targetid-1].fname} {usersCtx.users[props.targetid-1].lname}</div>}
-                {!props.groupid && <div className={`${self ? styles["self-username"] : styles["frd-username"]}`}>{usersCtx.users[props.sourceid-1].fname} {usersCtx.users[props.sourceid-1].lname}</div>} */}
-                <div className={`${self ? styles["self-username"] : styles["frd-username"]}`}>{usersCtx.users[props.sourceid-1].fname} {usersCtx.users[props.sourceid-1].lname}</div>
+                <div className={`${self ? styles["self-username"] : styles["frd-username"]}`}>{msgUser.fname} {msgUser.lname}</div>
                 <div className={`${self ? styles["chat-bubble-self"] : styles["chat-bubble-frd"]}`}>
                     {props.msg}
                 </div>
