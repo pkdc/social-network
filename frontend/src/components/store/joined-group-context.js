@@ -82,39 +82,54 @@ export const JoinedGroupContextProvider = (props) => {
 
                 const joinedGroupsArr = result[0];
                 console.log("memberOfGrpArr", joinedGroupsArr);
-                
-                if (!joinedGroupsArr || joinedGroupsArr.length === 0) { // case user hasn't joined any group
+                if (!joinedGroupsArr) {
                     setJoinedGrps([]);
                     console.log("user hasn't joined any group");
                     return;
-                } else { // case user has joined more than 1 group
-                    
-                    localStorage.setItem("joinedGroups", JSON.stringify(joinedGroupsArr));
+                } else {
+                    setJoinedGrps(joinedGroupsArr);
+                    console.log("user has joined groups", joinedGroupsArr);
+                }
+                localStorage.setItem("joinedGroups", JSON.stringify(joinedGroupsArr));
 
-                    const allGrpChatItemArr = result[1];
-                    console.log("grp chat item Arr", allGrpChatItemArr);
-                    // case user has joined more than 1 group, and has chat record
+                const allGrpChatItemArr = result[1];
+                console.log("grp chat item Arr", allGrpChatItemArr);
+                if (!allGrpChatItemArr) {
+                    console.log("no grp chat record", allGrpChatItemArr);
+                } else if (allGrpChatItemArr) {
                     const filteredGroupChatItems = allGrpChatItemArr.filter(chatItem => {
-                        // console.log("returned", joinedGroupsArr.some(grp => grp.id == chatItem.groupid && +selfId === chatItem.userid));
+                        // console.log("joinedGroupsArr length", joinedGroupsArr.length);
+                        // for (let grp of joinedGroupsArr) {
+                        //     console.log("grp id", grp.id);
+                        // }
+                        console.log("returned", joinedGroupsArr.some(grp => grp.id == chatItem.groupid && +selfId === chatItem.userid));
                         return joinedGroupsArr.some(grp => grp.id === chatItem.groupid && +selfId === chatItem.userid);
                     });
                     console.log("filteredGroupChatItems", filteredGroupChatItems);
 
-                        // merge the properties
-                        const groupChatItems = filteredGroupChatItems.map(chatItem => {
+                     // merge the properties
+                     const groupChatItems = filteredGroupChatItems.map(chatItem => {
                         const matchedGroups = joinedGroupsArr.find(grp => grp.id === chatItem.groupid);
                         return {...chatItem, ...matchedGroups};
                     });
-
-                    // Also display joined groups without chat records BELOW
+                    //  === chatItem.groupid && +selfId === chatItem.userId
+                    // Also display groups even if there is no chat item
                     let filteredGroupsNoChatItems;
-                    filteredGroupsNoChatItems = joinedGroupsArr.filter(grp => {
-                        return !allGrpChatItemArr.some(chatItem => chatItem.groupid === grp.id);
-                    });
+                    if (joinedGroupsArr) {
+                        filteredGroupsNoChatItems = joinedGroupsArr.filter(grp => {
+                            if (!allGrpChatItemArr) return false;
+                            return !allGrpChatItemArr.some(chatItem => grp.id);
+                        });
+                    }
                     console.log("filteredFollowing Without oChatItems", filteredGroupsNoChatItems);
                     const finalGroupChatItems = [...groupChatItems, ...filteredGroupsNoChatItems];
                     setJoinedGrps(finalGroupChatItems);
                 }
+
+
+
+                 // Also display joined groups even if there is no chat item
+
             } catch(err) {
                 console.log(`${err} occurred during fetch`);
             }
