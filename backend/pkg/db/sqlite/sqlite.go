@@ -46,8 +46,8 @@ var m *migrate.Migrate
 func RunMigration() *migrate.Migrate {
 
 	m, err := migrate.New(
-		"file://../../pkg/db/migration/sqlite",
-		"sqlite3://../../pkg/db/database.db")
+		"file://pkg/db/migration/sqlite",
+		"sqlite3://pkg/db/database.db")
 
 	if err != nil {
 		fmt.Print(err.Error())
@@ -73,7 +73,7 @@ func DbConnect() *sql.DB {
 			log.Fatal(err)
 		}
 		return db
-	} else  {
+	} else {
 		db, err := sql.Open("sqlite3", "pkg/db/database.db")
 		if err != nil {
 			log.Fatal(err)
