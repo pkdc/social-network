@@ -1,23 +1,25 @@
+import { useCallback, useContext } from "react";
 import Avatar from "../../UI/Avatar";
 import Card from "../../UI/Card";
-import useGet from "../../fetch/useGet";
+import { UsersContext } from "../../store/users-context";
 import styles from "./ChatDetailTopBar.module.css";
 import { Link, useNavigate } from "react-router-dom";
 const UserChatDetailTopBar = (props) => {
 
-    const { error , isLoaded, data } = useGet(`/user?id=${props.userId}`)
+    // const { error , isLoaded, data } = useGet(`/user?id=${props.userId}`)
 
-    if (!isLoaded) return <div>Loading...</div>
-    if (error) return <div>Error: {error.message}</div>
-
+    // if (!isLoaded) return <div>Loading...</div>
+    // if (error) return <div>Error: {error.message}</div>
+    const usersCtx = useContext(UsersContext);
+    console.log("tar uid", props.userId);
+    const targetUser = usersCtx.users.find(user => +user.id === props.userId);
+    console.log("tar u", targetUser);
 
     return (
         <Card className={styles["container"]}>
             <div className={styles.chatdetails}>
-
-            <Avatar src={data.data[0].avatar}height={40} width={40} />
-             <Link to={`profile/${props.userId}`} className={styles.lnk}>{data.data[0].fname} {data.data[0].lname}</Link>
-
+                <Avatar src={targetUser.avatar}height={40} width={40} />
+                <Link to={`profile/${props.userId}`} className={styles.lnk}>{targetUser.fname} {targetUser.lname}</Link>
             </div>
         </Card>
     );

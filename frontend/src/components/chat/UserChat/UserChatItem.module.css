@@ -10,6 +10,7 @@
     border: 1px solid var(--ultra-violet, purple);
     border-left: 15px solid var(--ultra-violet, purple);    
     /* z-index: 1000; */
+    cursor: pointer;
 }
 
 .noti {

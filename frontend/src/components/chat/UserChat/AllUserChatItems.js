@@ -50,9 +50,13 @@ const AllUserChatItems = (props) => {
                 console.log("new Received msg data when chatbox is closed (public, from private)", wsCtx.newPrivateMsgsObj);
                 console.log("ws receives msg  when chatbox is closed (public, from private): ", wsCtx.newPrivateMsgsObj.sourceid);
                 const privateSender = usersCtx.users.find((user) => user.id === wsCtx.newPrivateMsgsObj.sourceid);
-                if (privateSender && !followingCtx.otherListedChatUsers.some(chatUser => chatUser.id === privateSender.id)) {
-                    privateSender["chat_noti"] = true; // since it must have received a new msg from the privateSender to start a
-                    followingCtx.setOtherListedChatUsers((prevList) => [privateSender, ...prevList]);
+                if (followingCtx.otherListedChatUsers && followingCtx.otherListedChatUsers.length !== 0) {
+                    if (privateSender &&  !followingCtx.otherListedChatUsers.some(chatUser => chatUser.id === privateSender.id)) {
+                        privateSender["chat_noti"] = true; // since it must have received a new msg from the privateSender to start a
+                        followingCtx.setOtherListedChatUsers((prevList) => [privateSender, ...prevList]);
+                    }
+                } else {
+                    followingCtx.setOtherListedChatUsers([privateSender]);
                 }
             } else {
                 console.log("Cur user is not following the msg sender nor having a public profile");
