@@ -86,7 +86,7 @@ export const FollowingContextProvider = (props) => {
                         setOtherListedChatUsers([...allOtherChatItems, ...filteredPublicUsers]);                        
                     } else {
                         const filteredFollowingChatItems = allChatItemArr.filter(chatItem => {
-                            console.log("chatItem.sourceid", chatItem.sourceid);
+                            // console.log("chatItem.sourceid", chatItem.sourceid);
                             if (!following) return false;
                             return following.some(followingUser => followingUser.id === chatItem.sourceid)
                         });
@@ -144,13 +144,15 @@ export const FollowingContextProvider = (props) => {
                         console.log("allOtherChatItems", allOtherChatItems);
                         console.log("filteredOther Without ChatItems", filteredOtherNoChatItems);
 
-                        // merge otherUsers WITH chatItems, and public users WITHOUT chatItems to create the finalOtherUsersChatItems
+                        // combine otherUsers WITH chatItems, and public users WITHOUT chatItems to create the finalOtherUsersChatItems
                         let finalOtherUsersChatItems;
-                        if (filteredOtherNoChatItems && filteredOtherNoChatItems.length !== 0) {
-                            if (allOtherChatItems && allOtherChatItems.length !== 0) finalOtherUsersChatItems = [...filteredOtherNoChatItems];
+                        if (filteredOtherNoChatItems && filteredOtherNoChatItems.length !== 0 && !allOtherChatItems && allOtherChatItems.length === 0) {
+                            finalOtherUsersChatItems = [...filteredOtherNoChatItems];
+                        } else if (!filteredOtherNoChatItems && filteredOtherNoChatItems.length === 0 && allOtherChatItems && allOtherChatItems.length !== 0) {
+                            finalOtherUsersChatItems = [...allOtherChatItems];
+                        } else {
                             finalOtherUsersChatItems = [...allOtherChatItems, ...filteredOtherNoChatItems];
-                            console.log("finalOtherNoChatItems in if", finalOtherUsersChatItems); 
-                        }
+                        }                                                     
                         console.log("finalOtherNoChatItems", finalOtherUsersChatItems);                  
                         setOtherListedChatUsers(finalOtherUsersChatItems);
                     }
