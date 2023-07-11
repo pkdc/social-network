@@ -127,23 +127,27 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 		not.CreatedAt = msgStruct.CreatedAt
 		// fmt.Printf("not Struct: %v\n", not)
 	} else if msgStruct.Label == "set-seen-p-chat-noti" {
-		query := crud.New(db)
-		fmt.Println("set-p-seen")
-		chatItem, err := query.GetOnePrivateChatItem(context.Background(), crud.GetOnePrivateChatItemParams{
-			SourceID: int64(msgStruct.SourceId),
-			TargetID: int64(msgStruct.TargetId),
-		})
-		if err != nil {
-			log.Println(err)
-		}
-		fmt.Println("Found target p item", chatItem)
-		_, err = query.UpdatePrivateChatItem(context.Background(), crud.UpdatePrivateChatItemParams{
-			ChatNoti:  int64(0), // 0 - seen, 1 - not seen
-			LastMsgAt: chatItem.LastMsgAt,
-			SourceID:  int64(msgStruct.SourceId),
-			TargetID:  int64(msgStruct.TargetId),
-		})
-		fmt.Println("Updated p chat item")
+		// query := crud.New(db)
+
+		go func() {
+			fmt.Println("set-p-seen")
+			chatItem, err := query.GetOnePrivateChatItem(context.Background(), crud.GetOnePrivateChatItemParams{
+				SourceID: int64(msgStruct.SourceId),
+				TargetID: int64(msgStruct.TargetId),
+			})
+			if err != nil {
+				log.Println(err)
+			}
+			fmt.Println("Found target p item", chatItem)
+			_, err = query.UpdatePrivateChatItem(context.Background(), crud.UpdatePrivateChatItemParams{
+				ChatNoti:  int64(0), // 0 - seen, 1 - not seen
+				LastMsgAt: chatItem.LastMsgAt,
+				SourceID:  int64(msgStruct.SourceId),
+				TargetID:  int64(msgStruct.TargetId),
+			})
+			fmt.Println("Updated p chat item")
+		}()
+
 		// if err != nil {
 		// 	fmt.Println("Unable to delete private chat notification to database")
 		// }
@@ -175,13 +179,16 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 			log.Println(err)
 		}
 		fmt.Println("Found target g item", chatItem)
-		_, err = query.UpdateGroupChatItem(context.Background(), crud.UpdateGroupChatItemParams{
-			ChatNoti:  int64(0), // 0 - seen, 1 - not seen
-			LastMsgAt: chatItem.LastMsgAt,
-			GroupID:   int64(msgStruct.GroupId),
-			UserID:    int64(msgStruct.SourceId),
-		})
-		fmt.Println("Updated g chat item")
+		go func() {
+			_, err = query.UpdateGroupChatItem(context.Background(), crud.UpdateGroupChatItemParams{
+				ChatNoti:  int64(0), // 0 - seen, 1 - not seen
+				LastMsgAt: chatItem.LastMsgAt,
+				GroupID:   int64(msgStruct.GroupId),
+				UserID:    int64(msgStruct.SourceId),
+			})
+			fmt.Println("Updated g chat item")
+		}()
+
 	} else {
 		// panic
 		log.Println("Error finding the right label")
@@ -415,86 +422,92 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 		// 	fmt.Println("Unable to convert to date")
 		// }
 
-		// create private chat msg in db
-		var message crud.CreateMessageParams
-		message.CreatedAt = time.Now()
-		message.Message = userMsg.Message
-		message.SourceID = int64(userMsg.SourceId)
-		message.TargetID = int64(userMsg.TargetId)
-		fmt.Printf("message.SourceID %d\n", message.SourceID)
-		fmt.Printf("message.TargetID %d\n", message.TargetID)
+		go func() {
+			// create private chat msg in db
+			var message crud.CreateMessageParams
+			message.CreatedAt = time.Now()
+			message.Message = userMsg.Message
+			message.SourceID = int64(userMsg.SourceId)
+			message.TargetID = int64(userMsg.TargetId)
+			fmt.Printf("message.SourceID %d\n", message.SourceID)
+			fmt.Printf("message.TargetID %d\n", message.TargetID)
 
-		_, err := query.CreateMessage(context.Background(), message)
+			_, err := query.CreateMessage(context.Background(), message)
 
-		if err != nil {
-			fmt.Println("Unable to store message to database")
-		}
+			if err != nil {
+				fmt.Println("Unable to store message to database")
+			}
+		}()
 
-		fmt.Printf("Checking if private chat item exists, source %d and target %d\n", userMsg.SourceId, userMsg.TargetId)
-		chatItem, err := query.GetOnePrivateChatItem(context.Background(), crud.GetOnePrivateChatItemParams{
-			SourceID: int64(userMsg.SourceId),
-			TargetID: int64(userMsg.TargetId),
-		})
-		// update private chat item to not seen in db if exist
-		if chatItem != (crud.PrivateChatItem{}) {
-			fmt.Println("Exists")
-			_, err = query.UpdatePrivateChatItem(context.Background(), crud.UpdatePrivateChatItemParams{
-				LastMsgAt: time.Now(),
-				SourceID:  int64(userMsg.SourceId),
-				TargetID:  int64(userMsg.TargetId),
-				ChatNoti:  int64(1), // 0 - seen, 1 - not seen
+		go func() {
+			fmt.Printf("Checking if private chat item exists, source %d and target %d\n", userMsg.SourceId, userMsg.TargetId)
+			chatItem, err := query.GetOnePrivateChatItem(context.Background(), crud.GetOnePrivateChatItemParams{
+				SourceID: int64(userMsg.SourceId),
+				TargetID: int64(userMsg.TargetId),
 			})
-			if err != nil {
-				fmt.Println(err)
-				fmt.Println("Unable to update private chat item in database")
+			// update private chat item to not seen in db if exist
+			if chatItem != (crud.PrivateChatItem{}) {
+				fmt.Println("Exists")
+				_, err = query.UpdatePrivateChatItem(context.Background(), crud.UpdatePrivateChatItemParams{
+					LastMsgAt: time.Now(),
+					SourceID:  int64(userMsg.SourceId),
+					TargetID:  int64(userMsg.TargetId),
+					ChatNoti:  int64(1), // 0 - seen, 1 - not seen
+				})
+				if err != nil {
+					fmt.Println(err)
+					fmt.Println("Unable to update private chat item in database")
+				}
+			} else {
+				fmt.Println("Not Exists")
+				// save new private chat item as not seen if not exist
+				_, err = query.CreatePrivateChatItem(context.Background(), crud.CreatePrivateChatItemParams{
+					LastMsgAt: time.Now(),
+					SourceID:  int64(userMsg.SourceId),
+					TargetID:  int64(userMsg.TargetId),
+					ChatNoti:  int64(1), // 0 - seen, 1 - not seen
+				})
+				if err != nil {
+					fmt.Println(err)
+					fmt.Println("Unable to store private chat item to database")
+				}
 			}
-		} else {
-			fmt.Println("Not Exists")
-			// save new private chat item as not seen if not exist
-			_, err = query.CreatePrivateChatItem(context.Background(), crud.CreatePrivateChatItemParams{
-				LastMsgAt: time.Now(),
-				SourceID:  int64(userMsg.SourceId),
-				TargetID:  int64(userMsg.TargetId),
-				ChatNoti:  int64(1), // 0 - seen, 1 - not seen
-			})
-			if err != nil {
-				fmt.Println(err)
-				fmt.Println("Unable to store private chat item to database")
-			}
-		}
+		}()
 
-		fmt.Printf("Checking if reverse order private chat item exists, target %d and source %d\n", userMsg.TargetId, userMsg.SourceId)
-		chatItemRev, err := query.GetOnePrivateChatItem(context.Background(), crud.GetOnePrivateChatItemParams{
-			SourceID: int64(userMsg.TargetId),
-			TargetID: int64(userMsg.SourceId),
-		})
-		// only update last_msg_time in private chat item for reverse
-		if chatItemRev != (crud.PrivateChatItem{}) {
-			fmt.Println("Exists")
-			_, err = query.UpdatePrivateChatItem(context.Background(), crud.UpdatePrivateChatItemParams{
-				LastMsgAt: time.Now(),
-				SourceID:  int64(userMsg.TargetId),
-				TargetID:  int64(userMsg.SourceId),
-				ChatNoti:  chatItemRev.ChatNoti, // 0 - seen, 1 - not seen // no need to change in reverse
+		go func() {
+			fmt.Printf("Checking if reverse order private chat item exists, target %d and source %d\n", userMsg.TargetId, userMsg.SourceId)
+			chatItemRev, err := query.GetOnePrivateChatItem(context.Background(), crud.GetOnePrivateChatItemParams{
+				SourceID: int64(userMsg.TargetId),
+				TargetID: int64(userMsg.SourceId),
 			})
-			if err != nil {
-				fmt.Println(err)
-				fmt.Println("Unable to update rev private chat item in database")
+			// only update last_msg_time in private chat item for reverse
+			if chatItemRev != (crud.PrivateChatItem{}) {
+				fmt.Println("Exists")
+				_, err = query.UpdatePrivateChatItem(context.Background(), crud.UpdatePrivateChatItemParams{
+					LastMsgAt: time.Now(),
+					SourceID:  int64(userMsg.TargetId),
+					TargetID:  int64(userMsg.SourceId),
+					ChatNoti:  chatItemRev.ChatNoti, // 0 - seen, 1 - not seen // no need to change in reverse
+				})
+				if err != nil {
+					fmt.Println(err)
+					fmt.Println("Unable to update rev private chat item in database")
+				}
+			} else {
+				fmt.Println("Not Exists")
+				// save new private chat item if not exist
+				_, err = query.CreatePrivateChatItem(context.Background(), crud.CreatePrivateChatItemParams{
+					LastMsgAt: time.Now(),
+					SourceID:  int64(userMsg.TargetId),
+					TargetID:  int64(userMsg.SourceId),
+					ChatNoti:  int64(0), // 0 - seen, 1 - not seen // no new msg for reverse, so seen
+				})
+				if err != nil {
+					fmt.Println(err)
+					fmt.Println("Unable to store rev private chat item to database")
+				}
 			}
-		} else {
-			fmt.Println("Not Exists")
-			// save new private chat item if not exist
-			_, err = query.CreatePrivateChatItem(context.Background(), crud.CreatePrivateChatItemParams{
-				LastMsgAt: time.Now(),
-				SourceID:  int64(userMsg.TargetId),
-				TargetID:  int64(userMsg.SourceId),
-				ChatNoti:  int64(0), // 0 - seen, 1 - not seen // no new msg for reverse, so seen
-			})
-			if err != nil {
-				fmt.Println(err)
-				fmt.Println("Unable to store rev private chat item to database")
-			}
-		}
+		}()
 
 		// Marshals the struct to a json object
 		fmt.Println("Marshals the struct to a json object")
