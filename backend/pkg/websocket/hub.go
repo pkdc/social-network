@@ -535,20 +535,22 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 		// GROUP MESSAGE
 		fmt.Println("group")
 
-		// create group chat msg in db
-		var message crud.CreateGroupMessageParams
-		message.CreatedAt = time.Now()
-		message.Message = groupMsg.Message
-		message.SourceID = int64(groupMsg.SourceId)
-		message.GroupID = int64(groupMsg.GroupId)
-		fmt.Printf("message.SourceID %d\n", message.SourceID)
-		fmt.Printf("message.GroupID %d\n", message.GroupID)
+		go func() {
+			// create group chat msg in db
+			var message crud.CreateGroupMessageParams
+			message.CreatedAt = time.Now()
+			message.Message = groupMsg.Message
+			message.SourceID = int64(groupMsg.SourceId)
+			message.GroupID = int64(groupMsg.GroupId)
+			fmt.Printf("message.SourceID %d\n", message.SourceID)
+			fmt.Printf("message.GroupID %d\n", message.GroupID)
 
-		_, err := query.CreateGroupMessage(context.Background(), message)
+			_, err := query.CreateGroupMessage(context.Background(), message)
 
-		if err != nil {
-			fmt.Println("Unable to store group message to database")
-		}
+			if err != nil {
+				fmt.Println("Unable to store group message to database")
+			}
+		}()
 
 		// ### SEARCH FOR GROUP MEMBERS ###
 		// receivers
@@ -563,9 +565,9 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 
 		// LOOP THRU ALL GROUP MEMBERS and check if an item exists FOR EACH OF THEM
 		for _, groupMember := range groupMembers {
-			fmt.Printf("Checking if group chat item exists for receivers, Group member %v in group %d\n", groupMember, message.GroupID)
+			fmt.Printf("Checking if group chat item exists for receivers, Group member %v in group %d\n", groupMember, groupMsg.GroupId)
 			chatItemReceiver, err := query.GetOneGroupChatItemByUserId(context.Background(), crud.GetOneGroupChatItemByUserIdParams{
-				GroupID: int64(message.GroupID),
+				GroupID: int64(groupMsg.GroupId),
 				UserID:  int64(groupMember.ID),
 			})
 			// only update last_msg_time in group chat item for receiver
@@ -573,7 +575,7 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 				fmt.Printf("G Receiver item Exists %v\n", chatItemReceiver)
 				_, err = query.UpdateGroupChatItem(context.Background(), crud.UpdateGroupChatItemParams{
 					LastMsgAt: time.Now(),
-					GroupID:   message.GroupID,
+					GroupID:   int64(groupMsg.GroupId),
 					UserID:    groupMember.ID,
 					ChatNoti:  int64(1), // 0 - seen, 1 - not seen
 				})
@@ -586,7 +588,7 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 				// save new group chat item if not exist
 				_, err = query.CreateGroupChatItem(context.Background(), crud.CreateGroupChatItemParams{
 					LastMsgAt: time.Now(),
-					GroupID:   message.GroupID,
+					GroupID:   int64(groupMsg.GroupId),
 					UserID:    groupMember.ID,
 					ChatNoti:  int64(1), // 0 - seen, 1 - not seen // no new msg for reverse, so seen
 				})
@@ -601,16 +603,16 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 		// setting sender
 		fmt.Printf("Checking if group chat item exists for that group for the sender, source %d and group %d\n", groupMsg.SourceId, groupMsg.GroupId)
 		chatItemSender, err := query.GetOneGroupChatItemByUserId(context.Background(), crud.GetOneGroupChatItemByUserIdParams{
-			GroupID: message.GroupID,
-			UserID:  message.SourceID,
+			GroupID: int64(groupMsg.GroupId),
+			UserID:  int64(groupMsg.SourceId),
 		})
 		// update group chat item LastMsgAt in db if exist
 		if chatItemSender != (crud.GroupChatItem{}) {
 			fmt.Println("G Sender Exists")
 			_, err = query.UpdateGroupChatItem(context.Background(), crud.UpdateGroupChatItemParams{
 				LastMsgAt: time.Now(),
-				GroupID:   message.GroupID,
-				UserID:    message.SourceID,
+				GroupID:   int64(groupMsg.GroupId),
+				UserID:    int64(groupMsg.SourceId),
 				ChatNoti:  int64(0), // 0 - seen, 1 - not seen
 			})
 			if err != nil {
@@ -622,8 +624,8 @@ func (h *Hub) Notif(msgStruct backend.NotiMessageStruct) {
 			// save new group chat item as seen if not exist
 			_, err = query.CreateGroupChatItem(context.Background(), crud.CreateGroupChatItemParams{
 				LastMsgAt: time.Now(),
-				GroupID:   message.GroupID,
-				UserID:    message.SourceID,
+				GroupID:   int64(groupMsg.GroupId),
+				UserID:    int64(groupMsg.SourceId),
 				ChatNoti:  int64(0), // 0 - seen, 1 - not seen
 			})
 			if err != nil {
