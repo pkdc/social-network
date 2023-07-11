@@ -44,10 +44,13 @@ var m *migrate.Migrate
 // run migrations
 
 func RunMigration() *migrate.Migrate {
-
-	m, err := migrate.New(
-		"file://pkg/db/migration/sqlite",
-		"sqlite3://pkg/db/database.db")
+	file := "file://pkg/db/migration/sqlite"
+	sqlite := "sqlite3://pkg/db/database.db"
+	if runtime.GOOS == "darwin" {
+		file = "file://../../pkg/db/migration/sqlite"
+		sqlite = "sqlite3://../../pkg/db/database.db"
+	}
+	m, err := migrate.New(file, sqlite)
 
 	if err != nil {
 		fmt.Print(err.Error())
