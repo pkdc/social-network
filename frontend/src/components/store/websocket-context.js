@@ -72,7 +72,7 @@ export const WebSocketContextProvider = (props) => {
                     setNewNotiFollowReplyObj(msgObj);
                     // const followUser = usersCtx.users.find((user) => user.id === msgObj.sourceid);
                     // console.log(msgObj.targetid, " Gonna follow (wsctx): ", followUser);
-                    // msgObj.accepted && 
+                    // msgObj.accepted &&
                 } else if (msgObj.type === "join-req-reply") {
                     console.log("ws receives noti join-req-reply (wsctx): ", msgObj);
                     console.log("ws receives noti join-req-reply type (wsctx): ", msgObj.type);
@@ -119,6 +119,3 @@ export const WebSocketContextProvider = (props) => {
         </WebSocketContext.Provider>
     );
 };
-
-
-

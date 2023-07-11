@@ -20,7 +20,7 @@ const SmallAvatar = (props) => {
         }
     },[wsCtx.newOnlineStatusObj.onlineuserids]);
 
-    console.log("Avatar online status for user", props.id, onlineStatus);
+    // console.log("Avatar online status for user", props.id, onlineStatus);
 
     let defaultImagePath = "default_avatar.jpg";
     if (props.avatar!= null){

@@ -29,7 +29,7 @@ function Post(props) {
         console.log(showComments);
         !showComments && setShowComments(true);
         showComments && setShowComments(false);
-    },[]);
+    }, []);
 
     const createCommentHandler = (createCommentPayloadObj) => {
         console.log("create comment for Post", createCommentPayloadObj)
@@ -56,11 +56,15 @@ function Post(props) {
     }
 
     var myDate = new Date(props.createdat);
-    var mills = myDate.getTime();
-    const newDate = new Intl.DateTimeFormat('en-GB', {
-        day: 'numeric', month: 'short', year: '2-digit', hour: 'numeric',
-        minute: 'numeric',
-    }).format(mills);
+    var options = {
+        day: '2-digit',
+        month: 'short',
+        year: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+    };
+    const newDate = myDate.toLocaleString("en-GB", options)
 
 
     let privacy;

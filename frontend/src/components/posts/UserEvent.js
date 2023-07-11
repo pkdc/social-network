@@ -20,11 +20,15 @@ function UserEvent(props) {
 
     }
     var myDate = new Date(props.date);
-    var mills = myDate.getTime();
-    const newDate = new Intl.DateTimeFormat('en-GB', {
-        day: 'numeric', month: 'short', year: '2-digit', hour: 'numeric',
-        minute: 'numeric',
-    }).format(mills);
+    var options = {
+        day: '2-digit',
+        month: 'short',
+        year: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+      };
+      const newDate = myDate.toLocaleString("en-GB", options)
 
     return <>
 

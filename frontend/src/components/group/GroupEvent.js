@@ -19,7 +19,7 @@ function GroupEvent(props) {
             .then(resp => resp.json())
             .then(data => {
                 setEventMemberData(data.data)
-                
+
             })
             .catch(
                 err => console.log(err)
@@ -35,7 +35,7 @@ function GroupEvent(props) {
                 if (member.status == 2) {
                     setGoing(true)
                     setNotGoing(false)
-                
+
             } else if (member.status == 3) {
                 setNotGoing(true)
                 setGoing(false)
@@ -46,16 +46,20 @@ function GroupEvent(props) {
             }
         }
         })
-        
+
     }, [eventMemberData]);
 
 
     var myDate = new Date(props.date);
-    var mills = myDate.getTime();
-    const newDate = new Intl.DateTimeFormat('en-GB', {
-        day: 'numeric', month: 'short', year: '2-digit', hour: 'numeric',
-        minute: 'numeric',
-    }).format(mills);
+    var options = {
+        day: '2-digit',
+        month: 'short',
+        year: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+      };
+      const newDate = myDate.toLocaleString("en-GB", options)
 
     const currUserId = localStorage.getItem("user_id");
 
