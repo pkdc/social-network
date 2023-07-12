@@ -10,6 +10,7 @@
     border-radius: 1rem;   */
     padding: 25px;
     margin: 20px 0px 20px 0px;
+
     /* background-color: var(--seasalt);  */
 
 
@@ -22,6 +23,7 @@
     /* justify-content: flex-start; */
     align-items: center;
     gap: 10px;
+    padding-bottom: 10px;
 
 }
 .author a {

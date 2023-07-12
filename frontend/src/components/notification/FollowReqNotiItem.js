@@ -4,6 +4,7 @@ import SmallButton from "../UI/SmallButton";
 import { WebSocketContext } from "../store/websocket-context";
 import Avatar from "../UI/Avatar";
 import { useNavigate } from 'react-router-dom';
+import SmallAvatar from '../UI/SmallAvatar';
 
 const FollowReqNotiItem = (props) => {
     const navigate = useNavigate();
@@ -64,7 +65,7 @@ const FollowReqNotiItem = (props) => {
                 <div>
                     <div className={styles.container} id={props.srcUser.id}>
                         <div className={styles.left} id={props.srcUser.id}>
-                            <Avatar height={50} width={50}></Avatar>
+                            <SmallAvatar height={50} width={50}/>
                         </div>
                         <div className={styles.mid} id={props.srcUser.id}>
                             <div id={props.srcUser.id}>{`${props.srcUser.fname} ${props.srcUser.lname} wants to follow you`}</div>

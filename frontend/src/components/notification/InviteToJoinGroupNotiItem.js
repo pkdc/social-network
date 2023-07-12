@@ -5,6 +5,7 @@ import Avatar from "../UI/Avatar";
 import { GroupsContext } from "../store/groups-context";
 import { JoinedGroupContext } from "../store/joined-group-context";
 import styles from './NotificationItem.module.css'
+import SmallAvatar from "../UI/SmallAvatar";
 
 
 const InviteToJoinGroupNotiItem = (props) => {
@@ -75,7 +76,7 @@ const InviteToJoinGroupNotiItem = (props) => {
                 <div className={styles.container}>
                     <div className={styles.left}>
 
-                        <Avatar height={50} width={50}></Avatar>
+                        <SmallAvatar height={50} width={50}/>
                     </div>
                     <div className={styles.mid}>
 

@@ -3,6 +3,7 @@ import classes from './Comment.module.css'
 
 // import profile from '../../assets/profile.svg'
 import Avatar from '../../UI/Avatar';
+import SmallAvatar from "../../UI/SmallAvatar";
 
 
 function Comment(props) {
@@ -19,7 +20,7 @@ function Comment(props) {
         <div className={classes.container}>
             <div className={classes["author"]}>
                 <Link to={`/profile/${props.authorId}`} >
-                    <Avatar className={classes["comment-avatar"]} id={props.authorId} src={props.avatar} alt="" width={"30px"} />
+                    <SmallAvatar className={classes["comment-avatar"]} id={props.authorId} src={props.avatar} alt="" height={"30px"}  width={"30px"} />
                 </Link>
 <div className={classes.columnContainer}>
 

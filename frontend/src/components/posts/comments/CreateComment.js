@@ -1,12 +1,15 @@
 import { useState, useRef } from 'react'
 import { Link } from "react-router-dom";
-import send from '../../assets/send.svg'
-// import send from '../../assets/send2.svg'
+import send from '../../assets/send2.svg'
+
+
 
 import profile from '../../assets/profile.svg'
 import ImgUpload from '../../UI/ImgUpload'
 import classes from './CreateComment.module.css'
 import Avatar from '../../UI/Avatar'
+import SmallAvatar from '../../UI/SmallAvatar';
+
 
 
 function CreateComment(props) {
@@ -52,7 +55,7 @@ function CreateComment(props) {
 
     return <form className={classes.inputWrapper} onSubmit={SubmitHandler}>
         <Link to={`/profile/${userId}`} className={classes["author"]}>
-            <Avatar src={localStorage.getItem("avatar")}className={classes["avatar"]} id={userId}  alt="" width={"35px"} />
+            <SmallAvatar src={localStorage.getItem("avatar")}className={classes["avatar"]} id={userId}  alt="" height={"35px"}  width={"35px"} />
         </Link>
         <textarea className={classes.input} placeholder="Write a comment" ref={commentInput} required />
         <div className={classes["functions"]}>

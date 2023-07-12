@@ -5,6 +5,7 @@ import SmallButton from "../UI/SmallButton";
 import classes from './CreateGroupPost.module.css';
 import profile from '../assets/profile.svg';
 import Avatar from "../UI/Avatar";
+import SmallAvatar from "../UI/SmallAvatar";
 
 
 function  CreateGroupPost(props) {
@@ -68,7 +69,7 @@ return <form className={classes.container} onSubmit={SubmitHandler}>
         <Card>
             <div className={classes.row}>
                 {/* <img src={profile} alt='' /> */}
-                <Avatar src={localStorage.getItem("avatar")}height={40} width={40}></Avatar>
+                <SmallAvatar src={localStorage.getItem("avatar")}height={40} width={40}/>
                 <textarea className={classes.content} placeholder="What's on your mind?" rows="1" value={message} onChange={e => setMessage(e.target.value)} required/>
             </div>
 

@@ -8,6 +8,7 @@ import ImgUpload from "../UI/ImgUpload";
 import Avatar from "../UI/Avatar";
 import classes from './CreatePost.module.css';
 import img1 from '../assets/img.svg'
+import SmallAvatar from "../UI/SmallAvatar";
 
 function CreatePost(props) {
     const userId = +localStorage.getItem("user_id");
@@ -63,7 +64,7 @@ function CreatePost(props) {
         <Card>
             <div className={classes["author"]}>
             <Link to={`/profile/${userId}`} >
-                <Avatar className={classes["avatar"]} id={userId} src={avatar} alt="" width={"50px"}/>
+                <SmallAvatar className={classes["avatar"]} id={userId} src={avatar} height={"40px"}  alt="" width={"40px"}/>
             </Link> 
             <Link to={`/profile/${userId}`} className={classes["author"]}>
                 <div className={classes["details"]}>{`${first} ${last}`}</div>

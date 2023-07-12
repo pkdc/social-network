@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import useGet from '../fetch/useGet';
 import Avatar from '../UI/Avatar';
+import SmallAvatar from '../UI/SmallAvatar';
 
 
 
@@ -39,7 +40,7 @@ function EventNotif(props) {
                 <div className={styles.container}>
                     <div className={styles.left}>
                         {/* <img className={styles.img} src={profile} alt='' /> */}
-                        <Avatar height={50} width={50}></Avatar>
+                        <SmallAvatar height={50} width={50}/>
                     </div>
                     <div className={styles.mid}>
                         { data.data && 

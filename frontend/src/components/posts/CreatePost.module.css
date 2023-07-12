@@ -13,6 +13,7 @@
     color: var(--ultra-violet);
     text-decoration: none;
     align-items: center;
+    padding-bottom: 10px;
 }
 .avatar {
     border-radius: 50%;

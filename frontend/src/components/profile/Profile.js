@@ -387,7 +387,7 @@ function Profile({ userId }) {
             <div className={classes.wrapper}>
                 {/* <div className={classes.img}></div> */}
                 {/* <Avatar height={100}></Avatar> */}
-                <SmallAvatar  src={data.data[0].avatar}height={100}></SmallAvatar>
+                <SmallAvatar  src={data.data[0].avatar}height={100} width={100}></SmallAvatar>
 
                 <div className={classes.column}>
                     <div className={classes.row}>

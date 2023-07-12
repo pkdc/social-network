@@ -10,7 +10,6 @@ const Avatar = (props) => {
     const wsCtx = useContext(WebSocketContext);
 
     useEffect(() => {
-        console.log("incoming wsCtx.newOnlineStatusObj.onlineuserids", wsCtx.newOnlineStatusObj.onlineuserids);
         if (wsCtx.websocket !== null && wsCtx.newOnlineStatusObj.onlineuserids) {
             if (wsCtx.newOnlineStatusObj.onlineuserids.find((userId) => props.id === userId)) {
                 setOnlineStatus(true);
@@ -19,8 +18,6 @@ const Avatar = (props) => {
             }
         }
     },[wsCtx.newOnlineStatusObj.onlineuserids]);
-
-    // console.log("Avatar online status for user", props.id, onlineStatus);
 
     const defaultImagePath = "default_avatar.jpg";
     const classes = `${styles["avatar"]} ${props.className || ""}`;

@@ -26,11 +26,13 @@
     cursor: pointer;
 }
 
-.img {
-    padding: 25px;
+.groupimg img{
+    width: 50px;
+    height: 42px;
+
     border-radius: 30%;
     /* margin-left: 8px; */
-    background: var(--antiflash-white);
+    /* background: var(--antiflash-white); */
 }
 
 .btn {
