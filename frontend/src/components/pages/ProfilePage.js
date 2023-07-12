@@ -43,7 +43,9 @@ function ProfilePage() {
     if (!isLoaded) return <div>Loading...</div>
     if (error) return <div>Error: {error.message}</div>
 
-    const postData = data.filter(x => x.author === +id)
+    let postData = []
+    if (data!= null ){
+        postData = data.filter(x => x.author === +id)}
 
 
     // let curFollowing;

@@ -121,11 +121,11 @@ function Profile({ userId }) {
 
                 console.log("follow user id", wsCtx.newNotiFollowReplyObj.sourceid);
                 console.log("cur user is following (profile)", followingCtx.following);
-                const targetId = wsCtx.newNotiFollowReplyObj.sourceid;
+                const targetId = wsCtx.newNotiFollowReplyObj.targetid;
                 console.log("targetid", targetId)
                 console.log("current user", currUserId)
 
-                storeFollow(targetId);
+                // storeFollow(targetId);
             } else {
                 setCurrentlyFollowing(false);
                 setRequestedToFollow(false);
