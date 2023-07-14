@@ -8,10 +8,12 @@ import JoinedGroups from "../group/JoinedGroup";
 import classes from './layout.module.css';
 
 function GroupPage() {
-    const [refresh, setRefresh] = useState(true)
-    
+    const [refresh, setRefresh] = useState(false)
+
+
     function creategroupupdate() {
-        refresh ? setRefresh(false) : setRefresh(true)
+        refresh ? setRefresh(false) : setRefresh(true);
+
     }
 
     return <div className={classes.container}>

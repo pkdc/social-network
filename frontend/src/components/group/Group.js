@@ -21,7 +21,9 @@ function Group(props) {
     const grpCtx = useContext(GroupsContext);
     const wsCtx = useContext(WebSocketContext);
     const usersCtx = useContext(UsersContext);
-
+    useEffect(() => {
+        jGrpCtx.getJoinedGrps()
+    }, [])
     useEffect(() => {
         // const storedJoinedGrps = JSON.parse(localStorage.getItem("joined-grps"));
         // console.log("stored joined-grps (group)", storedJoinedGrps);
@@ -30,15 +32,15 @@ function Group(props) {
 
 
         jGrpCtx.joinedGrps && setCurrentlyJoined(jGrpCtx.joinedGrps.some(joinedGrp => joinedGrp.id === +props.grpid))
-        console.log("fklglfl", jGrpCtx.joinedGrps)
-    }, [jGrpCtx.joinedGrps, props.grpid])
+        console.log("fklglfl123", jGrpCtx.joinedGrps)
+    }, [jGrpCtx.joinedGrps, props.grpid, props])
 
     useEffect(() => {
         jGrpCtx.requestLocalStrg()
     }, [])
     useEffect(() => {
         // const reqGroups = JSON.parse(localStorage.getItem("requestedGroups"));
-const reqGroups = jGrpCtx.requestedGroups
+        const reqGroups = jGrpCtx.requestedGroups
         console.log("stored req-grps (group)", reqGroups);
         if (reqGroups != null) {
             reqGroups.forEach(element => {
@@ -117,18 +119,16 @@ const reqGroups = jGrpCtx.requestedGroups
 
     function handleClick(e) {
         const id = e.target.id
-console.log(id, "1234536546")
+        console.log(id, "1234536546")
         navigate("/groupprofile", { state: { id } })
 
     }
-
     return <Card>
         <div className={classes.container}>
             <div className={classes.wrapper}>
                 <div className={classes.img}></div>
                 <div>
                     <div className={classes.title}>{props.title}</div>
-                    <div className={classes.members}>{props.members} members</div>
                     <div className={classes.desc}>{props.description}</div>
                 </div>
 

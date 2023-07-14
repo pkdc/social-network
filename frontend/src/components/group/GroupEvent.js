@@ -50,16 +50,29 @@ function GroupEvent(props) {
     }, [eventMemberData]);
 
 
+    // var myDate = new Date(props.date);
+    // var options = {
+    //     day: '2-digit',
+    //     month: 'short',
+    //     year: '2-digit',
+    //     hour: '2-digit',
+    //     minute: '2-digit',
+    //     hour12: false
+    //   };
+    //   const newDate = myDate.toLocaleString("en-GB", options)
     var myDate = new Date(props.date);
-    var options = {
-        day: '2-digit',
-        month: 'short',
-        year: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false
-      };
-      const newDate = myDate.toLocaleString("en-GB", options)
+var options = {
+  day: '2-digit',
+  month: 'short',
+  year: '2-digit'
+};
+const dateString = myDate.toLocaleDateString("en-GB", options);
+const timeString = myDate.toLocaleTimeString("en-GB", {
+  hour: '2-digit',
+  minute: '2-digit',
+  hour12: false
+});
+const newDate = `${dateString} ${timeString}`;
 
     const currUserId = localStorage.getItem("user_id");
 

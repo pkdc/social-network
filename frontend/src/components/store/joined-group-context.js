@@ -257,12 +257,12 @@ export const JoinedGroupContextProvider = (props) => {
             setJoinedGrps: setJoinedGrps,
             // joinedGrpsChat: joinedGrpsChat,
             // setJoinedGrpsChat, setJoinedGrpsChat,
-            getFollowing: getJoinedGrpsHandler, // implement
+            getJoinedGrps: getJoinedGrpsHandler, // implement
             requestToJoin: requestToJoinHandler,
             InviteToJoin: InviteToJoinHandler,
             requestLocalStrg: getRequestedGrpsHandler,
             requestedGroups:requestedGroups,
-            getFollowing : getRequestedGrpsHandler,
+            // getFollowing : getRequestedGrpsHandler,
             join: joinHandler,
             // leave: leaveHandler,
             // storeGroupMember: storeGroupMemberHandler,

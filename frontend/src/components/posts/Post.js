@@ -56,16 +56,23 @@ function Post(props) {
         navigate("/profile", { state: { id } })
     }
 
-    var myDate = new Date(props.createdat);
-    var options = {
-        day: '2-digit',
-        month: 'short',
-        year: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false
-    };
-    const newDate = myDate.toLocaleString("en-GB", options)
+    // var myDate = new Date(props.createdat);
+    const moment = require(`moment`);
+    const myDate = moment(props.createdat)
+    let newDate;
+    if (myDate.isValid()) {
+        const mills = myDate.valueOf();
+        newDate = new Intl.DateTimeFormat(`en-GB`, {
+
+            day: 'numeric',
+            month: 'short',
+            year: '2-digit',
+            hour: 'numeric',
+            minute: 'numeric',
+
+
+        }).format(mills)
+    }
 
 
     let privacy;
@@ -78,7 +85,7 @@ function Post(props) {
     return <Card className={classes.container} >
         <div className={classes["author"]}>
             <Link to={`/profile/${props.authorId}`}>
-                <SmallAvatar className={classes["post-avatar"]} id={props.authorId} src={props.avatar} alt="" height={"50px"}  width={"50px"} />
+                <SmallAvatar className={classes["post-avatar"]} id={props.authorId} src={props.avatar} alt="" height={"50px"} width={"50px"} />
             </Link>
             <div className={classes.column}>
                 <div className={classes.row}>

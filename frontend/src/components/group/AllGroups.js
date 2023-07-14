@@ -4,16 +4,10 @@ import classes from './AllGroups.module.css';
 import useGet from "../fetch/useGet";
 import { useEffect, useState } from "react";
 
-function AllGroups({refresh}) {
+function AllGroups(props) {
 
   const currUserId = localStorage.getItem("user_id");
 const [groupData, setGroupData] = useState([])
-    // const { error , isLoaded, data } = useGet(`/group?userid=${currUserId}`)
-    // const { error , isLoaded, data } = useGet(`/group`)
-
-
-    //   if (!isLoaded) return <div>Loading...</div>
-    //   if (error) return <div>Error: {error.message}</div>
     useEffect(() => {
       async function fetchData() {
         try {
@@ -25,16 +19,17 @@ const [groupData, setGroupData] = useState([])
           console.log(error);
         }
       }
-    
       fetchData();
-    }, [refresh]);
+    }, [props.refresh]);
+
+
 
     return <div className={classes.container}>
         {groupData && groupData.map((group) => (
          <Group
         key={group.id}
         grpid={group.id}
-        title={group.title} 
+        title={group.title}
         creator={group.creator}
         description={group.description}
         // img={group.img}

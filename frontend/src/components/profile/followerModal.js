@@ -1,6 +1,7 @@
 import classes from './followerModal.module.css'
 import profile from '../assets/profile.svg';
 import { useNavigate } from 'react-router-dom';
+import SmallAvatar from '../UI/SmallAvatar';
 
 
 function FollowerModal(props) {
@@ -28,7 +29,8 @@ function FollowerModal(props) {
 
                         <div className={classes.container} id={follower.id} onClick={handleClick} >
                             <div className={classes.left} id={follower.id}>
-                                <img className={classes.img} id={follower.id} src={profile} />
+                                <SmallAvatar  className={classes.img} id={follower.id} height={30} width = {30} src={follower.avatar} />
+
                                 <div key={follower.id} id={follower.id} className={classes.user}>{follower.fname}</div>
                             </div>
 
@@ -47,5 +49,3 @@ function FollowerModal(props) {
 }
 
 export default FollowerModal;
-
-
