@@ -19,16 +19,23 @@ function UserEvent(props) {
         navigate("/groupprofile", { state: { id } })
 
     }
-    var myDate = new Date(props.date);
-    var options = {
-        day: '2-digit',
-        month: 'short',
-        year: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false
-      };
-      const newDate = myDate.toLocaleString("en-GB", options)
+    const moment = require(`moment`);
+    const myDate = moment(props.date)
+    let newDate;
+    if (myDate.isValid()) {
+        const mills = myDate.valueOf();
+        newDate = new Intl.DateTimeFormat(`en-GB`, {
+
+            day: 'numeric',
+            month: 'short',
+            year: '2-digit',
+            hour: 'numeric',
+            minute: 'numeric',
+
+
+        }).format(mills)
+    }
+
 
     return <>
 
