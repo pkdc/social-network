@@ -1,5 +1,4 @@
 import classes from './followerModal.module.css'
-import profile from '../assets/profile.svg';
 import { useNavigate } from 'react-router-dom';
 import SmallAvatar from '../UI/SmallAvatar';
 

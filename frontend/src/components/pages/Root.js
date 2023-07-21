@@ -1,4 +1,3 @@
-import {useEffect, useState} from "react";
 import { Outlet } from "react-router-dom";
 import TopNav from "../navigation/TopNav";
 import ChatSidebar from "../navigation/ChatSidebar";
@@ -15,7 +14,7 @@ const Root = (props) => {
     // const [usersList, setUsersList] = useState([]);
     // const [joinedGroupList, setJoinedGroupList] = useState([]);
 
-    console.log("Root");
+    // console.log("Root");
     
     return (
         <>

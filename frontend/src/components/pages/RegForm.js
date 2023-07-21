@@ -123,7 +123,7 @@ const RegForm = () => {
                 <FormInput className={styles["reg-input"]} type="date" name="Dob" id="Dob" value={enteredDob} onChange={dobChangeHandler} />
                 <FormLabel className={styles["reg-label"]} >Avatar (Optional)</FormLabel>
                 <figure>
-                    {!uploadedImg && <img src={require("../../images/" + `${defaultImagePath}`)} alt="Default Image" className={styles["img-preview"]} width={"250px"} />}
+                    {!uploadedImg && <img src={require("../../images/" + defaultImagePath)} alt="Default Image" className={styles["img-preview"]} width={"250px"} />}
                     {uploadedImg && <img src={uploadedImg} className={styles["img-preview"]} width={"250px"} />}
                 </figure>
                 <ImgUpload className={styles["reg-input"]} name="avatar" id="avatar" accept=".jpg, .jpeg, .png, .gif" text="Upload Image" onChange={avatarHandler} />

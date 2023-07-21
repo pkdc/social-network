@@ -1,10 +1,7 @@
 import { useEffect, useState, useContext } from "react";
-import { useParams } from "react-router-dom";
 import useGet from "../fetch/useGet";
-import Post from "../posts/Post";
 import Card from "../UI/Card";
 import GreyButton from "../UI/GreyButton";
-import SmallButton from "../UI/SmallButton";
 import ToggleSwitch from "../UI/ToggleSwitch";
 import { FollowingContext } from "../store/following-context";
 import { UsersContext } from "../store/users-context";
@@ -13,7 +10,6 @@ import classes from './Profile.module.css';
 import FollowerModal from "./followerModal";
 import FollowingModal from "./followingModal";
 import lock from '../assets/lock7.svg'
-import Avatar from "../UI/Avatar";
 import SmallAvatar from "../UI/SmallAvatar";
 function Profile({ userId }) {
 

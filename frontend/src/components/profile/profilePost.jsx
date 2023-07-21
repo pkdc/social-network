@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
 import classes from './profilePost.module.css'
 // import profile from '../assets/profile.svg';

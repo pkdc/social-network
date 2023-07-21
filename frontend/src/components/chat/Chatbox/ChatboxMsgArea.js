@@ -1,9 +1,7 @@
-import { useEffect, useRef, useState } from "react";
-import Card from "../../UI/Card";
+import { useEffect, useRef } from "react";
 import AllOldMsgItems from "./AllOldMsgItems";
 import AllNewMsgItems from "./AllNewMsgItems";
 import styles from "./ChatboxMsgArea.module.css";
-import GroupChatDetailTopBar from "../GroupChat/GroupChatDetailTopBar";
 
 const ChatboxMsgArea = (props) => {
     const msgAreaRef = useRef();
