@@ -3,12 +3,10 @@ import ChooseChat from "../chat/ChooseChat.js";
 import styles from "./ChatSidebar.module.css";
 
 
-const ChatSidebar = (props) => {
+const ChatSidebar = (showChat, setShowChat) => {
     const [hovered, setHovered] = useState(false);
-    const [showChat, setShowChat] = useState(false);
+    // const [showChat, setShowChat] = useState(false);
     const clickHandler = () => !showChat ? setShowChat(true) : setShowChat(false);
-
-    // console.log("user chat followers (sidebar)", props.followersList);
 
     // const sidebarHoveredHandler = () => {};
     return (

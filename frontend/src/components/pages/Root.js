@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import TopNav from "../navigation/TopNav";
 import ChatSidebar from "../navigation/ChatSidebar";
@@ -15,7 +16,12 @@ const Root = (props) => {
     // const [joinedGroupList, setJoinedGroupList] = useState([]);
 
     // console.log("Root");
-    
+    const [showChat, setShowChat] = useState(false);
+
+    const chatIconClickHandler = () =>  {
+        console.log("Root chat icon clicked");
+        setShowChat(prev => !prev);
+    };
     return (
         <>
         <UsersContextProvider>
@@ -23,8 +29,8 @@ const Root = (props) => {
                 <FollowingContextProvider>
                     <GroupsContextProvider>
                         <JoinedGroupContextProvider>
-                            <TopNav/>
-                            <ChatSidebar/>
+                            <TopNav onClickChatIcon={chatIconClickHandler}/>
+                            <ChatSidebar showChat={showChat} setShowChat={setShowChat}/>
                             <Outlet/>
                         </JoinedGroupContextProvider>
                     </GroupsContextProvider>
