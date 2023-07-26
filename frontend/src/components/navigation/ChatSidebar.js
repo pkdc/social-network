@@ -3,11 +3,14 @@ import ChooseChat from "../chat/ChooseChat.js";
 import styles from "./ChatSidebar.module.css";
 
 
-const ChatSidebar = (showChat, setShowChat) => {
+const ChatSidebar = ({showChat, toggleChatSidebar}) => {
     const [hovered, setHovered] = useState(false);
     // const [showChat, setShowChat] = useState(false);
-    const clickHandler = () => !showChat ? setShowChat(true) : setShowChat(false);
-
+    // const clickHandler = () => !showChat ? setShowChat(true) : setShowChat(false);
+    const clickSidebarHandler = () => {
+        console.log("chatbar  btn clicked");
+        toggleChatSidebar();
+    };
     // const sidebarHoveredHandler = () => {};
     return (
         <>
@@ -27,7 +30,7 @@ const ChatSidebar = (showChat, setShowChat) => {
                 className={`${styles["show-sidebar-btn"]} ${hovered ? styles["hovered"] : ""} ${showChat ? styles["show-chat"] : ""}`} 
                 onMouseEnter={() => setHovered(true)}
                 onMouseLeave={() => setHovered(false)}
-                onClick={clickHandler}
+                onClick={clickSidebarHandler}
             >{showChat ? ">" : "<"}</button>
         </div>
         </>
