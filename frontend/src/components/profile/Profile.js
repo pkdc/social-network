@@ -10,7 +10,7 @@ import classes from './Profile.module.css';
 import FollowerModal from "./followerModal";
 import FollowingModal from "./followingModal";
 import lock from '../assets/lock7.svg'
-import SmallAvatar from "../UI/SmallAvatar";
+import Avatar from "../UI/Avatar";
 function Profile({ userId }) {
 
     const [followerOpen, setFollowerOpen] = useState(false)
@@ -383,7 +383,7 @@ function Profile({ userId }) {
             <div className={classes.wrapper}>
                 {/* <div className={classes.img}></div> */}
                 {/* <Avatar height={100}></Avatar> */}
-                <SmallAvatar  src={data.data[0].avatar}height={100} width={100}></SmallAvatar>
+                <Avatar src={data.data[0].avatar} showStatus={false} height={100} width={100}/>
 
                 <div className={classes.column}>
                     <div className={classes.row}>
