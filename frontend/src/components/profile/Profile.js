@@ -1,10 +1,7 @@
 import { useEffect, useState, useContext } from "react";
-import { useParams } from "react-router-dom";
 import useGet from "../fetch/useGet";
-import Post from "../posts/Post";
 import Card from "../UI/Card";
 import GreyButton from "../UI/GreyButton";
-import SmallButton from "../UI/SmallButton";
 import ToggleSwitch from "../UI/ToggleSwitch";
 import { FollowingContext } from "../store/following-context";
 import { UsersContext } from "../store/users-context";
@@ -14,7 +11,6 @@ import FollowerModal from "./followerModal";
 import FollowingModal from "./followingModal";
 import lock from '../assets/lock7.svg'
 import Avatar from "../UI/Avatar";
-import SmallAvatar from "../UI/SmallAvatar";
 function Profile({ userId }) {
 
     const [followerOpen, setFollowerOpen] = useState(false)
@@ -387,7 +383,7 @@ function Profile({ userId }) {
             <div className={classes.wrapper}>
                 {/* <div className={classes.img}></div> */}
                 {/* <Avatar height={100}></Avatar> */}
-                <SmallAvatar  src={data.data[0].avatar}height={100} width={100}></SmallAvatar>
+                <Avatar src={data.data[0].avatar} showStatus={false} height={100} width={100}/>
 
                 <div className={classes.column}>
                     <div className={classes.row}>

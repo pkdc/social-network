@@ -3,8 +3,6 @@ import classes from './Comment.module.css'
 
 // import profile from '../../assets/profile.svg'
 import Avatar from '../../UI/Avatar';
-import SmallAvatar from "../../UI/SmallAvatar";
-
 
 function Comment(props) {
     const created = new Intl.DateTimeFormat('en-GB', {
@@ -20,7 +18,7 @@ function Comment(props) {
         <div className={classes.container}>
             <div className={classes["author"]}>
                 <Link to={`/profile/${props.authorId}`} >
-                    <SmallAvatar className={classes["comment-avatar"]} id={props.authorId} src={props.avatar} alt="" height={"30px"}  width={"30px"} />
+                    <Avatar className={classes["comment-avatar"]} id={props.authorId} src={props.avatar} alt="" showStatus={false} height={"30px"}  width={"30px"} />
                 </Link>
 <div className={classes.columnContainer}>
 

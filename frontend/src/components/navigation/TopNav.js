@@ -11,7 +11,7 @@ import { AuthContext } from "../store/auth-context";
 import { WebSocketContext } from "../store/websocket-context";
 import NotificationCentre from "../notification/NotificationCentre";
 
-const TopNav = () => {
+const TopNav = ({onClickChatIcon}) => {
     const [showNoti, setShowNoti] = useState(false);
     const [newNoti, setNewNoti] = useState([]);
     const [showNotiBadge , setShowNotiBadge] = useState(false)
@@ -56,7 +56,7 @@ console.log("checkingwebsocket: ",wsCtx.newNotiObj);
                 
                 setNewNoti(JSON.parse(lastcurrentnotifarr))
                 console.log("empty new noti", newNoti)
-            }else {
+            } else {
                 console.log("new notif empty1")
                 setNewNoti([]);     
             }
@@ -79,7 +79,13 @@ console.log("checkingwebsocket: ",wsCtx.newNotiObj);
     const onShowNoti = () => {
         setShowNoti(prev => !prev);
         setShowNotiBadge(false)
-        };
+    };
+
+    const chatIconClickHandler = () => {
+        console.log("chat icon clicked");
+        onClickChatIcon();
+    };
+
     return (
         <nav>
             <div className={styles["top-nav"]}>
@@ -109,10 +115,12 @@ console.log("checkingwebsocket: ",wsCtx.newNotiObj);
                             onClose={() => setShowNoti(false)}
                             />
                         }
+                        <div onClick={chatIconClickHandler}>
                         <button className={styles.btn}>
                             <img src={chatIcon} alt=""></img>
                             {/* <div className={styles.badge}></div> */}
-                        </button>
+                        </button> 
+                        </div>
                     </div>
                     <div className={styles.logout} onClick={onClickingLogout}><img src={logout} alt=""/></div>
                 </div>

@@ -3,7 +3,7 @@ import { WebSocketContext } from "../store/websocket-context";
 import styles from "./Avatar.module.css";
 import profile from '../assets/profile.svg'
 
-const Avatar = (props) => {
+const Avatar = ({className, id, src, alt, height, width, showStatus}) => {
     // const onlineStatus = false; // change this
     const [onlineStatus, setOnlineStatus] = useState(false);
 
@@ -11,7 +11,7 @@ const Avatar = (props) => {
 
     useEffect(() => {
         if (wsCtx.websocket !== null && wsCtx.newOnlineStatusObj.onlineuserids) {
-            if (wsCtx.newOnlineStatusObj.onlineuserids.find((userId) => props.id === userId)) {
+            if (wsCtx.newOnlineStatusObj.onlineuserids.find((userId) => id === userId)) {
                 setOnlineStatus(true);
             } else {
                 setOnlineStatus(false);
@@ -20,13 +20,13 @@ const Avatar = (props) => {
     },[wsCtx.newOnlineStatusObj.onlineuserids]);
 
     const defaultImagePath = "default_avatar.jpg";
-    const classes = `${styles["avatar"]} ${props.className || ""}`;
+    const classes = `${styles["avatar"]} ${className || ""}`;
     return (
         <div className={styles["wrapper"]}>
-            {onlineStatus && <div className={styles["online-status-dot"]}></div>}
-            {!onlineStatus && <div className={styles["offline-status-dot"]}></div>}
-            {props.src && <img className={classes} src={props.src} alt={props.alt} height={props.height} width={props.width}/>}
-            {!props.src && <img className={classes} src={require("../../images/"+`${defaultImagePath}`)} alt={props.alt} height={props.height} width={props.width}/>}
+            {showStatus && onlineStatus && <div className={styles["online-status-dot"]}></div>}
+            {showStatus && !onlineStatus && <div className={styles["offline-status-dot"]}></div>}
+            {src && <img className={classes} src={src} alt={alt} height={height} width={width}/>}
+            {!src && <img className={classes} src={require("../../images/"+`${defaultImagePath}`)} alt={alt} height={height} width={width}/>}
         </div>
     )
 };

@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import TopNav from "../navigation/TopNav";
 import ChatSidebar from "../navigation/ChatSidebar";
@@ -8,15 +8,20 @@ import { WebSocketContextProvider } from "../store/websocket-context";
 import { GroupsContextProvider } from "../store/groups-context";
 import { JoinedGroupContextProvider } from "../store/joined-group-context";
 
-const Root = (props) => {
-    // const userFollowersUrl = "http://localhost:8080/user-follower";
-    // const userUrl = "http://localhost:8080/user";
+const Root = () => {
+    // console.log("Root");
+    const [showChat, setShowChat] = useState(false);
 
-    // const [usersList, setUsersList] = useState([]);
-    // const [joinedGroupList, setJoinedGroupList] = useState([]);
+    const chatIconClickHandler = () =>  {
+        console.log("Root chat icon clicked");
+        !showChat ? setShowChat(true) : setShowChat(false);
+    };
 
-    console.log("Root");
-    
+    const chatbarClickHandler = () =>  {
+        console.log("Root chatsidebar clicked");
+        !showChat ? setShowChat(true) : setShowChat(false);
+    };
+
     return (
         <>
         <UsersContextProvider>
@@ -24,8 +29,8 @@ const Root = (props) => {
                 <FollowingContextProvider>
                     <GroupsContextProvider>
                         <JoinedGroupContextProvider>
-                            <TopNav/>
-                            <ChatSidebar/>
+                            <TopNav onClickChatIcon={chatIconClickHandler}/>
+                            <ChatSidebar showChat={showChat} toggleChatSidebar={chatbarClickHandler}/>
                             <Outlet/>
                         </JoinedGroupContextProvider>
                     </GroupsContextProvider>

@@ -1,10 +1,8 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import EmojiPicker from 'emoji-picker-react';
-import Form from "../../UI/Form";
 import send from '../../assets/send.svg';
 import SendMsgForm from "../../UI/SendMsgForm";
 import CreateMsgTextarea from "../../UI/CreateMsgTextarea";
-import SmallButton from "../../UI/SmallButton";
 import styles from "./SendMsg.module.css";
 
 const SendMsg = (props) => {

@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import SmallAvatar from "../../UI/SmallAvatar";
 import styles from "./OldMsgItem.module.css";
-import useGet from '../../fetch/useGet';
 import { UsersContext } from "../../store/users-context";
 
 const NewMsgItem = (props) => {

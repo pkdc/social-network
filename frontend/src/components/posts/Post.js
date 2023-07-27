@@ -7,7 +7,6 @@ import Avatar from '../UI/Avatar';
 import Card from '../UI/Card';
 import lock from '../assets/lock2.svg'
 import lockCF from '../assets/lock6.svg'
-import SmallAvatar from '../UI/SmallAvatar';
 
 
 function Post(props) {
@@ -85,7 +84,7 @@ function Post(props) {
     return <Card className={classes.container} >
         <div className={classes["author"]}>
             <Link to={`/profile/${props.authorId}`}>
-                <SmallAvatar className={classes["post-avatar"]} id={props.authorId} src={props.avatar} alt="" height={"50px"} width={"50px"} />
+                <Avatar className={classes["post-avatar"]} id={props.authorId} src={props.avatar} alt="" showStatus={false} height={"50px"} width={"50px"} />
             </Link>
             <div className={classes.column}>
                 <div className={classes.row}>
