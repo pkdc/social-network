@@ -7,10 +7,10 @@ function AllJoinedGroups() {
 
     const currUserId = localStorage.getItem("user_id");
 
-    const { error , isLoaded, data } = useGet(`/group-member?userid=${currUserId}`)
+    const { error , isLoading, data } = useGet(`/group-member?userid=${currUserId}`)
     // for group members `/group-member?groupid=${groupId}
 
-      if (!isLoaded) return <div>Loading...</div>
+      if (isLoading) return <div>Loading...</div>
       if (error) return <div>Error: {error.message}</div>
 
     return <Card>

@@ -15,18 +15,8 @@ const OldMsgItem = (props) => {
     }, [props])
 
     let targetUsers;
-    // usersCtx.users.find((user) => user.id === wsCtx.newPrivateMsgsObj.sourceid);
-    // assume usersCtx.users sorted by user id
-    // console.log(usersCtx.users);
-    // console.log(props.targetid);
-    // console.log(props.sourceid);
 
     const msgUser = usersCtx.users.find(user => user.id === props.sourceid);
-
-    // const { error, isLoaded, data } = useGet(`/user?id=${props.sourceid}`);
-
-    // if (!isLoaded) return <div>Loading...</div>
-    // if (error) return <div>Error: {error.message}</div>
 
     return (
         <div className={`${self ? styles["self-msg"] : styles["frd-msg"]}`}>
@@ -40,9 +30,6 @@ const OldMsgItem = (props) => {
                     {props.msg}
                 </div>
             </div>
-            {/* {self &&
-                <SmallAvatar height={30} width={30}></SmallAvatar>
-            } */}
         </div>
     );
 };

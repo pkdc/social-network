@@ -10,10 +10,10 @@ import useGet from '../fetch/useGet';
 
 
 function ProfilePosts() {
-    const { error, isLoaded, data } = useGet("/post");
+    const { error, isLoading, data } = useGet("/post");
     console.log("profile posts", data);
    
-    if (!isLoaded) return <div>Loading...</div>
+    if (isLoading) return <div>Loading...</div>
     if (error) return <div>Error: {error.message}</div>
 
     return <>

@@ -91,6 +91,7 @@ nav {
     outline: none;
     background: none;
     position: relative;
+    cursor: pointer;
 }
 
 .notif {

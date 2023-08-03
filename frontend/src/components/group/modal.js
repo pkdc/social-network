@@ -11,8 +11,8 @@ function Modal({ open, onClose, onInvite, currentlyJoined, invitedToJoin }) {
     const jGrpCtx = useContext(JoinedGroupContext);
     const { state } = useLocation();
     const { id } = state; // group id
-    const { error, isLoaded, data } = useGet(`/group-member?groupid=${id}`)
-    if (!isLoaded) return <div>Loading...</div>
+    const { error, isLoading, data } = useGet(`/group-member?groupid=${id}`)
+    if (isLoading) return <div>Loading...</div>
     if (error) return <div>Error: {error.message}</div>
     if (!open) return null;
     

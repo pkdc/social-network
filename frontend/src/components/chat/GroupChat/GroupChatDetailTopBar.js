@@ -6,11 +6,6 @@ import { useContext } from "react";
 const GroupChatDetailTopBar = (props) => {
 
     const navigate = useNavigate();
-    
-    // const { error, isLoaded, data } = useGet(`/group?id=${props.groupId}`)
-
-    // if (!isLoaded) return <div>Loading...</div>
-    // if (error) return <div>Error: {error.message}</div>
 
     const grpCtx = useContext(GroupsContext);
 

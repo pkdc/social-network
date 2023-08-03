@@ -23,6 +23,18 @@
     color: var(--ultra-violet, purple);
     margin: 5rem 0 3rem 0;
 }
+
+@keyframes flyInBtn {
+    0% {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
 .nav-link {
     margin: 0 auto;
     width: 60%;
@@ -31,4 +43,16 @@
 .nav-link-btn {
     margin: 3rem 0%;
     width: 100%;
+    opacity: 0;
+    transform: translateX(-100%);
+}
+
+.login-btn {
+    animation: flyInBtn 0.8s ease forwards;
+    animation-delay: 0.2s;
+}
+
+.reg-btn {
+    animation: flyInBtn 0.8s ease forwards;
+    animation-delay: 0.5s;
 }

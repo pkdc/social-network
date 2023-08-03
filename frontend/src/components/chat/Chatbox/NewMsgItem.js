@@ -15,10 +15,6 @@ const NewMsgItem = (props) => {
 
     console.log("new chat item", usersCtx.users);
     console.log("new chat item", props.sourceid);
-    // const { error, isLoaded, data } = useGet(`/user?id=${props.sourceid}`);
-
-    // if (!isLoaded) return <div>Loading...</div>
-    // if (error) return <div>Error: {error.message}</div>
 
     return (
         <div className={`${self ? styles["self-msg"] : styles["frd-msg"]}`}>

@@ -53,13 +53,13 @@ function GroupProfile({ groupid }) {
         wsCtx.setNewNotiInvitationReplyObj(null);
     }, [wsCtx.newNotiInvitationReplyObj]);
 
-    const { error, isLoaded, data } = useGet(`/group?id=${groupid}`)
+    const { error, isLoading, data } = useGet(`/group?id=${groupid}`)
     const [open, setOpen] = useState(false)
 
 
     const currUserId = localStorage.getItem("user_id");
 
-    if (!isLoaded) return <div>Loading...</div>
+    if (isLoading) return <div>Loading...</div>
     if (error) return <div>Error: {error.message}</div>
 
     function handleClick(e) {

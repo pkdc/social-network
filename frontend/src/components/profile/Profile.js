@@ -258,7 +258,7 @@ function Profile({ userId }) {
         }
     }
     //  console.log("user data (profile)", data.data)
-    if (!isLoaded) return <div>Loading...</div>
+    if (!isLoaded) return <div>Loading Profile...</div>
     if (error) return <div>Error: {error.message}</div>
 
 

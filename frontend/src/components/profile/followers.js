@@ -11,7 +11,7 @@ function Followers({ userId }) {
 
     const { error, isLoaded, data } = useGet(`/user-follower?id=${userId}`);
 
-    if (!isLoaded) return <div>Loading...</div>
+    if (isLoaded) return <div>Loading..foler.</div>
     if (error) return <div>Error: {error.message}</div>
 
     function handleClick(e) {

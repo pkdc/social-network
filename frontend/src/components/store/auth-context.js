@@ -75,8 +75,6 @@ export const AuthContextProvider = (props) => {
       body: JSON.stringify(loginPayloadObj)
     };
 
-
-
     fetch(loginURL, reqOptions)
       .then(resp => resp.json())
       .then(data => {

@@ -1,14 +1,10 @@
 import { useEffect, useState } from "react";
-import useGet from "../fetch/useGet";
 import GroupEvent from "./GroupEvent";
 
 function AllEvents({groupid, refresh}) {
 let userid = localStorage.getItem("user_id")
 const [ eventData, setEventData ] = useState([])
-// const { error, isLoaded, data } = useGet(`/group-event?id=${groupid}&userid=${userid}`)
 
-// if (!isLoaded) return <div>Loading...</div>
-// if (error) return <div>Error: {error.message}</div
 useEffect(() => {
     async function fetchData() {
       try {

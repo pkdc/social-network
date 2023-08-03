@@ -13,15 +13,6 @@ function JoinedGroups({ refresh }) {
     const jGrpCtx = useContext(JoinedGroupContext);
     const [joinedGroup, setJoinedGroup] = useState()
     const currUserId = localStorage.getItem("user_id");
-
-    
-    
-    // const { error, isLoaded, data } = useGet(`/group-member?userid=${currUserId}`)
-    // // for group members `/group-member?groupid=${groupId}
-    
-    // if (!isLoaded) return <div>Loading...</div>
-    // if (error) return <div>Error: {error.message}</div>
-    
     
     function handleClick(e) {
         let id = e.target.id
@@ -31,9 +22,7 @@ function JoinedGroups({ refresh }) {
         }
         console.log("3690", id)
         navigate("/groupprofile", { state: { id } })
-        
     }
-    
     
     useEffect(() => {
         console.log(jGrpCtx.joinedGrps.length,"sfklsdlflds;")

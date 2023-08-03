@@ -1,7 +1,5 @@
 import Group from "./Group";
-
 import classes from './AllGroups.module.css';
-import useGet from "../fetch/useGet";
 import { useEffect, useState } from "react";
 
 function AllGroups(props) {

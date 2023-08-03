@@ -5,12 +5,8 @@ import { UsersContext } from "../../store/users-context";
 import styles from "./ChatDetailTopBar.module.css";
 import { Link, useNavigate } from "react-router-dom";
 import SmallAvatar from "../../UI/SmallAvatar";
+
 const UserChatDetailTopBar = (props) => {
-
-    // const { error , isLoaded, data } = useGet(`/user?id=${props.userId}`)
-
-    // if (!isLoaded) return <div>Loading...</div>
-    // if (error) return <div>Error: {error.message}</div>
     const usersCtx = useContext(UsersContext);
     console.log("tar uid", props.userId);
     const targetUser = usersCtx.users.find(user => +user.id === props.userId);

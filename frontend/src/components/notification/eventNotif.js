@@ -12,11 +12,8 @@ function EventNotif(props) {
     const navigate = useNavigate();
     const [isVisible, setIsVisible] = useState(true);
 
-
-    const { error, isLoaded, data } = useGet(`/group?id=${props.groupId}`)
-    console.log("0987", data)
-    
-    if (!isLoaded) return <div>Loading...</div>
+    const { error, isLoading, data } = useGet(`/group?id=${props.groupId}`)    
+    if (isLoading) return <div>Loading...</div>
     if (error) return <div>Error: {error.message}</div>
 
     function handleClick(e) {

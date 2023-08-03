@@ -13,7 +13,7 @@ function Following({ userId }) {
 
     const { error , isLoaded, data } = useGet(`/user-following?id=${userId}`)
 
-    if (!isLoaded) return <div>Loading...</div>
+    if (isLoaded) return <div>Loading..foing.</div>
     if (error) return <div>Error: {error.message}</div>
 
     console.log("following: ", data.data);

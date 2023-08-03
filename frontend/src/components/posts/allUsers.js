@@ -15,8 +15,7 @@ function AllUsers() {
     const currUserId = localStorage.getItem("user_id");
 
     const { error, isLoaded, data } = useGet(`/user`)
-
-    if (!isLoaded) return <div>Loading...</div>
+    if (!isLoaded) return <div>Loading All Users...</div>
     if (error) return <div>Error: {error.message}</div>
 
 
@@ -26,7 +25,6 @@ function AllUsers() {
         if (id == "") {
             id = e.target.parentElement.parentElement.id
         }
-        console.log("3690", id)
         navigate(`/profile/${id}`)
 
     }
