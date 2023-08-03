@@ -15,7 +15,7 @@ function AllUsers() {
     const currUserId = localStorage.getItem("user_id");
 
     const { error, isLoaded, data } = useGet(`/user`)
-    if (!isLoaded) return <div>Loading All Users...</div>
+    if (isLoaded) return <div>Loading All Users...</div>
     if (error) return <div>Error: {error.message}</div>
 
 
@@ -34,7 +34,7 @@ function AllUsers() {
             Users
         </div>
         <Card>
-    {data.data && data.data.map((user) => (
+    {data && data.data && data.data.map((user) => (
 
                 <div key={user.id} id={user.id} className={classes.container} onClick={handleClick} >
                     {/* <div className={classes.img}></div> */}

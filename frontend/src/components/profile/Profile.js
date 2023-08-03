@@ -249,7 +249,7 @@ function Profile({ userId }) {
     }, [userId]);
 
     const { error, isLoaded, data } = useGet(`/user?id=${userId}`)
-    if (data.data !== undefined) {
+    if (data && data.data && data.data.length > 0) {
 
         if (data.data[0].public == 0) {
             localStorage.setItem('isChecked', true);
@@ -258,7 +258,7 @@ function Profile({ userId }) {
         }
     }
     //  console.log("user data (profile)", data.data)
-    if (!isLoaded) return <div>Loading Profile...</div>
+    if (isLoaded) return <div>Loading Profile...</div>
     if (error) return <div>Error: {error.message}</div>
 
 

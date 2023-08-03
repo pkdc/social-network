@@ -40,11 +40,11 @@ function ProfilePage() {
 
     const { error, isLoaded, data } = useGet(`/post?id=${localStorage.getItem("user_id")}`)
 
-    if (!isLoaded) return <div>Loading...Profile Page</div>
+    if (isLoaded) return <div>Loading...Profile Page</div>
     if (error) return <div>Error: {error.message}</div>
 
     let postData = []
-    if (data!= null ){
+    if (data && data.data && data.data.length > 0){
         postData = data.filter(x => x.author === +id)}
 
 
