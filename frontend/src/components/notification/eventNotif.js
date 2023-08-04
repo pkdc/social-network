@@ -12,8 +12,8 @@ function EventNotif(props) {
     const navigate = useNavigate();
     const [isVisible, setIsVisible] = useState(true);
 
-    const { error, isLoading, data } = useGet(`/group?id=${props.groupId}`)    
-    if (isLoading) return <div>Loading...</div>
+    const { error, isLoaded: isLoading, data } = useGet(`/group?id=${props.groupId}`)    
+    if (isLoading) return <div>Loading Event Noti...</div>
     if (error) return <div>Error: {error.message}</div>
 
     function handleClick(e) {
@@ -40,7 +40,7 @@ function EventNotif(props) {
                         <SmallAvatar height={50} width={50}/>
                     </div>
                     <div className={styles.mid}>
-                        { data.data && 
+                        { data && data.data && 
                         <div id={props.groupId} onClick={handleClick} className={styles.user}> {data.data[0].title} added new event: {props.type.split("+")[1]}</div>
                         }
                         {/* <div id={props.groupId} onClick={handleClick} className={styles.user}>GroupTitle {props.groupId} added a new event: EventTitle</div>   */}

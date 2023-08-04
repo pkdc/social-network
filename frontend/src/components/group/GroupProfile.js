@@ -20,14 +20,10 @@ function GroupProfile({ groupid }) {
     const [invitedToJoin, setInvitedToJoin] = useState(false);
     const [groupMembers, setgroupmembers] = useState(null);
 
-
     const jGrpCtx = useContext(JoinedGroupContext);
     const grpCtx = useContext(GroupsContext);
     const wsCtx = useContext(WebSocketContext);
     const usersCtx = useContext(UsersContext);
-
-
-
 
     useEffect(() => {
         console.log(wsCtx.newNotiInvitationReplyObj);
@@ -53,13 +49,13 @@ function GroupProfile({ groupid }) {
         wsCtx.setNewNotiInvitationReplyObj(null);
     }, [wsCtx.newNotiInvitationReplyObj]);
 
-    const { error, isLoading, data } = useGet(`/group?id=${groupid}`)
+    const { error, isLoaded: isLoading, data } = useGet(`/group?id=${groupid}`)
     const [open, setOpen] = useState(false)
 
 
     const currUserId = localStorage.getItem("user_id");
 
-    if (isLoading) return <div>Loading...</div>
+    if (isLoading) return <div>Loading GP...</div>
     if (error) return <div>Error: {error.message}</div>
 
     function handleClick(e) {
@@ -86,11 +82,10 @@ function GroupProfile({ groupid }) {
         } else {
             setInvitedToJoin(false)
         }
-
     };
 
     return <Card className={classes.container}>
-        {data.data && data.data.map((group) => (
+        {data && data.data && data.data.map((group) => (
             <div className={classes.groupContainer} key={group.id} id={group.id}>
                 <div className={classes.img}> <img src={groupimg} ></img> </div>
 

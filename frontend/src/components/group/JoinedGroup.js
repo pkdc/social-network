@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from 'react';
 import classes from './JoinedGroup.module.css';
 import { useNavigate } from "react-router-dom";
-import useGet from '../fetch/useGet'
 import Card from '../UI/Card';
 import { JoinedGroupContext } from '../store/joined-group-context';
 import groupimg from '../assets/groupimg.jpg'

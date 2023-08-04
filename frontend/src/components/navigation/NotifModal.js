@@ -8,9 +8,9 @@ import profile from '../assets/profile.svg';
 
 function NotifModal({open, onClose}) {
     const currUserId = localStorage.getItem("user_id");
-   const { error, isLoading, data } = useGet(`/group-member?userid=${currUserId}`)
+   const { error, isLoaded: isLoading, data } = useGet(`/group-member?userid=${currUserId}`)
 console.log("members data: ", data)
-    if (isLoading) return <div>Loading...</div>
+    if (isLoading) return <div>Loading Noti Modal...</div>
     if (error) return <div>Error: {error.message}</div>
     if (!open) return null;
 

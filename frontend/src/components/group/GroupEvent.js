@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import useGet from '../fetch/useGet';
 import Card from '../UI/Card';
 import GreyButton from '../UI/GreyButton';
 import SmallButton from '../UI/SmallButton';

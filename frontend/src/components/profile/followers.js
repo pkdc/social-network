@@ -9,9 +9,9 @@ import { useEffect, useState } from "react";
 function Followers({ userId }) {
     const navigate = useNavigate();
 
-    const { error, isLoaded, data } = useGet(`/user-follower?id=${userId}`);
+    const { error, isLoaded: isLoading, data } = useGet(`/user-follower?id=${userId}`);
 
-    if (isLoaded) return <div>Loading..foler.</div>
+    if (isLoading) return <div>Loading..foler.</div>
     if (error) return <div>Error: {error.message}</div>
 
     function handleClick(e) {

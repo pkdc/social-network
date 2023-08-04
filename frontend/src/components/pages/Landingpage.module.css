@@ -49,10 +49,10 @@
 
 .login-btn {
     animation: flyInBtn 0.8s ease forwards;
-    animation-delay: 0.2s;
+    animation-delay: 0.1s;
 }
 
 .reg-btn {
     animation: flyInBtn 0.8s ease forwards;
-    animation-delay: 0.5s;
+    animation-delay: 0.25s;
 }

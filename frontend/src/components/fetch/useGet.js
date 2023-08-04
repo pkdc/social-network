@@ -9,7 +9,7 @@ function useGet(url) {
   useEffect(() => {
     console.log("useGet: Starting fetch for", url);
     setIsLoading(true);
-    fetch(`http://localhost:8080${url}`)
+    fetch(`http://localhost:8080${url}`, {credentials: "include"})
       .then(response => {
         console.log("useGet: Received response:", response);
         return response.json();
