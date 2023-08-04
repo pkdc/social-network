@@ -250,8 +250,7 @@ function Profile({ userId }) {
 
     const { error, isLoaded: isLoading, data } = useGet(`/user?id=${userId}`)
     if (data && data.data && data.data.length > 0) {
-
-        if (data.data[0].public == 0) {
+        if (data.data[0].public === 0) {
             localStorage.setItem('isChecked', true);
         } else {
             localStorage.setItem('isChecked', false);
@@ -260,9 +259,6 @@ function Profile({ userId }) {
     //  console.log("user data (profile)", data.data)
     if (isLoading) return <div>Loading Profile...</div>
     if (error) return <div>Error: {error.message}</div>
-
-
-
 
     // delete follower from db
     const deleteFollow = (targetId) => {
@@ -336,9 +332,6 @@ function Profile({ userId }) {
 
     }
 
-
-
-
     let followButton;
     let messageButton;
     let closeFriend;
@@ -358,8 +351,6 @@ function Profile({ userId }) {
         closeFriendText = <div>close friend</div>
 
     }
-
-
 
     function handleFollowerClick() {
         setFollowerOpen(true)
@@ -383,39 +374,39 @@ function Profile({ userId }) {
             <div className={classes.wrapper}>
                 {/* <div className={classes.img}></div> */}
                 {/* <Avatar height={100}></Avatar> */}
-                <Avatar src={data.data[0].avatar} showStatus={false} height={100} width={100}/>
+                {data && 
+                <>
+                    <Avatar src={data.data[0].avatar} showStatus={false} height={100} width={100}/>
 
-                <div className={classes.column}>
-                    <div className={classes.row}>
+                    <div className={classes.column}>
                         <div className={classes.row}>
-                        <div className={classes.name}>{data.data[0].fname} {data.data[0].lname}</div>
-                        {!pubCheck &&
-                            <div><img src={lock} alt=''></img> </div>
-                        }
+                            <div className={classes.row}>
+                            <div className={classes.name}>{data.data[0].fname} {data.data[0].lname}</div>
+                            {!pubCheck &&
+                                <div><img src={lock} alt=''></img> </div>
+                            }
+                            </div>
+                            <div className={classes.btn}>
+                                {followButton}
+                                {messageButton}
+                            </div>
                         </div>
-                        <div className={classes.btn}>
-                            {followButton}
-                            {messageButton}
+
+                        <div className={classes.username}>{data.data[0].nname}</div>
+                        <div className={classes.followers}>
+                            <div className={classes.follow} onClick={handleFollowerClick}><span className={classes.count}>{followerData && followerData.length}{!followerData && 0}</span> followers</div>
+                            <div className={classes.follow} onClick={handleFollowingClick}><span className={classes.count}>{followingData && followingData.length}{!followingData && 0}</span> following</div>
+                        </div>
+                        <div>{data.data[0].about}</div>
+                        <div className={classes.closeFriend}>
+                            {isFollower &&
+                                closeFriendText
+                            }
+                            {isFollower &&
+                                closeFriend}
                         </div>
                     </div>
-
-                    <div className={classes.username}>{data.data[0].nname}</div>
-                    <div className={classes.followers}>
-                        <div className={classes.follow} onClick={handleFollowerClick}><span className={classes.count}>{followerData && followerData.length}{!followerData && 0}</span> followers</div>
-                        <div className={classes.follow} onClick={handleFollowingClick}><span className={classes.count}>{followingData && followingData.length}{!followingData && 0}</span> following</div>
-                    </div>
-                    <div>{data.data[0].about}</div>
-                    <div className={classes.closeFriend}>
-                        {isFollower &&
-                            closeFriendText
-                        }
-                        {isFollower &&
-                            closeFriend}
-
-                    </div>
-
-                </div>
-
+                </>}
             </div>
             {followerOpen && followerData &&
                 <FollowerModal
