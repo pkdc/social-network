@@ -14,8 +14,8 @@ function AllUsers() {
 
     const currUserId = localStorage.getItem("user_id");
 
-    const { error, isLoaded, data } = useGet(`/user`)
-    if (isLoaded) return <div>Loading All Users...</div>
+    const { error, isLoaded: isLoading, data } = useGet(`/user`)
+    if (isLoading) return <div>Loading All Users...</div>
     if (error) return <div>Error: {error.message}</div>
 
 

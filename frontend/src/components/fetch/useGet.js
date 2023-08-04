@@ -27,7 +27,7 @@ function useGet(url) {
   }, [url]);
 
   console.log("useGet: Returning data:", data);
-  return { error, isLoading, data };
+  return { error, isLoading: isLoading, data };
 }
 
 export default useGet;

@@ -38,9 +38,9 @@ function ProfilePage() {
             );
     }, []);
 
-    const { error, isLoaded, data } = useGet(`/post?id=${localStorage.getItem("user_id")}`)
+    const { error, isLoaded: isLoading, data } = useGet(`/post?id=${localStorage.getItem("user_id")}`)
 
-    if (isLoaded) return <div>Loading...Profile Page</div>
+    if (isLoading) return <div>Loading...Profile Page</div>
     if (error) return <div>Error: {error.message}</div>
 
     let postData = []

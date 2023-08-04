@@ -248,7 +248,7 @@ function Profile({ userId }) {
             })
     }, [userId]);
 
-    const { error, isLoaded, data } = useGet(`/user?id=${userId}`)
+    const { error, isLoaded: isLoading, data } = useGet(`/user?id=${userId}`)
     if (data && data.data && data.data.length > 0) {
 
         if (data.data[0].public == 0) {
@@ -258,7 +258,7 @@ function Profile({ userId }) {
         }
     }
     //  console.log("user data (profile)", data.data)
-    if (isLoaded) return <div>Loading Profile...</div>
+    if (isLoading) return <div>Loading Profile...</div>
     if (error) return <div>Error: {error.message}</div>
 
 
