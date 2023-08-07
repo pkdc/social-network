@@ -112,7 +112,8 @@ export const AuthContextProvider = (props) => {
 
         } else {
           setLoggedIn(false)
-          setErrMsg("ERROR - Please check your credentials")
+          // setErrMsg("ERROR - Please check your credentials")
+          throw new Error("Login Failed: Please check your credentials and login again");
         }
         setLoginIsLoading(false);
       })

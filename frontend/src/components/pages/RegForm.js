@@ -23,7 +23,7 @@ const RegForm = () => {
     const [uploadedImg, setUploadedImg] = useState("");
     const [enteredNickname, setEnteredNickname] = useState("");
     const [enteredAbout, setEnteredAbout] = useState("");
-    const [regErrMsg, setRegErrMsg] = useState("");
+    // const [regErrMsg, setRegErrMsg] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
