@@ -45,7 +45,7 @@ export const AuthContextProvider = (props) => {
       },
       body: JSON.stringify(regPayloadObj)
     };
-    setTimeout(() => {
+    
     fetch(regURL, reqOptions)
       .then(resp => {
         if (!resp.ok) throw new Error ("Failed to Register");
@@ -63,20 +63,22 @@ export const AuthContextProvider = (props) => {
           // alert(data.fname)
           setErrMsg(data.fname)
         }
+        setRegIsLoading(false);
       })
       .catch(err => {
         // console.log(err);
         setRegError(err.message);
+        setRegIsLoading(false);
       })
-      setRegIsLoading(false);
-  }, 3000);
   };
 
   const [loginIsLoading, setLoginIsLoading] = useState(false);
   const [loginError, setLoginError] = useState(null);
 
   const loginHandler = (loginPayloadObj) => {
-    console.log("app.js", loginPayloadObj);
+    setLoginIsLoading(true);
+    setLoginError(null);
+
     const reqOptions = {
       method: "POST",
       credentials: "include",
@@ -88,7 +90,10 @@ export const AuthContextProvider = (props) => {
     };
 
     fetch(loginURL, reqOptions)
-      .then(resp => resp.json())
+      .then(resp => {
+        if (!resp.ok) throw new Error("Failed to Login");
+        return resp.json();
+      })
       .then(data => {
         console.log("login", data);
         if (data.resp.success) {
@@ -108,12 +113,14 @@ export const AuthContextProvider = (props) => {
 
         } else {
           setLoggedIn(false)
-          // alert("ERROR - Please check your credentials")
           setErrMsg("ERROR - Please check your credentials")
         }
+        setLoginIsLoading(false);
       })
       .catch(err => {
-        console.log(err);
+        // console.log(err);
+        setLoginError(err.message);
+        setLoginIsLoading(false);
       })
   };
 
