@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import Card from "../UI/Card";
 import Form from "../UI/Form";
 import LgButton from "../UI/LgButton";
+import LoadingSpinner from "../UI/LoadingSpinner";
 import styles from "./Landingpage.module.css";
 import { AuthContext } from "../store/auth-context";
 
@@ -26,7 +27,7 @@ const Homepage = () => {
                 <Link className={styles["nav-link"]} to="/reg"><LgButton className={`${styles["nav-link-btn"]} ${styles["reg-btn"]}`}>Register</LgButton></Link>
             </div>
         </div>}
-        {loginIsLoading && <h2>Login Loading...</h2>}
+        {loginIsLoading && <LoadingSpinner/>}
         </>
     );
 };

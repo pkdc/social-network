@@ -87,8 +87,8 @@ export const AuthContextProvider = (props) => {
       },
       body: JSON.stringify(loginPayloadObj)
     };
-
-    fetch(loginURL, reqOptions)
+    setTimeout(() => {
+      fetch(loginURL, reqOptions)
       .then(resp => {
         if (!resp.ok) throw new Error("Failed to Login");
         return resp.json();
@@ -122,6 +122,41 @@ export const AuthContextProvider = (props) => {
         setLoginError(err.message);
         setLoginIsLoading(false);
       })
+    }, 10000000);
+    // fetch(loginURL, reqOptions)
+    //   .then(resp => {
+    //     if (!resp.ok) throw new Error("Failed to Login");
+    //     return resp.json();
+    //   })
+    //   .then(data => {
+    //     console.log("login", data);
+    //     if (data.resp.success) {
+    //       setLoggedIn(true);
+    //       localStorage.setItem("user_id", data.resp.user_id);
+    //       localStorage.setItem("fname", data.resp.fname);
+    //       localStorage.setItem("lname", data.resp.lname);
+    //       localStorage.setItem("dob", data.resp.dob);
+    //       data.resp.nname && localStorage.setItem("nname", data.resp.nname);
+    //       data.resp.avatar && localStorage.setItem("avatar", data.resp.avatar);
+    //       data.resp.about && localStorage.setItem("about", data.resp.about);
+    //       localStorage.setItem("public", data.resp.public);
+    //       localStorage.setItem("new_notif", "[]");
+
+    //       localStorage.setItem("new_notif", JSON.stringify(Object.values(data.notif)));
+    //       setNotif(Object.values(data.notif));
+
+    //     } else {
+    //       setLoggedIn(false)
+    //       // setErrMsg("ERROR - Please check your credentials")
+    //       throw new Error("Login Failed: Please check your credentials and login again");
+    //     }
+    //     setLoginIsLoading(false);
+    //   })
+    //   .catch(err => {
+    //     // console.log(err);
+    //     setLoginError(err.message);
+    //     setLoginIsLoading(false);
+    //   })
   };
 
   const logoutHandler = () => {

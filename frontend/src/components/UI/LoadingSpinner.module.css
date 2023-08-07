@@ -1,0 +1,48 @@
+loading-spinner{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    background-color: transparent;
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    50% {
+        transform: rotate(150deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+spinner {
+    position: relative;
+    height: 100px;
+    width: 100px;
+}
+
+dot {
+    animation: rotate 2s linear infinite;
+    border-radius: 50%;
+    background-color: var(--ultra-violet-0, purple);
+    position: absolute;
+}
+
+dot-1 {
+    animation-delay: 0;
+}
+dot-2 {
+    animation-delay: 0.1s;
+}
+dot-3 {
+    animation-delay: 0.2s;
+}
+dot-4 {
+    animation-delay: 0.3s;
+}
+dot-5 {
+    animation-delay: 0.4s;
+}
