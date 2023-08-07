@@ -3,13 +3,17 @@ import { UsersContext } from "./users-context";
 
 export const AuthContext = React.createContext({
   isLoggedIn: false,
-  onReg: (regPayloadObj) => { },
-  onLogin: (loginPayloadObj) => { },
-  onLogout: () => { },
+  onReg: (regPayloadObj) => {},
+  onLogin: (loginPayloadObj) => {},
+  onLogout: () => {},
   regSuccess: false,
   notif: [],
   errMsg: "",
-  setErrMsg: () => { },
+  setErrMsg: () => {},
+  regIsLoading: false,
+  regError: null,
+  loginIsLoading: false,
+  loginError:null,
 });
 
 export const AuthContextProvider = (props) => {
@@ -23,8 +27,15 @@ export const AuthContextProvider = (props) => {
 
   const usersCtx = useContext(UsersContext);
 
+  const [regIsLoading, setRegIsLoading] = useState(false);
+  const [regError, setRegError] = useState(null);
+
   const regHandler = (regPayloadObj) => {
+    setRegIsLoading(true);
+    setRegError(null);
+
     console.log("app.js", regPayloadObj);
+
     const reqOptions = {
       method: "POST",
       credentials: "include",
@@ -34,9 +45,12 @@ export const AuthContextProvider = (props) => {
       },
       body: JSON.stringify(regPayloadObj)
     };
-
+    setTimeout(() => {
     fetch(regURL, reqOptions)
-      .then(resp => resp.json())
+      .then(resp => {
+        if (!resp.ok) throw new Error ("Failed to Register");
+        return resp.json();
+      })
       .then(data => {
         console.log(data);
         // redirect to login
@@ -44,14 +58,6 @@ export const AuthContextProvider = (props) => {
           console.log(data.success);
           setRegSuccess(true);
           usersCtx.onNewUserReg();
-          //   setLoggedIn(true);
-          //   localStorage.setItem("user_id", data.user_id);
-          //   localStorage.setItem("fname", data.fname);
-          //   localStorage.setItem("lname", data.lname);
-          //   localStorage.setItem("dob", data.dob);
-          //   data.nname && localStorage.setItem("nname", data.nname);
-          //   data.avatar && localStorage.setItem("avatar", data.avatar);
-          //   data.about && localStorage.setItem("about", data.about);
         } else {
           setRegSuccess(false);
           // alert(data.fname)
@@ -59,9 +65,15 @@ export const AuthContextProvider = (props) => {
         }
       })
       .catch(err => {
-        console.log(err);
+        // console.log(err);
+        setRegError(err.message);
       })
+      setRegIsLoading(false);
+  }, 3000);
   };
+
+  const [loginIsLoading, setLoginIsLoading] = useState(false);
+  const [loginError, setLoginError] = useState(null);
 
   const loginHandler = (loginPayloadObj) => {
     console.log("app.js", loginPayloadObj);
@@ -141,6 +153,10 @@ export const AuthContextProvider = (props) => {
         notif: notif,
         errMsg: errMsg,
         setErrMsg: setErrMsg,
+        regIsLoading: regIsLoading,
+        regError: regError,
+        loginIsLoading: loginIsLoading,
+        loginError: loginError,
       }}
     >
       {props.children}

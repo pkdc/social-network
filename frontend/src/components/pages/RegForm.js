@@ -24,6 +24,8 @@ const RegForm = () => {
     const [enteredNickname, setEnteredNickname] = useState("");
     const [enteredAbout, setEnteredAbout] = useState("");
     const [regErrMsg, setRegErrMsg] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(null);
 
     const navigate = useNavigate();
 
@@ -35,6 +37,11 @@ const RegForm = () => {
         setRegErrMsg(ctx.errMsg);
         // navigate("/reg", { replace: true });
     }, [ctx.errMsg]);
+
+    useEffect(() => {
+        setIsLoading(ctx.regIsLoading);
+        setError(ctx.regError);
+    }, [ctx.regIsLoading, ctx.regError]);
 
     const emailChangeHandler = (e) => {
         setEnteredEmail(e.target.value);
@@ -109,8 +116,8 @@ const RegForm = () => {
     return (
         <div className={styles.container}>
             <h1 className={styles["title"]}>Register</h1>
-            <h2>{regErrMsg}</h2>
-            <Form className={styles["reg-form"]} onSubmit={submitHandler}>
+            {console.log(isLoading)}
+            {!isLoading && <Form className={styles["reg-form"]} onSubmit={submitHandler}>
                 <FormLabel className={styles["reg-label"]} htmlFor="email">Email</FormLabel>
                 <FormInput className={styles["reg-input"]} type="email" name="email" id="email" placeholder="abc@mail.com" value={enteredEmail} onChange={emailChangeHandler} />
                 <FormLabel className={styles["reg-label"]} htmlFor="password">Password</FormLabel>
@@ -134,7 +141,9 @@ const RegForm = () => {
                 <FormTextarea className={styles["reg-input"]} name="about" id="about" placeholder="About me..." rows={5} value={enteredAbout} onChange={aboutChangeHandler} />
                 <LgButton className={styles["sub-btn"]} type="submit">Register</LgButton>
                 <p>Already have an account? <Link to="/login">Login</Link></p>
-            </Form>
+            </Form>}
+            {!isLoading && error && <h2>{error}</h2>}
+            {isLoading && <h2>Reging...</h2>}
         </div>
 
     )
