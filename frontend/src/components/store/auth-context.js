@@ -60,8 +60,7 @@ export const AuthContextProvider = (props) => {
           usersCtx.onNewUserReg();
         } else {
           setRegSuccess(false);
-          // alert(data.fname)
-          setErrMsg(data.fname)
+          throw new Error ("Email Already Registered");
         }
         setRegIsLoading(false);
       })
