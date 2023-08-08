@@ -46,7 +46,31 @@ export const AuthContextProvider = (props) => {
       body: JSON.stringify(regPayloadObj)
     };
     
-    fetch(regURL, reqOptions)
+    // fetch(regURL, reqOptions)
+    //   .then(resp => {
+    //     if (!resp.ok) throw new Error ("Failed to Register");
+    //     return resp.json();
+    //   })
+    //   .then(data => {
+    //     console.log(data);
+    //     // redirect to login
+    //     if (data.success) {
+    //       console.log(data.success);
+    //       setRegSuccess(true);
+    //       usersCtx.onNewUserReg();
+    //     } else {
+    //       setRegSuccess(false);
+    //       throw new Error ("Email Already Registered");
+    //     }
+    //     setRegIsLoading(false);
+    //   })
+    //   .catch(err => {
+    //     // console.log(err);
+    //     setRegError(err.message);
+    //     setRegIsLoading(false);
+    //   })
+    setTimeout(() => {
+      fetch(regURL, reqOptions)
       .then(resp => {
         if (!resp.ok) throw new Error ("Failed to Register");
         return resp.json();
@@ -69,6 +93,7 @@ export const AuthContextProvider = (props) => {
         setRegError(err.message);
         setRegIsLoading(false);
       })
+    }, 2000);
   };
 
   const [loginIsLoading, setLoginIsLoading] = useState(false);
@@ -94,9 +119,10 @@ export const AuthContextProvider = (props) => {
         return resp.json();
       })
       .then(data => {
-        console.log("login", data);
+        console.log("data reached", data);
         if (data.resp.success) {
           setLoggedIn(true);
+          console.log("login resp success", data);
           localStorage.setItem("user_id", data.resp.user_id);
           localStorage.setItem("fname", data.resp.fname);
           localStorage.setItem("lname", data.resp.lname);
@@ -107,11 +133,12 @@ export const AuthContextProvider = (props) => {
           localStorage.setItem("public", data.resp.public);
           localStorage.setItem("new_notif", "[]");
 
-          localStorage.setItem("new_notif", JSON.stringify(Object.values(data.notif)));
-          setNotif(Object.values(data.notif));
+          data.notif && localStorage.setItem("new_notif", JSON.stringify(Object.values(data.notif)));
+          data.notif && setNotif(Object.values(data.notif));
 
         } else {
           setLoggedIn(false)
+          console.log("login resp failed", data);
           // setErrMsg("ERROR - Please check your credentials")
           throw new Error("Login Failed: Please check your credentials and login again");
         }
@@ -119,10 +146,11 @@ export const AuthContextProvider = (props) => {
       })
       .catch(err => {
         // console.log(err);
+        console.log("lerrmsg", err.message);
         setLoginError(err.message);
         setLoginIsLoading(false);
       })
-    }, 10000000);
+    }, 2000);
     // fetch(loginURL, reqOptions)
     //   .then(resp => {
     //     if (!resp.ok) throw new Error("Failed to Login");

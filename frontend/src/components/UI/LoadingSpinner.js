@@ -2,8 +2,9 @@ import styles from "./LoadingSpinner.module.css";
 
 const LoadingSpinner = (props) => {
     // const classes = `${styles["loading-spinner"]} ${styles[props.className] || ""}`;
+    const classes = `${styles["loading-spinner"]} ${props.className ? styles[props.className] : ""}`;
     return (
-        <div className={styles["loading-spinner"]}>
+        <div className={classes}>
             <div className={styles["spinner"]}>
                 <div className={`${styles["dot"]} ${styles["dot-1"]}`}></div>
                 <div className={`${styles["dot"]} ${styles["dot-2"]}`}></div>

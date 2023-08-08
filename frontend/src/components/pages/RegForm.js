@@ -6,6 +6,7 @@ import FormLabel from "../UI/FormLabel";
 import FormTextarea from "../UI/FormTextarea";
 import LgButton from "../UI/LgButton";
 import ImgUpload from "../UI/ImgUpload";
+import LoadingSpinner from "../UI/LoadingSpinner";
 import { AuthContext } from "../store/auth-context";
 import styles from "./RegForm.module.css";
 
@@ -151,7 +152,7 @@ const RegForm = () => {
                 <LgButton className={styles["sub-btn"]} type="submit">Register</LgButton>
                 <p>Already have an account? <Link to="/login">Login</Link></p>
             </Form>}
-            {isLoading && <h2>Reging...</h2>}
+            {isLoading && <LoadingSpinner/>}
         </div>
 
     )

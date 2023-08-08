@@ -19,15 +19,16 @@ const Homepage = () => {
 
     return (
         <>
-        {!loginIsLoading && <div className={styles.wrapper}>
+        <div className={styles.wrapper}>
+        {!loginIsLoading &&
             <div className={styles["container"]}>
                 <h1 className={styles["title"]}>Welcome</h1>
                 {error && <h2>{error}</h2>}
                 <Link className={styles["nav-link"]} to="/login"><LgButton className={`${styles["nav-link-btn"]} ${styles["login-btn"]}`}>Login</LgButton></Link>
                 <Link className={styles["nav-link"]} to="/reg"><LgButton className={`${styles["nav-link-btn"]} ${styles["reg-btn"]}`}>Register</LgButton></Link>
-            </div>
-        </div>}
-        {loginIsLoading && <LoadingSpinner/>}
+            </div>}
+        {loginIsLoading && <div><LoadingSpinner height={"200px"} width={"200px"}/></div>}
+        </div>
         </>
     );
 };

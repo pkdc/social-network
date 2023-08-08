@@ -1,5 +1,5 @@
 import styles from "./ImgUpload.module.css";
-import img from "../assets/img.svg"
+// import img from "../assets/img.svg"
 
 const ImgUpload = (props) => {
     // const classes = `${styles["lg-btn"]} ${styles[props.className] || ""}`;

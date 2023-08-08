@@ -10,6 +10,7 @@ import PostsPage from './components/pages/PostsPage';
 import GroupPage from "./components/pages/GroupPage";
 import GroupProfilePage from "./components/pages/GroupProfilePage";
 import ProfilePage from "./components/pages/ProfilePage";
+import LoadingTestPage from "./components/pages/LoadingTestPage";
 
 function App() {
   const authCtx = useContext(AuthContext);
@@ -18,6 +19,7 @@ function App() {
     {path: "/", element: <Landingpage />},
     {path: "/login", element: <LoginForm/>},
     {path: "/reg", element: <RegForm/>},
+    // {path: "/loading", element: <LoadingTestPage/>}
   ]);
 
  if (authCtx.isLoggedIn) router = createBrowserRouter([
