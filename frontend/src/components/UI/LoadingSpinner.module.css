@@ -22,7 +22,8 @@
     position: relative;
     height: 150px;
     width: 150px;
-    animation: rotate 3s linear infinite;
+    transform-origin: center center;
+    animation: rotate 5s linear infinite;
     /* transform-origin: center; */
 }
 
@@ -44,16 +45,70 @@
     }
 } */
 
-@keyframes enlarge {
+@keyframes enlarge-0 {
     0% {
         opacity: 1;
+        top: 0;
+        left: 0;
         /* transform: translate(100px, 0); */
     }
     100% {
         opacity: 0;
         height: 150px;
         width:150px;
-        /* transform: translate(0, 0); */
+        top: 0;
+        left: 0;
+        transform: translate(75px, 75px);
+    }
+}
+
+@keyframes enlarge-1 {
+    0% {
+        opacity: 1;
+        top: 0;
+        left: 150px;
+        /* transform: translate(100px, 0); */
+    }
+    100% {
+        opacity: 0;
+        height: 150px;
+        width:150px;
+        top: 0;
+        left: 150px;
+        transform: translate(-150px, 75px);
+    }
+}
+
+@keyframes enlarge-2 {
+    0% {
+        opacity: 1;
+        top: 150px;
+        left: 0;
+        /* transform: translate(100px, 0); */
+    }
+    100% {
+        opacity: 0;
+        height: 150px;
+        width:150px;
+        top: 150px;
+        left: 0;
+        transform: translate(75px, -150px);
+    }
+}
+
+@keyframes enlarge-3 {
+    0% {
+        opacity: 1;
+        top: 150px;
+        left: 150px;
+    }
+    100% {
+        opacity: 0;
+        height: 150px;
+        width:150px;
+        top: 150px;
+        left: 150px;
+        transform: translate(-150px, -150px);
     }
 }
 
@@ -63,7 +118,7 @@
     position: absolute;
     height: 16px;
     width: 16px;
-    animation: enlarge 3s linear infinite;
+    /* animation: enlarge 3s linear infinite; */
 }
 
 /* .dot::before {
@@ -72,21 +127,56 @@
 } */
 
 .dot-1 {
-    animation-delay: 0;
+    /* animation-delay: 0; */
+    animation: enlarge-0 3s linear 0s infinite;
 }
 
 .dot-2 {
     /* transform: translate(calc(75px*(cos(10deg))), calc(75px*(sin(10deg)))); */
-    
-    animation-delay: 0.6s;
+    /* animation-delay: 1s; */
+    animation: enlarge-0 3s linear 1s infinite;
 }
 .dot-3 {
-    transform: translate(0px, 0px);
-    animation-delay: 1.2s;
+    /* transform: translate(0px, 0px); */
+    /* animation-delay: 2s; */
+    animation: enlarge-0 3s linear 2s infinite;
 }
 .dot-4 {
-    animation-delay: 1.8s;
+    /* transform: translateX(75px); */
+    /* animation-delay: 0s; */
+    animation: enlarge-1 3s linear 0s infinite;
 }
 .dot-5 {
-    animation-delay: 2.4s;
+    /* animation-delay: 1s; */
+    animation: enlarge-1 3s linear 1s infinite;
+}
+.dot-6 {
+    /* animation-delay: 2s; */
+    animation: enlarge-1 3s linear 2s infinite;
+}
+
+.dot-7 {
+    /* animation-delay: 0s; */
+    animation: enlarge-2 3s linear 0s infinite;
+}
+.dot-8 {
+    /* animation-delay: 1s; */
+    animation: enlarge-2 3s linear 1s infinite;
+}
+.dot-9 {
+    /* animation-delay: 2s; */
+    animation: enlarge-2 3s linear 2s infinite;
+}
+
+.dot-10 {
+    /* animation-delay: 0s; */
+    animation: enlarge-3 3s linear 0s infinite;
+}
+.dot-11 {
+    /* animation-delay: 1s; */
+    animation: enlarge-3 3s linear 1s infinite;
+}
+.dot-12 {
+    /* animation-delay: 2s; */
+    animation: enlarge-3 3s linear 2s infinite;
 }
