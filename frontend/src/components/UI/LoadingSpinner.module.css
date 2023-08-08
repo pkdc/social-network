@@ -118,7 +118,7 @@
     position: absolute;
     height: 16px;
     width: 16px;
-    /* animation: enlarge 3s linear infinite; */
+    /* animation: enlarge 2s linear infinite; */
 }
 
 /* .dot::before {
@@ -128,55 +128,63 @@
 
 .dot-1 {
     /* animation-delay: 0; */
-    animation: enlarge-0 3s linear 0s infinite;
+    animation: enlarge-0 2s linear 0s infinite;
 }
 
 .dot-2 {
     /* transform: translate(calc(75px*(cos(10deg))), calc(75px*(sin(10deg)))); */
-    /* animation-delay: 1s; */
-    animation: enlarge-0 3s linear 1s infinite;
+    /* animation-delay: 0.5s; */
+    animation: enlarge-0 2s linear 0.5s infinite;
 }
 .dot-3 {
     /* transform: translate(0px, 0px); */
     /* animation-delay: 2s; */
-    animation: enlarge-0 3s linear 2s infinite;
+    animation: enlarge-0 2s linear 1.0s infinite;
 }
 .dot-4 {
-    /* transform: translateX(75px); */
-    /* animation-delay: 0s; */
-    animation: enlarge-1 3s linear 0s infinite;
+    top: 0;
+    left: 150px;
+    animation: enlarge-1 2s linear 0s infinite;
 }
 .dot-5 {
-    /* animation-delay: 1s; */
-    animation: enlarge-1 3s linear 1s infinite;
+    top: 0;
+    left: 150px;
+    animation: enlarge-1 2s linear 0.5s infinite;
 }
 .dot-6 {
-    /* animation-delay: 2s; */
-    animation: enlarge-1 3s linear 2s infinite;
+    top: 0;
+    left: 150px;
+    animation: enlarge-1 2s linear 1.0s infinite;
 }
 
 .dot-7 {
-    /* animation-delay: 0s; */
-    animation: enlarge-2 3s linear 0s infinite;
+    top: 150px;
+    left: 0;
+    animation: enlarge-2 2s linear 0s infinite;
 }
 .dot-8 {
-    /* animation-delay: 1s; */
-    animation: enlarge-2 3s linear 1s infinite;
+    top: 150px;
+    left: 0;
+    animation: enlarge-2 2s linear 0.5s infinite;
 }
 .dot-9 {
-    /* animation-delay: 2s; */
-    animation: enlarge-2 3s linear 2s infinite;
+    top: 150px;
+    left: 0;
+    animation: enlarge-2 2s linear 1.0s infinite;
 }
 
 .dot-10 {
-    /* animation-delay: 0s; */
-    animation: enlarge-3 3s linear 0s infinite;
+    top: 150px;
+    left: 150px;
+    animation: enlarge-3 2s linear 0s infinite;
 }
 .dot-11 {
-    /* animation-delay: 1s; */
-    animation: enlarge-3 3s linear 1s infinite;
+    top: 150px;
+    left: 150px;
+    animation: enlarge-3 2s linear 0.5s infinite;
 }
 .dot-12 {
-    /* animation-delay: 2s; */
-    animation: enlarge-3 3s linear 2s infinite;
+    top: 150px;
+    left: 150px;
+    animation: enlarge-3 2s linear 1.0s infinite;
 }

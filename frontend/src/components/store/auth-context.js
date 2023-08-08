@@ -93,7 +93,7 @@ export const AuthContextProvider = (props) => {
         setRegError(err.message);
         setRegIsLoading(false);
       })
-    }, 2000);
+    }, 10000);
   };
 
   const [loginIsLoading, setLoginIsLoading] = useState(false);
@@ -150,7 +150,7 @@ export const AuthContextProvider = (props) => {
         setLoginError(err.message);
         setLoginIsLoading(false);
       })
-    }, 2000);
+    }, 10000);
     // fetch(loginURL, reqOptions)
     //   .then(resp => {
     //     if (!resp.ok) throw new Error("Failed to Login");

@@ -124,8 +124,8 @@ const RegForm = () => {
             {console.log(isLoading)}
             {!isLoading && error && 
             <>
-            <h2>{error}</h2> 
-            <LgButton onClick={resetHandler}>Try Again</LgButton>
+            {error && <h2 className={styles["error-msg"]}>{error}</h2>}
+            <div  className={styles["try-again"]}><LgButton onClick={resetHandler}>Try Again</LgButton></div>
             </>}
             {!isLoading && !error && <Form className={styles["reg-form"]} onSubmit={submitHandler}>
                 <FormLabel className={styles["reg-label"]} htmlFor="email">Email</FormLabel>
@@ -152,7 +152,10 @@ const RegForm = () => {
                 <LgButton className={styles["sub-btn"]} type="submit">Register</LgButton>
                 <p>Already have an account? <Link to="/login">Login</Link></p>
             </Form>}
-            {isLoading && <LoadingSpinner/>}
+            {isLoading && <div>
+                <div className={styles["loading-spinner-div"]}><LoadingSpinner/></div>
+                <h2 className={styles["loading"]}>Registering New User...</h2>
+            </div> }
         </div>
 
     )

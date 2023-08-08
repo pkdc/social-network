@@ -18,7 +18,7 @@ const LoadingSpinner = (props) => {
                 <div className={`${styles["dot"]} ${styles["dot-10"]}`}></div>
                 {/* <div className={`${styles["dot"]} ${styles["dot-11"]}`}></div> */}
                 <div className={`${styles["dot"]} ${styles["dot-12"]}`}></div>
-            </div>    
+            </div> 
         </div>
     )
 };
