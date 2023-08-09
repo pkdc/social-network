@@ -24,21 +24,19 @@ function JoinedGroups({ refresh }) {
     }
     
     useEffect(() => {
-        console.log(jGrpCtx.joinedGrps.length,"sfklsdlflds;")
         // setJoinedGroup(jGrpCtx.joinedGrps)
-        if (jGrpCtx.joinedGrps.length != 0){
+        if (jGrpCtx.joinedGrps && jGrpCtx.joinedGrps.length > 0){
             // alert("dssdg")
             setJoinedGroup(true)
-            console.log(joinedGroup,"sfklsdlflds;")
+            console.log(joinedGroup)
         }
     }, [refresh]);
     useEffect(() => {
-        console.log(jGrpCtx.joinedGrps.length,"sfklsdlflds;")
         // setJoinedGroup(jGrpCtx.joinedGrps)
-        if (jGrpCtx.joinedGrps.length != 0){
+        if (jGrpCtx.joinedGrps && jGrpCtx.joinedGrps.length > 0){
             // alert("dssdg")
             setJoinedGroup(true)
-            console.log(joinedGroup,"sfklsdlflds;")
+            console.log(joinedGroup)
         }
     }, [jGrpCtx.joinedGrps]);
 // console.log("joirndgrups",joinedGroup.length)
@@ -49,7 +47,6 @@ function JoinedGroups({ refresh }) {
         }
         {joinedGroup &&  
         <Card className={classes.joinedGroupCard}>
-
             {/* {data.data && data.data.map((group) => ( */}
             {jGrpCtx.joinedGrps && jGrpCtx.joinedGrps.map((group) => (
                 <div key={group.id} id={group.id} className={classes.container} onClick={handleClick} >
@@ -59,12 +56,9 @@ function JoinedGroups({ refresh }) {
                         <div className={classes.title}>{group.title}</div>
                     </div>
                     {console.log("title jg", group.title)}
-
                 </div>
             ))}
-
-        </Card>
-}
+        </Card>}
     </div>
 }
 
