@@ -33,22 +33,22 @@ func WriteHttpHeader(jsonResp []byte, w http.ResponseWriter) {
 	w.Write(jsonResp)
 }
 
-func EnableCors(w *http.ResponseWriter) {
-	(*w).Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
-	(*w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-	(*w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Authorization")
-	(*w).Header().Set("Access-Control-Allow-Credentials", "true")
-}
+// func // EnableCors(w *http.ResponseWriter) {
+// 	(*w).Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+// 	(*w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+// 	(*w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Authorization")
+// 	(*w).Header().Set("Access-Control-Allow-Credentials", "true")
+// }
 
 func Homehandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		EnableCors(&w)
+		// EnableCors(&w)
 	}
 }
 
 func SessionHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		EnableCors(&w)
+		// EnableCors(&w)
 		// Prevents the endpoint being called from other url paths
 		if err := UrlPathMatcher(w, r, "/session"); err != nil {
 			return
@@ -100,7 +100,7 @@ func SessionHandler() http.HandlerFunc {
 
 func Loginhandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		EnableCors(&w)
+		// EnableCors(&w)
 		// Prevents the endpoint being called from other url paths
 		if err := UrlPathMatcher(w, r, "/login"); err != nil {
 			return
@@ -238,7 +238,7 @@ func Loginhandler() http.HandlerFunc {
 
 func Reghandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		EnableCors(&w)
+		// EnableCors(&w)
 		// Prevents the endpoint being called from other url paths
 		if err := UrlPathMatcher(w, r, "/reg"); err != nil {
 			return
@@ -381,7 +381,7 @@ func Reghandler() http.HandlerFunc {
 
 func Logouthandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		EnableCors(&w)
+		// EnableCors(&w)
 
 		// Prevents the endpoint being called from other url paths
 		if err := UrlPathMatcher(w, r, "/logout"); err != nil {
@@ -448,7 +448,7 @@ func Logouthandler() http.HandlerFunc {
 
 func Posthandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		EnableCors(&w)
+		// EnableCors(&w)
 		if r.Method == http.MethodPost {
 			fmt.Printf("-----POST---(create-post)--\n")
 			var payload PostStruct
@@ -580,7 +580,7 @@ func Posthandler() http.HandlerFunc {
 func PostCommentHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// fmt.Fprintf(w, "Post")
-		EnableCors(&w)
+		// EnableCors(&w)
 		if r.Method == http.MethodPost {
 			// fmt.Printf("-----POST---(create-comment)--\n")
 			var payload PostCommentStruct
@@ -680,7 +680,7 @@ func PostCommentHandler() http.HandlerFunc {
 
 func Userhandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		EnableCors(&w)
+		// EnableCors(&w)
 		// Prevents the endpoint being called from other url paths
 		if err := UrlPathMatcher(w, r, "/user"); err != nil {
 			return
@@ -779,7 +779,7 @@ func Userhandler() http.HandlerFunc {
 
 func UserFollowerHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		EnableCors(&w)
+		// EnableCors(&w)
 		// Prevents the endpoint being called from other url paths
 		if err := UrlPathMatcher(w, r, "/user-follower"); err != nil {
 			return
@@ -935,7 +935,7 @@ func UserFollowerHandler() http.HandlerFunc {
 
 func UserFollowingHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		EnableCors(&w)
+		// EnableCors(&w)
 		// Prevents the endpoint being called from other url paths
 		if err := UrlPathMatcher(w, r, "/user-following"); err != nil {
 			return
@@ -1059,7 +1059,7 @@ func UserFollowingHandler() http.HandlerFunc {
 
 func CloseFriendHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		EnableCors(&w)
+		// EnableCors(&w)
 		// Prevents the endpoint being called from other url paths
 		if err := UrlPathMatcher(w, r, "/close-friend"); err != nil {
 			return
@@ -1203,7 +1203,7 @@ func CloseFriendHandler() http.HandlerFunc {
 
 func UserMessageHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		EnableCors(&w)
+		// EnableCors(&w)
 		// Prevents the endpoint being called from other url paths
 		if err := UrlPathMatcher(w, r, "/user-message"); err != nil {
 			return
@@ -1331,7 +1331,7 @@ func UserMessageHandler() http.HandlerFunc {
 
 func Grouphandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		EnableCors(&w)
+		// EnableCors(&w)
 		// Prevents the endpoint being called from other url paths
 		if err := UrlPathMatcher(w, r, "/group"); err != nil {
 			return
@@ -1528,7 +1528,7 @@ func Grouphandler() http.HandlerFunc {
 
 func GroupMemberHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		EnableCors(&w)
+		// EnableCors(&w)
 		// Prevents the endpoint being called from other url paths
 		if err := UrlPathMatcher(w, r, "/group-member"); err != nil {
 			return
@@ -1735,7 +1735,7 @@ func GroupMemberHandler() http.HandlerFunc {
 
 func GroupRequestHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		EnableCors(&w)
+		// EnableCors(&w)
 		// Prevents the endpoint being called from other url paths
 		if err := UrlPathMatcher(w, r, "/group-request"); err != nil {
 			return
@@ -1867,7 +1867,7 @@ func GroupRequestHandler() http.HandlerFunc {
 
 func GroupPostHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		EnableCors(&w)
+		// EnableCors(&w)
 		// Prevents the endpoint being called from other url paths
 		if err := UrlPathMatcher(w, r, "/group-post"); err != nil {
 			return
@@ -2025,7 +2025,7 @@ func GroupPostHandler() http.HandlerFunc {
 
 func GroupPostCommentHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		EnableCors(&w)
+		// EnableCors(&w)
 		// Prevents the endpoint being called from other url paths
 		if err := UrlPathMatcher(w, r, "/group-post-comment"); err != nil {
 			return
@@ -2080,7 +2080,7 @@ func GroupPostCommentHandler() http.HandlerFunc {
 				newComment.Message = comment.Message
 				newComment.GroupPostId = int(comment.GroupPostID)
 				newComment.CreatedAt = comment.CreatedAt.String()
-				newComment.AuthorAvatar =us.Image
+				newComment.AuthorAvatar = us.Image
 				Resp.Data = append(Resp.Data, newComment)
 			}
 			fmt.Println("Resp: ", Resp.Data, len(Resp.Data))
@@ -2142,7 +2142,7 @@ func GroupPostCommentHandler() http.HandlerFunc {
 
 func GroupEventHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		EnableCors(&w)
+		// EnableCors(&w)
 		// Prevents the endpoint being called from other url paths
 		if err := UrlPathMatcher(w, r, "/group-event"); err != nil {
 			return
@@ -2273,7 +2273,7 @@ func GroupEventHandler() http.HandlerFunc {
 
 func GroupEventMemberHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		EnableCors(&w)
+		// EnableCors(&w)
 		// Prevents the endpoint being called from other url paths
 		if err := UrlPathMatcher(w, r, "/group-event-member"); err != nil {
 			return
@@ -2443,7 +2443,7 @@ func GroupEventMemberHandler() http.HandlerFunc {
 
 func GroupMessageHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		EnableCors(&w)
+		// EnableCors(&w)
 		// Prevents the endpoint being called from other url paths
 		if err := UrlPathMatcher(w, r, "/group-message"); err != nil {
 			return
@@ -2552,7 +2552,7 @@ func GroupMessageHandler() http.HandlerFunc {
 }
 func PrivacyHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		EnableCors(&w)
+		// EnableCors(&w)
 		fmt.Println(r.Method)
 		if r.Method == "POST" {
 			fmt.Println("its arrived")
@@ -2622,7 +2622,7 @@ func PrivacyHandler() http.HandlerFunc {
 }
 func UserFollowerStatusHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		EnableCors(&w)
+		// EnableCors(&w)
 		// Prevents the endpoint being called from other url paths
 		if err := UrlPathMatcher(w, r, "/user-follow-status"); err != nil {
 			return
@@ -2721,7 +2721,7 @@ func checkFollower(targetid, sourceid int) int {
 func GroupRequestByUserHandler() http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
-		EnableCors(&w)
+		// EnableCors(&w)
 		// Prevents the endpoint being called from other url paths
 		if err := UrlPathMatcher(w, r, "/group-request-by-user"); err != nil {
 			os.Exit(1)
@@ -2863,7 +2863,7 @@ func offlineNot(userid int) []NotifStruct {
 
 func PrivateChatItemHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		EnableCors(&w)
+		// EnableCors(&w)
 		// Prevents the endpoint being called from other url paths
 		if err := UrlPathMatcher(w, r, "/private-chat-item"); err != nil {
 			return
@@ -2944,7 +2944,7 @@ func PrivateChatItemHandler() http.HandlerFunc {
 
 func GroupChatItemHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		EnableCors(&w)
+		// EnableCors(&w)
 		// Prevents the endpoint being called from other url paths
 		if err := UrlPathMatcher(w, r, "/group-chat-item"); err != nil {
 			return
@@ -3069,7 +3069,7 @@ func GroupChatItemHandler() http.HandlerFunc {
 
 func GroupChatSeenHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		EnableCors(&w)
+		// EnableCors(&w)
 		// Prevents the endpoint being called from other url paths
 		if err := UrlPathMatcher(w, r, "/group-chat-seen"); err != nil {
 			return
