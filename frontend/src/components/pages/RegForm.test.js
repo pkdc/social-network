@@ -1,15 +1,13 @@
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import { userEvent } from "@testing-library/user-event";
-import LoginForm from "./LoginForm";
+import RegForm from "./RegForm";
 
-
-describe("Login Form compo", () => {  
+describe("Reg Form Compo", () => {
     test("renders Email Input", () => {
         // Arrange
         render(
             <MemoryRouter>
-                <LoginForm />
+                <RegForm />
             </MemoryRouter>
         );
         // Act
@@ -22,7 +20,7 @@ describe("Login Form compo", () => {
         // Arrange
         render(
             <MemoryRouter>
-                <LoginForm />
+                <RegForm />
             </MemoryRouter>
         );
         // Act
@@ -30,40 +28,42 @@ describe("Login Form compo", () => {
         const pwInput = screen.getByLabelText("Password", {exact: true});
         expect(pwInput).toBeInTheDocument();
     });
-    
-    test("render login btn", () => {
+
+    // test("");
+
+    // test("");
+
+    // test("");
+
+    // test("");
+
+    // test("");
+
+    // test("");
+
+    test("render reg btn", () => {
         // Arrange
         render(
             <MemoryRouter>
-                <LoginForm />
+                <RegForm />
             </MemoryRouter>
         );
         // Act
         //Assert
-        const loginBtn = screen.getByRole("button", { name: /login/i});
-        expect(loginBtn).toBeInTheDocument();
+        const regBtn = screen.getByRole("button", { name: /register/i});
+        expect(regBtn).toBeInTheDocument();
     });
 
-    test("renders reg link", () => {
+    test("renders login link", () => {
         // Arrange
         render(
             <MemoryRouter>
-                <LoginForm />
+                <RegForm />
             </MemoryRouter>
         );
         // Act
         // Assert
-        const regLinkEl = screen.getByRole("link", { name: /Register/i});
-        expect(regLinkEl).toBeInTheDocument();
-    });
-
-    test("normal login success", () => {
-        render(
-            <MemoryRouter>
-                <LoginForm />
-            </MemoryRouter>
-        );
-        
-
+        const loginLinkEl = screen.getByRole("link", { name: /Login/i });
+        expect(loginLinkEl).toBeInTheDocument();
     });
 });
