@@ -1,5 +1,4 @@
 import Post from "./Post";
-
 import classes from './AllPosts.module.css'
 import useGet from "../fetch/useGet";
 import { useCallback, useEffect } from "react";
