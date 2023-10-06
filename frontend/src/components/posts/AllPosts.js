@@ -3,23 +3,30 @@ import classes from "./AllPosts.module.css";
 import useGet from "../fetch/useGet";
 import { useCallback, useEffect, useState } from "react";
 
-function AllPosts(props) {
-	//props.userId
+function AllPosts({
+	posts,
+	comments,
+	onCreateCommentSuccessful,
+	isLoadingPost,
+}) {
+	//userId
 
 	// const { data } = useGet(`/posts`)
-	// console.log("out", props.comments);
+	// console.log("out", comments);
 	// const [posts, setPosts] = useState([]);
 	let eachPostCommentsArr = [];
 
-	// useEffect(() => setPosts(props.posts), [props.posts]);
+	let noPostMsg = <h3>Loading...</h3>;
+	if (!isLoadingPost) noPostMsg = <h3>No Posts Yet...</h3>;
+	// useEffect(() => setPosts(posts), [posts]);
 
-	if (props.posts)
-		for (let i = 0; i < props.posts.length; i++) {
+	if (posts)
+		for (let i = 0; i < posts.length; i++) {
 			let thisPostComments = [];
-			for (let j = 0; j < props.comments.length; j++) {
-				props.comments[j] &&
-					props.comments[j].postid === props.posts[i].id &&
-					thisPostComments.push(props.comments[j]);
+			for (let j = 0; j < comments.length; j++) {
+				comments[j] &&
+					comments[j].postid === posts[i].id &&
+					thisPostComments.push(comments[j]);
 			}
 			eachPostCommentsArr.push(thisPostComments);
 		}
@@ -28,18 +35,18 @@ function AllPosts(props) {
 	const createCommentSuccessHandler = useCallback(
 		(createCommentSuccessful) => {
 			// lift it up to PostPage
-			props.onCreateCommentSuccessful(createCommentSuccessful);
+			onCreateCommentSuccessful(createCommentSuccessful);
 		},
-		[props.onCreateCommentSuccessful]
+		[onCreateCommentSuccessful]
 	);
 
 	return (
 		<>
-			{!props.posts ? (
-				<h3>No Posts Yet...</h3>
+			{!posts ? (
+				noPostMsg
 			) : (
 				<div className={classes.container}>
-					{props.posts.map((post, p) => (
+					{posts.map((post, p) => (
 						<Post
 							key={post.id}
 							id={post.id}
@@ -52,7 +59,7 @@ function AllPosts(props) {
 							createdat={post.createdat}
 							authorId={post.author}
 							privacy={post.privacy}
-							// totalNumPost={props.posts.length}
+							// totalNumPost={posts.length}
 							postNum={p}
 							commentsForThisPost={eachPostCommentsArr[p]}
 							onCreateCommentSuccessful={createCommentSuccessHandler}

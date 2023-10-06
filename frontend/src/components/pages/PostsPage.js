@@ -23,6 +23,7 @@ const PostsPage = () => {
 	const postCommentUrl = "http://localhost:8080/post-comment";
 	const [postData, setPostData] = useState([]);
 	// const [noPost, setNoPost] = useState(true);
+	const [isLoadingPost, setIsLoadingPost] = useState(false);
 	const [commentData, setCommentData] = useState([]);
 	const [refreshState, setRefreshState] = useState(false);
 
@@ -30,6 +31,7 @@ const PostsPage = () => {
 	let userId = localStorage.getItem("user_id");
 	console.log(userId);
 	useEffect(() => {
+		setIsLoadingPost(true);
 		fetch(`http://localhost:8080/post?id=${userId}`)
 			.then((resp) => resp.json())
 			.then((data) => {
@@ -41,11 +43,16 @@ const PostsPage = () => {
 					);
 					// setNoPost(false);
 					setPostData(data);
+					setIsLoadingPost(false);
 				} else {
 					// setNoPost(true);
+					setIsLoadingPost(false);
 				}
 			})
-			.catch((err) => console.log(err));
+			.catch((err) => {
+				console.log(err);
+				setIsLoadingPost(false);
+			});
 	}, [refreshState]);
 
 	// get comments
@@ -127,10 +134,10 @@ const PostsPage = () => {
 				{/* {noPost && <AllPosts noPost={noPost} />} */}
 				{/* {!noPost && ( */}
 				<AllPosts
-					// noPost={noPost}
 					posts={postData}
 					comments={commentData}
 					onCreateCommentSuccessful={createCommentSuccessHandler}
+					isLoadingPost={isLoadingPost}
 				/>
 				{/* )} */}
 			</div>

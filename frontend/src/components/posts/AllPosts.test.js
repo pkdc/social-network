@@ -3,20 +3,20 @@ import { MemoryRouter } from "react-router-dom";
 import AllPosts from "./AllPosts";
 
 describe("Posts and Comments feature", () => {
-	// test("Loading Post", () => {
-	// 	render(
-	// 		<MemoryRouter>
-	// 			<AllPosts />
-	// 		</MemoryRouter>
-	// 	);
+	test("Loading Post", () => {
+		render(
+			<MemoryRouter>
+				<AllPosts isLoadingPost={true} />
+			</MemoryRouter>
+		);
 
-	// 	// Act
-	// 	// Assert
-	// 	const loadingMsg = screen.findByText(/loading posts/i, {
-	// 		exact: false,
-	// 	});
-	// 	expect(loadingMsg).toBeInTheDocument();
-	// });
+		// Act
+		// Assert
+		const loadingMsg = screen.getByText(/Loading/i, {
+			exact: false,
+		});
+		expect(loadingMsg).toBeInTheDocument();
+	});
 
 	test("Get All Posts (No Posts)", async () => {
 		// Arrange
