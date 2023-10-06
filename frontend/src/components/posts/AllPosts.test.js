@@ -3,7 +3,47 @@ import { MemoryRouter } from "react-router-dom";
 import AllPosts from "./AllPosts";
 
 describe("Posts and Comments feature", () => {
-	// test("Get All Posts (No Posts)", () => {
+	// test("Loading Post", () => {
+	// 	render(
+	// 		<MemoryRouter>
+	// 			<AllPosts />
+	// 		</MemoryRouter>
+	// 	);
+
+	// 	// Act
+	// 	// Assert
+	// 	const loadingMsg = screen.findByText(/loading posts/i, {
+	// 		exact: false,
+	// 	});
+	// 	expect(loadingMsg).toBeInTheDocument();
+	// });
+
+	test("Get All Posts (No Posts)", async () => {
+		// Arrange
+		window.fetch = jest.fn();
+		window.fetch.mockResolvedValueOnce({
+			json: async () => [],
+		});
+
+		render(
+			<MemoryRouter>
+				<AllPosts />
+			</MemoryRouter>
+		);
+
+		// Act
+		// Assert
+		const postSomethingMsg = await screen.findByText(
+			/No Posts Yet/i,
+			{
+				exact: false,
+			},
+			{
+				timeout: 5000,
+			}
+		);
+		expect(postSomethingMsg).toBeInTheDocument();
+	});
 
 	test("Get All Posts (>1 Posts)", async () => {
 		// Arrange
@@ -19,7 +59,7 @@ describe("Posts and Comments feature", () => {
 						fname: "testfname1",
 						lname: "testlname1",
 						nname: "testnname1",
-						createdat: "2023-01-01 00:00:00.000000 +0100 +0100",
+						createdat: "2023-08-01 03:16:00.000000 +0100 +0100",
 						image: "",
 						message: "post1_testmsg",
 						privacy: 1,
@@ -33,7 +73,7 @@ describe("Posts and Comments feature", () => {
 						fname: "testfname1",
 						lname: "testlname1",
 						nname: "testnname1",
-						createdat: "2023-01-01 01:00:00.000000 +0100 +0100",
+						createdat: "2023-08-01 15:16:00.000000 +0100 +0100",
 						image: "",
 						message: "post2_testmsg",
 						privacy: 0,
@@ -52,9 +92,22 @@ describe("Posts and Comments feature", () => {
 		// Act
 
 		// Assert
+		// can't find these coz it is currently testing the initial ccase where
+		// the resp is undefined
+		const fname = screen.getByText("testfname1", { exact: true });
+		expect(fname).toBeInTheDocument();
+		const lname = screen.getByText("testlname1", { exact: true });
+		expect(lname).toBeInTheDocument();
+		const nname = screen.getByText("testnname1", { exact: true });
+		expect(nname).toBeInTheDocument();
+		//9 Aug 23, 18:36
+		const post1createdat = screen.getByText("1 Aug 23, 03:16", { exact: true });
+		expect(post1createdat).toBeInTheDocument();
+		const post2createdat = screen.getByText("1 Aug 23, 15:16", { exact: true });
+		expect(post2createdat).toBeInTheDocument();
 		const post1msg = screen.getByText("post1_testmsg", { exact: true });
 		expect(post1msg).toBeInTheDocument();
-		const post2msg = screen.getByText("post2_testmsg");
+		const post2msg = screen.getByText("post2_testmsg", { exact: true });
 		expect(post2msg).toBeInTheDocument();
 	});
 });

@@ -22,6 +22,7 @@ const PostsPage = () => {
 	// const postUrl = "http://localhost:8080/post";
 	const postCommentUrl = "http://localhost:8080/post-comment";
 	const [postData, setPostData] = useState([]);
+	// const [noPost, setNoPost] = useState(true);
 	const [commentData, setCommentData] = useState([]);
 	const [refreshState, setRefreshState] = useState(false);
 
@@ -33,9 +34,16 @@ const PostsPage = () => {
 			.then((resp) => resp.json())
 			.then((data) => {
 				console.log("all post data: ", data);
-                data && 
-				data.sort((a, b) => Date.parse(b.createdat) - Date.parse(a.createdat));
-				setPostData(data);
+				// data &&
+				if (data.length > 0) {
+					data.sort(
+						(a, b) => Date.parse(b.createdat) - Date.parse(a.createdat)
+					);
+					// setNoPost(false);
+					setPostData(data);
+				} else {
+					// setNoPost(true);
+				}
 			})
 			.catch((err) => console.log(err));
 	}, [refreshState]);
@@ -116,11 +124,15 @@ const PostsPage = () => {
 						<img src={refreshImg} alt=""></img>
 					</button>
 				</div>
+				{/* {noPost && <AllPosts noPost={noPost} />} */}
+				{/* {!noPost && ( */}
 				<AllPosts
+					// noPost={noPost}
 					posts={postData}
 					comments={commentData}
 					onCreateCommentSuccessful={createCommentSuccessHandler}
 				/>
+				{/* )} */}
 			</div>
 
 			<div className={styles.right}>
