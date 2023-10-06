@@ -8,17 +8,17 @@ function AllPosts(props) {
 
 	// const { data } = useGet(`/posts`)
 	// console.log("out", props.comments);
-	const [posts, setPosts] = useState([]);
+	// const [posts, setPosts] = useState([]);
 	let eachPostCommentsArr = [];
 
-	useEffect(() => setPosts(props.posts), [props.posts]);
+	// useEffect(() => setPosts(props.posts), [props.posts]);
 
-	if (posts)
-		for (let i = 0; i < posts.length; i++) {
+	if (props.posts)
+		for (let i = 0; i < props.posts.length; i++) {
 			let thisPostComments = [];
 			for (let j = 0; j < props.comments.length; j++) {
 				props.comments[j] &&
-					props.comments[j].postid === posts[i].id &&
+					props.comments[j].postid === props.posts[i].id &&
 					thisPostComments.push(props.comments[j]);
 			}
 			eachPostCommentsArr.push(thisPostComments);
@@ -35,11 +35,11 @@ function AllPosts(props) {
 
 	return (
 		<>
-			{!props.posts && !posts ? (
+			{!props.posts ? (
 				<h3>No Posts Yet...</h3>
 			) : (
 				<div className={classes.container}>
-					{posts.map((post, p) => (
+					{props.posts.map((post, p) => (
 						<Post
 							key={post.id}
 							id={post.id}
