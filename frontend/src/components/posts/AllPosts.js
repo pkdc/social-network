@@ -1,19 +1,17 @@
 import Post from "./Post";
 import classes from "./AllPosts.module.css";
 import useGet from "../fetch/useGet";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 
-function AllPosts({
+const AllPosts = ({
 	posts,
 	comments,
 	onCreateCommentSuccessful,
 	isLoadingPost,
-}) {
+}) => {
 	//userId
-
 	// const { data } = useGet(`/posts`)
 	// console.log("out", comments);
-	// const [posts, setPosts] = useState([]);
 	let eachPostCommentsArr = [];
 
 	let noPostMsg = <h3>Loading...</h3>;
@@ -69,6 +67,6 @@ function AllPosts({
 			)}
 		</>
 	);
-}
+};
 
 export default AllPosts;
