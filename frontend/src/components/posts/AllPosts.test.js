@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import AllPosts from "./AllPosts";
-jest.setTimeout(10000);
+// jest.setTimeout(10000);
 describe("Posts and Comments feature", () => {
 	test("Loading Post", () => {
 		render(
@@ -52,26 +52,28 @@ describe("Posts and Comments feature", () => {
 			json: async () => {
 				return [
 					{
-						id: 1,
 						author: 1,
-						fname: "testfname1",
-						lname: "testlname1",
-						nname: "testnname1",
+						avatar: "",
 						createdat: "2023-08-01 03:16:00.000000 +0100 +0100",
+						fname: "testfname1",
+						id: 1,
 						image: "",
+						lname: "testlname1",
 						message: "post1_testmsg",
+						nname: "testnname1",
 						privacy: 1,
 						success: true,
 					},
 					{
-						id: 2,
 						author: 1,
-						fname: "testfname1",
-						lname: "testlname1",
-						nname: "testnname1",
+						avatar: "",
 						createdat: "2023-08-01 15:16:00.000000 +0100 +0100",
+						fname: "testfname1",
+						id: 2,
 						image: "",
+						lname: "testlname1",
 						message: "post2_testmsg",
+						nname: "testnname1",
 						privacy: 0,
 						success: true,
 					},
@@ -88,24 +90,23 @@ describe("Posts and Comments feature", () => {
 		// Act
 
 		// Assert
-		await waitFor(
-			async () => {
-				const fname = await screen.findByText("testfname1", { exact: true });
-				expect(fname).toBeInTheDocument();
-			}
-			// { timeout: 20000 }
+		const fname = await screen.findByText(
+			"testfname1",
+			{ exact: true },
+			{ timeout: 3000 }
 		);
-
+		screen.debug(fname);
+		expect(fname).toBeInTheDocument();
 		const lname = await screen.findByText(
 			"testlname1",
 			{ exact: true },
-			{ timeout: 5000 }
+			{ timeout: 3000 }
 		);
 		expect(lname).toBeInTheDocument();
 		const nname = await screen.findByText(
 			"testnname1",
 			{ exact: true },
-			{ timeout: 5000 }
+			{ timeout: 3000 }
 		);
 		expect(nname).toBeInTheDocument();
 		//9 Aug 23, 18:36
@@ -114,7 +115,7 @@ describe("Posts and Comments feature", () => {
 			{
 				exact: true,
 			},
-			{ timeout: 5000 }
+			{ timeout: 3000 }
 		);
 		expect(post1createdat).toBeInTheDocument();
 		const post2createdat = await screen.findByText(
@@ -122,19 +123,19 @@ describe("Posts and Comments feature", () => {
 			{
 				exact: true,
 			},
-			{ timeout: 5000 }
+			{ timeout: 3000 }
 		);
 		expect(post2createdat).toBeInTheDocument();
 		const post1msg = await screen.findByText(
 			"post1_testmsg",
 			{ exact: true },
-			{ timeout: 5000 }
+			{ timeout: 3000 }
 		);
 		expect(post1msg).toBeInTheDocument();
 		const post2msg = await screen.findByText(
 			"post2_testmsg",
 			{ exact: true },
-			{ timeout: 5000 }
+			{ timeout: 3000 }
 		);
 		expect(post2msg).toBeInTheDocument();
 	});
