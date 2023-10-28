@@ -50,5 +50,9 @@ describe("Old Chat Msg", () => {
 		});
 		// Act
 		//Assert
+		const msg0 = await screen.findByText("testOldMsg0", {}, { timeout: 3000 });
+		expect(msg0).toBeInTheDocument();
+		const msg1 = await screen.findByText("testOldMsg1", {}, { timeout: 3000 });
+		expect(msg1).toBeInTheDocument();
 	});
 });
