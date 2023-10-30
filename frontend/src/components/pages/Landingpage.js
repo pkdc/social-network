@@ -43,7 +43,8 @@ const Landingpage = () => {
 
 	return (
 		<>
-			<div className={styles.wrapper} ref={vantaRef}>
+			<div className={styles.background} ref={vantaRef}></div>
+			<div className={styles.wrapper}>
 				{!loginIsLoading && (
 					<div className={styles["container"]}>
 						<h1 className={styles["title"]}>Welcome</h1>
