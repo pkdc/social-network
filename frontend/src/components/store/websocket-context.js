@@ -33,7 +33,7 @@ export const WebSocketContextProvider = (props) => {
 
     const usersCtx = useContext(UsersContext);
 
-    useEffect(() => {
+    const connectSocket = () => {
         const newSocket = new WebSocket("ws://localhost:8080/ws");
 
         newSocket.onopen = () => {
@@ -43,7 +43,12 @@ export const WebSocketContextProvider = (props) => {
 
         newSocket.onclose = () => {
             console.log("bye ws");
-            setSocket(null);
+            // setSocket(null);
+
+            setTimeout(() => {
+                setSocket(connectSocket);
+                console.log("ws connected again!");
+            }, 1000);
         };
 
         newSocket.onerror = (err) => console.log("ws error");
@@ -92,8 +97,14 @@ export const WebSocketContextProvider = (props) => {
             }
         };
 
+        return newSocket;
+    };
+
+    useEffect(() => {
+        const socket = connectSocket();
+
         return () => {
-            newSocket.close();
+            socket.close();
         };
     }, []);
 
