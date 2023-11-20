@@ -34,7 +34,7 @@ export const WebSocketContextProvider = (props) => {
     const usersCtx = useContext(UsersContext);
 
     useEffect(() => {
-        const newSocket = new WebSocket("ws://localhost:8080/ws")
+        const newSocket = new WebSocket("ws://localhost:8080/ws");
 
         newSocket.onopen = () => {
             console.log("ws connected");
