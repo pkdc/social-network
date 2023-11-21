@@ -2,6 +2,9 @@
 
 This is a Facebook-like social network application built using React for the frontend and Golang for the backend.
 
+It is hosting on https://notfacebook.netlify.app/
+Note: The websocket is working in localhost, but works inconsistently when hosted.
+
 ## Features
 
 The application includes the following features:
