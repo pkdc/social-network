@@ -12,7 +12,7 @@ import (
 
 func main() {
 
-	db.RunMigration()
+	// db.RunMigration()
 	db.DbConnect()
 	// db.RemoveMigration(m)
 	// db.InsertMockUserData()
