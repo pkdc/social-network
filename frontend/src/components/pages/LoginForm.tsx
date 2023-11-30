@@ -5,7 +5,7 @@ import FormInput from "../UI/FormInput";
 import FormLabel from "../UI/FormLabel";
 import LgButton from "../UI/LgButton";
 import { AuthContext } from "../store/auth-context";
-import styles from "./LoginForm.module.css";
+import styles from "./LoginForm.module";
 
 const LoginForm = () => {
     const [enteredEmail, setEnteredEmail] = useState("");
