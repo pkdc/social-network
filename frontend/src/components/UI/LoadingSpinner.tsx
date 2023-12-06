@@ -1,6 +1,12 @@
+
+import React from "react";
 import styles from "./LoadingSpinner.module.css";
 
-const LoadingSpinner = (props) => {
+type SpinnerProps = {
+    className?: string,
+};
+
+const LoadingSpinner: React.FC<SpinnerProps> = (props) => {
     // const classes = `${styles["loading-spinner"]} ${styles[props.className] || ""}`;
     const classes = `${styles["loading-spinner"]} ${props.className ? styles[props.className] : ""}`;
     return (

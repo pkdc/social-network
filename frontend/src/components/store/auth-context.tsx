@@ -1,7 +1,22 @@
 import React, { useState, useEffect, useContext } from "react";
 import { UsersContext } from "./users-context";
 
-export const AuthContext = React.createContext({
+type createContextType = {
+    isLoggedIn: boolean,
+    onReg: (regPayloadObj)=> void,
+    onLogin: (loginPayloadObj) => void,
+    onLogout: () => void,
+    regSuccess: boolean,
+    notif: [], // array of what?
+    errMsg: string,
+    setErrMsg: () => void,
+    regIsLoading: boolean,
+    regError: string,
+    loginIsLoading: boolean,
+    loginError: string,
+};
+
+export const AuthContext = React.createContext<createContextType>({
   isLoggedIn: false,
   onReg: (regPayloadObj) => {},
   onLogin: (loginPayloadObj) => {},
@@ -17,10 +32,10 @@ export const AuthContext = React.createContext({
 });
 
 export const AuthContextProvider = (props) => {
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [regSuccess, setRegSuccess] = useState(false);
-  const [notif, setNotif] = useState([])
-  const [errMsg, setErrMsg] = useState("");
+  const [loggedIn, setLoggedIn] = useState<boolean>(false);
+  const [regSuccess, setRegSuccess] = useState<boolean>(false);
+  const [notif, setNotif] = useState<>([])
+  const [errMsg, setErrMsg] = useState<string>("");
   const loginURL = "http://localhost:8080/login";
   const regURL = "http://localhost:8080/reg";
   const logoutURL = "http://localhost:8080/logout";

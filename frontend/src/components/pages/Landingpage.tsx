@@ -11,7 +11,7 @@ const Landingpage = () => {
 	const [error, setError] = useState(null);
 	const authCtx = useContext(AuthContext);
 
-	const [vantaEffect, setVantaEffect] = useState<NET>(null);
+	const [vantaEffect, setVantaEffect] = useState<any>(null);
 	const vantaRef = useRef(null);
 
 	useEffect(() => {
