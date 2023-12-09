@@ -1,22 +1,23 @@
 import React, { useState, useEffect, useContext } from "react";
 import { UsersContext } from "./users-context";
+import Notif from "src/models/notif";
 
-type createContextType = {
+type createAuthContextType = {
     isLoggedIn: boolean,
-    onReg: (regPayloadObj)=> void,
-    onLogin: (loginPayloadObj) => void,
+    onReg: (regPayloadObj: {})=> void, // obj not ready yet
+    onLogin: (loginPayloadObj: {}) => void, // obj not ready yet
     onLogout: () => void,
     regSuccess: boolean,
-    notif: [], // array of what?
+    notif: Notif[],
     errMsg: string,
-    setErrMsg: () => void,
+    setErrMsg: (errMsg: string) => void,
     regIsLoading: boolean,
     regError: string,
     loginIsLoading: boolean,
     loginError: string,
 };
 
-export const AuthContext = React.createContext<createContextType>({
+export const AuthContext = React.createContext<createAuthContextType>({
   isLoggedIn: false,
   onReg: (regPayloadObj) => {},
   onLogin: (loginPayloadObj) => {},
@@ -26,15 +27,19 @@ export const AuthContext = React.createContext<createContextType>({
   errMsg: "",
   setErrMsg: () => {},
   regIsLoading: false,
-  regError: null,
+  regError: "",
   loginIsLoading: false,
-  loginError:null,
+  loginError: "",
 });
 
-export const AuthContextProvider = (props) => {
+type AuthCtxProviderProps = {
+  children: React.ReactNode;
+};
+
+export const AuthContextProvider: React.FC<AuthCtxProviderProps> = (props) => {
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [regSuccess, setRegSuccess] = useState<boolean>(false);
-  const [notif, setNotif] = useState<>([])
+  const [notif, setNotif] = useState<Notif[]>([]);
   const [errMsg, setErrMsg] = useState<string>("");
   const loginURL = "http://localhost:8080/login";
   const regURL = "http://localhost:8080/reg";
@@ -43,11 +48,11 @@ export const AuthContextProvider = (props) => {
   const usersCtx = useContext(UsersContext);
 
   const [regIsLoading, setRegIsLoading] = useState(false);
-  const [regError, setRegError] = useState(null);
+  const [regError, setRegError] = useState("");
 
   const regHandler = (regPayloadObj) => {
     setRegIsLoading(true);
-    setRegError(null);
+    setRegError("");
 
     console.log("app.js", regPayloadObj);
 
@@ -112,11 +117,11 @@ export const AuthContextProvider = (props) => {
   };
 
   const [loginIsLoading, setLoginIsLoading] = useState(false);
-  const [loginError, setLoginError] = useState(null);
+  const [loginError, setLoginError] = useState("");
 
   const loginHandler = (loginPayloadObj) => {
     setLoginIsLoading(true);
-    setLoginError(null);
+    setLoginError("");
 
     const reqOptions = {
       method: "POST",
