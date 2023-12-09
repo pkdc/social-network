@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { UsersContext } from "./users-context";
 import Notif from "src/models/notif";
 
-type createAuthContextType = {
+type CreateAuthContext = {
     isLoggedIn: boolean,
     onReg: (regPayloadObj: {})=> void, // obj not ready yet
     onLogin: (loginPayloadObj: {}) => void, // obj not ready yet
@@ -17,7 +17,7 @@ type createAuthContextType = {
     loginError: string,
 };
 
-export const AuthContext = React.createContext<createAuthContextType>({
+export const AuthContext = React.createContext<CreateAuthContext>({
   isLoggedIn: false,
   onReg: (regPayloadObj) => {},
   onLogin: (loginPayloadObj) => {},
@@ -33,7 +33,7 @@ export const AuthContext = React.createContext<createAuthContextType>({
 });
 
 type AuthCtxProviderProps = {
-  children: React.ReactNode;
+  children: React.ReactNode,
 };
 
 export const AuthContextProvider: React.FC<AuthCtxProviderProps> = (props) => {
@@ -56,7 +56,7 @@ export const AuthContextProvider: React.FC<AuthCtxProviderProps> = (props) => {
 
     console.log("app.js", regPayloadObj);
 
-    const reqOptions = {
+    const reqOptions: RequestInit = {
       method: "POST",
       credentials: "include",
       mode: "cors",
@@ -123,7 +123,7 @@ export const AuthContextProvider: React.FC<AuthCtxProviderProps> = (props) => {
     setLoginIsLoading(true);
     setLoginError("");
 
-    const reqOptions = {
+    const reqOptions: RequestInit = {
       method: "POST",
       credentials: "include",
       mode: "cors",
@@ -211,7 +211,7 @@ export const AuthContextProvider: React.FC<AuthCtxProviderProps> = (props) => {
     localStorage.clear();
     localStorage.removeItem("following");
 
-    const reqOptions = {
+    const reqOptions: RequestInit = {
       method: "GET",
       credentials: "include",
       mode: "cors",
