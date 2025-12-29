@@ -12,7 +12,3 @@ const root = client_1.default.createRoot(document.getElementById('root'));
 root.render(react_1.default.createElement(react_1.default.StrictMode, null,
     react_1.default.createElement(auth_context_1.AuthContextProvider, null,
         react_1.default.createElement(App_1.default, null))));
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();

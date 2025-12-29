@@ -46,7 +46,7 @@ export const WebSocketContextProvider = (props) => {
             // setSocket(null);
 
             setTimeout(() => {
-                setSocket(connectSocket);
+                connectSocket();
                 console.log("ws connected again!");
             }, 1000);
         };
