@@ -31,7 +31,7 @@ const InviteToJoinGroupNotiItem = (props) => {
         notiReplyPayloadObj["groupid"] = grp.id;
         notiReplyPayloadObj["accepted"] = true;
         console.log("gonna send reply (accept) to Invitation : ", notiReplyPayloadObj);
-        if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(notiReplyPayloadObj));
+        wsCtx.sendWebSocketMessage(notiReplyPayloadObj);
         jGrpCtx.getFollowing();
 
         let notifarr  =JSON.parse(localStorage.getItem("new_notif"))
@@ -43,7 +43,7 @@ const InviteToJoinGroupNotiItem = (props) => {
                 break
             }
         }
-        
+
     };
     const declineInvitationHandler = () => {
         setIsVisible(false);
@@ -58,7 +58,7 @@ const InviteToJoinGroupNotiItem = (props) => {
         notiReplyPayloadObj["groupid"] = grp.id;
         notiReplyPayloadObj["accepted"] = false;
         console.log("gonna send reply (decline) to Invitation : ", notiReplyPayloadObj);
-        if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(notiReplyPayloadObj));
+        wsCtx.sendWebSocketMessage(notiReplyPayloadObj);
         let notifarr  =JSON.parse(localStorage.getItem("new_notif"))
         for (let i= 0 ; i < notifarr.length; i++) {
             if (notifarr[i].sourceid == props.srcUser.id && notifarr[i].groupid == props.groupId && notifarr[i].type == "invitation"){

@@ -22,7 +22,7 @@ const Chatbox = (props) => {
 
     const selfId = +localStorage.getItem("user_id");
     const frdOrGrpId = props.chatboxId;
-    
+
     !props.grp && console.log("friendId: ", frdOrGrpId);
     props.grp && console.log("groupId: ", frdOrGrpId);
 
@@ -46,7 +46,7 @@ const Chatbox = (props) => {
     //         message: msgObj.message,
     //         createdat: msgObj.createdat,
     //     };
-    
+
     if (!props.grp) {
         // followingCtx.following.find((followingUser) => followingUser.id === frdOrGrpId)["chat_noti"] = false;
         // console.log("following (chatbox)", followingCtx.following);
@@ -72,7 +72,7 @@ const Chatbox = (props) => {
                 console.log("new Received msg data when chatbox is open", wsCtx.newPrivateMsgsObj);
                 console.log("ws receives msg from when chatbox is open: ", wsCtx.newPrivateMsgsObj.sourceid);
                 setNewMsgs((prevNewMsgs) => [...new Set([...prevNewMsgs, wsCtx.newPrivateMsgsObj])]);
-            
+
                 if (wsCtx.newPrivateMsgsObj !== null) wsCtx.setNewPrivateMsgsObj(null);
 
                 // if chatboxId is a user that the cur user is following (not chatting coz of public user)
@@ -82,9 +82,9 @@ const Chatbox = (props) => {
                     followingCtx.receiveMsgFollowing(frdOrGrpId, true, false);
                 }
             }
-        }       
+        }
         setJustUpdated(prev => !prev);
-    }, [wsCtx.newPrivateMsgsObj]) 
+    }, [wsCtx.newPrivateMsgsObj])
 
     useEffect(() => {
         // group chat
@@ -94,14 +94,14 @@ const Chatbox = (props) => {
                 console.log("new Received msg data when chatbox is open", wsCtx.newGroupMsgsObj);
                 console.log("ws receives msg for group when chatbox is open: ", wsCtx.newGroupMsgsObj.groupid);
                 setNewMsgs((prevNewMsgs) => [...new Set([...prevNewMsgs, wsCtx.newGroupMsgsObj])]);
-            
+
                 if (wsCtx.newGroupMsgsObj !== null) wsCtx.setNewGroupMsgsObj(null);
 
-                joinedGrpCtx.receiveMsgGroup(frdOrGrpId, true);   
+                joinedGrpCtx.receiveMsgGroup(frdOrGrpId, true);
             }
         }
         setJustUpdated(prev => !prev);
-    }, [wsCtx.newGroupMsgsObj]) 
+    }, [wsCtx.newGroupMsgsObj])
 
     useEffect(() => {
         // clear noti if the chatbox is initilly closed, but then opened
@@ -127,7 +127,7 @@ const Chatbox = (props) => {
         } else {
             chatPayloadObj["label"] = "group" ;
             chatPayloadObj["groupid"] = frdOrGrpId;
-        }      
+        }
         chatPayloadObj["id"] = Date.now();
         chatPayloadObj["sourceid"] = selfId;
         chatPayloadObj["message"] = msg;
@@ -136,20 +136,20 @@ const Chatbox = (props) => {
 
         const selfNewMsgObject = {};
         if (!props.grp) {
-            selfNewMsgObject["targetid"] = frdOrGrpId;  
+            selfNewMsgObject["targetid"] = frdOrGrpId;
         } else {
             selfNewMsgObject["groupid"] = frdOrGrpId;
             selfNewMsgObject["targetid"] = selfId;
-        }  
+        }
         selfNewMsgObject["id"] = Date.now();
         selfNewMsgObject["sourceid"] = selfId;
         selfNewMsgObject["message"] = msg;
         selfNewMsgObject["createdat"] = createdatObj.toString();
-        
+
         console.log("new self msg data", selfNewMsgObject);
         setNewMsgs((prevNewMsgs) => [...prevNewMsgs, selfNewMsgObject]);
 
-        if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(chatPayloadObj));
+        wsCtx.sendWebSocketMessage(chatPayloadObj);
 
         // move friendId chat item to top
         if (props.grp) {
@@ -160,7 +160,7 @@ const Chatbox = (props) => {
             } else {
                 followingCtx.receiveMsgFollowing(frdOrGrpId, true, false);
             }
-        } 
+        }
 
         setJustUpdated(prev => !prev);
     }, [props.grp, frdOrGrpId, followingCtx.following, wsCtx.websocket, joinedGrpCtx.receiveMsgGroup, followingCtx.receiveMsgFollowing, props.chatboxId]);
@@ -206,17 +206,17 @@ const Chatbox = (props) => {
         // fetch old pri msg
         !props.grp && fetchOldMsg(`${userMsgUrl}?targetid=${selfId}&sourceid=${frdOrGrpId}`);
         // fetch old grp msg
-        props.grp && fetchOldMsg(`${groupMsgUrl}?id=${frdOrGrpId}`);        
+        props.grp && fetchOldMsg(`${groupMsgUrl}?id=${frdOrGrpId}`);
     }, []);
 
     return (
         <div className={styles["container"]}>
             <button onClick={closeChatboxHandler} className={styles["close-btn"]}>X</button>
-            {props.grp && <GroupChatDetailTopBar groupId={props.chatboxId} />} 
+            {props.grp && <GroupChatDetailTopBar groupId={props.chatboxId} />}
              {!props.grp && <UserChatDetailTopBar userId={props.chatboxId} />}
             {/* <ChatboxMsgArea oldMsgItems={oldMsgData} newMsgItems={newMsgsData}/> */}
             <ChatboxMsgArea oldMsgItems={oldMsgData} newMsgItems={newMsgsData} justUpdated={justUpdated}/>
-            <SendMsg onSendMsg={sendMsgHandler}/>            
+            <SendMsg onSendMsg={sendMsgHandler}/>
         </div>
     );
 };

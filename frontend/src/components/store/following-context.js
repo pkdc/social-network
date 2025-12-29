@@ -48,7 +48,7 @@ export const FollowingContextProvider = (props) => {
 
     const getPrivateChatHandler = () => {
         // private chat notification list after login
-        // no need to sort coz the db is already returning items ordered by last-msg-time 
+        // no need to sort coz the db is already returning items ordered by last-msg-time
         fetch(`http://localhost:8080/private-chat-item?id=${selfId}`)
         .then(resp => resp.json())
         .then(data => {
@@ -71,7 +71,7 @@ export const FollowingContextProvider = (props) => {
                 }
 
                 // filter following
-                if (allChatItemArr && allChatItemArr.length !== 0) {                    
+                if (allChatItemArr && allChatItemArr.length !== 0) {
                     if (!following || following.length === 0) {
                         console.log("no following, have chat item");
                         setFollowingChat([]);
@@ -83,7 +83,7 @@ export const FollowingContextProvider = (props) => {
                         const allPublicUsers = usersCtx.users.filter(user => user.public === 1);
                         // filter out all public users with chat record
                         const filteredPublicUsers = allPublicUsers.filter(user => !allOtherChatItems.some(chatItem => user.id === chatItem.sourceid));
-                        setOtherListedChatUsers([...allOtherChatItems, ...filteredPublicUsers]);                        
+                        setOtherListedChatUsers([...allOtherChatItems, ...filteredPublicUsers]);
                     } else {
                         // filter following WITH chat item
                         const filteredFollowingChatItems = allChatItemArr.filter(chatItem => {
@@ -100,7 +100,7 @@ export const FollowingContextProvider = (props) => {
                             return {...chatItem, ...matchedFollowing};
                         });
                         console.log("followingChatItems", followingChatItems);
-    
+
                         // Also display following that are WITHOUT chat item below the ones that have chat item // buggy
                         const filteredFollowingNoChatItems = following.filter(followingUser => {
                             return !allChatItemArr.some(chatItem => followingUser.id === chatItem.sourceid);
@@ -118,7 +118,7 @@ export const FollowingContextProvider = (props) => {
                             finalFollowingChatItems = [];
                         }
                         setFollowingChat([...new Set(finalFollowingChatItems)]);
-    
+
                         // filter out following, to get all OtherListedChatUsers
                         // first get all OtherListedChatUsers WITH chatItems
                         const filteredOtherChatItems = allChatItemArr.filter(chatItem => {
@@ -133,7 +133,7 @@ export const FollowingContextProvider = (props) => {
                             const matchedOtherChatItem = usersCtx.users.find(user => user.id === chatItem.sourceid);
                             return {...chatItem, ...matchedOtherChatItem};
                         });
-    
+
                         // case public users WITHOUT chat item
                         let filteredOtherNoChatItems;
                         let allPublicUsersExcludeFolloiwing;
@@ -158,11 +158,11 @@ export const FollowingContextProvider = (props) => {
                             finalOtherUsersChatItems = [...allOtherChatItems];
                         } else {
                             finalOtherUsersChatItems = [];
-                        }                                                     
-                        console.log("finalOtherNoChatItems", finalOtherUsersChatItems);                  
+                        }
+                        console.log("finalOtherNoChatItems", finalOtherUsersChatItems);
                         setOtherListedChatUsers(finalOtherUsersChatItems);
                     }
-                } 
+                }
         }).catch(err => {
             console.log(err);
         })
@@ -179,7 +179,7 @@ export const FollowingContextProvider = (props) => {
         followPayloadObj["targetid"] = followUser.id;
         followPayloadObj["createdat"] = Date.now().toString();
         console.log("gonna send fol req : ", followPayloadObj);
-        if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(followPayloadObj));
+        wsCtx.sendWebSocketMessage(followPayloadObj);
     };
 
     const followHandler = (followUser) => {
@@ -228,7 +228,7 @@ export const FollowingContextProvider = (props) => {
                 privateChatNotiPayloadObj["sourceid"] = friendId;
                 privateChatNotiPayloadObj["targetid"] = +selfId;
 
-                if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(privateChatNotiPayloadObj));
+                wsCtx.sendWebSocketMessage(privateChatNotiPayloadObj);
             }
             // move userId chat item to the top
             setFollowingChat(prevFollowingChat => [targetUser, ...prevFollowingChat.filter(followingUser => followingUser.id !== +friendId)]);
@@ -249,7 +249,7 @@ export const FollowingContextProvider = (props) => {
                 privateChatNotiPayloadObj["sourceid"] = friendId;
                 privateChatNotiPayloadObj["targetid"] = +selfId;
 
-                if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(privateChatNotiPayloadObj));
+                wsCtx.sendWebSocketMessage(privateChatNotiPayloadObj);
             }
             setOtherListedChatUsers(prevList => [targetUser, ...prevList.filter(otherChatUser => otherChatUser.id !== +friendId)]);
             console.log("after add chat noti target user", targetUser);
@@ -265,7 +265,7 @@ export const FollowingContextProvider = (props) => {
         } else {
             targetUser = usersCtx.users.find(user => user.id === +friendId);
         }
-        
+
         console.log("target user open box", targetUser);
 
         targetUser["chat_noti"] = false;
@@ -275,7 +275,7 @@ export const FollowingContextProvider = (props) => {
         privateChatNotiPayloadObj["sourceid"] = friendId;
         privateChatNotiPayloadObj["targetid"] = +selfId;
 
-        if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(privateChatNotiPayloadObj));
+        wsCtx.sendWebSocketMessage(privateChatNotiPayloadObj);
     };
 
     useEffect(() => {

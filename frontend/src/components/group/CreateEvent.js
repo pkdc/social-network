@@ -35,20 +35,20 @@ function CreateEvent( {groupid, newEvent} ) {
         followPayloadObj.targetid = 987;
         followPayloadObj.createdat = datenow;
         console.log("CREATED AT: ",followPayloadObj.createdat)
-        if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(followPayloadObj));
+        wsCtx.sendWebSocketMessage(followPayloadObj);
         setTitle('');
         setDescription('');
         setDate('');
-    
-        fetch('http://localhost:8080/group-event', 
+
+        fetch('http://localhost:8080/group-event',
         {
-            
+
             method: 'POST',
             credentials: "include",
             mode: 'cors',
             body: JSON.stringify(data),
-            headers: { 
-                'Content-Type': 'application/json' 
+            headers: {
+                'Content-Type': 'application/json'
             }
         }).then(() => {
             newEvent()

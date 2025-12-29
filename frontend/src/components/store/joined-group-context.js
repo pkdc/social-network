@@ -154,7 +154,7 @@ export const JoinedGroupContextProvider = (props) => {
         joinGrpPayloadObj["groupid"] = joinGrpId;
         joinGrpPayloadObj["createdat"] = Date.now().toString();
         console.log("gonna send join grp req : ", joinGrpPayloadObj);
-        if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(joinGrpPayloadObj));
+        wsCtx.sendWebSocketMessage(joinGrpPayloadObj);
     };
 
     const InviteToJoinHandler = (grpid, InvitedUserId) => {
@@ -175,7 +175,7 @@ export const JoinedGroupContextProvider = (props) => {
         InviteToJoinPayloadObj["groupid"] = grpid;
         InviteToJoinPayloadObj["createdat"] = Date.now().toString();
         console.log("gonna send invite : ", InviteToJoinPayloadObj);
-        if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(InviteToJoinPayloadObj));
+        wsCtx.sendWebSocketMessage(InviteToJoinPayloadObj);
     };
 
     const joinHandler = (toJoinGrp, user) => {
@@ -223,7 +223,7 @@ export const JoinedGroupContextProvider = (props) => {
             groupChatNotiPayloadObj["sourceid"] = +selfId;
             groupChatNotiPayloadObj["groupid"] = groupId;
 
-            if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(groupChatNotiPayloadObj));
+            wsCtx.sendWebSocketMessage(groupChatNotiPayloadObj);
         }
         // move userId chat item to the top
         setJoinedGrps(prevJoinedGrps => [targetGroup, ...prevJoinedGrps.filter(joinedGrp => joinedGrp.id !== +groupId)]);
@@ -242,7 +242,7 @@ export const JoinedGroupContextProvider = (props) => {
         groupChatNotiPayloadObj["sourceid"] = +selfId;
         groupChatNotiPayloadObj["groupid"] = +groupId;
 
-        if (wsCtx.websocket !== null) wsCtx.websocket.send(JSON.stringify(groupChatNotiPayloadObj));
+        wsCtx.sendWebSocketMessage(groupChatNotiPayloadObj);
     };
 
     useEffect(() => {

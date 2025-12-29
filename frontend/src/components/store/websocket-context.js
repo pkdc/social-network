@@ -3,6 +3,7 @@ import { UsersContext } from "./users-context";
 
 export const WebSocketContext = React.createContext({
     websocket: null,
+    sendWebSocketMessage: () => {},
     newPrivateMsgsObj: null,
     setNewPrivateMsgsObj: () => {},
     newGroupMsgsObj: null,
@@ -32,6 +33,15 @@ export const WebSocketContextProvider = (props) => {
     const [newOnlineStatusObj, setNewOnlineStatusObj] = useState(false);
 
     const usersCtx = useContext(UsersContext);
+
+    const sendWebSocketMessage = (msg) => {
+        if (socket && socket.readyState === WebSocket.OPEN) {
+            socket.send(JSON.stringify(msg));
+            return true;
+        }
+        console.warn('WebSocket not ready, message not sent:', msg);
+        return false;
+    };
 
     const connectSocket = () => {
         const newSocket = new WebSocket("ws://localhost:8080/ws");
@@ -111,6 +121,8 @@ export const WebSocketContextProvider = (props) => {
     return (
         <WebSocketContext.Provider value={{
             websocket: socket,
+            sendWebSocketMessage: sendWebSocketMessage,
+
             newPrivateMsgsObj: newPrivateMsgsObj,
             setNewPrivateMsgsObj: setNewPrivateMsgsObj,
             newGroupMsgsObj: newGroupMsgsObj,
